@@ -17,8 +17,8 @@
  * along with Taproot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DJI_MOTOR_TERMINAL_SERIAL_HANDLER_HPP_
-#define DJI_MOTOR_TERMINAL_SERIAL_HANDLER_HPP_
+#ifndef TAPROOT_DJI_MOTOR_TERMINAL_SERIAL_HANDLER_HPP_
+#define TAPROOT_DJI_MOTOR_TERMINAL_SERIAL_HANDLER_HPP_
 
 #include "tap/communication/serial/terminal_serial.hpp"
 #include "tap/util_macros.hpp"
@@ -31,7 +31,7 @@ class Drivers;
 namespace motor
 {
 class DjiMotorTxHandler;
-class DjiMotorTerminalSerialHandler : public communication::serial::ITerminalSerialCallback
+class DjiMotorTerminalSerialHandler : public communication::serial::TerminalSerialCallbackInterface
 {
 public:
     static constexpr char HEADER[] = "motorinfo";
@@ -62,7 +62,7 @@ private:
     Drivers* drivers;
 
     bool motorIdValid = false;
-    int motorId = 0;
+    uint32_t motorId = 0;
     bool canBusValid = false;
     int canBus = 0;
     bool printAll = false;
@@ -76,4 +76,4 @@ private:
 }  // namespace motor
 }  // namespace tap
 
-#endif  // DJI_MOTOR_TERMINAL_SERIAL_HANDLER_HPP_
+#endif  // TAPROOT_DJI_MOTOR_TERMINAL_SERIAL_HANDLER_HPP_

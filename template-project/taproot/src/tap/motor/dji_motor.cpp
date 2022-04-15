@@ -43,8 +43,8 @@ DjiMotor::DjiMotor(
     tap::can::CanBus motorCanBus,
     bool isInverted,
     const char* name,
-    uint16_t encWrapped,
-    int64_t encRevolutions)
+    uint16_t encoderWrapped,
+    int64_t encoderRevolutions)
     : CanRxListener(drivers, static_cast<uint32_t>(desMotorIdentifier), motorCanBus),
       motorName(name),
       drivers(drivers),
@@ -55,8 +55,8 @@ DjiMotor::DjiMotor(
       temperature(0),
       torque(0),
       motorInverted(isInverted),
-      encoderWrapped(encWrapped),
-      encoderRevolutions(encRevolutions)
+      encoderWrapped(encoderWrapped),
+      encoderRevolutions(encoderRevolutions)
 {
     motorDisconnectTimeout.stop();
 }
@@ -119,7 +119,7 @@ bool DjiMotor::isMotorOnline() const
 
 void DjiMotor::serializeCanSendData(modm::can::Message* txMessage) const
 {
-    int id = DJI_MOTOR_NORMALIZED_ID(this->getMotorIdentifier());  // number between 0 and 7
+    int id = DJI_MOTOR_TO_NORMALIZED_ID(this->getMotorIdentifier());  // number between 0 and 7
     // this method assumes you have choosen the correct message
     // to send the data in. Is blind to message type and is a private method
     // that I use accordingly.

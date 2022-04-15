@@ -41,7 +41,7 @@ void DjiMotorTerminalSerialHandler::init() { drivers->terminalSerial.addHeader(H
 bool DjiMotorTerminalSerialHandler::terminalSerialCallback(
     char* inputLine,
     modm::IOStream& outputStream,
-    bool)
+    bool streamingEnabled)
 {
     char* arg;
     motorId = 0;
@@ -63,8 +63,8 @@ bool DjiMotorTerminalSerialHandler::terminalSerialCallback(
             char* indexEnd;
             motorId = strtol(arg, &indexEnd, 10);
             if (indexEnd != arg + strlen(arg) ||
-                motorId < (DJI_MOTOR_NORMALIZED_ID(MotorId::MOTOR1) + 1) ||
-                motorId > (DJI_MOTOR_NORMALIZED_ID(MotorId::MOTOR8) + 1))
+                motorId < (DJI_MOTOR_TO_NORMALIZED_ID(MotorId::MOTOR1) + 1) ||
+                motorId > (DJI_MOTOR_TO_NORMALIZED_ID(MotorId::MOTOR8) + 1))
             {
                 outputStream << "motorinfo: Invalid motorID" << modm::endl << USAGE;
                 return false;
@@ -97,13 +97,23 @@ bool DjiMotorTerminalSerialHandler::terminalSerialCallback(
         else if (strcmp(arg, "-H") == 0)
         {
             outputStream << USAGE;
-            return true;
+            // If streamingEnabled == true, we want to return false to indicate we shouldn't start
+            // streaming. Also if any of the other inputs have been set, return false since the user
+            // shouldn't specify -H and another argument.
+            return !streamingEnabled && !canBusValid && !motorIdValid && !printAll &&
+                   (*inputLine == '\0');
         }
         else
         {
             outputStream << USAGE;
             return false;
         }
+    }
+
+    if (((canBusValid || motorIdValid) && printAll) || (*inputLine != '\0'))
+    {
+        outputStream << USAGE;
+        return false;
     }
 
     return printInfo(outputStream);
@@ -179,7 +189,7 @@ void DjiMotorTerminalSerialHandler::getMotorInfoToString(
 {
     if (motor != nullptr)
     {
-        outputStream << (DJI_MOTOR_NORMALIZED_ID(motor->getMotorIdentifier()) + 1) << ". "
+        outputStream << (DJI_MOTOR_TO_NORMALIZED_ID(motor->getMotorIdentifier()) + 1) << ". "
                      << motor->getName() << ": online: " << (motor->isMotorOnline() ? "yes" : "no")
                      << ", enc: " << motor->getEncoderWrapped() << ", rpm: " << motor->getShaftRPM()
                      << ", out des: " << motor->getOutputDesired() << modm::endl;
