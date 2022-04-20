@@ -61,20 +61,11 @@ By using this template, your project will start out with a fully-functional Tapr
 build tools. The provided `main.cpp` (`/template-project/src/main.cpp`) includes initialization of
 all core systems and drivers. This should allow you to develop control systems starting day one.
 
-_Note: [Issue #3](https://gitlab.com/aruw/controls/taproot-template-project/-/issues/3) tracks the
-desire to automate the below process. Let us know about your experiences there._
-
-To get started, we suggest using Visual Studio Code to perform a find-and-replace across all files,
-swapping your own project name in place of `template-project`. Furthermore, rename the directory
-`/template-project` accordingly. Feel free to call it the same name as your repo.
-
-You should also update the license headers in your project. The above find-and-replace should have
-updated the project name references. However, you will also want to update the copyright line of
-each header:
-
-```
-Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
-```
+To automatically configure your project, you should run the python script
+`rename_template_project.py`. This script takes a couple arguments, the name of your repository
+(for example, `aruw-mcb`) and the name of your team (used for updating copyright headers). This
+script will rename the project for you with the given name. Once you have run this script, you may
+delete it.
 
 To refer to your own team, year and email. Do so in all template source files, **excluding files in
 `**/taproot`**. Also update `scripts/check_license_headers.py` accordingly.
