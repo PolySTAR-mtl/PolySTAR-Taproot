@@ -1,7 +1,7 @@
 *.pyc
 
-template-project/build
-template-project/Pipfile.lock
+PolySTAR-Taproot-project/build
+PolySTAR-Taproot-project/Pipfile.lock
 project.xml.log
 
 .vscode/.cortex-debug.peripherals.state.json

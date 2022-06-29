@@ -73,13 +73,13 @@
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "C_Cpp.default.includePath": [
-        "template-project/taproot/src",
-        "template-project/src",
+        "PolySTAR-Taproot-project/taproot/src",
+        "PolySTAR-Taproot-project/src",
     ],
     "C_Cpp.default.cppStandard": "c++20",
     "C_Cpp.default.cStandard": "c11",
     "C_Cpp.default.forcedInclude": [
-        "template-project/robot-type/robot_type.hpp"
+        "PolySTAR-Taproot-project/robot-type/robot_type.hpp"
     ],
     "[markdown]": {
         "editor.wordWrap": "off",
