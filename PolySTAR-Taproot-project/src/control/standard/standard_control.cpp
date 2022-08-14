@@ -3,6 +3,7 @@
 #include "control/drivers/drivers.hpp"
 #include "subsystems/chassis/chassis_subsystem.hpp"
 #include "subsystems/chassis/chassis_drive_command.hpp"
+#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 
 using src::DoNotUse_getDrivers;
 using tap::communication::serial::Remote;
@@ -23,6 +24,7 @@ chassis::ChassisSubsystem theChassis(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
+chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 /* define command mappings --------------------------------------------------*/
 
@@ -38,11 +40,13 @@ void initializeSubsystems() {
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    theChassis.setDefaultCommand((&chassisDrive));
+    theChassis.setDefaultCommand(&chassisDrive);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *) {}
+void startStandardCommands(src::Drivers *drivers) {
+    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+}
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *) {
