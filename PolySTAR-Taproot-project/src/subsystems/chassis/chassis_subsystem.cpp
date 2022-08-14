@@ -3,7 +3,6 @@
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
 #include "control/drivers/drivers.hpp"
-#include "tap/communication/sensors/imu/imu_interface.hpp"
 
 using namespace tap;
 
@@ -17,10 +16,6 @@ void ChassisSubsystem::initialize()
     frontRightMotor.initialize();
     backLeftMotor.initialize();
     backRightMotor.initialize();
-
-    drivers->mpu6500.requestCalibration();
-    // Wait for MPU6500 to finish calibration before finishing initialization
-    while (drivers->mpu6500.getImuState() != tap::communication::sensors::imu::ImuInterface::ImuState::IMU_CALIBRATED) {}
 
 }
 

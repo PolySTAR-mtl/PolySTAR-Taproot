@@ -40,11 +40,11 @@ private:
     ChassisSubsystem *const chassis;
 
     src::Drivers *drivers;
-};  // ChassisTankDriveCommand
+};  // ChassisDriveCommand
 
 }  // namespace chassis
 
 }  // namespace control
 
-#endif  // CHASSIS_TANK_DRIVE_COMMAND_HPP_
+#endif  // CHASSIS_DRIVE_COMMAND_HPP_
 
