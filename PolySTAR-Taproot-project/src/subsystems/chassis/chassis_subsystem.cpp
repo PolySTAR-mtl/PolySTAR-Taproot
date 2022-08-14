@@ -2,6 +2,8 @@
 
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
+#include "control/drivers/drivers.hpp"
+#include "tap/communication/sensors/imu/imu_interface.hpp"
 
 using namespace tap;
 
@@ -15,6 +17,11 @@ void ChassisSubsystem::initialize()
     frontRightMotor.initialize();
     backLeftMotor.initialize();
     backRightMotor.initialize();
+
+    drivers->mpu6500.requestCalibration();
+    // Wait for MPU6500 to finish calibration before finishing initialization
+    while (drivers->mpu6500.getImuState() != tap::communication::sensors::imu::ImuInterface::ImuState::IMU_CALIBRATED) {}
+
 }
 
 void ChassisSubsystem::refresh() {
@@ -36,16 +43,22 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
 {
     // x, y, and r contained between -1 and 1
     
+    autoRotationDesiredVel = r*AUTOROTATE_SCALE_FACTOR;
+
+    autoRotatePid.update(autoRotationDesiredVel - drivers->mpu6500.getGz());
+
+    r = autoRotatePid.getValue();
+
     float norm = sqrt(x*x+y*y);
     if (norm > 1) {
         x = x / norm;
         y = y / norm;
     }
 
-    frontLeftDesiredRpm = (x-y)*RPM_SCALE_FACTOR;
-    frontRightDesiredRpm = (x+y)*RPM_SCALE_FACTOR;
-    backLeftDesiredRpm = (x+y)*RPM_SCALE_FACTOR;
-    backRightDesiredRpm = (x-y)*RPM_SCALE_FACTOR;
+    frontLeftDesiredRpm = (x-y+r)*RPM_SCALE_FACTOR;
+    frontRightDesiredRpm = (x+y-r)*RPM_SCALE_FACTOR;
+    backLeftDesiredRpm = (x+y+r)*RPM_SCALE_FACTOR;
+    backRightDesiredRpm = (x-y-r)*RPM_SCALE_FACTOR;
 
 }
 
