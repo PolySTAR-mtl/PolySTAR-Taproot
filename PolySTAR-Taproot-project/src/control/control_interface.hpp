@@ -41,6 +41,7 @@ public:
 
 private:
     tap::Drivers *drivers;
+    static constexpr float WHEEL_MAX_VALUE = 660.0f;
 };  // ControlInterface
 
 }  // namespace control
