@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 PolySTAR-Mtl
+ * Copyright (c) 2022-2023 PolySTAR-Mtl
  *
  * This file is part of PolySTAR-Taproot.
  *
@@ -34,14 +34,15 @@
 #include "tap/architecture/profiler.hpp"
 
 /* communication includes ---------------------------------------------------*/
-#include "drivers.hpp"
-#include "drivers_singleton.hpp"
+#include "control/drivers/drivers.hpp"
+#include "control/drivers/drivers_singleton.hpp"
 
 /* error handling includes --------------------------------------------------*/
 #include "tap/errors/create_errors.hpp"
 
 /* control includes ---------------------------------------------------------*/
 #include "tap/architecture/clock.hpp"
+#include "control/robot_control.hpp"
 
 /* define timers here -------------------------------------------------------*/
 tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
@@ -70,6 +71,7 @@ int main()
 
     Board::initialize();
     initializeIo(drivers);
+    control::initSubsystemCommands(drivers);
 
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
