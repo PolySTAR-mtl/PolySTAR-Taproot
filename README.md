@@ -1,6 +1,3 @@
-[![pipeline status](https://gitlab.com/aruw/controls/PolySTAR-Taproot/badges/develop/pipeline.svg)](https://gitlab.com/aruw/controls/PolySTAR-Taproot/-/commits/develop)
-
-
 ## Resources
 
 - **The [Taproot wiki](https://gitlab.com/aruw/controls/taproot/-/wikis/home). It has lots of content and we strongly recommend you browse through it to get a sense of
@@ -41,7 +38,7 @@ _Make sure you have followed the above setup instructions._
 Run the following to clone this repository:
 
 ```
-git clone --recursive https://gitlab.com/my-team/my-amazing-project.git
+git clone --recursive https://github.com/PolySTAR-mtl/PolySTAR-Taproot.git
 ```
 
 If you use the Docker container, or have already cloned the repository yourself, you should instead
@@ -54,7 +51,7 @@ git submodule update --init --recursive
 Now, `cd` into the project directory, activate the virtualenv, and run some builds:
 
 ```
-cd my-amazing-project/PolySTAR-Taproot-project
+cd PolySTAR-Taproot/PolySTAR-Taproot-project
 pipenv shell
 # Build for hardware
 scons build
