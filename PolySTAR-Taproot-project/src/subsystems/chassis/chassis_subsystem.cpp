@@ -37,13 +37,14 @@ void ChassisSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor*
 void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
 {
     // x, y, and r contained between -1 and 1
-    
+    /*
     autoRotationDesiredVel = r*AUTOROTATE_SCALE_FACTOR;
 
     autoRotatePid.update(autoRotationDesiredVel - drivers->mpu6500.getGz());
 
     r = autoRotatePid.getValue();
-
+    r = 0; 
+    */
     float norm = sqrt(x*x+y*y);
     if (norm > 1) {
         x = x / norm;
