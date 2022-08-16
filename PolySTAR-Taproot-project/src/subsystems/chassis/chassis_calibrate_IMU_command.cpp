@@ -14,7 +14,7 @@ ChassisCalibrateImuCommand::ChassisCalibrateImuCommand(
     src::Drivers *drivers)
     : chassis(chassis),
       drivers(drivers),
-      currentImuState(tap::communication::sensors::imu::ImuInterface::ImuState::IMU_NOT_CONNECTED)
+      currentImuState(tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState::IMU_NOT_CALIBRATED)
 {
     if (chassis == nullptr)
     {
@@ -24,6 +24,7 @@ ChassisCalibrateImuCommand::ChassisCalibrateImuCommand(
 }
 
 void  ChassisCalibrateImuCommand::initialize() {
+    chassis->setDesiredOutput(0,0,0);
     drivers->mpu6500.requestCalibration();
 }
 
@@ -35,7 +36,7 @@ void  ChassisCalibrateImuCommand::execute()
 void  ChassisCalibrateImuCommand::end(bool) {}
 
 bool  ChassisCalibrateImuCommand::isFinished() const {
-    return currentImuState == tap::communication::sensors::imu::ImuInterface::ImuState::IMU_CALIBRATED;
+    return currentImuState == tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState::IMU_CALIBRATED;
 }
 }  // namespace chassis
 }  // namespace control

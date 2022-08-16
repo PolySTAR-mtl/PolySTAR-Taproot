@@ -42,7 +42,7 @@ private:
 
     src::Drivers *drivers;
 
-    tap::communication::sensors::imu::ImuInterface::ImuState currentImuState;
+    tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState currentImuState;
 };  // ChassisCalibrateImuCommand
 
 }  // namespace chassis
