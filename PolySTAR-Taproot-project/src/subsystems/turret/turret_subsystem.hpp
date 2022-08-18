@@ -26,12 +26,10 @@ public:
      */
     TurretSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, false, "front left motor"),
-          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, true, "front right motor"),
+          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, false, "yaw motor"),
+          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, true, "pitch motor"),
           yawPid(YAW_PID_KP,YAW_PID_KI,YAW_PID_KD,YAW_PID_MAX_ERROR_SUM,YAW_PID_MAX_OUTPUT),
-          pitchPid(PITCH_PID_KP,PITCH_PID_KI,PITCH_PID_KD,PITCH_PID_MAX_ERROR_SUM,PITCH_PID_MAX_OUTPUT),
-          yawDesiredPos(YAW_NEUTRAL_POSITION),
-          pitchDesiredPos(PITCH_NEUTRAL_POSITION)
+          pitchPid(PITCH_PID_KP,PITCH_PID_KI,PITCH_PID_KD,PITCH_PID_MAX_ERROR_SUM,PITCH_PID_MAX_OUTPUT)
     {
     }
 
@@ -47,10 +45,13 @@ public:
 
     void setDesiredOutput(float yaw, float pitch);
 
-    void updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredPos);
+    void updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
 
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
+
+    const int64_t &getYawNeutralPos() const { return yawNeutralPos; }
+    const int64_t &getPitchNeutralPos() const { return pitchNeutralPos; }
 
 private:
     ///< Hardware constants, not specific to any particular turret.
@@ -69,6 +70,9 @@ private:
     ///< Any user input is translated into desired position for each motor.
     float yawDesiredPos;
     float pitchDesiredPos;
+    // TODO : Find a better way of determining neutral position
+    int64_t yawNeutralPos;
+    int64_t pitchNeutralPos;
 
     // Scale factor for converting joystick movement into position setpoint
     static constexpr float POS_SCALE_FACTOR = 10.0f;

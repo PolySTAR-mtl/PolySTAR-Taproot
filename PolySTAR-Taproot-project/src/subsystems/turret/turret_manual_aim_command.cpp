@@ -31,7 +31,7 @@ void  TurretManualAimCommand::execute()
         drivers->controlInterface.getTurretYInput());
 }
 
-void  TurretManualAimCommand::end(bool) { turret->setDesiredOutput(YAW_NEUTRAL_POSITION,PITCH_NEUTRAL_POSITION); }
+void  TurretManualAimCommand::end(bool) { turret->setDesiredOutput(turret->getYawNeutralPos(),turret->getPitchNeutralPos()); }
 
 bool  TurretManualAimCommand::isFinished() const { return false; }
 }  // namespace turret

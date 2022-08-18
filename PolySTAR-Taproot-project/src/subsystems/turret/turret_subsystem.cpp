@@ -14,6 +14,9 @@ void TurretSubsystem::initialize()
 {
     yawMotor.initialize();
     pitchMotor.initialize();
+    yawNeutralPos = yawMotor.getEncoderUnwrapped();
+    pitchNeutralPos = pitchMotor.getEncoderUnwrapped();
+    setDesiredOutput(yawNeutralPos,pitchNeutralPos);
 }
 
 void TurretSubsystem::refresh() {
@@ -21,16 +24,18 @@ void TurretSubsystem::refresh() {
     updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos);
 }
 
-void TurretSubsystem::updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRpm) {
-    pid->update(desiredRpm - motor->getEncoderWrapped());
-    // motor->setDesiredOutput(pid->getValue());
+void TurretSubsystem::updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) {
+    pid->update(desiredPos - motor->getEncoderUnwrapped());
+    motor->setDesiredOutput(pid->getValue());
 }
 
 /*
-    Give desired setpoints for chassis movement, relative to turret neutral position (aiming straight ahead).
+    Give desired setpoints for turret position.
 */
 void TurretSubsystem::setDesiredOutput(float yaw, float pitch) 
 {
+    yawDesiredPos = yawNeutralPos + yaw*YAW_RANGE;
+    pitchDesiredPos = pitchNeutralPos + pitch*PITCH_RANGE;
 }
 
 }  // namespace turret

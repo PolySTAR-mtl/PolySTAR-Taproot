@@ -21,8 +21,9 @@ static constexpr float PITCH_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float PITCH_PID_MAX_OUTPUT = 16000.0f;
 
 /**
- * Setpoint values for neutral positions of turret (aiming forward, barrel parallel to chassis) 
- * 
+ * Range values for YAW and PITCH. Motors are limited to range [NeutralPos - Range, NeutralPos + Range]
+ * Value is in encoder ticks, where 8192 is a full revolution
+ * TODO : Make this use degrees or radians to be easier to read 
  */
-static constexpr float YAW_NEUTRAL_POSITION = 20.0f;
-static constexpr float PITCH_NEUTRAL_POSITION = 0.2f;
+static constexpr int64_t YAW_RANGE = 1024; // +/- 45 degrees
+static constexpr int64_t PITCH_RANGE = 680; // +/- 15 degrees
