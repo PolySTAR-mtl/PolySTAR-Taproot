@@ -2,9 +2,15 @@
 #include "control/drivers/drivers_singleton.hpp"
 #include "control/drivers/drivers.hpp"
 #include "control/safe_disconnect.hpp"
+
+// Chassis includes
 #include "subsystems/chassis/chassis_subsystem.hpp"
 #include "subsystems/chassis/chassis_drive_command.hpp"
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+
+// Turret includes
+#include "subsystems/turret/turret_subsystem.hpp"
+#include "subsystems/turret/turret_manual_aim_command.hpp"
 
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
@@ -23,10 +29,12 @@ namespace control
 {
 /* define subsystems --------------------------------------------------------*/
 chassis::ChassisSubsystem theChassis(drivers());
+turret::TurretSubsystem theTurret(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 
 // Safe disconnect function
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -41,11 +49,13 @@ void registerStandardSubsystems(src::Drivers *drivers) {
 /* initialize subsystems ----------------------------------------------------*/
 void initializeSubsystems() {
     theChassis.initialize();
+    theTurret.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisDrive);
+    theTurret.setDefaultCommand(&turretManualAim);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -54,8 +64,7 @@ void startStandardCommands(src::Drivers *drivers) {
 }
 
 /* register io mappings here ------------------------------------------------*/
-void registerStandardIoMappings(src::Drivers *) {
-    
+void registerStandardIoMappings(src::Drivers *) {   
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
