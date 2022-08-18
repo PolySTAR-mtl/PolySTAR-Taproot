@@ -42,10 +42,10 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
         y = y / norm;
     }
 
-    frontLeftDesiredRpm = (x-y)*RPM_SCALE_FACTOR;
-    frontRightDesiredRpm = (x+y)*RPM_SCALE_FACTOR;
-    backLeftDesiredRpm = (x+y)*RPM_SCALE_FACTOR;
-    backRightDesiredRpm = (x-y)*RPM_SCALE_FACTOR;
+    frontLeftDesiredRpm = (x-y-r)*RPM_SCALE_FACTOR;
+    frontRightDesiredRpm = (x+y+r)*RPM_SCALE_FACTOR;
+    backLeftDesiredRpm = (x+y-r)*RPM_SCALE_FACTOR;
+    backRightDesiredRpm = (x-y+r)*RPM_SCALE_FACTOR;
 
 }
 
