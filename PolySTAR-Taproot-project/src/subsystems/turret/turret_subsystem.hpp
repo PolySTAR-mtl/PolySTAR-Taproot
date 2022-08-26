@@ -27,9 +27,11 @@ public:
     TurretSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, false, "yaw motor"),
-          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, true, "pitch motor"),
-          yawPid(YAW_PID_KP,YAW_PID_KI,YAW_PID_KD,YAW_PID_MAX_ERROR_SUM,YAW_PID_MAX_OUTPUT),
-          pitchPid(PITCH_PID_KP,PITCH_PID_KI,PITCH_PID_KD,PITCH_PID_MAX_ERROR_SUM,PITCH_PID_MAX_OUTPUT)
+          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
+          yawPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
+          pitchPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
+          yawDesiredRpm(0),
+          pitchDesiredRpm(0)
     {
     }
 
@@ -45,7 +47,7 @@ public:
 
     void setDesiredOutput(float yaw, float pitch);
 
-    void updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
+    void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM);
 
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
@@ -67,15 +69,16 @@ private:
     modm::Pid<float> yawPid;
     modm::Pid<float> pitchPid;
 
-    ///< Any user input is translated into desired position for each motor.
-    float yawDesiredPos;
-    float pitchDesiredPos;
+    ///< Any user input is translated into desired RPM for each motor.
+    float yawDesiredRpm;
+    float pitchDesiredRpm;
+
     // TODO : Find a better way of determining neutral position
     int64_t yawNeutralPos;
     int64_t pitchNeutralPos;
 
-    // Scale factor for converting joystick movement into position setpoint
-    static constexpr float POS_SCALE_FACTOR = 10.0f;
+    // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
+    static constexpr float RPM_SCALE_FACTOR = 20.0f;
 
 };  // class TurretSubsystem
 
