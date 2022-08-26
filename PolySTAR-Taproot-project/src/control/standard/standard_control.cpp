@@ -44,6 +44,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
     drivers->commandScheduler.registerSubsystem(&theChassis);
+    drivers->commandScheduler.registerSubsystem(&theTurret);
 }
 
 /* initialize subsystems ----------------------------------------------------*/

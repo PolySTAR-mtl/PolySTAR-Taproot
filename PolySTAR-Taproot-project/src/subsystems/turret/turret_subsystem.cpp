@@ -16,26 +16,45 @@ void TurretSubsystem::initialize()
     pitchMotor.initialize();
     yawNeutralPos = yawMotor.getEncoderUnwrapped();
     pitchNeutralPos = pitchMotor.getEncoderUnwrapped();
-    setDesiredOutput(yawNeutralPos,pitchNeutralPos);
 }
 
 void TurretSubsystem::refresh() {
-    updatePosPid(&yawPid, &yawMotor, yawDesiredPos);
-    updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos);
+    updateRpmPid(&yawPid, &yawMotor, yawDesiredRpm);
+    updateRpmPid(&pitchPid, &pitchMotor, pitchDesiredRpm);
 }
 
-void TurretSubsystem::updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) {
-    pid->update(desiredPos - motor->getEncoderUnwrapped());
+void TurretSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM) {
+    pid->update(desiredRPM - motor->getShaftRPM());
     motor->setDesiredOutput(pid->getValue());
 }
 
 /*
-    Give desired setpoints for turret position.
+    Give desired setpoints for turret movement.
 */
 void TurretSubsystem::setDesiredOutput(float yaw, float pitch) 
 {
-    yawDesiredPos = yawNeutralPos + yaw*YAW_RANGE;
-    pitchDesiredPos = pitchNeutralPos + pitch*PITCH_RANGE;
+    // int64_t currentYaw = yawMotor.getEncoderUnwrapped();
+    // int64_t currentPitch = pitchMotor.getEncoderUnwrapped();
+
+    // if ((yaw > 0 && currentYaw > yawNeutralPos + YAW_RANGE) || 
+    //     (yaw < 0 && currentYaw < yawNeutralPos - YAW_RANGE)) 
+    // {
+    //     yawDesiredRpm = 0;
+    // } else {
+    //     yawDesiredRpm = yaw*RPM_SCALE_FACTOR;
+    // }
+
+    // if ((pitch > 0 && currentPitch > pitchNeutralPos + PITCH_RANGE) || 
+    //     (pitch < 0 && currentPitch < pitchNeutralPos - PITCH_RANGE)) 
+    // {
+    //     pitchDesiredRpm = 0;
+    // } else {
+    //     pitchDesiredRpm = pitch*RPM_SCALE_FACTOR;
+    // }
+
+    pitchDesiredRpm = pitch*TURRET_PITCH_MULT;
+    yawDesiredRpm = yaw*TURRET_YAW_MULT;
+
 }
 
 }  // namespace turret
