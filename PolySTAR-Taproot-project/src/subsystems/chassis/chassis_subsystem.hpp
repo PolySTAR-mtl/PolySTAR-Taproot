@@ -44,10 +44,12 @@ public:
           frontRightPid(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
           backLeftPid(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
           backRightPid(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
+          autoRotatePid(AUTOROTATE_PID_KP,AUTOROTATE_PID_KI,AUTOROTATE_PID_KD,AUTOROTATE_PID_MAX_ERROR_SUM,AUTOROTATE_PID_MAX_OUTPUT),
           frontLeftDesiredRpm(0),
           frontRightDesiredRpm(0),
           backLeftDesiredRpm(0),
-          backRightDesiredRpm(0)
+          backRightDesiredRpm(0),
+          autoRotationDesiredVel(0)
     {
     }
 
@@ -59,10 +61,6 @@ public:
 
     void initialize() override;
 
-    /**
-     * No-op function that is a placeholder because all interactions with motors are done
-     * in setDesiredOutput.
-     */
     void refresh() override;
 
     void setDesiredOutput(float x, float y, float r);
@@ -94,14 +92,24 @@ private:
     modm::Pid<float> backLeftPid;
     modm::Pid<float> backRightPid;
 
+    // PID controller for autorotation
+    modm::Pid<float> autoRotatePid;
+
     ///< Any user input is translated into desired RPM for each motor.
     float frontLeftDesiredRpm;
     float frontRightDesiredRpm;
     float backLeftDesiredRpm;
     float backRightDesiredRpm;
 
+    ///< Any user rotation input is translated into desired autorotate velocity.
+    float autoRotationDesiredVel;
+
+
     // Scale factor for converting joystick movement into RPM setpoint
     static constexpr float RPM_SCALE_FACTOR = 4000.0f;
+
+    // Scale factor for converting remote wheel rotation into autorotation setpoint
+    static constexpr float AUTOROTATE_SCALE_FACTOR = 90.0f;
 
 };  // class ChassisSubsystem
 

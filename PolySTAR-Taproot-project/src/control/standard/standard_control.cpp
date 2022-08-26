@@ -1,10 +1,19 @@
 #include "tap/control/command_mapper.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 #include "control/drivers/drivers.hpp"
+#include "control/safe_disconnect.hpp"
+
+// Chassis includes
 #include "subsystems/chassis/chassis_subsystem.hpp"
 #include "subsystems/chassis/chassis_drive_command.hpp"
+#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+
+// Turret includes
+#include "subsystems/turret/turret_subsystem.hpp"
+#include "subsystems/turret/turret_manual_aim_command.hpp"
 
 using src::DoNotUse_getDrivers;
+using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
 using tap::control::CommandMapper;
 
@@ -20,37 +29,48 @@ namespace control
 {
 /* define subsystems --------------------------------------------------------*/
 chassis::ChassisSubsystem theChassis(drivers());
+turret::TurretSubsystem theTurret(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
+chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
+
+// Safe disconnect function
+RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
     drivers->commandScheduler.registerSubsystem(&theChassis);
+    drivers->commandScheduler.registerSubsystem(&theTurret);
 }
 
 /* initialize subsystems ----------------------------------------------------*/
 void initializeSubsystems() {
     theChassis.initialize();
+    theTurret.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    theChassis.setDefaultCommand((&chassisDrive));
+    theChassis.setDefaultCommand(&chassisDrive);
+    theTurret.setDefaultCommand(&turretManualAim);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *) {}
+void startStandardCommands(src::Drivers *drivers) {
+    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+}
 
 /* register io mappings here ------------------------------------------------*/
-void registerStandardIoMappings(src::Drivers *) {
-    
+void registerStandardIoMappings(src::Drivers *) {   
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
 {
+    drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
     initializeSubsystems();
     registerStandardSubsystems(drivers);
     setDefaultStandardCommands(drivers);
