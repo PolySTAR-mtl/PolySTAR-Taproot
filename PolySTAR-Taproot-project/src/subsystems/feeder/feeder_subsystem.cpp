@@ -29,12 +29,7 @@ void FeederSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* 
         float pidValue = pid->getValue();
         motor->setDesiredOutput(pidValue);
     }
-    // DEBUG : Show RPM on UART6
-    if (drivers->uart.isWriteFinished(Uart::UartPort::Uart6)) {
-        char buffer[200];
-        int nBytes = sprintf (buffer, "Current RPM: %i \n", shaftRPM);
-        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
-    }
+
 }
 
 /*
