@@ -14,14 +14,11 @@ static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
  * Value is in encoder ticks, where 8192 is a full revolution
  * TODO : Make this use degrees or radians to be easier to read 
  */
-static constexpr int64_t YAW_RANGE = 1024; // +/- 45 degrees
-static constexpr int64_t PITCH_RANGE = 680; // +/- 15 degrees
+static constexpr int64_t YAW_RANGE = 1365;
+static constexpr int64_t PITCH_RANGE = 400;
 
 /**
  * Right joystick dead zone size. If the absolute value return by the stick is below
  * this value, it is considered zero.  
  */
 static constexpr float TURRET_DEAD_ZONE = 0.05;
-
-static constexpr float TURRET_PITCH_MULT = 20;
-static constexpr float TURRET_YAW_MULT = -20; // Negative to invert direction

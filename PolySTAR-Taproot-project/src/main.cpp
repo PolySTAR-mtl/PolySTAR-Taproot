@@ -56,6 +56,8 @@ static void initializeIo(src::Drivers *drivers);
 // called as frequently.
 static void updateIo(src::Drivers *drivers);
 
+using tap::communication::serial::Uart;
+
 int main()
 {
 #ifdef PLATFORM_HOSTED
@@ -110,6 +112,7 @@ static void initializeIo(src::Drivers *drivers)
     drivers->terminalSerial.initialize();
     drivers->schedulerTerminalHandler.init();
     drivers->djiMotorTerminalSerialHandler.init();
+    drivers->uart.init<Uart::UartPort::Uart6, 115200>();
 }
 
 static void updateIo(src::Drivers *drivers)
