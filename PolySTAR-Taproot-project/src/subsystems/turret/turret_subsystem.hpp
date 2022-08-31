@@ -31,7 +31,8 @@ public:
           yawPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
           pitchPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
           yawDesiredRpm(0),
-          pitchDesiredRpm(0)
+          pitchDesiredRpm(0),
+          is_neutral_calibrated(false)
     {
     }
 
@@ -52,8 +53,13 @@ public:
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
 
-    const int64_t &getYawNeutralPos() const { return yawNeutralPos; }
-    const int64_t &getPitchNeutralPos() const { return pitchNeutralPos; }
+    int64_t getYawNeutralPos() { return yawNeutralPos; }
+    int64_t getPitchNeutralPos() { return pitchNeutralPos; }
+
+    int64_t getYawUnwrapped() { return yawMotor.getEncoderUnwrapped(); }
+    int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
+    int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
+    int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
 private:
     ///< Hardware constants, not specific to any particular turret.
@@ -74,11 +80,15 @@ private:
     float pitchDesiredRpm;
 
     // TODO : Find a better way of determining neutral position
-    int64_t yawNeutralPos;
-    int64_t pitchNeutralPos;
+    int64_t yawNeutralPos = 4750;
+
+    int64_t pitchNeutralPos = 6170;
 
     // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
-    static constexpr float RPM_SCALE_FACTOR = 20.0f;
+    static constexpr float YAW_SCALE_FACTOR = 55.0f;
+    static constexpr float PITCH_SCALE_FACTOR = 40.0f;
+
+    bool is_neutral_calibrated;
 
 };  // class TurretSubsystem
 
