@@ -22,13 +22,12 @@ Otherwise, follow the guide appropriate for your operating system.
     of Debian or Fedora packages.
 - macOS: https://gitlab.com/aruw/controls/taproot/-/wikis/macOS-Setup
 - Windows: https://gitlab.com/aruw/controls/taproot/-/wikis/Windows-Setup
+  - ***Note: You do not need to change clang-format.exe anymore (gcc and g++ installation step)***
 
-Finally, install `pipenv` and set up the build tools:
+Finally, install `pipenv`:
 
 ```
 pip3 install pipenv
-cd PolySTAR-Taproot-project/
-pipenv install
 ```
 
 ### Getting started with this repo
@@ -48,10 +47,13 @@ run:
 git submodule update --init --recursive
 ```
 
-Now, `cd` into the project directory, activate the virtualenv, and run some builds:
+Now, `cd` into the project directory, setup and activate the virtualenv, and run some builds:
 
 ```
 cd PolySTAR-Taproot/PolySTAR-Taproot-project
+# Setup pipenv
+pipenv install
+# Activate environment
 pipenv shell
 # Build for hardware
 scons build
