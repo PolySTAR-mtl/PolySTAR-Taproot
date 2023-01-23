@@ -78,8 +78,8 @@ void setDefaultStandardCommands(src::Drivers *) {
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *drivers) {
-    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+void startStandardCommands(src::Drivers *) {
+    // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
 }
 
 /* register io mappings here ------------------------------------------------*/

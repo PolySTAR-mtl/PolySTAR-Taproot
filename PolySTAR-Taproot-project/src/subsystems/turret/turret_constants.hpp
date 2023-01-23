@@ -18,7 +18,7 @@ static constexpr int64_t YAW_RANGE = 1365;
 static constexpr int64_t PITCH_RANGE = 400;
 
 /**
- * Right joystick dead zone size. If the absolute value return by the stick is below
+ * Right joystick dead zone size. If the absolute value returned by the stick is below
  * this value, it is considered zero.  
  */
 static constexpr float TURRET_DEAD_ZONE = 0.05;

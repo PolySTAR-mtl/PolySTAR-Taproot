@@ -19,3 +19,9 @@ static constexpr float AUTOROTATE_PID_KI = 0.0f;
 static constexpr float AUTOROTATE_PID_KD = 0.0f;
 static constexpr float AUTOROTATE_PID_MAX_ERROR_SUM = 1.0f;
 static constexpr float AUTOROTATE_PID_MAX_OUTPUT = 5.0f;
+
+/**
+ * Left joystick dead zone size. If the absolute value return by the stick is below
+ * this value, it is considered zero.  
+ */
+static constexpr float CHASSIS_DEAD_ZONE = 0.05;
