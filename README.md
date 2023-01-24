@@ -91,7 +91,7 @@ terminal" below._
 
 ### Debugging with an ST-Link
 
-1. Open the folder `aruw-PolySTAR-Taproot-project` in VSCode. Hit the debug tab on the left side or type
+1. Open the folder `PolySTAR-Taproot-project` in VSCode. Hit the debug tab on the left side or type
    <kbd>Ctrl</kbd>+<kbd>shift</kbd>+<kbd>D</kbd>.
 2. Hit the green play arrow on the left top of the screen.
 3. See [this
