@@ -67,6 +67,8 @@ public:
 
     void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRpm);
 
+    bool sendCVUpdate();
+
     const tap::motor::DjiMotor &getFrontLeftMotor() const { return frontLeftMotor; }
     const tap::motor::DjiMotor &getFrontRightMotor() const { return frontRightMotor; }
     const tap::motor::DjiMotor &getBackLeftMotor() const { return backLeftMotor; }
@@ -104,12 +106,15 @@ private:
     ///< Any user rotation input is translated into desired autorotate velocity.
     float autoRotationDesiredVel;
 
-
     // Scale factor for converting joystick movement into RPM setpoint
     static constexpr float RPM_SCALE_FACTOR = 4000.0f;
 
     // Scale factor for converting remote wheel rotation into autorotation setpoint
     static constexpr float AUTOROTATE_SCALE_FACTOR = 90.0f;
+
+    // Variables for managing UART messages sent to CV
+    bool CVUpdateWaiting;
+    uint32_t prevCVUpdate;
 
 };  // class ChassisSubsystem
 
