@@ -34,8 +34,7 @@ void ChassisSubsystem::refresh() {
     // Attempt to send a UART message to Jetson if the delay has elapsed
     // or the previous send attempt failed
     if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMilliseconds() < CV_UPDATE_PERIOD ) {
-        CVUpdateWaiting = sendCVUpdate();
-        prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
+        CVUpdateWaiting = !sendCVUpdate(); // Set waiting flag to try again immediately if write is unsuccessful
     }
 }
 
