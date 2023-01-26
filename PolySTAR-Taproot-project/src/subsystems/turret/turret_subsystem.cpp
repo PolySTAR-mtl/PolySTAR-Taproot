@@ -20,8 +20,8 @@ void TurretSubsystem::initialize()
 }
 
 void TurretSubsystem::refresh() {
-    updateRpmPid(&yawPid, &yawMotor, yawDesiredRpm);
-    updateRpmPid(&pitchPid, &pitchMotor, pitchDesiredRpm);
+    updateRpmPid(&yawPid, &yawMotor, yawDesiredPos);
+    updateRpmPid(&pitchPid, &pitchMotor, pitchDesiredPos);
     
     // if (drivers->uart.isWriteFinished(Uart::UartPort::Uart6)) {
     //     char buffer[500];
@@ -32,35 +32,32 @@ void TurretSubsystem::refresh() {
     // }
 }
 
-void TurretSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM) {
-    pid->update(desiredRPM - motor->getShaftRPM());
+void TurretSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) {
+    pid->update(desiredPos - motor->getEncoderWrapped());
     motor->setDesiredOutput(pid->getValue());
 }
 
 /*
-    Give desired setpoints for turret movement.
+    Give position desired setpoints for turret movement.
 */
-void TurretSubsystem::setDesiredOutput(float yaw, float pitch) 
+void TurretSubsystem::setPosOutput(uint64_t yaw, uint64_t pitch) 
+{
+    yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, yawNeutralPos + YAW_RANGE, yawNeutralPos - YAW_RANGE);
+    pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, pitchNeutralPos + PITCH_RANGE, pitchNeutralPos - PITCH_RANGE);
+}
+
+/*
+    Give desired setpoints for turret movement based on the current position.
+*/
+    void TurretSubsystem::setVelOutput(float yawDelta, float pitchDelta) 
 {
     int64_t currentYaw = yawMotor.getEncoderWrapped();
     int64_t currentPitch = pitchMotor.getEncoderWrapped();
 
-    if ((yaw > 0 && currentYaw > yawNeutralPos + YAW_RANGE) || 
-        (yaw < 0 && currentYaw < yawNeutralPos - YAW_RANGE)) 
-    {
-        yawDesiredRpm = 0;
-    } else {
-        yawDesiredRpm = yaw*YAW_SCALE_FACTOR;
-    }
+    yawDesiredPos = currentYaw + yawDelta * YAW_SCALE_FACTOR;
+    pitchDesiredPos = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
-    if ((pitch > 0 && currentPitch > pitchNeutralPos + PITCH_RANGE) || 
-        (pitch < 0 && currentPitch < pitchNeutralPos - PITCH_RANGE)) 
-    {
-        pitchDesiredRpm = 0;
-    } else {
-        pitchDesiredRpm = pitch*PITCH_SCALE_FACTOR;
-    }
-
+    setPosOutput(yawDesiredPos, pitchDesiredPos);
 }
 
 }  // namespace turret

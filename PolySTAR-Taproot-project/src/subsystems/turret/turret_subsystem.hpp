@@ -30,8 +30,8 @@ public:
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
           yawPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
           pitchPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
-          yawDesiredRpm(0),
-          pitchDesiredRpm(0),
+          yawDesiredPos(0),
+          pitchDesiredPos(0),
           is_neutral_calibrated(false)
     {
     }
@@ -46,9 +46,10 @@ public:
 
     void refresh() override;
 
-    void setDesiredOutput(float yaw, float pitch);
+    void setPosOutput(uint64_t yaw, uint64_t pitch);
+    void setVelOutput(float yawDelta, float pitchDelta);
 
-    void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM);
+    void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
 
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
@@ -75,16 +76,16 @@ private:
     modm::Pid<float> yawPid;
     modm::Pid<float> pitchPid;
 
-    ///< Any user input is translated into desired RPM for each motor.
-    float yawDesiredRpm;
-    float pitchDesiredRpm;
+    ///< Any user input is translated into desired position for each motor.
+    float yawDesiredPos;
+    float pitchDesiredPos;
 
     // TODO : Find a better way of determining neutral position
     int64_t yawNeutralPos = 4750;
 
     int64_t pitchNeutralPos = 6170;
 
-    // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
+    // Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
     static constexpr float YAW_SCALE_FACTOR = 55.0f;
     static constexpr float PITCH_SCALE_FACTOR = 40.0f;
 
