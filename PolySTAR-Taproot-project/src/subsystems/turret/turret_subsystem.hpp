@@ -32,7 +32,8 @@ public:
           pitchPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
           yawDesiredRpm(0),
           pitchDesiredRpm(0),
-          is_neutral_calibrated(false)
+          CVUpdateWaiting(true),
+          prevCVUpdate(0)
     {
     }
 
@@ -61,6 +62,8 @@ public:
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
+    bool sendCVUpdate();
+
 private:
     ///< Hardware constants, not specific to any particular turret.
     static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
@@ -88,7 +91,9 @@ private:
     static constexpr float YAW_SCALE_FACTOR = 55.0f;
     static constexpr float PITCH_SCALE_FACTOR = 40.0f;
 
-    bool is_neutral_calibrated;
+    // Variables for managing UART messages sent to CV
+    bool CVUpdateWaiting;
+    uint32_t prevCVUpdate;
 
 };  // class TurretSubsystem
 

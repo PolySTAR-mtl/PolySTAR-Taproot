@@ -31,4 +31,4 @@ static constexpr float CHASSIS_DEAD_ZONE = 0.05;
  * Time is in microseconds.
  */
 
-static constexpr uint32_t CV_UPDATE_PERIOD = 10000;
+static constexpr uint32_t CHASSIS_CV_UPDATE_PERIOD = 10000;

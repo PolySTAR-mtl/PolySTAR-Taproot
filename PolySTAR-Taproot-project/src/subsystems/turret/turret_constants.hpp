@@ -22,3 +22,10 @@ static constexpr int64_t PITCH_RANGE = 400;
  * this value, it is considered zero.  
  */
 static constexpr float TURRET_DEAD_ZONE = 0.05;
+
+ /**
+ * Interval for sending messages over UART to the Computer Vision computer
+ * Time is in microseconds.
+ */
+
+static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10000;

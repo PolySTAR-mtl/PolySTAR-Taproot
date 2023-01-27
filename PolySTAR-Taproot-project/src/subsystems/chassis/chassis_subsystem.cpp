@@ -7,7 +7,6 @@
 #include "communication/cv_protocol.hpp"
 
 using namespace tap;
-using tap::communication::serial::Uart;
 
 namespace control
 {
@@ -36,7 +35,7 @@ void ChassisSubsystem::refresh() {
 
     // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
     // or the previous send attempt failed
-    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() < CV_UPDATE_PERIOD ) {
+    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() < CHASSIS_CV_UPDATE_PERIOD ) {
         CVUpdateWaiting = !sendCVUpdate(); // Set waiting flag to try again immediately if write is unsuccessful
     }
 }
@@ -99,7 +98,7 @@ bool ChassisSubsystem::sendCVUpdate() {
     const int M_TO_MM = 1000;
     const float DEG_TO_MILIRAD = 17.453293;
 
-    src::communication::cv::PositionMessage positionMessage;
+    src::communication::cv::Tx::PositionMessage positionMessage;
     positionMessage.Ax = static_cast<int16_t>(Ax*M_TO_MM);
     positionMessage.Ay = static_cast<int16_t>(Ay*M_TO_MM);
     positionMessage.Az = static_cast<int16_t>(Az*M_TO_MM);
@@ -112,7 +111,12 @@ bool ChassisSubsystem::sendCVUpdate() {
     positionMessage.backRightEncoder = backRightEncoder;
     positionMessage.dt = static_cast<uint16_t>(timeSinceLastUpdate);
 
-    return src::communication::cv::sendCVMessage(positionMessage, drivers);
+    if (src::communication::cv::Tx::sendCVMessage(positionMessage, drivers)) {
+        prevCVUpdate = currentTime;
+        return true;
+    }
+
+    return false;
 }
 
 }  // namespace chassis
