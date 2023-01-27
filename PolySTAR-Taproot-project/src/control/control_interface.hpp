@@ -3,6 +3,9 @@
 
 #include "tap/algorithms/linear_interpolation_predictor.hpp"
 #include "tap/util_macros.hpp"
+#include <string>
+#include <map>
+
 
 namespace tap
 {
@@ -38,6 +41,12 @@ public:
      * between -660 and 660. Positive is turning right (clockwise viewed from the top).
      */
     mockable float getChassisRInput();
+
+    /**
+     * Returns the value used for chassis keyboard input,
+     * map of key name to whether it is pressed.
+     */
+    mockable std::map<std::string, bool> getChassisKeyboardInput();
 
     /**
      * Returns the value used for turret movement forward and backward,

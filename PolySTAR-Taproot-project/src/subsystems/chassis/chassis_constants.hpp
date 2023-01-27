@@ -19,3 +19,15 @@ static constexpr float AUTOROTATE_PID_KI = 0.0f;
 static constexpr float AUTOROTATE_PID_KD = 0.0f;
 static constexpr float AUTOROTATE_PID_MAX_ERROR_SUM = 1.0f;
 static constexpr float AUTOROTATE_PID_MAX_OUTPUT = 5.0f;
+
+/**
+ * Chassis speed multiplier: The speed multiplier for the chassis. This is used to scale the speed
+ * of the chassis when using the keyboard.
+*/
+
+static constexpr float CHASSIS_DEFAULT_SPEED = 0.5f;
+static constexpr float CHASSIS_SHIFT_MULTIPLIER = 1.0f;
+static constexpr float CHASSIS_CTRL_MULTIPLIER = 0.25f;
+
+
+
