@@ -4,6 +4,7 @@
 #include "tap/communication/serial/ref_serial_data.hpp"
 
 using tap::communication::serial::RefSerialData;
+using tap::communication::serial::Uart;
 
 namespace src 
 {
@@ -78,11 +79,16 @@ namespace cv
         uint16_t backLeftEncoder;
         uint16_t backRightEncoder;
         uint16_t dt;
-    } TurretMessage;
+    } PositionMessage;
     #pragma pack(pop)
 
     bool sendCVMessage(PositionMessage message, tap::Drivers *drivers) {
-        drivers->uart.write(Uart::UartPort::Uart7,(uint8_t*)&message, message.dataLength + DATA_LEN_PREFIX);
+        if (drivers->uart.isWriteFinished(Uart::UartPort::Uart7)) {
+            drivers->uart.write(Uart::UartPort::Uart7,(uint8_t*)&message, message.dataLength + DATA_LEN_PREFIX);
+            return true;
+        }
+
+        return false;
     }
 }
 }
