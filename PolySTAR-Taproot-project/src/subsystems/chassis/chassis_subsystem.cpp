@@ -2,7 +2,9 @@
 
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
+#include "tap/architecture/endianness_wrappers.hpp"
 #include "control/drivers/drivers.hpp"
+#include "communication/cv_protocol.hpp"
 
 using namespace tap;
 using tap::communication::serial::Uart;
@@ -11,6 +13,7 @@ namespace control
 {
 namespace chassis
 {
+
 void ChassisSubsystem::initialize()
 {
     frontLeftMotor.initialize();
@@ -31,9 +34,9 @@ void ChassisSubsystem::refresh() {
     updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm);
     updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm);
 
-    // Attempt to send a UART message to Jetson if the delay has elapsed
+    // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
     // or the previous send attempt failed
-    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMilliseconds() < CV_UPDATE_PERIOD ) {
+    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() < CV_UPDATE_PERIOD ) {
         CVUpdateWaiting = !sendCVUpdate(); // Set waiting flag to try again immediately if write is unsuccessful
     }
 }
@@ -65,7 +68,7 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
 
 /*
     Attempts to send IMU and wheel encoder data to CV over UART.
-    Returns true if the message was sent sucessfully.
+    Returns true if the positionMessage was sent sucessfully.
 */
 bool ChassisSubsystem::sendCVUpdate() {
 
@@ -84,42 +87,32 @@ bool ChassisSubsystem::sendCVUpdate() {
     uint16_t backRightEncoder = backRightMotor.getEncoderWrapped();
 
     // Get time elapsed since last message. Store current time for calculation of next dt.
-    int32_t currentTime = tap::arch::clock::getTimeMilliseconds();
+    int32_t currentTime = tap::arch::clock::getTimeMicroseconds();
     int32_t timeSinceLastUpdate = prevCVUpdate - currentTime;
     
     // Convert IMU and encoder data to 2 byte data types for transmission
-    // TODO Remove magic numbers for conversion
     // Conversions need to occur to respect 2 byte limit for each value sent
-    // Accelerations : converted from float m/s2 to int16_t cm/s2 (full scale range is +/- 8g therefore +/- 7848 cm/s2)
-    // Gyro : converted from float deg/s to int16_t deg/10s (full scale range is +/- 2000 deg/s therefore +/- 20000 deg/10s)
+    // Accelerations : converted from m/s2 to int16_t mm/s2
+    // Gyro : converted from deg/s to int16_t milirad/s
     // Encoders : passed as is, with only information about current wheel position, not number of turns
-    // Time since last update : Cast to uint16_t 
-    int16_t imuData[8] = {(int16_t)(Ax*100), (int16_t)(Ay*100),(int16_t)(Az*100),
-                          (int16_t)(Gx*10), (int16_t)(Gy*10),(int16_t)(Gz*10)};
+    // Time since last update : Time in us cast to uint16_t
+    const int M_TO_MM = 1000;
+    const float DEG_TO_MILIRAD = 17.453293;
 
-    uint16_t encoderData[5] = {frontLeftEncoder, frontRightEncoder, backLeftEncoder, backRightEncoder,
-                               (uint16_t) timeSinceLastUpdate};
+    src::communication::cv::PositionMessage positionMessage;
+    positionMessage.Ax = static_cast<int16_t>(Ax*M_TO_MM);
+    positionMessage.Ay = static_cast<int16_t>(Ay*M_TO_MM);
+    positionMessage.Az = static_cast<int16_t>(Az*M_TO_MM);
+    positionMessage.Gx = static_cast<int16_t>(Gx*DEG_TO_MILIRAD);
+    positionMessage.Gy = static_cast<int16_t>(Gy*DEG_TO_MILIRAD);
+    positionMessage.Gz = static_cast<int16_t>(Gz*DEG_TO_MILIRAD);
+    positionMessage.frontLeftEncoder = frontLeftEncoder;
+    positionMessage.frontRightEncoder = frontRightEncoder;
+    positionMessage.backLeftEncoder = backLeftEncoder;
+    positionMessage.backRightEncoder = backRightEncoder;
+    positionMessage.dt = static_cast<uint16_t>(timeSinceLastUpdate);
 
-    // This feels really cursed, there's gotta be a better way to put together the message buffer
-    uint8_t buffer[23];
-    buffer[0] = 0x04;
-
-    for (int i = 0; i < 8; i++) {
-        uint8_t *writePointer = (uint8_t *) imuData;
-        buffer[i] = writePointer[i+1];
-    }
-
-    for (int i = 0; i < 5; i++) {
-        uint8_t *writePointer = (uint8_t *) encoderData;
-        buffer[i] = writePointer[i+1];
-    }
-
-    if (drivers->uart.write(Uart::UartPort::Uart7, buffer, 23)) {
-        prevCVUpdate = currentTime;
-        return true;
-    } else {
-        return false;
-    }
+    return src::communication::cv::sendCVMessage(positionMessage, drivers);
 }
 
 }  // namespace chassis

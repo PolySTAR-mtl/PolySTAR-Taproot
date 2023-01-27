@@ -28,7 +28,7 @@ static constexpr float CHASSIS_DEAD_ZONE = 0.05;
 
 /**
  * Interval for sending messages over UART to the Computer Vision computer
- * Time is in milliseconds.
+ * Time is in microseconds.
  */
 
-static constexpr uint32_t CV_UPDATE_PERIOD = 10;
+static constexpr uint32_t CV_UPDATE_PERIOD = 10000;
