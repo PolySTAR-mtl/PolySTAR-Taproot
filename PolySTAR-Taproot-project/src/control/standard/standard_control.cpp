@@ -12,6 +12,7 @@
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
+#include "subsystems/turret/turret_right_aim_command.hpp"
 #include "subsystems/turret/turret_debug_command.hpp"
 
 // Feeder includes
@@ -45,6 +46,7 @@ feeder::FeederSubsystem theFeeder(drivers());
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
+turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretDebugCommand turretDebug(&theTurret, drivers());
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
@@ -55,6 +57,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* define command mappings --------------------------------------------------*/
 HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping debugTurret(drivers(), {&turretDebug}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 
 /* register subsystems here -------------------------------------------------*/
