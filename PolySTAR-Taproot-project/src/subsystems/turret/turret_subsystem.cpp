@@ -20,8 +20,8 @@ void TurretSubsystem::initialize()
 }
 
 void TurretSubsystem::refresh() {
-    updateRpmPid(&yawPid, &yawMotor, yawDesiredPos);
-    updateRpmPid(&pitchPid, &pitchMotor, pitchDesiredPos);
+    updatePosPid(&yawPid, &yawMotor, yawDesiredPos);
+    updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos);
     
     // if (drivers->uart.isWriteFinished(Uart::UartPort::Uart6)) {
     //     char buffer[500];
@@ -32,7 +32,8 @@ void TurretSubsystem::refresh() {
     // }
 }
 
-void TurretSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) {
+void TurretSubsystem::updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) 
+{
     pid->update(desiredPos - motor->getEncoderWrapped());
     motor->setDesiredOutput(pid->getValue());
 }
@@ -54,10 +55,10 @@ void TurretSubsystem::setPosOutput(uint64_t yaw, uint64_t pitch)
     int64_t currentYaw = yawMotor.getEncoderWrapped();
     int64_t currentPitch = pitchMotor.getEncoderWrapped();
 
-    yawDesiredPos = currentYaw + yawDelta * YAW_SCALE_FACTOR;
-    pitchDesiredPos = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
+    int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
+    int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
-    setPosOutput(yawDesiredPos, pitchDesiredPos);
+    setPosOutput(newYaw, newPitch);
 }
 
 }  // namespace turret

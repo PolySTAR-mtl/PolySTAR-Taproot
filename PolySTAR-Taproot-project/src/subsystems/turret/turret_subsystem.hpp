@@ -49,7 +49,7 @@ public:
     void setPosOutput(uint64_t yaw, uint64_t pitch);
     void setVelOutput(float yawDelta, float pitchDelta);
 
-    void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
+    void updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
 
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
