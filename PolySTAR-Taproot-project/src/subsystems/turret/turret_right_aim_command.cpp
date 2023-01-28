@@ -36,7 +36,10 @@ void  TurretRightAimCommand::execute()
         turret->getPitchNeutralPos());
 }
 
-void  TurretRightAimCommand::end(bool) {}
+void  TurretRightAimCommand::end(bool) 
+{
+    turret->setPosOutput(turret->getYawNeutralPos(), turret->getPitchNeutralPos());
+}
 
 bool  TurretRightAimCommand::isFinished() const { return false; }
 }  // namespace turret
