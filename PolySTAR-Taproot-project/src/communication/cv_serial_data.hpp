@@ -104,16 +104,25 @@ public:
             SHOOT_MESSAGE = 0x12
         };
 
+        /*
+        * Turret pitch and yaw setpoints as received from CV
+        * Angles given in millirad in the local body frame (Origin is barrel straight ahead, parallel to ground)
+        */
         struct TurretData {
             int16_t pitchSetpoint;
             int16_t yawSetpoint;
-        } modm_packed;
+        };
 
+        /*
+        * Chassis movement setpoints as received from CV
+        * x, y in mm/s
+        * r in millirad/s
+        */
         struct MovementData {
             int16_t xSetpoint;
             int16_t ySetpoint;
             int16_t rSetpoint;
-        } modm_packed;
+        };
 
     };  // Class Rx
 }; // Class CVSerialData

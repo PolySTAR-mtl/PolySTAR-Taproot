@@ -39,6 +39,9 @@ void CVHandler::messageReceiveCallback(const ReceivedSerialMessage& completeMess
     }
 }
 
+/*
+* Decode turret setpoint data
+*/
 bool CVHandler::decodeToTurretData(const ReceivedSerialMessage& message)
 {
     if (message.header.dataLength != sizeof(Rx::TurretData))
@@ -50,6 +53,9 @@ bool CVHandler::decodeToTurretData(const ReceivedSerialMessage& message)
     return true;
 }
 
+/*
+* Decode chassis setpoint data
+*/
 bool CVHandler::decodeToMovementData(const ReceivedSerialMessage& message)
 {
     if (message.header.dataLength != sizeof(Rx::MovementData))
