@@ -114,6 +114,8 @@ public:
      */
     virtual void messageReceiveCallback(const ReceivedSerialMessage &completeMessage) = 0;
 
+    Uart::UartPort getUartPort() const { return port; } ;
+
 private:
     enum SerialRxState
     {
@@ -121,7 +123,7 @@ private:
         PROCESS_FRAME_HEADER,  /// A header is received and the frame header is being processed.
         PROCESS_FRAME_DATA     /// The data is being processed.
     };
-
+    
     /// The serial port you are connected to.
     Uart::UartPort port;
 

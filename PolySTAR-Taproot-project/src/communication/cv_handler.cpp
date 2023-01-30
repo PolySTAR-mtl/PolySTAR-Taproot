@@ -79,8 +79,10 @@ bool CVHandler::decodeToShootOrder()
 * Returns true if message was sent succesfully
 */
 bool CVHandler::sendCVMessage(CVSerialData::Tx::CVMessageHeader message) {
-    if (drivers->uart.isWriteFinished(Uart::UartPort::Uart7)) {
-        drivers->uart.write(Uart::UartPort::Uart7,(uint8_t*)&message, CVSerialData::Tx::DATA_LEN_PREFIX + message.dataLength);
+    // TODO waiting for the buffer to empty every time slows us down. It's likely the buffer is big enough that we won't have 
+    // to worry about overflowing it, but needs to be tested
+    if (drivers->uart.isWriteFinished(getUartPort())) {
+        drivers->uart.write(getUartPort(), reinterpret_cast<uint8_t*>(&message), CVSerialData::Tx::DATA_LEN_PREFIX + message.dataLength);
         return true;
     }
     return false;
