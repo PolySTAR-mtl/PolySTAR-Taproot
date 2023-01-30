@@ -3,7 +3,7 @@
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
 #include "control/drivers/drivers.hpp"
-#include "communication/cv_protocol.hpp"
+#include "communication/cv_handler.hpp"
 
 using namespace tap;
 using tap::communication::serial::Uart;
@@ -76,11 +76,11 @@ bool TurretSubsystem::sendCVUpdate() {
     // Convert from ticks to milirads
     const float DEG_TO_MILIRAD = 17.453293;
 
-    src::communication::cv::Tx::TurretMessage turretMessage;
+    src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage;
     turretMessage.yaw = static_cast<int16_t>(currentBodyYawDeg*DEG_TO_MILIRAD);
     turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg*DEG_TO_MILIRAD);
 
-    if (src::communication::cv::Tx::sendCVMessage(turretMessage, drivers)) {
+    if (drivers->cvHandler.sendCVMessage(turretMessage)) {
         prevCVUpdate = currentTime;
         return true;
     }

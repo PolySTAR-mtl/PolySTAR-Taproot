@@ -6,6 +6,7 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "turret_constants.hpp"
+#include "control/drivers/drivers.hpp"
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -24,7 +25,7 @@ public:
      * Constructs a new TurretSubsystem with default parameters specified in
      * the private section of this class.
      */
-    TurretSubsystem(tap::Drivers *drivers)
+    TurretSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, false, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
@@ -65,6 +66,8 @@ public:
     bool sendCVUpdate();
 
 private:
+    src::Drivers *drivers;
+
     ///< Hardware constants, not specific to any particular turret.
     static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
     static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;

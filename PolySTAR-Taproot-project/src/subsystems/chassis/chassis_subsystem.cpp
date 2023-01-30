@@ -2,9 +2,8 @@
 
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
-#include "tap/architecture/endianness_wrappers.hpp"
 #include "control/drivers/drivers.hpp"
-#include "communication/cv_protocol.hpp"
+#include "communication/cv_handler.hpp"
 
 using namespace tap;
 
@@ -98,7 +97,7 @@ bool ChassisSubsystem::sendCVUpdate() {
     const int M_TO_MM = 1000;
     const float DEG_TO_MILIRAD = 17.453293;
 
-    src::communication::cv::Tx::PositionMessage positionMessage;
+    src::communication::cv::CVSerialData::Tx::PositionMessage positionMessage;
     positionMessage.Ax = static_cast<int16_t>(Ax*M_TO_MM);
     positionMessage.Ay = static_cast<int16_t>(Ay*M_TO_MM);
     positionMessage.Az = static_cast<int16_t>(Az*M_TO_MM);
@@ -111,7 +110,7 @@ bool ChassisSubsystem::sendCVUpdate() {
     positionMessage.backRightEncoder = backRightEncoder;
     positionMessage.dt = static_cast<uint16_t>(timeSinceLastUpdate);
 
-    if (src::communication::cv::Tx::sendCVMessage(positionMessage, drivers)) {
+    if (drivers->cvHandler.sendCVMessage(positionMessage)) {
         prevCVUpdate = currentTime;
         return true;
     }

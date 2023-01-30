@@ -6,6 +6,7 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "chassis_constants.hpp"
+#include "control/drivers/drivers.hpp"
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -34,8 +35,9 @@ public:
      * Constructs a new ChassisSubsystem with default parameters specified in
      * the private section of this class.
      */
-    ChassisSubsystem(tap::Drivers *drivers)
+    ChassisSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
+          drivers(drivers),
           frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CAN_BUS_MOTORS, false, "front left motor"),
           frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CAN_BUS_MOTORS, true, "front right motor"),
           backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CAN_BUS_MOTORS, false, "back left motor"),
@@ -75,6 +77,8 @@ public:
     const tap::motor::DjiMotor &getBackRightMotor() const { return backRightMotor; }
 
 private:
+    src::Drivers *drivers;
+
     ///< Hardware constants, not specific to any particular chassis.
     static constexpr tap::motor::MotorId FRONT_LEFT_MOTOR_ID = tap::motor::MOTOR1;
     static constexpr tap::motor::MotorId FRONT_RIGHT_MOTOR_ID = tap::motor::MOTOR2;
