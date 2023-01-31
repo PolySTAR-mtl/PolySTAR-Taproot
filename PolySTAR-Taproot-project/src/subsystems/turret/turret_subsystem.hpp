@@ -48,6 +48,7 @@ public:
 
     void refresh() override;
 
+    void setPosOutputDegrees(float yaw, float pitch);
     void setDesiredOutput(float yaw, float pitch);
 
     void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM);

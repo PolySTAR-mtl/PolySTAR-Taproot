@@ -45,10 +45,17 @@ void ChassisSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor*
 }
 
 /*
-    Give desired setpoints for chassis movement. +x is forward, +y is right, +r is clockwise (turning right). Expressed in body frame.
+    Give desired setpoints for chassis movement. 
+    +x is forward, +y is right, +r is clockwise (turning right). 
+    Expressed in body frame.
 */
 void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
 {
+    
+    x = tap::algorithms::limitVal<float>(x,-1,1);
+    y = tap::algorithms::limitVal<float>(y,-1,1);
+    r = tap::algorithms::limitVal<float>(r,-1,1);
+    
     // x, y, and r contained between -1 and 1
     // Normalize movement vector
     float norm = sqrt(x*x+y*y);

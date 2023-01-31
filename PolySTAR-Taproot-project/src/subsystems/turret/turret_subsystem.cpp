@@ -35,6 +35,14 @@ void TurretSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* 
 /*
     Give desired setpoints for turret movement.
 */
+void TurretSubsystem::setPosOutputDegrees(float yaw, float pitch) 
+{
+    // TODO : Implement method
+}
+
+/*
+    Give desired setpoints for turret movement.
+*/
 void TurretSubsystem::setDesiredOutput(float yaw, float pitch) 
 {
     int64_t currentYaw = yawMotor.getEncoderWrapped();

@@ -32,3 +32,13 @@ static constexpr float CHASSIS_DEAD_ZONE = 0.05;
  */
 
 static constexpr uint32_t CHASSIS_CV_UPDATE_PERIOD = 10000;
+
+/**
+ * Conversion rates for CV velocities to chassis inputs.
+ * Vx and Vy : Convert from mm/s
+ * W : Convert from milirad/s
+ */
+// TODO : Test and properly calibrate these values.
+static constexpr float VX_TO_X = 0.5e-3; // 1m/s = 0.5 on chassis x
+static constexpr float VY_TO_Y = 0.5e-3; // 1m/s = 0.5 on chassis y
+static constexpr float W_TO_R = 0.07955; // 1rps = 0.5 on chassis r
