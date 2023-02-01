@@ -23,7 +23,9 @@ public:
      */
     FlywheelSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          flywheelMotor(drivers, FLYWHEEL_PWM_PIN, DEFAULT_FLYWHEEL_VEL, SNAIL_RAMP_RATE)
+          snailMotor(drivers, FLYWHEEL_PWM_PIN),
+          currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
+          firing(false)
     {
     }
 
@@ -41,16 +43,21 @@ public:
 
     void stopFiring();
 
-    void updateFireVel(float targetFireVelocity);
+    void setThrottle(float throttle);
 
-    const src::motor::SnailMotor &getFlywheelMotor() const { return flywheelMotor; }
+    float getCurrentThrottle() const;
+
+    const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
 
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
     static constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
 
-    // Servo interface used for the PWM to communicate to Snail ESC
-    src::motor::SnailMotor flywheelMotor;
+    src::motor::SnailMotor snailMotor;
+
+    float currentThrottle;
+
+    float firing;
 };  // class FlywheelSubsystem
 
 }  // namespace flywheel

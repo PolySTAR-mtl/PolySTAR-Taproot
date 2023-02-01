@@ -1,48 +1,49 @@
 #ifndef SNAIL_MOTOR_HPP_
 #define SNAIL_MOTOR_HPP_
 
-
-#include "tap/motor/servo.hpp"
+#include "tap/drivers.hpp"
+#include "tap/communication/gpio/pwm.hpp"
 
 namespace src
 {
-class Drivers;
 namespace motor
 {
 /**
  * This class wraps around the Servo class to provide utilities for controlling a Robomaster Snail motor.
  */
-class SnailMotor : tap::motor::Servo
+class SnailMotor
 {
 public:
     /**
      * Initializes the Snail PWM and associates the motor with some PWM pin.
+     * THIS WILL ONLY WORK IF PWM IS SET TO 500Hz OR LESS (see snail esc datasheet)
      *
      * @param[in] drivers Instance to the drivers class you would like to use.
-     * @param[in] pwmPin The pin to attach the Servo class with.
-     * @param[in] firingSpeed Firing speed between 0 and 1. No associated unit.
+     * @param[in] pwmPin The pin to attach the Snail Motor class with.
      */
     SnailMotor(
         tap::Drivers *drivers,
-        tap::gpio::Pwm::Pin pwmPin,
-        float firingSpeed,
-        float rampRate);
+        tap::gpio::Pwm::Pin pwmPin);
+
+    void init();
 
     /**
-     * Updates the `pwmOutputRamp` object and then sets the output PWM to the updated
-     * ramp value.
+     * Sets the throttle value sent to the Snail ESC.
+     * 0-1, where 0 is idle and 1 is full throttle
      */
-    void updateSendPwm();
-
-    void start();
-
-    void setTargetSpeed(float targetFiringSpeed);
-
-    void stop();
+    void setThrottle(float throttle);
 
 private:
-    // Target PWM duty cycle sent to the snail ESC.
-    float firingSpeed;
+    tap::Drivers *drivers;
+
+    /// The PWM pin that the servo is attached to.
+    tap::gpio::Pwm::Pin pwmPin;
+
+    // Duty cycle values for pulse widths
+    // Idle throttle 1ms -> 50% duty cycle at 500Hz
+    // Full throttle 2ms -> 100% duty cycle at 500Hz
+    const float THROTTLE_IDLE = 0.5;
+    const float THROTTLE_RANGE = 0.5;
 
 };  // class SnailMotor
 

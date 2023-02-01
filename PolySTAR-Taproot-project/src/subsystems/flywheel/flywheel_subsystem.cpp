@@ -13,23 +13,31 @@ namespace flywheel
 {
 void FlywheelSubsystem::initialize()
 {
-
+    snailMotor.init();
 }
 
 void FlywheelSubsystem::refresh() {
-    flywheelMotor.updateSendPwm();
+
 }
 
 void FlywheelSubsystem::startFiring() {
-    flywheelMotor.start();
+    snailMotor.setThrottle(currentThrottle);
 }
 
 void FlywheelSubsystem::stopFiring() {
-    flywheelMotor.stop();
+    snailMotor.setThrottle(0);
 }
 
-void FlywheelSubsystem::updateFireVel(float targetFireVelocity) {
-    flywheelMotor.setTargetSpeed(targetFireVelocity);
+void FlywheelSubsystem::setThrottle(float throttle) {
+    currentThrottle = throttle;
+
+    if (firing == false) return;
+
+    startFiring();
+}
+
+float FlywheelSubsystem::getCurrentThrottle() const {
+    return currentThrottle;
 }
 
 }  // namespace flywheel
