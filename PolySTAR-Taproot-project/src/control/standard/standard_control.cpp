@@ -1,5 +1,6 @@
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
+#include "tap/control/toggle_command_mapping.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 #include "control/drivers/drivers.hpp"
 #include "control/safe_disconnect.hpp"
@@ -7,6 +8,7 @@
 // Chassis includes
 #include "subsystems/chassis/chassis_subsystem.hpp"
 #include "subsystems/chassis/chassis_drive_command.hpp"
+#include "subsystems/chassis/chassis_keyboard_drive_command.hpp"
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 
 // Turret includes
@@ -24,7 +26,8 @@ using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
 using tap::control::CommandMapper;
 using tap::control::HoldCommandMapping;
-using tap::control::RemoteMapState;
+using tap::control::ToggleCommandMapping;
+using tap::control::RemoteMapState;;
 
 /*
  * NOTE: We are using the DoNotUse_getDrivers() function here
@@ -43,6 +46,7 @@ feeder::FeederSubsystem theFeeder(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
+chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretDebugCommand turretDebug(&theTurret, drivers());
@@ -56,6 +60,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 HoldCommandMapping debugTurret(drivers(), {&turretDebug}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -78,8 +83,8 @@ void setDefaultStandardCommands(src::Drivers *) {
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *drivers) {
-    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+void startStandardCommands(src::Drivers *) {
+    // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
 }
 
 /* register io mappings here ------------------------------------------------*/
@@ -87,6 +92,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
    drivers->commandMapper.addMap(&feedFeeder);
    drivers->commandMapper.addMap(&reverseFeeder);
    drivers->commandMapper.addMap(&debugTurret);
+   drivers->commandMapper.addMap(&toggleChassisDrive);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
