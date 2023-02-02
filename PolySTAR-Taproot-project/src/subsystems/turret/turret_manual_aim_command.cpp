@@ -29,7 +29,7 @@ void  TurretManualAimCommand::execute()
     float xInput = drivers->controlInterface.getTurretXInput();
     float yInput = drivers->controlInterface.getTurretYInput();
 
-    turret->setVelOutput(
+    turret->setRelativeOutput(
         fabs(xInput) >= TURRET_DEAD_ZONE ? -xInput : 0.0f, // Inverted Left-Right
         fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
 }

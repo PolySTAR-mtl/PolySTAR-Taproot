@@ -41,7 +41,7 @@ void TurretSubsystem::updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* 
 /*
     Give position desired setpoints for turret movement.
 */
-void TurretSubsystem::setPosOutput(uint64_t yaw, uint64_t pitch) 
+void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch) 
 {
     yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, yawNeutralPos + YAW_RANGE, yawNeutralPos - YAW_RANGE);
     pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, pitchNeutralPos + PITCH_RANGE, pitchNeutralPos - PITCH_RANGE);
@@ -50,7 +50,7 @@ void TurretSubsystem::setPosOutput(uint64_t yaw, uint64_t pitch)
 /*
     Give desired setpoints for turret movement based on the current position.
 */
-    void TurretSubsystem::setVelOutput(float yawDelta, float pitchDelta) 
+    void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta) 
 {
     int64_t currentYaw = yawMotor.getEncoderWrapped();
     int64_t currentPitch = pitchMotor.getEncoderWrapped();
@@ -58,7 +58,7 @@ void TurretSubsystem::setPosOutput(uint64_t yaw, uint64_t pitch)
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
-    setPosOutput(newYaw, newPitch);
+    setAbsoluteOutput(newYaw, newPitch);
 }
 
 }  // namespace turret

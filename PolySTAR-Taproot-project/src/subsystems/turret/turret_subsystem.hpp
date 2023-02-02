@@ -46,8 +46,8 @@ public:
 
     void refresh() override;
 
-    void setPosOutput(uint64_t yaw, uint64_t pitch);
-    void setVelOutput(float yawDelta, float pitchDelta);
+    void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
+    void setRelativeOutput(float yawDelta, float pitchDelta);
 
     void updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
 
