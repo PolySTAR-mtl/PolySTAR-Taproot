@@ -30,7 +30,7 @@ public:
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
           yawPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
           pitchPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
-          yawDesiredPos(0),
+          yawDesiredPos(4750),
           pitchDesiredPos(0),
           is_neutral_calibrated(false)
     {
@@ -86,10 +86,14 @@ private:
     int64_t pitchNeutralPos = 6170;
 
     // Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
-    static constexpr float YAW_SCALE_FACTOR = 55.0f;
+    static constexpr float YAW_SCALE_FACTOR = 275.0f;
     static constexpr float PITCH_SCALE_FACTOR = 40.0f;
 
     bool is_neutral_calibrated;
+
+    uint32_t prevTime;
+
+    const uint32_t DEBUG_MESSAGE_DELAY = 500; // In milliseconds
 
 };  // class TurretSubsystem
 

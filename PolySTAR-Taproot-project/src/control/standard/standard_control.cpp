@@ -92,7 +92,8 @@ void startStandardCommands(src::Drivers *) {
 void registerStandardIoMappings(src::Drivers *drivers) {  
    drivers->commandMapper.addMap(&feedFeeder);
    drivers->commandMapper.addMap(&reverseFeeder);
-//    drivers->commandMapper.addMap(&debugTurret);
+   drivers->commandMapper.addMap(&leftAimTurret);
+   drivers->commandMapper.addMap(&rightAimTurret);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)

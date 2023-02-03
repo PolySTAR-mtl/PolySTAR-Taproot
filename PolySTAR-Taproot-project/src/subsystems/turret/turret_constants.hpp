@@ -3,9 +3,9 @@
  * controller are listed below.
  */
 
-static constexpr float TURRET_PID_KP = 100.0f;
-static constexpr float TURRET_PID_KI = 0.2f;
-static constexpr float TURRET_PID_KD = 0.0f;
+static constexpr float TURRET_PID_KP = 10.0f;
+static constexpr float TURRET_PID_KI = 0.1f;
+static constexpr float TURRET_PID_KD = 320.0f;
 static constexpr float TURRET_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
 

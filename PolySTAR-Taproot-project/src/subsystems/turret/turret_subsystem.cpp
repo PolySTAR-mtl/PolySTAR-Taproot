@@ -21,15 +21,16 @@ void TurretSubsystem::initialize()
 
 void TurretSubsystem::refresh() {
     updatePosPid(&yawPid, &yawMotor, yawDesiredPos);
-    updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos);
+    // updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos);
     
-    // if (drivers->uart.isWriteFinished(Uart::UartPort::Uart6)) {
-    //     char buffer[500];
-    //     int nBytes = sprintf (buffer, "Unwrapped: Yaw: %i Pitch: %i \n  Wrapped: Yaw: %i Pitch: %i \n", 
-    //                                 (int) yawMotor.getEncoderUnwrapped(), (int) pitchMotor.getEncoderUnwrapped(), 
-    //                                 yawMotor.getEncoderWrapped(), pitchMotor.getEncoderWrapped());
-    //     drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
-    // }
+    if (tap::arch::clock::getTimeMilliseconds() - prevTime > DEBUG_MESSAGE_DELAY) {
+        prevTime = tap::arch::clock::getTimeMilliseconds();
+        char buffer[500];
+        int nBytes = sprintf (buffer, "Yaw: %i \tDesired Yaw: %i\n",
+                              (int)(yawMotor.getEncoderWrapped()-yawNeutralPos),
+                              (int)(yawDesiredPos - yawNeutralPos));
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    }
 }
 
 void TurretSubsystem::updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) 
