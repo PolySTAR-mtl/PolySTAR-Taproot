@@ -11,14 +11,19 @@ namespace control
 {
 namespace flywheel
 {
+
+FlywheelFireCommand::FlywheelFireCommand (FlywheelSubsystem *const flywheel, tap::Drivers *drivers): { 
+    this.flywheel = flywheel;
+}
+
 void FlywheelFireCommand::initialize()
 {
-    snailMotor.init();
+    flywheel.startFiring();
 }
 
 void FlywheelFireCommand::end(bool)
 {   
-    snailMotor.setThrottle(END_VALUE);
+    flywheel.stopFiring();
 }
 
 void FlywheelFireCommand::execute ()

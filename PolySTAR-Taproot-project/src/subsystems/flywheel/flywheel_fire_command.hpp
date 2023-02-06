@@ -12,20 +12,12 @@ namespace control
 {
 namespace flywheel
 {
-/**
- * A bare bones Subsystem for interacting with a flywheel.
- */
+
 class FlywheelFireCommand : public tap::control::Command
 {
 public:
 
-    /**
-     * Constructs a new FlywheelSubsystem with default parameters specified in
-     * the private section of this class.
-     */
-    FlywheelFireCommand(FlywheelSubsystem *const flywheel, tap::Drivers *drivers)
-    {
-    }
+    FlywheelFireCommand(FlywheelSubsystem *const flywheel, tap::Drivers *drivers) {}
 
     void initialize() override;
 
@@ -35,23 +27,16 @@ public:
 
     void execute() override;
 
-    bool isFinished() const { return false; } 
-
-    const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
+    bool isFinished() const { return false; }
 
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
-    static constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
+    FlywheelSubsystem flywheel;
 
-    src::motor::SnailMotor snailMotor;
-
-    float currentThrottle;
-
-    float firing;
-};  // class FlywheelSubsystem
+};  // class FlywheelFireCommand
 
 }  // namespace flywheel
 
 }  // namespace control
 
-#endif  // FLYWHEEL_SUBSYSTEM_HPP_
+#endif  // FLYWHEEL_SUBSYSTEM_COMMAND_HPP_
