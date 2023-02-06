@@ -22,17 +22,13 @@ public:
      * Constructs a new FlywheelSubsystem with default parameters specified in
      * the private section of this class.
      */
-    FlywheelFireCommand(tap::Drivers *drivers)
-        : tap::control::Command(),
-          snailMotor(drivers, FLYWHEEL_PWM_PIN),
-          currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
-          firing(false)
+    FlywheelFireCommand(FlywheelSubsystem *const flywheel, tap::Drivers *drivers)
     {
     }
 
     void initialize() override;
-    
-    void end() override;
+
+    void end(bool) override;
 
     const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
 
