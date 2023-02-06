@@ -1,5 +1,6 @@
-#ifndef FLYWHEEL_SUBSYSTEM_HPP_
-#define FLYWHEEL_SUBSYSTEM_HPP_
+#ifndef FLYWHEEL_SUBSYSTEM_COMMAND_HPP_
+#define FLYWHEEL_SUBSYSTEM_COMMAND_HPP_
+
 
 #include "tap/control/command.hpp"
 #include "snail_motor.hpp"
@@ -29,6 +30,12 @@ public:
     void initialize() override;
 
     void end(bool) override;
+
+    const char *getName () const { return "flywheel"; }
+
+    void execute() override;
+
+    bool isFinished() const { return false; } 
 
     const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
 

@@ -16,10 +16,12 @@ void FlywheelFireCommand::initialize()
     snailMotor.init();
 }
 
-void FlywheelFireCommand::end()
+void FlywheelFireCommand::end(bool)
 {   
     snailMotor.setThrottle(END_VALUE);
 }
+
+void FlywheelFireCommand::execute ()
 
 }  // namespace flywheel
 
