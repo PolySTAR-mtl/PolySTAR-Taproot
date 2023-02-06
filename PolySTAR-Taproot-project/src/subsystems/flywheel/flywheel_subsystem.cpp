@@ -25,7 +25,7 @@ void FlywheelSubsystem::startFiring() {
 }
 
 void FlywheelSubsystem::stopFiring() {
-    snailMotor.setThrottle(0);
+    snailMotor.setThrottle(END_VALUE);
 }
 
 void FlywheelSubsystem::setThrottle(float throttle) {

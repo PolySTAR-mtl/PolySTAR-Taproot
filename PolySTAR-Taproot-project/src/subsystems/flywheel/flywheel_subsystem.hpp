@@ -47,6 +47,8 @@ public:
 
     float getCurrentThrottle() const;
 
+    void flywheelCommandFire()
+
     const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
 
 private:
