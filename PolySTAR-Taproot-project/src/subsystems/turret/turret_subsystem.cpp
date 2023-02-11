@@ -2,6 +2,7 @@
 
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
+#include "tap/algorithms/smooth_pid.hpp"
 #include "control/drivers/drivers.hpp"
 
 using namespace tap;
@@ -23,20 +24,22 @@ void TurretSubsystem::refresh() {
     updatePosPid(&yawPid, &yawMotor, yawDesiredPos);
     // updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos);
     
-    if (tap::arch::clock::getTimeMilliseconds() - prevTime > DEBUG_MESSAGE_DELAY) {
-        prevTime = tap::arch::clock::getTimeMilliseconds();
+    if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > DEBUG_MESSAGE_DELAY) {
+        prevDebugTime = tap::arch::clock::getTimeMilliseconds();
         char buffer[500];
-        int nBytes = sprintf (buffer, "Yaw: %i \tDesired Yaw: %i\n",
+        int nBytes = sprintf (buffer, "Yaw: %i \nDesired Yaw: %i\n",
                               (int)(yawMotor.getEncoderWrapped()-yawNeutralPos),
                               (int)(yawDesiredPos - yawNeutralPos));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
     }
 }
 
-void TurretSubsystem::updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) 
+void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) 
 {
-    pid->update(desiredPos - motor->getEncoderWrapped());
-    motor->setDesiredOutput(pid->getValue());
+    // pid->runController(desiredPos - motor->getEncoderWrapped(), motor->degreesToEncoder<uint16_t>((float)motor->getShaftRPM() * 360/60), (tap::arch::clock::getTimeMilliseconds() - prevTime) * 0.001);
+    pid->runControllerDerivateError(desiredPos - motor->getEncoderWrapped(), (tap::arch::clock::getTimeMilliseconds() - prevTime));
+    motor->setDesiredOutput(pid->getOutput());
+    prevTime = tap::arch::clock::getTimeMilliseconds();
 }
 
 /*

@@ -2,6 +2,7 @@
 #define TURRET_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
+#include "tap/algorithms/smooth_pid.hpp"
 #include "modm/math/filter/pid.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
@@ -28,8 +29,8 @@ public:
         : tap::control::Subsystem(drivers),
           yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, false, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
-          yawPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
-          pitchPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
+          yawPid(yawPidConfig),
+          pitchPid(pitchPidConfig),
           yawDesiredPos(4750),
           pitchDesiredPos(0),
           is_neutral_calibrated(false)
@@ -49,7 +50,7 @@ public:
     void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
-    void updatePosPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
+    void updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
 
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
@@ -72,9 +73,13 @@ private:
     tap::motor::DjiMotor yawMotor;
     tap::motor::DjiMotor pitchMotor;
 
-    // PID controllers for position feedback from motors
-    modm::Pid<float> yawPid;
-    modm::Pid<float> pitchPid;
+    // Smooth PID configuration
+    tap::algorithms::SmoothPidConfig yawPidConfig = { TURRET_YAW_PID_KP, TURRET_YAW_PID_KI, TURRET_YAW_PID_KD, TURRET_YAW_PID_MAX_ERROR_SUM, TURRET_YAW_PID_MAX_OUTPUT, TURRET_YAW_TQ_DERIVATIVE_KALMAN, TURRET_YAW_TR_DERIVATIVE_KALMAN, TURRET_YAW_TQ_PROPORTIONAL_KALMAN, TURRET_YAW_TR_PROPORTIONAL_KALMAN };
+    tap::algorithms::SmoothPidConfig pitchPidConfig = { TURRET_PITCH_PID_KP, TURRET_PITCH_PID_KI, TURRET_PITCH_PID_KD, TURRET_PITCH_PID_MAX_ERROR_SUM, TURRET_PITCH_PID_MAX_OUTPUT, TURRET_PITCH_TQ_DERIVATIVE_KALMAN, TURRET_PITCH_TR_DERIVATIVE_KALMAN, TURRET_PITCH_TQ_PROPORTIONAL_KALMAN, TURRET_PITCH_TR_PROPORTIONAL_KALMAN };
+
+    // Smooth PID controllers for position feedback from motors
+    tap::algorithms::SmoothPid yawPid;
+    tap::algorithms::SmoothPid pitchPid;
 
     ///< Any user input is translated into desired position for each motor.
     float yawDesiredPos;
@@ -91,6 +96,7 @@ private:
 
     bool is_neutral_calibrated;
 
+    uint32_t prevDebugTime;
     uint32_t prevTime;
 
     const uint32_t DEBUG_MESSAGE_DELAY = 500; // In milliseconds

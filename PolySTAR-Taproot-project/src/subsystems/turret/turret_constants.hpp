@@ -3,11 +3,30 @@
  * controller are listed below.
  */
 
-static constexpr float TURRET_PID_KP = 10.0f;
-static constexpr float TURRET_PID_KI = 0.1f;
-static constexpr float TURRET_PID_KD = 320.0f;
-static constexpr float TURRET_PID_MAX_ERROR_SUM = 5000.0f;
-static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
+static constexpr float TURRET_YAW_PID_KP = 5.0f;
+static constexpr float TURRET_YAW_PID_KI = 0.00f;
+static constexpr float TURRET_YAW_PID_KD = 15.0f;
+static constexpr float TURRET_YAW_PID_MAX_ERROR_SUM = 5000.0f;
+static constexpr float TURRET_YAW_PID_MAX_OUTPUT = 16000.0f;
+static constexpr float TURRET_YAW_TQ_DERIVATIVE_KALMAN = 1.0f;
+static constexpr float TURRET_YAW_TR_DERIVATIVE_KALMAN = 0.5f;
+static constexpr float TURRET_YAW_TQ_PROPORTIONAL_KALMAN = 1.0f;
+static constexpr float TURRET_YAW_TR_PROPORTIONAL_KALMAN = 0.0f;
+
+static constexpr float TURRET_PITCH_PID_KP = 10.0f;
+static constexpr float TURRET_PITCH_PID_KI = 0.1f;
+static constexpr float TURRET_PITCH_PID_KD = 320.0f;
+static constexpr float TURRET_PITCH_PID_MAX_ERROR_SUM = 5000.0f;
+static constexpr float TURRET_PITCH_PID_MAX_OUTPUT = 16000.0f;
+static constexpr float TURRET_PITCH_TQ_DERIVATIVE_KALMAN = 1.0f;
+static constexpr float TURRET_PITCH_TR_DERIVATIVE_KALMAN = 0.0f;
+static constexpr float TURRET_PITCH_TQ_PROPORTIONAL_KALMAN = 1.0f;
+static constexpr float TURRET_PITCH_TR_PROPORTIONAL_KALMAN = 0.0f;
+
+
+
+
+
 
 /**
  * Range values for YAW and PITCH. Motors are limited to range [NeutralPos - Range, NeutralPos + Range]
