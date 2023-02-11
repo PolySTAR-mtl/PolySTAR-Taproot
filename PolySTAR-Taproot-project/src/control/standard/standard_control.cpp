@@ -1,5 +1,6 @@
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
+#include "tap/control/toggle_command_mapping.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 #include "control/drivers/drivers.hpp"
 #include "control/safe_disconnect.hpp"
@@ -13,6 +14,7 @@
 #include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
 #include "subsystems/turret/turret_debug_command.hpp"
+#include "subsystems/turret/turret_mouse_command.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/feeder_subsystem.hpp"
@@ -24,6 +26,7 @@ using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
 using tap::control::CommandMapper;
 using tap::control::HoldCommandMapping;
+using tap::control::ToggleCommandMapping;
 using tap::control::RemoteMapState;
 
 /*
@@ -46,6 +49,7 @@ chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretDebugCommand turretDebug(&theTurret, drivers());
+turret::TurretMouseCommand turretMouse(&theTurret, drivers());
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
 
@@ -56,6 +60,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 HoldCommandMapping debugTurret(drivers(), {&turretDebug}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+ToggleCommandMapping turretMouseToggle(drivers(), {&turretMouse}, RemoteMapState({Remote::Key::G}));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -84,9 +89,10 @@ void startStandardCommands(src::Drivers *) {
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {  
-   drivers->commandMapper.addMap(&feedFeeder);
-   drivers->commandMapper.addMap(&reverseFeeder);
-   drivers->commandMapper.addMap(&debugTurret);
+    drivers->commandMapper.addMap(&feedFeeder);
+    drivers->commandMapper.addMap(&reverseFeeder);
+    drivers->commandMapper.addMap(&debugTurret);
+    drivers->commandMapper.addMap(&turretMouseToggle);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
