@@ -22,3 +22,9 @@ static constexpr int64_t PITCH_RANGE = 400;
  * this value, it is considered zero.  
  */
 static constexpr float TURRET_DEAD_ZONE = 0.05;
+
+/**
+ * Turret mouse scale factor: The mouse scale factor for the turret. This is used to scale the
+ * mouse movement to the turret movement.
+ */
+static constexpr float TURRET_MOUSE_SCALE_FACTOR = 0.1f;

@@ -26,7 +26,7 @@ public:
      */
     TurretSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, false, "yaw motor"),
+          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, true, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
           yawPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
           pitchPid(TURRET_PID_KP,TURRET_PID_KI,TURRET_PID_KD,TURRET_PID_MAX_ERROR_SUM,TURRET_PID_MAX_OUTPUT),
@@ -47,6 +47,7 @@ public:
     void refresh() override;
 
     void setDesiredOutput(float yaw, float pitch);
+    void setRelativeOutput(float yawDelta, float pitchDelta);
 
     void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM);
 
