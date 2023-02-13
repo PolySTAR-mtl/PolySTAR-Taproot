@@ -34,8 +34,8 @@ void ChassisKeyboardDriveCommand::execute()
     if (keyboard_input["s"]) { x -= 1; }
     if (keyboard_input["d"]) { y += 1; }
     if (keyboard_input["a"]) { y -= 1; }
-    if (keyboard_input["e"]) { r += 1; }
-    if (keyboard_input["q"]) { r -= 1; }
+    if (keyboard_input["q"]) { r += 1; }
+    if (keyboard_input["e"]) { r -= 1; }
     if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
     if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
     if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
