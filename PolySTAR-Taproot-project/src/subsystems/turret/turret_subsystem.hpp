@@ -50,7 +50,7 @@ public:
     void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
-    void updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos);
+    void updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt);
 
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
@@ -97,7 +97,7 @@ private:
     bool is_neutral_calibrated;
 
     uint32_t prevDebugTime;
-    uint32_t prevTime;
+    uint32_t prevPidUpdate;
 
     const uint32_t DEBUG_MESSAGE_DELAY = 500; // In milliseconds
 

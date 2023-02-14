@@ -21,25 +21,36 @@ void TurretSubsystem::initialize()
 }
 
 void TurretSubsystem::refresh() {
-    updatePosPid(&yawPid, &yawMotor, yawDesiredPos);
+
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
+    updatePosPid(&yawPid, &yawMotor, yawDesiredPos, dt);
     // updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos);
+    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
     
     if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > DEBUG_MESSAGE_DELAY) {
         prevDebugTime = tap::arch::clock::getTimeMilliseconds();
         char buffer[500];
-        int nBytes = sprintf (buffer, "Yaw: %i \nDesired Yaw: %i\n",
+        int nBytes = sprintf (buffer, "Yaw: %i \tSetpoint: %i\n",
                               (int)(yawMotor.getEncoderWrapped()-yawNeutralPos),
                               (int)(yawDesiredPos - yawNeutralPos));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
     }
 }
 
-void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos) 
+void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt) 
 {
-    // pid->runController(desiredPos - motor->getEncoderWrapped(), motor->degreesToEncoder<uint16_t>((float)motor->getShaftRPM() * 360/60), (tap::arch::clock::getTimeMilliseconds() - prevTime) * 0.001);
-    pid->runControllerDerivateError(desiredPos - motor->getEncoderWrapped(), (tap::arch::clock::getTimeMilliseconds() - prevTime));
+    const int RPM_TO_DEGPERSECOND = 6;
+    int64_t error = desiredPos - motor->getEncoderWrapped();
+    int16_t de = 1000*motor->degreesToEncoder<int64_t>(RPM_TO_DEGPERSECOND*motor->getShaftRPM());
+    if (error == 0) {
+        de = abs(de);
+    } else if (error > 0) {
+        de = -de;
+    }
+    
+    // pid->runController(error, de, dt);
+    pid->runControllerDerivateError(error, dt);
     motor->setDesiredOutput(pid->getOutput());
-    prevTime = tap::arch::clock::getTimeMilliseconds();
 }
 
 /*
@@ -47,8 +58,8 @@ void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::
 */
 void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch) 
 {
-    yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, yawNeutralPos + YAW_RANGE, yawNeutralPos - YAW_RANGE);
-    pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, pitchNeutralPos + PITCH_RANGE, pitchNeutralPos - PITCH_RANGE);
+    yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, yawNeutralPos - YAW_RANGE, yawNeutralPos + YAW_RANGE);
+    pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, pitchNeutralPos - PITCH_RANGE, pitchNeutralPos + PITCH_RANGE);
 }
 
 /*
