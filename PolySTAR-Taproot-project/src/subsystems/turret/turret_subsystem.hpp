@@ -31,9 +31,8 @@ public:
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
           yawPid(yawPidConfig),
           pitchPid(pitchPidConfig),
-          yawDesiredPos(4750),
-          pitchDesiredPos(0),
-          is_neutral_calibrated(false)
+          yawDesiredPos(YAW_NEUTRAL_POS),
+          pitchDesiredPos(PITCH_NEUTRAL_POS)
     {
     }
 
@@ -55,13 +54,15 @@ public:
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
 
-    int64_t getYawNeutralPos() { return yawNeutralPos; }
-    int64_t getPitchNeutralPos() { return pitchNeutralPos; }
+    int64_t getYawNeutralPos() { return YAW_NEUTRAL_POS; }
+    int64_t getPitchNeutralPos() { return PITCH_NEUTRAL_POS; }
 
     int64_t getYawUnwrapped() { return yawMotor.getEncoderUnwrapped(); }
     int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
+
+    float approximateCos(float angle);
 
 private:
     ///< Hardware constants, not specific to any particular turret.
@@ -69,13 +70,22 @@ private:
     static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
     static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
+    ///< Unit conversion constant from RPM to deg/ms
+    static constexpr float RPM_TO_DEGPERMS = 0.006;
+
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor yawMotor;
     tap::motor::DjiMotor pitchMotor;
 
     // Smooth PID configuration
-    tap::algorithms::SmoothPidConfig yawPidConfig = { TURRET_YAW_PID_KP, TURRET_YAW_PID_KI, TURRET_YAW_PID_KD, TURRET_YAW_PID_MAX_ERROR_SUM, TURRET_YAW_PID_MAX_OUTPUT, TURRET_YAW_TQ_DERIVATIVE_KALMAN, TURRET_YAW_TR_DERIVATIVE_KALMAN, TURRET_YAW_TQ_PROPORTIONAL_KALMAN, TURRET_YAW_TR_PROPORTIONAL_KALMAN };
-    tap::algorithms::SmoothPidConfig pitchPidConfig = { TURRET_PITCH_PID_KP, TURRET_PITCH_PID_KI, TURRET_PITCH_PID_KD, TURRET_PITCH_PID_MAX_ERROR_SUM, TURRET_PITCH_PID_MAX_OUTPUT, TURRET_PITCH_TQ_DERIVATIVE_KALMAN, TURRET_PITCH_TR_DERIVATIVE_KALMAN, TURRET_PITCH_TQ_PROPORTIONAL_KALMAN, TURRET_PITCH_TR_PROPORTIONAL_KALMAN };
+    tap::algorithms::SmoothPidConfig yawPidConfig = { TURRET_YAW_PID_KP, TURRET_YAW_PID_KI, TURRET_YAW_PID_KD, 
+                                                      TURRET_YAW_PID_MAX_ERROR_SUM, TURRET_YAW_PID_MAX_OUTPUT, 
+                                                      TURRET_YAW_TQ_DERIVATIVE_KALMAN, TURRET_YAW_TR_DERIVATIVE_KALMAN, 
+                                                      TURRET_YAW_TQ_PROPORTIONAL_KALMAN, TURRET_YAW_TR_PROPORTIONAL_KALMAN };
+    tap::algorithms::SmoothPidConfig pitchPidConfig = { TURRET_PITCH_PID_KP, TURRET_PITCH_PID_KI, TURRET_PITCH_PID_KD, 
+                                                        TURRET_PITCH_PID_MAX_ERROR_SUM, TURRET_PITCH_PID_MAX_OUTPUT, 
+                                                        TURRET_PITCH_TQ_DERIVATIVE_KALMAN, TURRET_PITCH_TR_DERIVATIVE_KALMAN, 
+                                                        TURRET_PITCH_TQ_PROPORTIONAL_KALMAN, TURRET_PITCH_TR_PROPORTIONAL_KALMAN };
 
     // Smooth PID controllers for position feedback from motors
     tap::algorithms::SmoothPid yawPid;
@@ -85,21 +95,8 @@ private:
     float yawDesiredPos;
     float pitchDesiredPos;
 
-    // TODO : Find a better way of determining neutral position
-    int64_t yawNeutralPos = 4750;
-
-    int64_t pitchNeutralPos = 6170;
-
-    // Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
-    static constexpr float YAW_SCALE_FACTOR = 275.0f;
-    static constexpr float PITCH_SCALE_FACTOR = 40.0f;
-
-    bool is_neutral_calibrated;
-
     uint32_t prevDebugTime;
     uint32_t prevPidUpdate;
-
-    const uint32_t DEBUG_MESSAGE_DELAY = 500; // In milliseconds
 
 };  // class TurretSubsystem
 

@@ -33,7 +33,7 @@ void  TurretLeftAimCommand::execute()
     */
     turret->setAbsoluteOutput(
         turret->getYawNeutralPos() + 1023, // Inverted Left-Right
-        turret->getPitchNeutralPos());
+        turret->getPitchNeutralPos() + 300);
 }
 
 void  TurretLeftAimCommand::end(bool) 
