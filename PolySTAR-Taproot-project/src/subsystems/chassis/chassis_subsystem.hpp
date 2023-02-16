@@ -3,6 +3,7 @@
 
 #include "tap/control/subsystem.hpp"
 #include "modm/math/filter/pid.hpp"
+#include "tap/algorithms/ramp.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "chassis_constants.hpp"
@@ -66,6 +67,8 @@ public:
     void setDesiredOutput(float x, float y, float r);
 
     void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRpm);
+    void updateRpmSetpoints();
+    void setTargetOutput(float x, float y, float r);
 
     const tap::motor::DjiMotor &getFrontLeftMotor() const { return frontLeftMotor; }
     const tap::motor::DjiMotor &getFrontRightMotor() const { return frontRightMotor; }
@@ -104,6 +107,19 @@ private:
     ///< Any user rotation input is translated into desired autorotate velocity.
     float autoRotationDesiredVel;
 
+    // Ramp  for each input
+    tap::algorithms::Ramp xInputRamp;
+    tap::algorithms::Ramp yInputRamp;
+    tap::algorithms::Ramp rInputRamp;
+
+    // previous update time for ramp
+    float prevUpdate = 0.0f;
+
+    // Ramp time
+    static constexpr float RAMP_TIME_MS = 500.0f;
+
+    // Slope for ramp
+    static constexpr float RAMP_SLOPE = 1.0f / RAMP_TIME_MS;
 
     // Scale factor for converting joystick movement into RPM setpoint
     static constexpr float RPM_SCALE_FACTOR = 4000.0f;
