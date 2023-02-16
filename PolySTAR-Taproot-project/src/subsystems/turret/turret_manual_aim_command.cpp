@@ -22,19 +22,21 @@ TurretManualAimCommand::TurretManualAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretManualAimCommand::initialize() {}
+void  TurretManualAimCommand::initialize() {
+    turret->setRelativeOutput(0.0f,0.1f);
+}
 
 void  TurretManualAimCommand::execute()
 {
     float xInput = drivers->controlInterface.getTurretXInput();
     float yInput = drivers->controlInterface.getTurretYInput();
 
-    turret->setDesiredOutput(
+    turret->setRelativeOutput(
         fabs(xInput) >= TURRET_DEAD_ZONE ? -xInput : 0.0f, // Inverted Left-Right
         fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
 }
 
-void  TurretManualAimCommand::end(bool) { turret->setDesiredOutput(0,0); }
+void  TurretManualAimCommand::end(bool) {}
 
 bool  TurretManualAimCommand::isFinished() const { return false; }
 }  // namespace turret
