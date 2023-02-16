@@ -16,10 +16,11 @@ void ChassisSubsystem::initialize()
     frontRightMotor.initialize();
     backLeftMotor.initialize();
     backRightMotor.initialize();
-
+    prevUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
 void ChassisSubsystem::refresh() {
+    updateRpmSetpoints();
     updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm);
     updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm);
     updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm);
@@ -29,6 +30,24 @@ void ChassisSubsystem::refresh() {
 void ChassisSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRpm) {
     pid->update(desiredRpm - motor->getShaftRPM());
     motor->setDesiredOutput(pid->getValue());
+}
+
+void ChassisSubsystem::updateRpmSetpoints() {
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevUpdate;
+
+    if(xInputRamp.isTargetReached() == false) { xInputRamp.update(RAMP_SLOPE * dt); }
+    if(yInputRamp.isTargetReached() == false) { yInputRamp.update(RAMP_SLOPE * dt); }
+    if(rInputRamp.isTargetReached() == false) { rInputRamp.update(RAMP_SLOPE * dt); }
+    
+    setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
+    prevUpdate = tap::arch::clock::getTimeMilliseconds();
+
+}
+
+void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
+    xInputRamp.setTarget(x);
+    yInputRamp.setTarget(y);
+    rInputRamp.setTarget(r);
 }
 
 /*
@@ -50,6 +69,8 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
         x = x / norm;
         y = y / norm;
     }
+
+    y *= -1; // y is inverted
 
     frontLeftDesiredRpm = (x-y-r)*RPM_SCALE_FACTOR;
     frontRightDesiredRpm = (x+y+r)*RPM_SCALE_FACTOR;
