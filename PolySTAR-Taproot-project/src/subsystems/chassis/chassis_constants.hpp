@@ -30,4 +30,8 @@ static constexpr float CHASSIS_SHIFT_MULTIPLIER = 1.0f;
 static constexpr float CHASSIS_CTRL_MULTIPLIER = 0.25f;
 
 
-
+/**
+ * Left joystick dead zone size. If the absolute value return by the stick is below
+ * this value, it is considered zero.  
+ */
+static constexpr float CHASSIS_DEAD_ZONE = 0.05;

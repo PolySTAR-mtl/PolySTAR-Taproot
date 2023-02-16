@@ -38,7 +38,7 @@ public:
 
     /**
      * Returns the value used for chassis movement rotation,
-     * between -660 and 660. Positive is turning right (clockwise viewed from the top).
+     * between -1 and 1. Positive is turning right (clockwise viewed from the top).
      */
     mockable float getChassisRInput();
 
