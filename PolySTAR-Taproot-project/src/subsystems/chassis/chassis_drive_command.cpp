@@ -26,13 +26,13 @@ void  ChassisDriveCommand::initialize() {}
 
 void  ChassisDriveCommand::execute()
 {
-    chassis->setDesiredOutput(
+    chassis->setTargetOutput(
         drivers->controlInterface.getChassisXInput(),
         drivers->controlInterface.getChassisYInput(),
         drivers->controlInterface.getChassisRInput());
 }
 
-void  ChassisDriveCommand::end(bool) { chassis->setDesiredOutput(0, 0, 0); }
+void  ChassisDriveCommand::end(bool) { chassis->setTargetOutput(0, 0, 0); }
 
 bool  ChassisDriveCommand::isFinished() const { return false; }
 }  // namespace chassis

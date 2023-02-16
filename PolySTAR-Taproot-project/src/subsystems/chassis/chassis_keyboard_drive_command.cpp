@@ -40,11 +40,13 @@ void ChassisKeyboardDriveCommand::execute()
     if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
     if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
 
-    chassis->setDesiredOutput(x * multiplier, y * multiplier, r * multiplier);
+    // should call the setTargetOutput method in the chassis subsystem
+
+    chassis->setTargetOutput(x * multiplier, y * multiplier, r * multiplier);
     
 }
 
-void ChassisKeyboardDriveCommand::end(bool) { chassis->setDesiredOutput(0, 0, 0); }
+void ChassisKeyboardDriveCommand::end(bool) { chassis->setTargetOutput(0, 0, 0); }
 
 bool ChassisKeyboardDriveCommand::isFinished() const { return false; }
 }  // namespace chassis
