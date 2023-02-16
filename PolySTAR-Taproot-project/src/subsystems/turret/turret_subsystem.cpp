@@ -16,6 +16,7 @@ void TurretSubsystem::initialize()
 {
     yawMotor.initialize();
     pitchMotor.initialize();
+    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
 void TurretSubsystem::refresh() {
