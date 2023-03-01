@@ -73,7 +73,7 @@ public:
     *   Send message to CV over UART
     *   Return true if successful
     */
-    bool sendCVMessage(CVSerial::Tx::CVMessageHeader);
+    bool sendCVMessage(CVSerial::Tx::CVMessageHeader&);
 
 private:
     Rx::TurretData turretData;

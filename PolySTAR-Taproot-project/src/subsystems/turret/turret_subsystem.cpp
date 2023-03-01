@@ -22,7 +22,7 @@ void TurretSubsystem::refresh() {
     updateRpmPid(&yawPid, &yawMotor, yawDesiredRpm);
     updateRpmPid(&pitchPid, &pitchMotor, pitchDesiredRpm);
     
-    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() < TURRET_CV_UPDATE_PERIOD ) {
+    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() > TURRET_CV_UPDATE_PERIOD ) {
         CVUpdateWaiting = !sendCVUpdate(); // Set waiting flag to try again immediately if write is unsuccessful
     }
 }

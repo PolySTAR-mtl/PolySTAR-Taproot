@@ -21,9 +21,21 @@ void ChassisSubsystem::initialize()
 
     // Calibrate IMU on initialization
     drivers->mpu6500.requestCalibration();
-    // Wait for IMU to report calibrated state
-    while (drivers->mpu6500.getImuState() != tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState::IMU_CALIBRATED);
+    // Wait for IMU
+    uint32_t startTime = tap::arch::clock::getTimeMilliseconds();
+    // while(tap::arch::clock::getTimeMilliseconds() < startTime + 15000);
 
+
+    char buffer[50];
+    int nBytes;
+    if (drivers->mpu6500.getImuState() == tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState::IMU_CALIBRATED) {
+        nBytes = sprintf(buffer,"Calibration succeeded\n");
+    } else if (drivers->mpu6500.getImuState() == tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState::IMU_CALIBRATING){
+        nBytes = sprintf(buffer,"Calibrating\n");
+    }  else {
+        nBytes = sprintf(buffer,"Calibration failed\n");
+    }
+    drivers->uart.write(tap::communication::serial::Uart::Uart6,(uint8_t*)buffer,nBytes+1);
 }
 
 void ChassisSubsystem::refresh() {
@@ -34,7 +46,7 @@ void ChassisSubsystem::refresh() {
 
     // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
     // or the previous send attempt failed
-    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() < CHASSIS_CV_UPDATE_PERIOD ) {
+    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() > CHASSIS_CV_UPDATE_PERIOD ) {
         CVUpdateWaiting = !sendCVUpdate(); // Set waiting flag to try again immediately if write is unsuccessful
     }
 }
@@ -86,7 +98,7 @@ bool ChassisSubsystem::sendCVUpdate() {
 
     // Get time elapsed since last message. Store current time for calculation of next dt.
     int32_t currentTime = tap::arch::clock::getTimeMicroseconds();
-    int32_t timeSinceLastUpdate = prevCVUpdate - currentTime;
+    int32_t timeSinceLastUpdate = currentTime - prevCVUpdate;
     
     // Convert IMU and encoder data to 2 byte data types for transmission
     // Conversions need to occur to respect 2 byte limit for each value sent
