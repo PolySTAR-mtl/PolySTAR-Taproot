@@ -56,27 +56,18 @@ void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
 void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
 {
     // x, y, and r contained between -1 and 1
-    /*
-    autoRotationDesiredVel = r*AUTOROTATE_SCALE_FACTOR;
-
-    autoRotatePid.update(autoRotationDesiredVel - drivers->mpu6500.getGz());
-
-    r = autoRotatePid.getValue();
-    r = 0; 
-    */
     float norm = sqrt(x*x+y*y);
     if (norm > 1) {
         x = x / norm;
         y = y / norm;
     }
 
-    y *= -1; // y is inverted
+    y = IS_Y_INVERTED ? -y : y;
 
     frontLeftDesiredRpm = (x-y-r)*RPM_SCALE_FACTOR;
     frontRightDesiredRpm = (x+y+r)*RPM_SCALE_FACTOR;
     backLeftDesiredRpm = (x+y-r)*RPM_SCALE_FACTOR;
     backRightDesiredRpm = (x-y+r)*RPM_SCALE_FACTOR;
-
 }
 
 }  // namespace chassis

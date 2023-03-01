@@ -12,7 +12,7 @@ namespace tap
 class Drivers;
 }
 
-namespace control
+namespace src::control
 {
 /**
  * When you want to receive use interface inside of commands, we put

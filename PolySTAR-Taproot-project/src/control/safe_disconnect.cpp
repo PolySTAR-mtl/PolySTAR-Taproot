@@ -11,4 +11,4 @@ RemoteSafeDisconnectFunction::RemoteSafeDisconnectFunction(src::Drivers *drivers
     this->drivers = drivers;
 }
 bool RemoteSafeDisconnectFunction::operator()() { return !drivers->remote.isConnected(); }
-}  // namespace aruwsrc::control
+}  // namespace src::control

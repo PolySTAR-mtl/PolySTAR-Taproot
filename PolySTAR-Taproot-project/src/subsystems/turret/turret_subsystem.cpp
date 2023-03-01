@@ -52,6 +52,7 @@ void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::
     int16_t de = motor->degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*motor->getShaftRPM());
     
     // Correct the sign of de depending on the sign of the error
+    // TODO Validate this calculation of de with proper math
     if (error == 0) {
         de = abs(de);
     } 
@@ -91,16 +92,7 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
     if (pitchDelta < 0) pitchDelta *= 1.5;
 
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
-    int64_t newPitch;
-
-    // TODO : Fix the issue of asymmetrical inputs with further Pitch Controller Tuning
-    if (pitchDelta > 0) {
-        newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
-    } else {
-        newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR / 2;
-    }
-
-    if (newPitch == currentPitch) newPitch = pitchDesiredPos; 
+    int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
     setAbsoluteOutput(newYaw, newPitch);
 }

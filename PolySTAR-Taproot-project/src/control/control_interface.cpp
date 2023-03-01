@@ -4,7 +4,7 @@
 #include "tap/drivers.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 
-namespace control
+namespace src::control
 {
 float ControlInterface::getChassisRInput()
 {

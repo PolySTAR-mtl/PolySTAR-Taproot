@@ -16,7 +16,6 @@
 #include "subsystems/turret/turret_manual_aim_command.hpp"
 #include "subsystems/turret/turret_left_aim_command.hpp"
 #include "subsystems/turret/turret_right_aim_command.hpp"
-// #include "subsystems/turret/turret_debug_command.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/feeder_subsystem.hpp"
@@ -51,9 +50,8 @@ chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
-turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
-// turret::TurretDebugCommand turretDebug(&theTurret, drivers());
+// turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
+// turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
 
@@ -63,8 +61,8 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* define command mappings --------------------------------------------------*/
 HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 
 /* register subsystems here -------------------------------------------------*/
@@ -88,16 +86,16 @@ void setDefaultStandardCommands(src::Drivers *) {
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *) {
-    // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+void startStandardCommands(src::Drivers *drivers) {
+    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
 }
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {  
    drivers->commandMapper.addMap(&feedFeeder);
    drivers->commandMapper.addMap(&reverseFeeder);
-   drivers->commandMapper.addMap(&leftAimTurret);
-   drivers->commandMapper.addMap(&rightAimTurret);
+//    drivers->commandMapper.addMap(&leftAimTurret);
+//    drivers->commandMapper.addMap(&rightAimTurret);
    drivers->commandMapper.addMap(&toggleChassisDrive);
 }
 

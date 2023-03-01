@@ -35,3 +35,10 @@ static constexpr float CHASSIS_CTRL_MULTIPLIER = 0.25f;
  * this value, it is considered zero.  
  */
 static constexpr float CHASSIS_DEAD_ZONE = 0.05;
+
+
+/**
+ * Inverts Left-Right chassis inputs, in case mecanum wheels are put on backwards
+ * 
+ */
+static constexpr bool IS_Y_INVERTED = true;

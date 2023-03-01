@@ -22,9 +22,7 @@ TurretManualAimCommand::TurretManualAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretManualAimCommand::initialize() {
-    turret->setRelativeOutput(0.0f,0.1f);
-}
+void  TurretManualAimCommand::initialize() {}
 
 void  TurretManualAimCommand::execute()
 {
