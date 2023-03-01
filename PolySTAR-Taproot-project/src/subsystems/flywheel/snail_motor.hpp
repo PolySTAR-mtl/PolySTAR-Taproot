@@ -42,8 +42,10 @@ private:
     // Duty cycle values for pulse widths
     // Idle throttle 1ms -> 50% duty cycle at 500Hz
     // Full throttle 2ms -> 100% duty cycle at 500Hz
-    const float THROTTLE_IDLE = 0.5;
-    const float THROTTLE_RANGE = 0.5;
+    const float THROTTLE_IDLE = 0.16;
+    const float THROTTLE_MAX = 0.88;
+    const float THROTTLE_RANGE = THROTTLE_MAX - THROTTLE_IDLE;
+
 
 };  // class SnailMotor
 

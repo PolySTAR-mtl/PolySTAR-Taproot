@@ -19,6 +19,10 @@
 #include "subsystems/feeder/feeder_feed_command.hpp"
 #include "subsystems/feeder/feeder_reverse_command.hpp"
 
+//Flywheel includes
+#include "subsystems/flywheel/flywheel_subsystem.hpp"
+#include "subsystems/flywheel/flywheel_fire_command.hpp"
+
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
@@ -40,6 +44,7 @@ namespace control
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers());
 feeder::FeederSubsystem theFeeder(drivers());
+flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
@@ -48,6 +53,7 @@ turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretDebugCommand turretDebug(&theTurret, drivers());
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
+flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -55,13 +61,15 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* define command mappings --------------------------------------------------*/
 HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping debugTurret(drivers(), {&turretDebug}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping flywheelFire(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
     drivers->commandScheduler.registerSubsystem(&theChassis);
     drivers->commandScheduler.registerSubsystem(&theTurret);
     drivers->commandScheduler.registerSubsystem(&theFeeder);
+    drivers->commandScheduler.registerSubsystem(&theFlywheel);
 }
 
 /* initialize subsystems ----------------------------------------------------*/
@@ -69,6 +77,7 @@ void initializeSubsystems() {
     theChassis.initialize();
     theTurret.initialize();
     theFeeder.initialize();
+    theFlywheel.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
@@ -86,7 +95,7 @@ void startStandardCommands(src::Drivers *) {
 void registerStandardIoMappings(src::Drivers *drivers) {  
    drivers->commandMapper.addMap(&feedFeeder);
    drivers->commandMapper.addMap(&reverseFeeder);
-   drivers->commandMapper.addMap(&debugTurret);
+   drivers->commandMapper.addMap(&flywheelFire);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)

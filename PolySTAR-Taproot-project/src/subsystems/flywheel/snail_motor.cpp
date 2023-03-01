@@ -17,7 +17,8 @@ SnailMotor::SnailMotor(
 }
 
 void SnailMotor::init() {
-    drivers->pwm.setTimerFrequency(tap::gpio::Pwm::Timer::TIMER8, 500);
+    drivers->pwm.setTimerFrequency(tap::gpio::Pwm::Timer::TIMER8, 400);
+    drivers->pwm.write(THROTTLE_IDLE, pwmPin);
 }
 
 void SnailMotor::setThrottle(float throttle) {
