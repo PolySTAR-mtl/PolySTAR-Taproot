@@ -8,6 +8,11 @@ static constexpr float CHASSIS_PID_KI = 0.2f;
 static constexpr float CHASSIS_PID_KD = 0.0f;
 static constexpr float CHASSIS_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float CHASSIS_PID_MAX_OUTPUT = 16000.0f;
+static constexpr float CHASSIS_TQ_DERIVATIVE_KALMAN = 1.0f;
+static constexpr float CHASSIS_TR_DERIVATIVE_KALMAN = 0.0f;
+static constexpr float CHASSIS_TQ_PROPORTIONAL_KALMAN = 1.0f;
+static constexpr float CHASSIS_TR_PROPORTIONAL_KALMAN = 0.0f;
+
 
 /**
  * Chassis autorotation PID: A PD controller for chassis autorotation. The PID parameters for the
@@ -35,3 +40,9 @@ static constexpr float CHASSIS_CTRL_MULTIPLIER = 0.25f;
  * this value, it is considered zero.  
  */
 static constexpr float CHASSIS_DEAD_ZONE = 0.05;
+
+/*
+ *   Enable UART debug messages for chassis
+ */
+static constexpr bool CHASSIS_DEBUG_MESSAGE = false;
+static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 500;

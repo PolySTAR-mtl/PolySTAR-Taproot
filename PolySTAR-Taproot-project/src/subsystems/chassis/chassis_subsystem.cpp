@@ -5,6 +5,7 @@
 #include "control/drivers/drivers.hpp"
 
 using namespace tap;
+using tap::communication::serial::Uart;
 
 namespace control
 {
@@ -21,15 +22,43 @@ void ChassisSubsystem::initialize()
 
 void ChassisSubsystem::refresh() {
     updateRpmSetpoints();
-    updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm);
-    updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm);
-    updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm);
-    updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm);
+
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
+    updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
+    updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm, dt);
+    updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm, dt);
+    updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm, dt);
+    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+
+    if (CHASSIS_DEBUG_MESSAGE == false) return;
+
+    if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
+        prevDebugTime = tap::arch::clock::getTimeMilliseconds();
+        char buffer[500];
+        
+        // Front right debug message
+        int nBytes = sprintf (buffer, "FR RPM: %i",
+                              (int)(frontRightMotor.getShaftRPM()));
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        // Front left debug message
+        nBytes = sprintf (buffer, "FL RPM: %i",
+                              (int)(frontLeftMotor.getShaftRPM()));
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        // Back right debug message
+        nBytes = sprintf (buffer, "BR RPM: %i",
+                              (int)(backRightMotor.getShaftRPM()));
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        // Back left debug message
+        nBytes = sprintf (buffer, "BL RPM: %i",
+                              (int)(backLeftMotor.getShaftRPM()));
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    }
 }
 
-void ChassisSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRpm) {
-    pid->update(desiredRpm - motor->getShaftRPM());
-    motor->setDesiredOutput(pid->getValue());
+void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
+    int64_t error = desiredRpm - motor->getShaftRPM();
+    pid->runControllerDerivateError(error, dt);
+    motor->setDesiredOutput(pid->getOutput());
 }
 
 void ChassisSubsystem::updateRpmSetpoints() {
@@ -56,14 +85,6 @@ void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
 void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
 {
     // x, y, and r contained between -1 and 1
-    /*
-    autoRotationDesiredVel = r*AUTOROTATE_SCALE_FACTOR;
-
-    autoRotatePid.update(autoRotationDesiredVel - drivers->mpu6500.getGz());
-
-    r = autoRotatePid.getValue();
-    r = 0; 
-    */
     float norm = sqrt(x*x+y*y);
     if (norm > 1) {
         x = x / norm;

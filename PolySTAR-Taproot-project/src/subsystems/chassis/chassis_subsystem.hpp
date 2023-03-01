@@ -2,6 +2,7 @@
 #define CHASSIS_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
+#include "tap/algorithms/smooth_pid.hpp"
 #include "modm/math/filter/pid.hpp"
 #include "tap/algorithms/ramp.hpp"
 #include "tap/motor/dji_motor.hpp"
@@ -41,16 +42,14 @@ public:
           frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CAN_BUS_MOTORS, true, "front right motor"),
           backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CAN_BUS_MOTORS, false, "back left motor"),
           backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, CAN_BUS_MOTORS, true, "back right motor"),
-          frontLeftPid(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
-          frontRightPid(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
-          backLeftPid(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
-          backRightPid(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
-          autoRotatePid(AUTOROTATE_PID_KP,AUTOROTATE_PID_KI,AUTOROTATE_PID_KD,AUTOROTATE_PID_MAX_ERROR_SUM,AUTOROTATE_PID_MAX_OUTPUT),
+          frontLeftPid(pidConfig),
+          frontRightPid(pidConfig),
+          backLeftPid(pidConfig),
+          backRightPid(pidConfig),
           frontLeftDesiredRpm(0),
           frontRightDesiredRpm(0),
           backLeftDesiredRpm(0),
-          backRightDesiredRpm(0),
-          autoRotationDesiredVel(0)
+          backRightDesiredRpm(0)
     {
     }
 
@@ -66,7 +65,7 @@ public:
 
     void setDesiredOutput(float x, float y, float r);
 
-    void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRpm);
+    void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
     void updateRpmSetpoints();
     void setTargetOutput(float x, float y, float r);
 
@@ -89,23 +88,23 @@ private:
     tap::motor::DjiMotor backLeftMotor;
     tap::motor::DjiMotor backRightMotor;
 
-    // PID controllers for RPM feedback from wheels
-    modm::Pid<float> frontLeftPid;
-    modm::Pid<float> frontRightPid;
-    modm::Pid<float> backLeftPid;
-    modm::Pid<float> backRightPid;
-
-    // PID controller for autorotation
-    modm::Pid<float> autoRotatePid;
+    // Smooth PID configuration
+    tap::algorithms::SmoothPidConfig pidConfig = { CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD,
+                                                            CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT,
+                                                            CHASSIS_TQ_DERIVATIVE_KALMAN, CHASSIS_TR_DERIVATIVE_KALMAN,
+                                                            CHASSIS_TQ_PROPORTIONAL_KALMAN, CHASSIS_TR_PROPORTIONAL_KALMAN };
+    
+    // Smooth PID controllers for position feedback from motors
+    tap::algorithms::SmoothPid frontLeftPid;
+    tap::algorithms::SmoothPid frontRightPid;
+    tap::algorithms::SmoothPid backLeftPid;
+    tap::algorithms::SmoothPid backRightPid;
 
     ///< Any user input is translated into desired RPM for each motor.
     float frontLeftDesiredRpm;
     float frontRightDesiredRpm;
     float backLeftDesiredRpm;
     float backRightDesiredRpm;
-
-    ///< Any user rotation input is translated into desired autorotate velocity.
-    float autoRotationDesiredVel;
 
     // Ramp  for each input
     tap::algorithms::Ramp xInputRamp;
@@ -124,8 +123,8 @@ private:
     // Scale factor for converting joystick movement into RPM setpoint
     static constexpr float RPM_SCALE_FACTOR = 4000.0f;
 
-    // Scale factor for converting remote wheel rotation into autorotation setpoint
-    static constexpr float AUTOROTATE_SCALE_FACTOR = 90.0f;
+    uint32_t prevDebugTime;
+    uint32_t prevPidUpdate;
 
 };  // class ChassisSubsystem
 
