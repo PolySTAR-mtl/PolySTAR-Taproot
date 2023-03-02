@@ -4,7 +4,6 @@
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
 #include "subsystems/feeder/feeder_feed_command.hpp"
-
 namespace control
 {
 namespace flywheel
@@ -17,7 +16,6 @@ FireCommandGroup::FireCommandGroup(
     : tap::control::ComprisedCommand(drivers),
       fireCommand(flywheel, drivers),
       feedCommand(feeder, drivers),
-      switchTimer(1000),
       feederIsFeeding(false)
 {
     this->addSubsystemRequirement(flywheel);
@@ -27,19 +25,18 @@ FireCommandGroup::FireCommandGroup(
 }
 
 void FireCommandGroup::initialize() {
-    startTime = tap::arch::clock::getTimeMilliseconds();
     this->comprisedCommandScheduler.addCommand(&fireCommand);
+    switchTimer.restart(1000);
     feederIsFeeding = false;
 }
 
 void FireCommandGroup::execute()
 {
-    if ( feederIsFeeding == false && (tap::arch::clock::getTimeMilliseconds() - startTime > 1000))
-    {
-        comprisedCommandScheduler.addCommand(&feedCommand);
-        feederIsFeeding = true;
-    }
-
+    if ( feederIsFeeding == false && switchTimer.execute())
+        {
+            comprisedCommandScheduler.addCommand(&feedCommand);
+            feederIsFeeding = true;
+        }
     this->comprisedCommandScheduler.run();
 }
 

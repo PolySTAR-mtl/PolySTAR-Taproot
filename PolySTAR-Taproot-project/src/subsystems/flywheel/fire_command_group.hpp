@@ -41,7 +41,7 @@ public:
     const char *getName() const override { return "fire command group"; }
 
 private:
-    // Hardware constants, not specific to any particular flywheel subsystem.
+    // attributes needed to operate the group command 
     FlywheelFireCommand fireCommand;
 
     feeder::FeederFeedCommand feedCommand;
@@ -51,8 +51,6 @@ private:
     tap::arch::MilliTimeout switchTimer;
 
     bool feederIsFeeding;
-
-    uint32_t startTime;
 
 };  // class FireCommandGroup
 
