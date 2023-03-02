@@ -22,6 +22,7 @@
 //Flywheel includes
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
 #include "subsystems/flywheel/flywheel_fire_command.hpp"
+#include "subsystems/flywheel/fire_command_group.hpp"
 
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
@@ -54,15 +55,16 @@ turret::TurretDebugCommand turretDebug(&theTurret, drivers());
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
+flywheel::FireCommandGroup fireCommandGroupStart(&theFlywheel, &theFeeder, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
-HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping flywheelFire(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-
+// HoldCommandMapping flywheelFire(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping fireCommandGroup(drivers(), {&fireCommandGroupStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -93,9 +95,10 @@ void startStandardCommands(src::Drivers *) {
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {  
-   drivers->commandMapper.addMap(&feedFeeder);
+//    drivers->commandMapper.addMap(&feedFeeder);
    drivers->commandMapper.addMap(&reverseFeeder);
-   drivers->commandMapper.addMap(&flywheelFire);
+//    drivers->commandMapper.addMap(&flywheelFire);
+   drivers->commandMapper.addMap(&fireCommandGroup);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
