@@ -2,7 +2,6 @@
 
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
-#include "tap/algorithms/smooth_pid.hpp"
 #include "control/drivers/drivers.hpp"
 
 using namespace tap;
