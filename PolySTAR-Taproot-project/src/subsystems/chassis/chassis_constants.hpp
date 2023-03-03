@@ -33,6 +33,7 @@ static constexpr float CHASSIS_DEAD_ZONE = 0.05;
  * 
  */
 static constexpr bool IS_Y_INVERTED = true;
+
 /*
  *   Enable UART debug messages for chassis
  */

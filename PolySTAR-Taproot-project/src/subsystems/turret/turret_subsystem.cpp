@@ -33,12 +33,12 @@ void TurretSubsystem::refresh() {
         char buffer[500];
         
         // Yaw debug message
-        int nBytes = sprintf (buffer, "Yaw: %i \tSetpoint: %i\n",
+        int nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
                               (int)(yawMotor.getEncoderWrapped()-YAW_NEUTRAL_POS),
                               (int)(yawDesiredPos - YAW_NEUTRAL_POS));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
         // Pitch debug message
-        nBytes = sprintf (buffer, "Pitch: %i \tSetpoint: %i\n",
+        nBytes = sprintf (buffer, "Pitch: %i, Setpoint: %i\n",
                               (int)(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS),
                               (int)(pitchDesiredPos - PITCH_NEUTRAL_POS));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);

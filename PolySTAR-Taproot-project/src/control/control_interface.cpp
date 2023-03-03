@@ -36,8 +36,6 @@ std::map<std::string, bool> ControlInterface::getChassisKeyboardInput ()
     keyboard_input["shift"] = drivers->remote.keyPressed(tap::communication::serial::Remote::Key::SHIFT);
     keyboard_input["ctrl"] = drivers->remote.keyPressed(tap::communication::serial::Remote::Key::CTRL);
 
-    keyboard_input["G"] = drivers->remote.keyPressed(tap::communication::serial::Remote::Key::G);
-
     return keyboard_input;
 }
 
