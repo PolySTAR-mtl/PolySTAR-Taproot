@@ -37,20 +37,24 @@ void ChassisSubsystem::refresh() {
         char buffer[500];
         
         // Front right debug message
-        int nBytes = sprintf (buffer, "FR RPM: %i",
-                              (int)(frontRightMotor.getShaftRPM()));
+        int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
+                              frontRightMotor.getShaftRPM(),
+                              (int)frontRightDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
         // Front left debug message
-        nBytes = sprintf (buffer, "FL RPM: %i",
-                              (int)(frontLeftMotor.getShaftRPM()));
+        nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
+                              frontLeftMotor.getShaftRPM(),
+                              (int)frontLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
         // Back right debug message
-        nBytes = sprintf (buffer, "BR RPM: %i",
-                              (int)(backRightMotor.getShaftRPM()));
+        nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
+                              backRightMotor.getShaftRPM(),
+                              (int)backRightDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
         // Back left debug message
-        nBytes = sprintf (buffer, "BL RPM: %i",
-                              (int)(backLeftMotor.getShaftRPM()));
+        nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
+                              backLeftMotor.getShaftRPM(),
+                              (int)backLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
     }
 }
@@ -58,7 +62,11 @@ void ChassisSubsystem::refresh() {
 void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
     int64_t error = desiredRpm - motor->getShaftRPM();
     pid->runControllerDerivateError(error, dt);
-    motor->setDesiredOutput(pid->getOutput());
+    if (desiredRpm == 0) {
+        motor->setDesiredOutput(0);
+    } else {
+        motor->setDesiredOutput(pid->getOutput());
+    }
 }
 
 void ChassisSubsystem::updateRpmSetpoints() {

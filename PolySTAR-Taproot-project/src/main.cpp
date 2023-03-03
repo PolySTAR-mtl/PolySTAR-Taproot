@@ -112,7 +112,7 @@ static void initializeIo(src::Drivers *drivers)
     drivers->terminalSerial.initialize();
     drivers->schedulerTerminalHandler.init();
     drivers->djiMotorTerminalSerialHandler.init();
-    drivers->uart.init<Uart::UartPort::Uart6, 38400>();
+    drivers->uart.init<Uart::UartPort::Uart6, 115200>();
 }
 
 static void updateIo(src::Drivers *drivers)
