@@ -48,16 +48,7 @@ void TurretSubsystem::refresh() {
 void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt) 
 {
     int64_t error = desiredPos - motor->getEncoderWrapped();
-    int16_t de = motor->degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*motor->getShaftRPM());
-    
-    // Correct the sign of de depending on the sign of the error
-    // TODO Validate this calculation of de with proper math
-    if (error == 0) {
-        de = abs(de);
-    } 
-    else if (error < 0) {
-        de = -de;
-    }
+    int16_t de = -1 * motor->degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*motor->getShaftRPM());
     
     // Add a feed-forward term to the pitch controller, to compensate for the effect of gravity.
     // Uses trigonometry to adjust feedforward term based on CG position.
