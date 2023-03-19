@@ -66,7 +66,7 @@ HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Rem
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
-ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouse}, RemoteMapState({Remote::Key::G}));
+ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -99,7 +99,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&reverseFeeder);
 //     drivers->commandMapper.addMap(&leftAimTurret);
 //    drivers->commandMapper.addMap(&rightAimTurret);
-   drivers->commandMapper.addMap(&toggleChassisDrive);
+    drivers->commandMapper.addMap(&toggleChassisDrive);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
 }
 

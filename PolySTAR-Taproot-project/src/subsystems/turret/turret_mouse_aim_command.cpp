@@ -25,13 +25,13 @@ TurretMouseAimCommand::TurretMouseAimCommand(
 void  TurretMouseAimCommand::initialize() {}
 
 void  TurretMouseAimCommand::execute() {
-    float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_SCALE_FACTOR;
-    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_SCALE_FACTOR ;
+    float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
+    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR ;
 
     turret->setRelativeOutput(xMouseInput, yMouseInput);
 }
 
-void  TurretMouseAimCommand::end(bool) { turret->setDesiredOutput(0,0); }
+void  TurretMouseAimCommand::end(bool) { turret->setAbsoluteOutput(YAW_NEUTRAL_POS,PITCH_NEUTRAL_POS); }
 
 bool  TurretMouseAimCommand::isFinished() const { return false; }
 }  // namespace turret
