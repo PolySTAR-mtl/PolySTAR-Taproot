@@ -30,13 +30,13 @@ void  ChassisDriveCommand::execute()
     float yInput = drivers->controlInterface.getChassisYInput();
     float rInput = drivers->controlInterface.getChassisRInput();
 
-    chassis->setDesiredOutput(
+    chassis->setTargetOutput(
         fabs(xInput) >= CHASSIS_DEAD_ZONE ? xInput : 0.0f,
         fabs(yInput) >= CHASSIS_DEAD_ZONE ? yInput : 0.0f,
         fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f);
 }
 
-void  ChassisDriveCommand::end(bool) { chassis->setDesiredOutput(0, 0, 0); }
+void  ChassisDriveCommand::end(bool) { chassis->setTargetOutput(0, 0, 0); }
 
 bool  ChassisDriveCommand::isFinished() const { return false; }
 }  // namespace chassis
