@@ -48,7 +48,7 @@ private:
 
     src::Drivers *drivers;
 
-    tap::arch::MilliTimeout switchTimer;
+    tap::arch::MilliTimeout feederDelayTimer;
 
     bool feederIsFeeding;
 

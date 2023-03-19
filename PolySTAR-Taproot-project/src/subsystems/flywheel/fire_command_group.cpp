@@ -3,6 +3,7 @@
 #include "control/drivers/drivers.hpp"
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
+#include "flywheel_constants.hpp"
 #include "subsystems/feeder/feeder_feed_command.hpp"
 namespace control
 {
@@ -26,13 +27,13 @@ FireCommandGroup::FireCommandGroup(
 
 void FireCommandGroup::initialize() {
     this->comprisedCommandScheduler.addCommand(&fireCommand);
-    switchTimer.restart(1000);
+    feederDelayTimer.restart(FEEDER_DELAY_MS);
     feederIsFeeding = false;
 }
 
 void FireCommandGroup::execute()
 {
-    if ( feederIsFeeding == false && switchTimer.execute())
+    if ( feederIsFeeding == false && feederDelayTimer.execute())
         {
             comprisedCommandScheduler.addCommand(&feedCommand);
             feederIsFeeding = true;
