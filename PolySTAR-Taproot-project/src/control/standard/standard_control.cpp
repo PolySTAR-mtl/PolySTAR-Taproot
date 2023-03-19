@@ -14,7 +14,7 @@
 #include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
 #include "subsystems/turret/turret_debug_command.hpp"
-#include "subsystems/turret/turret_mouse_command.hpp"
+#include "subsystems/turret/turret_mouse_aim_command.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/feeder_subsystem.hpp"
@@ -49,7 +49,7 @@ chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretDebugCommand turretDebug(&theTurret, drivers());
-turret::TurretMouseCommand turretMouse(&theTurret, drivers());
+turret::TurretMouseAimCommand turretMouse(&theTurret, drivers());
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
 
