@@ -32,7 +32,7 @@ public:
             DATA_LEN_GAME = 14,
             DATA_LEN_EVENT = 2,
             DATA_LEN_TURRET = 4,
-            DATA_LEN_POSITION = 22,
+            DATA_LEN_POSITION = 42,
             DATA_LEN_PREFIX = 3
         };
 
@@ -85,11 +85,21 @@ public:
             int16_t Gx;
             int16_t Gy;
             int16_t Gz;
+            int16_t Rx;
+            int16_t Ry;
+            int16_t Rz;
             uint16_t frontLeftEncoder;
+            int16_t  frontLeftRevolutions;
             uint16_t frontRightEncoder;
+            int16_t  frontRightRevolutions;
             uint16_t backLeftEncoder;
+            int16_t  backLeftRevolutions;
             uint16_t backRightEncoder;
-            uint16_t dt;
+            int16_t  backRightRevolutions;
+            int16_t  frontLeftRPM;
+            int16_t  frontRightRPM;
+            int16_t  backLeftRPM;
+            int16_t  backRightRPM;
         } modm_packed;
 
     };  // Class Tx

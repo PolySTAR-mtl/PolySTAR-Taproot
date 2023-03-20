@@ -136,23 +136,34 @@ bool ChassisSubsystem::sendCVUpdate() {
     float Gx = drivers->mpu6500.getGx();
     float Gy = drivers->mpu6500.getGy();
     float Gz = drivers->mpu6500.getGz();
+    float Rx = drivers->mpu6500.getPitch();
+    float Ry = drivers->mpu6500.getRoll();
+    float Rz = drivers->mpu6500.getYaw();
 
     // Get motor encoder positions
+    // Revolutions is calculated because DJIMotor interface does not have the getter for this value
     uint16_t frontLeftEncoder = frontLeftMotor.getEncoderWrapped();
+    int16_t frontLeftRevolutions = (frontLeftMotor.getEncoderUnwrapped() - frontLeftEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
     uint16_t frontRightEncoder = frontRightMotor.getEncoderWrapped();
+    int16_t frontRightRevolutions = (frontRightMotor.getEncoderUnwrapped() - frontRightEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
     uint16_t backLeftEncoder = backLeftMotor.getEncoderWrapped();
+    int16_t backLeftRevolutions = (backLeftMotor.getEncoderUnwrapped() - backLeftEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
     uint16_t backRightEncoder = backRightMotor.getEncoderWrapped();
+    int16_t backRightRevolutions = (backRightMotor.getEncoderUnwrapped() - backRightEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
 
-    // Get time elapsed since last message. Store current time for calculation of next dt.
-    int32_t currentTime = tap::arch::clock::getTimeMicroseconds();
-    int32_t timeSinceLastUpdate = currentTime - prevCVUpdate;
+    // Get motor RPMs
+    int16_t frontLeftRPM = frontLeftMotor.getShaftRPM();
+    int16_t frontRightRPM = frontRightMotor.getShaftRPM();
+    int16_t backLeftRPM = backLeftMotor.getShaftRPM();
+    int16_t backRightRPM = backRightMotor.getShaftRPM();
     
     // Convert IMU and encoder data to 2 byte data types for transmission
     // Conversions need to occur to respect 2 byte limit for each value sent
     // Accelerations : converted from m/s2 to int16_t mm/s2
-    // Gyro : converted from deg/s to int16_t milirad/s
-    // Encoders : passed as is, with only information about current wheel position, not number of turns
-    // Time since last update : Time in us cast to uint16_t
+    // Gyro : converted from deg/s to int16_t millirad/s
+    // Attitude : converted from deg to int16_t millirad
+    // Encoder positions: passed as is
+    // Encoder revolutions: converted to int16_t
     const int M_TO_MM = 1000;
     const float DEG_TO_MILIRAD = 17.453293;
 
@@ -163,14 +174,24 @@ bool ChassisSubsystem::sendCVUpdate() {
     positionMessage.Gx = static_cast<int16_t>(Gx*DEG_TO_MILIRAD);
     positionMessage.Gy = static_cast<int16_t>(Gy*DEG_TO_MILIRAD);
     positionMessage.Gz = static_cast<int16_t>(Gz*DEG_TO_MILIRAD);
+    positionMessage.Rx = static_cast<int16_t>(Rx*DEG_TO_MILIRAD);
+    positionMessage.Ry = static_cast<int16_t>(Ry*DEG_TO_MILIRAD);
+    positionMessage.Rz = static_cast<int16_t>(Rz*DEG_TO_MILIRAD);
     positionMessage.frontLeftEncoder = frontLeftEncoder;
+    positionMessage.frontLeftRevolutions = frontLeftRevolutions;
     positionMessage.frontRightEncoder = frontRightEncoder;
+    positionMessage.frontRightRevolutions = frontRightRevolutions;
     positionMessage.backLeftEncoder = backLeftEncoder;
+    positionMessage.backLeftRevolutions = backLeftRevolutions;
     positionMessage.backRightEncoder = backRightEncoder;
-    positionMessage.dt = static_cast<uint16_t>(timeSinceLastUpdate);
+    positionMessage.backRightRevolutions = backRightRevolutions;
+    positionMessage.frontLeftRPM = frontLeftRPM;
+    positionMessage.frontRightRPM = frontRightRPM;
+    positionMessage.backLeftRPM = backLeftRPM;
+    positionMessage.backRightRPM = backRightRPM;
 
     if (drivers->cvHandler.sendCVMessage(positionMessage)) {
-        prevCVUpdate = currentTime;
+        prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
         return true;
     }
 
