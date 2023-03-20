@@ -122,59 +122,6 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
     backLeftDesiredRpm = (x+y-r)*RPM_SCALE_FACTOR;
     backRightDesiredRpm = (x-y+r)*RPM_SCALE_FACTOR;
 }
-/*
-    Attempts to send IMU and wheel encoder data to CV over UART.
-    Returns true if the positionMessage was sent sucessfully.
-*/
-bool ChassisSubsystem::sendCVUpdate() {
-
-    // Get IMU measurements
-    float Ax = drivers->mpu6500.getAx();
-    float Ay = drivers->mpu6500.getAy();
-    float Az = drivers->mpu6500.getAz();
-    float Gx = drivers->mpu6500.getGx();
-    float Gy = drivers->mpu6500.getGy();
-    float Gz = drivers->mpu6500.getGz();
-
-    // Get motor encoder positions
-    uint16_t frontLeftEncoder = frontLeftMotor.getEncoderWrapped();
-    uint16_t frontRightEncoder = frontRightMotor.getEncoderWrapped();
-    uint16_t backLeftEncoder = backLeftMotor.getEncoderWrapped();
-    uint16_t backRightEncoder = backRightMotor.getEncoderWrapped();
-
-    // Get time elapsed since last message. Store current time for calculation of next dt.
-    int32_t currentTime = tap::arch::clock::getTimeMicroseconds();
-    int32_t timeSinceLastUpdate = currentTime - prevCVUpdate;
-    
-    // Convert IMU and encoder data to 2 byte data types for transmission
-    // Conversions need to occur to respect 2 byte limit for each value sent
-    // Accelerations : converted from m/s2 to int16_t mm/s2
-    // Gyro : converted from deg/s to int16_t milirad/s
-    // Encoders : passed as is, with only information about current wheel position, not number of turns
-    // Time since last update : Time in us cast to uint16_t
-    const int M_TO_MM = 1000;
-    const float DEG_TO_MILIRAD = 17.453293;
-
-    src::communication::cv::CVSerialData::Tx::PositionMessage positionMessage;
-    positionMessage.Ax = static_cast<int16_t>(Ax*M_TO_MM);
-    positionMessage.Ay = static_cast<int16_t>(Ay*M_TO_MM);
-    positionMessage.Az = static_cast<int16_t>(Az*M_TO_MM);
-    positionMessage.Gx = static_cast<int16_t>(Gx*DEG_TO_MILIRAD);
-    positionMessage.Gy = static_cast<int16_t>(Gy*DEG_TO_MILIRAD);
-    positionMessage.Gz = static_cast<int16_t>(Gz*DEG_TO_MILIRAD);
-    positionMessage.frontLeftEncoder = frontLeftEncoder;
-    positionMessage.frontRightEncoder = frontRightEncoder;
-    positionMessage.backLeftEncoder = backLeftEncoder;
-    positionMessage.backRightEncoder = backRightEncoder;
-    positionMessage.dt = static_cast<uint16_t>(timeSinceLastUpdate);
-
-    if (drivers->cvHandler.sendCVMessage(positionMessage)) {
-        prevCVUpdate = currentTime;
-        return true;
-    }
-
-    return false;
-}
 
 /*
     Attempts to send IMU and wheel encoder data to CV over UART.

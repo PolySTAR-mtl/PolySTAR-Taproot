@@ -33,7 +33,7 @@ void  TurretAutoAimCommand::execute()
     float pitch = turretData.pitchSetpoint*MRAD_TO_DEGREES;
     float yaw = turretData.yawSetpoint*MRAD_TO_DEGREES;
 
-    turret->setPosOutputDegrees(yaw, pitch);
+    turret->setAbsoluteOutput(yaw, pitch);
 }
 
 void  TurretAutoAimCommand::end(bool) {

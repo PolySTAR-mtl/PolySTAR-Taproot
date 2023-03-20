@@ -109,8 +109,8 @@ bool TurretSubsystem::sendCVUpdate() {
 
     // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
     // We take the unwrapped encoder value since turrent range is limited to less than 1 rotation
-    float currentBodyYawDeg = yawMotor.encoderToDegrees(yawMotor.getEncoderUnwrapped()-yawNeutralPos);
-    float currentBodyPitchDeg = pitchMotor.encoderToDegrees(pitchMotor.getEncoderWrapped()-pitchNeutralPos);
+    float currentBodyYawDeg = yawMotor.encoderToDegrees(yawMotor.getEncoderUnwrapped()-YAW_NEUTRAL_POS);
+    float currentBodyPitchDeg = pitchMotor.encoderToDegrees(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
 
     // Get time elapsed since last message. Store current time for calculation of next dt.
     int32_t currentTime = tap::arch::clock::getTimeMicroseconds();

@@ -131,13 +131,8 @@ private:
     // Scale factor for converting joystick movement into RPM setpoint
     static constexpr float RPM_SCALE_FACTOR = 4000.0f;
 
-
     uint32_t prevDebugTime;
     uint32_t prevPidUpdate;
-
-    // Variables for managing UART messages sent to CV
-    bool CVUpdateWaiting;
-    uint32_t prevCVUpdate;
 
     // Variables for managing UART messages sent to CV
     bool CVUpdateWaiting;
