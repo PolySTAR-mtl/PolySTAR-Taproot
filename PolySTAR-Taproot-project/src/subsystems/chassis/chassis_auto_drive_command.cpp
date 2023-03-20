@@ -32,11 +32,11 @@ void  ChassisAutoDriveCommand::execute()
     float x = movementData.xSetpoint*VX_TO_X;
     float y = movementData.xSetpoint*VY_TO_Y;
     float r = movementData.xSetpoint*W_TO_R;
-    chassis->setDesiredOutput(x,y,r);
+    chassis->setTargetOutput(x,y,r);
 }
 
 void  ChassisAutoDriveCommand::end(bool) {
-    chassis->setDesiredOutput(0,0,0);
+    chassis->setTargetOutput(0,0,0);
 }
 
 bool  ChassisAutoDriveCommand::isFinished() const { return false; }

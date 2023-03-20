@@ -50,6 +50,7 @@ public:
     void refresh() override;
 
     void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
+    void setAbsoluteOutputDegrees(float yaw, float pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
     void updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt);

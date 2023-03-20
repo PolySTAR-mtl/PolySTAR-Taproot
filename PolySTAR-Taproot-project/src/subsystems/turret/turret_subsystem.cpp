@@ -68,12 +68,21 @@ void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::
 }
 
 /*
-    Give position desired position setpoints for turret movement.
+    Give position desired position setpoints for turret movement. Values are in encoder ticks.
 */
 void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch) 
 {
     yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
     pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
+}
+
+/*
+    Give position desired position setpoints for turret movement. Values are in degrees.
+*/
+void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch) 
+{
+    setAbsoluteOutput(YAW_NEUTRAL_POS + yawMotor.degreesToEncoder<int64_t>(yaw),
+                      PITCH_NEUTRAL_POS + pitchMotor.degreesToEncoder<int64_t>(pitch));
 }
 
 /*

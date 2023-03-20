@@ -40,6 +40,9 @@ private:
     TurretSubsystem *const turret;
 
     src::Drivers *drivers;
+
+    const float MRAD_TO_DEGREES = 0.0572958;
+
 };  // TurretAutoAimCommand
 
 }  // namespace turret

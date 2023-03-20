@@ -26,14 +26,12 @@ void  TurretAutoAimCommand::initialize() {}
 
 void  TurretAutoAimCommand::execute()
 {
-    const float MRAD_TO_DEGREES = 0.0572958;
-
     // Acquire setpoints received from CV over serial through CVHandler
     CVSerialData::Rx::TurretData turretData = drivers->cvHandler.getTurretData();
-    float pitch = turretData.pitchSetpoint*MRAD_TO_DEGREES;
-    float yaw = turretData.yawSetpoint*MRAD_TO_DEGREES;
+    float pitchSetpoint = turretData.pitchSetpoint*MRAD_TO_DEGREES;
+    float yawSetpoint = turretData.yawSetpoint*MRAD_TO_DEGREES;
 
-    turret->setAbsoluteOutput(yaw, pitch);
+    turret->setAbsoluteOutputDegrees(yawSetpoint, pitchSetpoint);
 }
 
 void  TurretAutoAimCommand::end(bool) {
