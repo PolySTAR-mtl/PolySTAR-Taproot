@@ -6,6 +6,7 @@
 #include "communication/cv_handler.hpp"
 
 using namespace tap;
+using tap::communication::serial::Uart;
 
 namespace control
 {
@@ -18,31 +19,68 @@ void ChassisSubsystem::initialize()
     frontRightMotor.initialize();
     backLeftMotor.initialize();
     backRightMotor.initialize();
-
-    // Calibrate IMU on initialization
-    drivers->mpu6500.requestCalibration();
-    // Wait for IMU
-    uint32_t startTime = tap::arch::clock::getTimeMilliseconds();
-    // while(tap::arch::clock::getTimeMilliseconds() < startTime + 15000);
-
-
-    char buffer[50];
-    int nBytes;
-    if (drivers->mpu6500.getImuState() == tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState::IMU_CALIBRATED) {
-        nBytes = sprintf(buffer,"Calibration succeeded\n");
-    } else if (drivers->mpu6500.getImuState() == tap::communication::sensors::imu::mpu6500::Mpu6500::ImuState::IMU_CALIBRATING){
-        nBytes = sprintf(buffer,"Calibrating\n");
-    }  else {
-        nBytes = sprintf(buffer,"Calibration failed\n");
-    }
-    drivers->uart.write(tap::communication::serial::Uart::Uart6,(uint8_t*)buffer,nBytes+1);
+    prevUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
 void ChassisSubsystem::refresh() {
-    updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm);
-    updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm);
-    updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm);
-    updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm);
+    updateRpmSetpoints();
+
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
+    updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
+    updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm, dt);
+    updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm, dt);
+    updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm, dt);
+    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+
+    if (CHASSIS_DEBUG_MESSAGE == false) return;
+
+    if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
+        prevDebugTime = tap::arch::clock::getTimeMilliseconds();
+        char buffer[500];
+        
+        // Front right debug message
+        int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
+                              frontRightMotor.getShaftRPM(),
+                              (int)frontRightDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        // Front left debug message
+        nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
+                              frontLeftMotor.getShaftRPM(),
+                              (int)frontLeftDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        // Back right debug message
+        nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
+                              backRightMotor.getShaftRPM(),
+                              (int)backRightDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        // Back left debug message
+        nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
+                              backLeftMotor.getShaftRPM(),
+                              (int)backLeftDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    }
+}
+
+void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
+    int64_t error = desiredRpm - motor->getShaftRPM();
+    pid->runControllerDerivateError(error, dt);
+    if (desiredRpm == 0) {
+        motor->setDesiredOutput(0);
+    } else {
+        motor->setDesiredOutput(pid->getOutput());
+    }
+}
+
+void ChassisSubsystem::updateRpmSetpoints() {
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevUpdate;
+
+    if(xInputRamp.isTargetReached() == false) { xInputRamp.update(RAMP_SLOPE * dt); }
+    if(yInputRamp.isTargetReached() == false) { yInputRamp.update(RAMP_SLOPE * dt); }
+    if(rInputRamp.isTargetReached() == false) { rInputRamp.update(RAMP_SLOPE * dt); }
+    
+    setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
+    prevUpdate = tap::arch::clock::getTimeMilliseconds();
+
 
     // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
     // or the previous send attempt failed
@@ -51,9 +89,10 @@ void ChassisSubsystem::refresh() {
     }
 }
 
-void ChassisSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRpm) {
-    pid->update(desiredRpm - motor->getShaftRPM());
-    motor->setDesiredOutput(pid->getValue());
+void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
+    xInputRamp.setTarget(x);
+    yInputRamp.setTarget(y);
+    rInputRamp.setTarget(r);
 }
 
 /*
@@ -76,11 +115,65 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
         y = y / norm;
     }
 
+    y = IS_Y_INVERTED ? -y : y;
+
     frontLeftDesiredRpm = (x-y-r)*RPM_SCALE_FACTOR;
     frontRightDesiredRpm = (x+y+r)*RPM_SCALE_FACTOR;
     backLeftDesiredRpm = (x+y-r)*RPM_SCALE_FACTOR;
     backRightDesiredRpm = (x-y+r)*RPM_SCALE_FACTOR;
+}
+/*
+    Attempts to send IMU and wheel encoder data to CV over UART.
+    Returns true if the positionMessage was sent sucessfully.
+*/
+bool ChassisSubsystem::sendCVUpdate() {
 
+    // Get IMU measurements
+    float Ax = drivers->mpu6500.getAx();
+    float Ay = drivers->mpu6500.getAy();
+    float Az = drivers->mpu6500.getAz();
+    float Gx = drivers->mpu6500.getGx();
+    float Gy = drivers->mpu6500.getGy();
+    float Gz = drivers->mpu6500.getGz();
+
+    // Get motor encoder positions
+    uint16_t frontLeftEncoder = frontLeftMotor.getEncoderWrapped();
+    uint16_t frontRightEncoder = frontRightMotor.getEncoderWrapped();
+    uint16_t backLeftEncoder = backLeftMotor.getEncoderWrapped();
+    uint16_t backRightEncoder = backRightMotor.getEncoderWrapped();
+
+    // Get time elapsed since last message. Store current time for calculation of next dt.
+    int32_t currentTime = tap::arch::clock::getTimeMicroseconds();
+    int32_t timeSinceLastUpdate = currentTime - prevCVUpdate;
+    
+    // Convert IMU and encoder data to 2 byte data types for transmission
+    // Conversions need to occur to respect 2 byte limit for each value sent
+    // Accelerations : converted from m/s2 to int16_t mm/s2
+    // Gyro : converted from deg/s to int16_t milirad/s
+    // Encoders : passed as is, with only information about current wheel position, not number of turns
+    // Time since last update : Time in us cast to uint16_t
+    const int M_TO_MM = 1000;
+    const float DEG_TO_MILIRAD = 17.453293;
+
+    src::communication::cv::CVSerialData::Tx::PositionMessage positionMessage;
+    positionMessage.Ax = static_cast<int16_t>(Ax*M_TO_MM);
+    positionMessage.Ay = static_cast<int16_t>(Ay*M_TO_MM);
+    positionMessage.Az = static_cast<int16_t>(Az*M_TO_MM);
+    positionMessage.Gx = static_cast<int16_t>(Gx*DEG_TO_MILIRAD);
+    positionMessage.Gy = static_cast<int16_t>(Gy*DEG_TO_MILIRAD);
+    positionMessage.Gz = static_cast<int16_t>(Gz*DEG_TO_MILIRAD);
+    positionMessage.frontLeftEncoder = frontLeftEncoder;
+    positionMessage.frontRightEncoder = frontRightEncoder;
+    positionMessage.backLeftEncoder = backLeftEncoder;
+    positionMessage.backRightEncoder = backRightEncoder;
+    positionMessage.dt = static_cast<uint16_t>(timeSinceLastUpdate);
+
+    if (drivers->cvHandler.sendCVMessage(positionMessage)) {
+        prevCVUpdate = currentTime;
+        return true;
+    }
+
+    return false;
 }
 
 /*
