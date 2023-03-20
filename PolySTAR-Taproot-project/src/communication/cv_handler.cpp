@@ -17,33 +17,33 @@ CVHandler::CVHandler(Drivers* drivers)
 
 void CVHandler::messageReceiveCallback(const ReceivedSerialMessage& completeMessage)
 {
-    char buffer[50];
-    int nBytes;
+    // char buffer[50];
+    // int nBytes;
     switch (completeMessage.header.messageID)
     {
         case CVSerialData::Rx::TURRET_MESSAGE:
         {
             decodeToTurretData(completeMessage);
-            nBytes = sprintf(buffer,"Turret Message Received\n");
+            // nBytes = sprintf(buffer,"Turret Message Received\n");
             break;
         }
         case CVSerialData::Rx::MOVEMENT_MESSAGE:
         {
             decodeToMovementData(completeMessage);
-            nBytes = sprintf(buffer,"Movement Message Received\n");
+            // nBytes = sprintf(buffer,"Movement Message Received\n");
             break;
         }
         case CVSerialData::Rx::SHOOT_MESSAGE:
         {
             decodeToShootOrder();
-            nBytes = sprintf(buffer,"Shoot Message Received\n");
+            // nBytes = sprintf(buffer,"Shoot Message Received\n");
             break;
         }
         default:
-            nBytes = sprintf(buffer,"Message Not Recognized\n");
+            // nBytes = sprintf(buffer,"Message Not Recognized\n");
             break;
     }
-    drivers->uart.write(tap::communication::serial::Uart::Uart6,(uint8_t*)buffer,nBytes+1);
+    // drivers->uart.write(tap::communication::serial::Uart::Uart6,(uint8_t*)buffer,nBytes+1);
 }
 
 /*
