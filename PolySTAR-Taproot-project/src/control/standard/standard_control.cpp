@@ -64,6 +64,7 @@ feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 flywheel::FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
+flywheel::FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -78,6 +79,8 @@ HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, Remote
 HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
+
+// HoldCommandMapping stopFiring(drivers(), {&fireEndCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::MID));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -99,6 +102,7 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
+    theFeeder.setDefaultCommand(&fireEndCommandGroup);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -108,6 +112,9 @@ void startStandardCommands(src::Drivers *drivers) {
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {  
+    drivers->commandMapper.addMap(&remoteFireCommandGroup);
+    drivers->commandMapper.addMap(&mouseFireCommandGroup);
+    // drivers->commandMapper.addMap(&stopFiring);
     drivers->commandMapper.addMap(&reverseFeeder);
 //    drivers->commandMapper.addMap(&leftAimTurret);
 //    drivers->commandMapper.addMap(&rightAimTurret);
