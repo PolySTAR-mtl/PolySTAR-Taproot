@@ -28,7 +28,7 @@ public:
      */
     TurretSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, false, "yaw motor"),
+          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, true, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
           yawPid(yawPidConfig),
           pitchPid(pitchPidConfig),

@@ -22,12 +22,12 @@ static constexpr float TURRET_PITCH_TQ_DERIVATIVE_KALMAN = 1.0f;
 static constexpr float TURRET_PITCH_TR_DERIVATIVE_KALMAN = 0.0f;
 static constexpr float TURRET_PITCH_TQ_PROPORTIONAL_KALMAN = 1.0f;
 static constexpr float TURRET_PITCH_TR_PROPORTIONAL_KALMAN = 0.0f;
-static constexpr float TURRET_FEED_FORWARD_GAIN = 1500.0f;
+static constexpr float TURRET_FEED_FORWARD_GAIN = 1750.0f;
 
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr int64_t YAW_NEUTRAL_POS = 4750;
+static constexpr int64_t YAW_NEUTRAL_POS = 3470;
 static constexpr int64_t PITCH_NEUTRAL_POS = 6170;
 
 /**
@@ -49,6 +49,13 @@ static constexpr float TURRET_DEAD_ZONE = 0.05;
  */
 static constexpr float YAW_SCALE_FACTOR = 1000.0f;
 static constexpr float PITCH_SCALE_FACTOR = 250.0f;
+
+/**
+ * Turret mouse aim scale factors: The mouse aim scales factor for the turret. This is used to scale the
+ * mouse movement to the turret movement.
+ */
+static constexpr float TURRET_MOUSE_X_SCALE_FACTOR = 0.05f;
+static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
 
 /*
  *   Enable UART debug messages for turret
