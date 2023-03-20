@@ -17,26 +17,33 @@ CVHandler::CVHandler(Drivers* drivers)
 
 void CVHandler::messageReceiveCallback(const ReceivedSerialMessage& completeMessage)
 {
+    // char buffer[50];
+    // int nBytes;
     switch (completeMessage.header.messageID)
     {
         case CVSerialData::Rx::TURRET_MESSAGE:
         {
             decodeToTurretData(completeMessage);
+            // nBytes = sprintf(buffer,"Turret Message Received\n");
             break;
         }
         case CVSerialData::Rx::MOVEMENT_MESSAGE:
         {
             decodeToMovementData(completeMessage);
+            // nBytes = sprintf(buffer,"Movement Message Received\n");
             break;
         }
         case CVSerialData::Rx::SHOOT_MESSAGE:
         {
             decodeToShootOrder();
+            // nBytes = sprintf(buffer,"Shoot Message Received\n");
             break;
         }
         default:
+            // nBytes = sprintf(buffer,"Message Not Recognized\n");
             break;
     }
+    // drivers->uart.write(tap::communication::serial::Uart::Uart6,(uint8_t*)buffer,nBytes+1);
 }
 
 /*
@@ -78,7 +85,7 @@ bool CVHandler::decodeToShootOrder()
 * Send CV Message over UART.
 * Returns true if message was sent succesfully
 */
-bool CVHandler::sendCVMessage(CVSerialData::Tx::CVMessageHeader message) {
+bool CVHandler::sendCVMessage(CVSerialData::Tx::CVMessageHeader &message) {
     // TODO waiting for the buffer to empty every time slows us down. It's likely the buffer is big enough that we won't have 
     // to worry about overflowing it, but needs to be tested
     if (drivers->uart.isWriteFinished(getUartPort())) {
