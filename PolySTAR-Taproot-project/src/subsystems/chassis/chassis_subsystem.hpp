@@ -138,6 +138,10 @@ private:
     bool CVUpdateWaiting;
     uint32_t prevCVUpdate;
 
+    // Conversions for CV Messages
+    const int16_t M_TO_MM = 1000;
+    const float DEG_TO_MILLIRAD = 17.453293;
+
 };  // class ChassisSubsystem
 
 }  // namespace chassis

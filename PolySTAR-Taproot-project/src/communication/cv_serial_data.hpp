@@ -32,7 +32,7 @@ public:
             DATA_LEN_GAME = 14,
             DATA_LEN_EVENT = 2,
             DATA_LEN_TURRET = 4,
-            DATA_LEN_POSITION = 42,
+            DATA_LEN_POSITION = 43,
             DATA_LEN_PREFIX = 3
         };
 
@@ -100,6 +100,7 @@ public:
             int16_t  frontRightRPM;
             int16_t  backLeftRPM;
             int16_t  backRightRPM;
+            int8_t padding;
         } modm_packed;
 
     };  // Class Tx

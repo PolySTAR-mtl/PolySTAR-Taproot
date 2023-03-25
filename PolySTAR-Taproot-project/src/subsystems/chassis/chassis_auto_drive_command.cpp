@@ -30,8 +30,8 @@ void  ChassisAutoDriveCommand::execute()
     // And convert velocities to chassis inputs
     CVSerialData::Rx::MovementData movementData = drivers->cvHandler.getMovementData();
     float x = movementData.xSetpoint*VX_TO_X;
-    float y = movementData.xSetpoint*VY_TO_Y;
-    float r = movementData.xSetpoint*W_TO_R;
+    float y = movementData.ySetpoint*VY_TO_Y;
+    float r = movementData.rSetpoint*W_TO_R;
     chassis->setTargetOutput(x,y,r);
 }
 

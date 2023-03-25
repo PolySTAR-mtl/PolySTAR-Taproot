@@ -32,6 +32,12 @@ void ChassisSubsystem::refresh() {
     updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm, dt);
     prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
 
+    // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
+    if (tap::arch::clock::getTimeMilliseconds() - prevCVUpdate > CHASSIS_CV_UPDATE_PERIOD ) {
+        prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
+        sendCVUpdate();
+    }
+
     if (CHASSIS_DEBUG_MESSAGE == false) return;
 
     if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
@@ -80,13 +86,6 @@ void ChassisSubsystem::updateRpmSetpoints() {
     
     setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
     prevUpdate = tap::arch::clock::getTimeMilliseconds();
-
-
-    // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
-    // or the previous send attempt failed
-    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() > CHASSIS_CV_UPDATE_PERIOD ) {
-        CVUpdateWaiting = !sendCVUpdate(); // Set waiting flag to try again immediately if write is unsuccessful
-    }
 }
 
 void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
@@ -136,8 +135,8 @@ bool ChassisSubsystem::sendCVUpdate() {
     float Gx = drivers->mpu6500.getGx();
     float Gy = drivers->mpu6500.getGy();
     float Gz = drivers->mpu6500.getGz();
-    float Rx = drivers->mpu6500.getPitch();
-    float Ry = drivers->mpu6500.getRoll();
+    float Rx = drivers->mpu6500.getRoll();
+    float Ry = drivers->mpu6500.getPitch();
     float Rz = drivers->mpu6500.getYaw();
 
     // Get motor encoder positions
@@ -164,19 +163,17 @@ bool ChassisSubsystem::sendCVUpdate() {
     // Attitude : converted from deg to int16_t millirad
     // Encoder positions: passed as is
     // Encoder revolutions: converted to int16_t
-    const int M_TO_MM = 1000;
-    const float DEG_TO_MILIRAD = 17.453293;
-
+    // Encoder RPM: passed as is
     src::communication::cv::CVSerialData::Tx::PositionMessage positionMessage;
     positionMessage.Ax = static_cast<int16_t>(Ax*M_TO_MM);
     positionMessage.Ay = static_cast<int16_t>(Ay*M_TO_MM);
     positionMessage.Az = static_cast<int16_t>(Az*M_TO_MM);
-    positionMessage.Gx = static_cast<int16_t>(Gx*DEG_TO_MILIRAD);
-    positionMessage.Gy = static_cast<int16_t>(Gy*DEG_TO_MILIRAD);
-    positionMessage.Gz = static_cast<int16_t>(Gz*DEG_TO_MILIRAD);
-    positionMessage.Rx = static_cast<int16_t>(Rx*DEG_TO_MILIRAD);
-    positionMessage.Ry = static_cast<int16_t>(Ry*DEG_TO_MILIRAD);
-    positionMessage.Rz = static_cast<int16_t>(Rz*DEG_TO_MILIRAD);
+    positionMessage.Gx = static_cast<int16_t>(Gx*DEG_TO_MILLIRAD);
+    positionMessage.Gy = static_cast<int16_t>(Gy*DEG_TO_MILLIRAD);
+    positionMessage.Gz = static_cast<int16_t>(Gz*DEG_TO_MILLIRAD);
+    positionMessage.Rx = static_cast<int16_t>(Rx*DEG_TO_MILLIRAD);
+    positionMessage.Ry = static_cast<int16_t>(Ry*DEG_TO_MILLIRAD);
+    positionMessage.Rz = static_cast<int16_t>(Rz*DEG_TO_MILLIRAD);
     positionMessage.frontLeftEncoder = frontLeftEncoder;
     positionMessage.frontLeftRevolutions = frontLeftRevolutions;
     positionMessage.frontRightEncoder = frontRightEncoder;
@@ -191,7 +188,6 @@ bool ChassisSubsystem::sendCVUpdate() {
     positionMessage.backRightRPM = backRightRPM;
 
     if (drivers->cvHandler.sendCVMessage(positionMessage)) {
-        prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
         return true;
     }
 
