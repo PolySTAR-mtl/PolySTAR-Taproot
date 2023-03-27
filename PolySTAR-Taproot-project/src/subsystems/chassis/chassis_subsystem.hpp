@@ -52,7 +52,6 @@ public:
           frontRightDesiredRpm(0),
           backLeftDesiredRpm(0),
           backRightDesiredRpm(0),
-          CVUpdateWaiting(true),
           prevCVUpdate(0)
     {
     }
@@ -135,7 +134,6 @@ private:
     uint32_t prevPidUpdate;
 
     // Variables for managing UART messages sent to CV
-    bool CVUpdateWaiting;
     uint32_t prevCVUpdate;
 
     // Conversions for CV Messages

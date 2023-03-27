@@ -65,7 +65,7 @@ static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
 
  /**
  * Interval for sending messages over UART to the Computer Vision computer
- * Time is in microseconds.
+ * Time is in milliseconds.
  */
 
-static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10000;
+static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;

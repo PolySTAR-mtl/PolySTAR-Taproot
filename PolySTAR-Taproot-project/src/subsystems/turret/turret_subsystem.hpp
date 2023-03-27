@@ -34,7 +34,6 @@ public:
           pitchPid(pitchPidConfig),
           yawDesiredPos(YAW_NEUTRAL_POS),
           pitchDesiredPos(PITCH_NEUTRAL_POS),
-          CVUpdateWaiting(true),
           prevCVUpdate(0)
     {
     }
@@ -111,7 +110,6 @@ private:
     static constexpr float PITCH_SCALE_FACTOR = 40.0f;
 
     // Variables for managing UART messages sent to CV
-    bool CVUpdateWaiting;
     uint32_t prevCVUpdate;
 
 };  // class TurretSubsystem

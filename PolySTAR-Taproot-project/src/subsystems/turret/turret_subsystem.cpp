@@ -26,8 +26,9 @@ void TurretSubsystem::refresh() {
     updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos, dt);
     prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
     
-    if (CVUpdateWaiting || prevCVUpdate - tap::arch::clock::getTimeMicroseconds() > TURRET_CV_UPDATE_PERIOD ) {
-        CVUpdateWaiting = !sendCVUpdate(); // Set waiting flag to try again immediately if write is unsuccessful
+    if (tap::arch::clock::getTimeMilliseconds() - prevCVUpdate > TURRET_CV_UPDATE_PERIOD ) {
+        prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
+        sendCVUpdate();
     }
 
     // Skip sending debug messages if flag is disabled 
@@ -133,7 +134,6 @@ bool TurretSubsystem::sendCVUpdate() {
     turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg*DEG_TO_MILIRAD);
 
     if (drivers->cvHandler.sendCVMessage(turretMessage)) {
-        prevCVUpdate = currentTime;
         return true;
     }
 
