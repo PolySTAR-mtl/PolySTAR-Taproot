@@ -40,4 +40,3 @@ void FeederSubsystem::setDesiredOutput(float rpm) {
 }  // namespace feeder
 
 }  // namespace control
-

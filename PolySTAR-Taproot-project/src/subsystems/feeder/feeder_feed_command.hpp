@@ -47,4 +47,3 @@ private:
 } // namespace control
 
 #endif  // FEEDER_FEED_COMMAND_HPP_
-
