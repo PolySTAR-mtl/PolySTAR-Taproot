@@ -11,6 +11,11 @@ namespace control
 {
 namespace feeder
 {
+
+enum class Direction {
+    CLOCKWISE = true,
+    ANTICLOCKWISE = false
+};
 /**
  * A bare bones Subsystem for interacting with a feeder.
  */
@@ -21,12 +26,12 @@ public:
     /**
      * Constructs a new FeederSubsystem with default parameters specified in
      * the private section of this class.
+     * Argument direction has to be CLOCKWISE for STANDARD and ANTICLOCKWISE for ICRA.
      */
-    FeederSubsystem(tap::Drivers *drivers)
+    FeederSubsystem(tap::Drivers *drivers, Direction direction)
         : tap::control::Subsystem(drivers),
-          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, false, "feeder motor"),
+          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, (bool) direction, "feeder motor"),
           feederPid(FEEDER_PID_KP,FEEDER_PID_KI,FEEDER_PID_KD,FEEDER_PID_MAX_ERROR_SUM,FEEDER_PID_MAX_OUTPUT)
-
     {
     }
 
