@@ -1,3 +1,4 @@
+#ifdef TARGET_ICRA
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "control/drivers/drivers_singleton.hpp"
@@ -114,3 +115,4 @@ void initSubsystemCommands(src::Drivers *drivers)
 }
 
 }  // namespace control
+#endif  // TARGET_ICRA

@@ -17,6 +17,45 @@
             }
         },
         {
+            "label": "Build Icra- Release",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons build robot=TARGET_ICRA",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
+        {
+            "label": "Build Standard- Release",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons build robot=TARGET_STANDARD",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
+        {
+            "label": "Build Hero- Release",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons build robot=TARGET_HERO",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
+        {
             "label": "Program - Release",
             "type": "shell",
             "presentation": {
