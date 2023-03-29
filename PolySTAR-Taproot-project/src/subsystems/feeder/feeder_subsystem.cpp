@@ -17,30 +17,55 @@ void FeederSubsystem::initialize()
 }
 
 void FeederSubsystem::refresh() {
-    updateRpmPid(&feederPid, &feederMotor, feederDesiredRpm);
+    updatePosPid(feederDesiredPos);
 }
 
-void FeederSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM) {
-    int16_t shaftRPM = motor->getShaftRPM();
-    if (desiredRPM == 0) {
-        motor->setDesiredOutput(0);
-    } else {
-        pid->update(desiredRPM - shaftRPM);
-        float pidValue = pid->getValue();
-        motor->setDesiredOutput(pidValue);
-    }
-
+void FeederSubsystem::updatePosPid(float desiredPos) {
+    // sets position with pid
 }
 
-/*
-    Give desired setpoints for feeder movement.
-*/
-void FeederSubsystem::setDesiredOutput(float rpm) 
-{
-    feederDesiredRpm = rpm;
-}
+inline float FeederSubsystem::getSetpoint() const {
+    return feederDesiredPos;
+};
 
+void FeederSubsystem::setSetpoint(float newAngle)  {
+    feederDesiredPos = newAngle;
+};
+
+float FeederSubsystem::getCurrentValue() const  {
+    return feederMotor.getEncoderWrapped();
+};
+
+float FeederSubsystem::getJamSetpointTolerance() const  {
+    return JAM_SETPOINT_POS_TOLERANCE_DEG;
+};
+
+// TODO
+bool FeederSubsystem::calibrateHere()  {
+    
+};
+
+bool FeederSubsystem::isJammed()  {
+    return jamChecker.check();
+};
+
+void FeederSubsystem::clearJam()  {
+    // contents to be determined
+};
+
+// TODO
+inline bool FeederSubsystem::isCalibrated()  {
+    
+};
+
+inline bool FeederSubsystem::isOnline()  {
+    return feederMotor.isMotorOnline();
+};
+
+inline float FeederSubsystem::getVelocity()  {
+    // yet to be used
+    return NULL;
+};
 }  // namespace feeder
 
 }  // namespace control
-

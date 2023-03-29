@@ -19,7 +19,7 @@
 
 // Feeder includes
 #include "subsystems/feeder/feeder_subsystem.hpp"
-#include "subsystems/feeder/feeder_feed_command.hpp"
+#include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_reverse_command.hpp"
 
 using src::DoNotUse_getDrivers;
@@ -52,7 +52,7 @@ chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 // turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
 // turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
-feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
+feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, driver());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
