@@ -6,12 +6,12 @@
 #include "feeder_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 
-namespace control
-{
-namespace feeder
-{
-class FeederFeedCommand : public tap::control::Command
-{
+namespace control {
+
+namespace feeder {
+
+class FeederFeedCommand : public tap::control::Command {
+
 public:
     /**
      * Initializes the command with the passed in FeederSubsystem.  Must not
@@ -38,13 +38,13 @@ public:
 
 private:
     FeederSubsystem *const feeder;
-
+    
     src::Drivers *drivers;
-};  // FeederFeedCommand
+}; // FeederFeedCommand
 
-}  // namespace feeder
+} // namespace feeder
 
-}  // namespace control
+} // namespace control
 
 #endif  // FEEDER_FEED_COMMAND_HPP_
 
