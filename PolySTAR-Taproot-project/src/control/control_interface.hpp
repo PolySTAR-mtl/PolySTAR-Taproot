@@ -60,6 +60,16 @@ public:
      */
     mockable float getTurretYInput();
 
+    /**
+        * Returns the value used for turret movement right and left
+    */
+    mockable float getTurretXMouseInput();
+
+    /**
+        * Returns the value used for turret movement forward and backward
+    */
+    mockable float getTurretYMouseInput();
+
 private:
     tap::Drivers *drivers;
     static constexpr float WHEEL_MAX_VALUE = 660.0f;

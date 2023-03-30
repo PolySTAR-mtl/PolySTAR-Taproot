@@ -79,7 +79,7 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
     int64_t currentYaw = yawMotor.getEncoderWrapped();
     int64_t currentPitch = pitchMotor.getEncoderWrapped();
 
-    if (pitchDelta < 0) pitchDelta *= 1.5;
+    if (pitchDelta < 0) pitchDelta *= 0.5;
 
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;

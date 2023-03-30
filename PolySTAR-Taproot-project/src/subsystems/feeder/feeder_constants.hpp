@@ -16,8 +16,8 @@ static constexpr float FEEDER_PID_MAX_OUTPUT = 8000.0f;
 /**
  * The feeder RPM set when the feeder is on
 */
-static constexpr float FEEDER_RPM = 2000;
-static constexpr float FEEDER_REVERSE_RPM = -2000;
+static constexpr float FEEDER_RPM = 2500;
+static constexpr float FEEDER_REVERSE_RPM = -1500;
 
 static constexpr float JAM_MAX_WAIT_TIME_MS = 10000; // TO BE DETERMINED
 static constexpr float JAM_DISPLACEMENT_TICK = 3000; // TO BE DETERMINED
