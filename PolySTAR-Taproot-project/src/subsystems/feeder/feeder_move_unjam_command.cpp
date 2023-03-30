@@ -11,7 +11,10 @@ namespace feeder
 FeederMoveUnjamCommand::FeederMoveUnjamCommand(
     FeederSubsystem *const feeder,
     src::Drivers *drivers)
-    : tap::control::setpoint::MoveUnjamComprisedCommand(drivers, feeder, JAM_DISPLACEMENT_TICK, TIME_TO_FEED_MS, PAUSE_AFTER_MOVE_TIME_MS, true, JAM_SETPOINT_POS_TOLERANCE_DEG, JAM_MAX_DISPLACEMENT, JAM_MIN_DISPLACEMENT, JAM_MAX_WAIT_TIME_MS, JAM_CYCLES)
+    : tap::control::setpoint::MoveUnjamComprisedCommand(drivers, feeder, MOVE_DISPLACEMENT_TICK, MOVE_TIME_MS, 
+                                                        PAUSE_AFTER_MOVE_TIME_MS, true, SETPOINT_POS_TOLERANCE_TICK, 
+                                                        UNJAM_DISPLACEMENT_TICK, SETPOINT_POS_TOLERANCE_TICK, 
+                                                        UNJAM_CYCLES, UNJAM_MAX_WAIT_TIME_MS)
 {}
 }  // namespace feeder
 }  // namespace control

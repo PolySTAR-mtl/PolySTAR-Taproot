@@ -14,14 +14,21 @@ namespace feeder
 void FeederSubsystem::initialize()
 {
     feederMotor.initialize();
+    jamChecker.restart();
 }
 
 void FeederSubsystem::refresh() {
-    updatePosPid(feederDesiredPos);
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
+    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+    updatePosPid(feederDesiredPos, dt);
 }
 
-void FeederSubsystem::updatePosPid(float desiredPos) {
+void FeederSubsystem::updatePosPid(float desiredPos, uint32_t dt) {
     // sets position with pid
+    float error = desiredPos - feederMotor.getEncoderUnwrapped();
+
+    feederPid.runControllerDerivateError(error, dt);
+    feederMotor.setDesiredOutput(feederPid.getOutput());
 }
 
 inline float FeederSubsystem::getSetpoint() const {
@@ -33,16 +40,16 @@ void FeederSubsystem::setSetpoint(float newAngle)  {
 };
 
 float FeederSubsystem::getCurrentValue() const  {
-    return feederMotor.getEncoderWrapped();
+    return feederMotor.getEncoderUnwrapped();
 };
 
 float FeederSubsystem::getJamSetpointTolerance() const  {
-    return JAM_SETPOINT_POS_TOLERANCE_DEG;
+    return jamChecker.getJamSetpointTolerance();
 };
 
-// TODO
+// Unused method, implemented for interface compatibility.
 bool FeederSubsystem::calibrateHere()  {
-    
+    return false;
 };
 
 bool FeederSubsystem::isJammed()  {
@@ -50,12 +57,12 @@ bool FeederSubsystem::isJammed()  {
 };
 
 void FeederSubsystem::clearJam()  {
-    // contents to be determined
+    jamChecker.restart(); // Unsure, if bug look here
 };
 
-// TODO
+// Unused method, implemented for interface compatibility.
 inline bool FeederSubsystem::isCalibrated()  {
-    
+    return true;
 };
 
 inline bool FeederSubsystem::isOnline()  {
@@ -63,8 +70,7 @@ inline bool FeederSubsystem::isOnline()  {
 };
 
 inline float FeederSubsystem::getVelocity()  {
-    // yet to be used
-    return NULL;
+    return feederMotor.getShaftRPM();
 };
 }  // namespace feeder
 

@@ -3,6 +3,7 @@
 
 #include "tap/control/setpoint/interfaces/setpoint_subsystem.hpp"
 #include "tap/control/setpoint/algorithms/setpoint_continuous_jam_checker.hpp"
+#include "tap/algorithms/smooth_pid.hpp"
 #include "tap/control/subsystem.hpp"
 #include "modm/math/filter/pid.hpp"
 #include "tap/motor/dji_motor.hpp"
@@ -27,8 +28,8 @@ public:
     FeederSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, false, "feeder motor"),
-          feederPid(FEEDER_PID_KP,FEEDER_PID_KI,FEEDER_PID_KD,FEEDER_PID_MAX_ERROR_SUM,FEEDER_PID_MAX_OUTPUT),
-          jamChecker(this, JAM_SETPOINT_POS_TOLERANCE_DEG, JAM_SETPOINT_TIME_TOLERANCE_MS)
+          feederPid(pidConfig),
+          jamChecker(this, JAM_CHECKER_TOLERANCE_TICK, JAM_CHECKER_TOLERANCE_MS)
     {
     }
 
@@ -42,7 +43,7 @@ public:
 
     void refresh() override;
 
-    void updatePosPid(float desiredPos);
+    void updatePosPid(float desiredPos, uint32_t dt);
 
     const tap::motor::DjiMotor &getFeederMotor() const { return feederMotor; }
 
@@ -74,14 +75,23 @@ private:
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor feederMotor;
 
+    // Smooth PID configuration
+    tap::algorithms::SmoothPidConfig pidConfig = { FEEDER_PID_KP, FEEDER_PID_KI, FEEDER_PID_KD,
+                                                            FEEDER_PID_MAX_ERROR_SUM, FEEDER_PID_MAX_OUTPUT,
+                                                            FEEDER_TQ_DERIVATIVE_KALMAN, FEEDER_TR_DERIVATIVE_KALMAN,
+                                                            FEEDER_TQ_PROPORTIONAL_KALMAN, FEEDER_TR_PROPORTIONAL_KALMAN };
+    
     // PID controllers for position feedback from motors
-    modm::Pid<float> feederPid;
+    tap::algorithms::SmoothPid feederPid;
 
     // Jam Checker
     tap::control::setpoint::SetpointContinuousJamChecker jamChecker;
 
-    /// Activating the command sets a desired RPM (defined in feeder_constants.hpp) for the motor.
     float feederDesiredPos;
+    uint32_t prevPidUpdate;
+
+    uint16_t feederOrigin;
+    bool feederCalibrated;
 
 };  // class FeederSubsystem
 

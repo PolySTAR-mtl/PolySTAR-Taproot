@@ -1,5 +1,6 @@
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
+#include "tap/control/hold_repeat_command_mapping.hpp"
 #include "tap/control/toggle_command_mapping.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 #include "control/drivers/drivers.hpp"
@@ -33,6 +34,7 @@ using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
 using tap::control::CommandMapper;
 using tap::control::HoldCommandMapping;
+using tap::control::HoldRepeatCommandMapping;
 using tap::control::ToggleCommandMapping;
 using tap::control::RemoteMapState;
 
@@ -56,12 +58,14 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 // turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
 // turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
-feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, driver());
-feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
+
+feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
+
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 flywheel::FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
 flywheel::FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
@@ -70,13 +74,12 @@ flywheel::FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, driv
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
-// HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-// HoldCommandMapping flywheelFire(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
+// HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 
@@ -112,10 +115,10 @@ void startStandardCommands(src::Drivers *drivers) {
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {  
-    drivers->commandMapper.addMap(&remoteFireCommandGroup);
-    drivers->commandMapper.addMap(&mouseFireCommandGroup);
+    // drivers->commandMapper.addMap(&remoteFireCommandGroup);
+    // drivers->commandMapper.addMap(&mouseFireCommandGroup);
     // drivers->commandMapper.addMap(&stopFiring);
-    drivers->commandMapper.addMap(&reverseFeeder);
+    drivers->commandMapper.addMap(&feedFeeder);
 //    drivers->commandMapper.addMap(&leftAimTurret);
 //    drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&toggleChassisDrive);
