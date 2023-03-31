@@ -27,7 +27,7 @@
 //Flywheel includes
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
 #include "subsystems/flywheel/flywheel_fire_command.hpp"
-#include "subsystems/flywheel/fire_command_group.hpp"
+// #include "subsystems/flywheel/fire_command_group.hpp"
 
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
@@ -67,8 +67,8 @@ turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
-flywheel::FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
-flywheel::FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
+// flywheel::FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
+// flywheel::FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -77,7 +77,6 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
@@ -105,7 +104,7 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    theFeeder.setDefaultCommand(&fireEndCommandGroup);
+    // theFeeder.setDefaultCommand(&fireEndCommandGroup);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/

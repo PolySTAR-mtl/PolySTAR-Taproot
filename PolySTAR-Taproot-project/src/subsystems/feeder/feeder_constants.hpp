@@ -6,8 +6,8 @@
  * controller are listed below.
  */
 
-static constexpr float FEEDER_PID_KP = 20.0f;
-static constexpr float FEEDER_PID_KI = 0.005f;
+static constexpr float FEEDER_PID_KP = 1.0f;
+static constexpr float FEEDER_PID_KI = 0.0f;
 static constexpr float FEEDER_PID_KD = 0.0f;
 static constexpr float FEEDER_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float FEEDER_PID_MAX_OUTPUT = 8000.0f;
@@ -32,6 +32,6 @@ static constexpr float MOVE_TIME_MS = 125; // TO BE DETERMINED
 static constexpr float SETPOINT_POS_TOLERANCE_TICK = 1*DEGREE_TO_TICK; // TO BE DETERMINED
 
 static constexpr float JAM_CHECKER_TOLERANCE_TICK = 5*DEGREE_TO_TICK;
-static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 200;
+static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = UINT32_MAX;
 
 #endif

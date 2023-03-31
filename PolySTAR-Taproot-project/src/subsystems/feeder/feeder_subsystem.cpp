@@ -14,7 +14,7 @@ namespace feeder
 void FeederSubsystem::initialize()
 {
     feederMotor.initialize();
-    jamChecker.restart();
+    feederDesiredPos = feederMotor.getEncoderUnwrapped();
 }
 
 void FeederSubsystem::refresh() {
