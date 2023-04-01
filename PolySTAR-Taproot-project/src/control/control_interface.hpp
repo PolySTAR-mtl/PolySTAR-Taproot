@@ -3,13 +3,16 @@
 
 #include "tap/algorithms/linear_interpolation_predictor.hpp"
 #include "tap/util_macros.hpp"
+#include <string>
+#include <map>
+
 
 namespace tap
 {
 class Drivers;
 }
 
-namespace control
+namespace src::control
 {
 /**
  * When you want to receive use interface inside of commands, we put
@@ -40,6 +43,12 @@ public:
     mockable float getChassisRInput();
 
     /**
+     * Returns the value used for chassis keyboard input,
+     * map of key name to whether it is pressed.
+     */
+    mockable std::map<std::string, bool> getChassisKeyboardInput();
+
+    /**
      * Returns the value used for turret movement forward and backward,
      * between -1 and 1. Positive is forward.
      */
@@ -50,6 +59,16 @@ public:
      * between -1 and 1. Positive is towards the right.
      */
     mockable float getTurretYInput();
+
+    /**
+        * Returns the value used for turret movement right and left
+    */
+    mockable float getTurretXMouseInput();
+
+    /**
+        * Returns the value used for turret movement forward and backward
+    */
+    mockable float getTurretYMouseInput();
 
 private:
     tap::Drivers *drivers;

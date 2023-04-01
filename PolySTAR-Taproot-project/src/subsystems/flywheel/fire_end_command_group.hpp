@@ -1,12 +1,11 @@
-#ifndef FIRE_COMMAND_GROUP_HPP_
-#define FIRE_COMMAND_GROUP_HPP_
+#ifndef FIRE_END_COMMAND_GROUP_HPP_
+#define FIRE_END_COMMAND_GROUP_HPP_
 
 #include "tap/control/comprised_command.hpp"
 #include "control/drivers/drivers.hpp"
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
-#include "fire_end_command_group.hpp"
-#include "subsystems/feeder/feeder_feed_command.hpp"
+#include "subsystems/feeder/feeder_reverse_command.hpp"
 
 namespace control
 {
@@ -15,7 +14,7 @@ namespace flywheel
 /**
  * 
  */
-class FireCommandGroup : public tap::control::ComprisedCommand
+class FireEndCommandGroup : public tap::control::ComprisedCommand
 {
 public:
 
@@ -25,11 +24,11 @@ public:
      * @param[in] feeder a pointer to the feeder to be passed in that this
      * Command will interact with.
      */
-    FireCommandGroup(FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
+    FireEndCommandGroup(FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
 
-    FireCommandGroup(const FireCommandGroup &other) = delete;
+    FireEndCommandGroup(const FireEndCommandGroup &other) = delete;
 
-    FireCommandGroup &operator=(const FireCommandGroup &other) = delete;
+    FireEndCommandGroup &operator=(const FireEndCommandGroup &other) = delete;
 
     void initialize() override;
 
@@ -39,26 +38,22 @@ public:
 
     bool isFinished() const override { return false; }
 
-    const char *getName() const override { return "fire command group"; }
+    const char *getName() const override { return "fire end command group"; }
 
 private:
     // attributes needed to operate the group command 
     FlywheelFireCommand fireCommand;
 
-    feeder::FeederFeedCommand feedCommand;
-
-    FireEndCommandGroup fireEndCommand;
+    feeder::FeederReverseCommand reverseFeedCommand;
 
     src::Drivers *drivers;
 
-    tap::arch::MilliTimeout feederDelayTimer;
+    tap::arch::MilliTimeout flywheelDelayTimer;
 
-    bool feederIsFeeding;
-
-};  // class FireCommandGroup
+};  // class FireEndCommandGroup
 
 }  // namespace flywheel
 
 }  // namespace control
 
-#endif  // FIRE_COMMAND_GROUP_HPP_
+#endif  // FIRE_END_COMMAND_GROUP_HPP_
