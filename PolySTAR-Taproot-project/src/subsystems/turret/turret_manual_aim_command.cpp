@@ -22,7 +22,9 @@ TurretManualAimCommand::TurretManualAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretManualAimCommand::initialize() {}
+void  TurretManualAimCommand::initialize() {
+    turret->setRelativeControlFlag(true);
+}
 
 void  TurretManualAimCommand::execute()
 {
@@ -34,7 +36,9 @@ void  TurretManualAimCommand::execute()
         fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
 }
 
-void  TurretManualAimCommand::end(bool) {}
+void  TurretManualAimCommand::end(bool) {
+    turret->setRelativeControlFlag(false);
+}
 
 bool  TurretManualAimCommand::isFinished() const { return false; }
 }  // namespace turret

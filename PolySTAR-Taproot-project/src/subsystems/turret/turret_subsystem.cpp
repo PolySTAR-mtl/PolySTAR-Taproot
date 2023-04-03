@@ -15,15 +15,15 @@ void TurretSubsystem::initialize()
 {
     yawMotor.initialize();
     pitchMotor.initialize();
-    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
 void TurretSubsystem::refresh() {
 
-    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
-    updatePosPid(&yawPid, &yawMotor, yawDesiredPos, dt);
-    updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos, dt);
-    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevControllerUpdate;
+    updatePitchController(dt);
+    updateYawController(dt);
+    prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
     
     // Skip sending debug messages if flag is disabled 
     if (TURRET_DEBUG_MESSAGE == false) return;
@@ -45,21 +45,23 @@ void TurretSubsystem::refresh() {
     }
 }
 
-void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt) 
-{
-    int64_t error = desiredPos - motor->getEncoderWrapped();
-    int16_t de = -1 * motor->degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*motor->getShaftRPM());
+void TurretSubsystem::updateYawController(uint32_t dt) {
+    int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
+    int16_t de = -1 * yawMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*yawMotor.getShaftRPM());
+    float velocity = usingRelativeControl ? lastYawDelta : 0;
     
-    // Add a feed-forward term to the pitch controller, to compensate for the effect of gravity.
-    // Uses trigonometry to adjust feedforward term based on CG position.
-    float feedForward = 0;
-    if (motor == &pitchMotor) {
-        float pitchAngle = motor->encoderToDegrees<int64_t>(motor->getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
-        feedForward = TURRET_FEED_FORWARD_GAIN*approximateCos(pitchAngle);
-    }
+    yawController.runController(error, de, velocity, dt);
+    yawMotor.setDesiredOutput(yawController.getOutput());
+}
 
-    pid->runController(error, de, dt);
-    motor->setDesiredOutput(pid->getOutput()+feedForward);
+void TurretSubsystem::updatePitchController(uint32_t dt) {
+    int64_t error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+    int16_t de = -1 * pitchMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*pitchMotor.getShaftRPM());
+    float angle = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
+    float velocity = usingRelativeControl ? lastPitchDelta : 0;
+
+    pitchController.runController(error, de, velocity, angle, dt);
+    pitchMotor.setDesiredOutput(yawController.getOutput());
 }
 
 /*
@@ -81,19 +83,13 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
 
     if (pitchDelta < 0) pitchDelta *= 0.5;
 
+    lastPitchDelta = pitchDelta;
+    lastYawDelta = yawDelta;
+
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
     setAbsoluteOutput(newYaw, newPitch);
-}
-
-/*
-    Bahskara I approximation for cosine. Valid for values of +/- 90 degrees.
-    Input angle is in degrees.
-*/
-float TurretSubsystem::approximateCos(float angle) {
-    angle += 90; // Phase shift 90 degrees cosine from sine function
-    return 4*angle*(180-angle)/(40500 - angle*(180-angle)); // Bahskara I sine approximation
 }
 
 }  // namespace turret

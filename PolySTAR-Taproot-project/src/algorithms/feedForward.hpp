@@ -3,8 +3,6 @@
 
 #include <cstdint>
 
-#include "tap/algorithms/extended_kalman.hpp"
-
 namespace src
 {
 namespace algorithms
