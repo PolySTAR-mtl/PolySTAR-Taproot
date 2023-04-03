@@ -47,8 +47,8 @@ void TurretSubsystem::refresh() {
 
 void TurretSubsystem::updateYawController(uint32_t dt) {
     int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
-    int16_t de = -1 * yawMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*yawMotor.getShaftRPM());
-    float velocity = usingRelativeControl ? lastYawDelta : 0;
+    int16_t de = yawMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*yawMotor.getShaftRPM());
+    float velocity = usingRelativeControl ? lastYawDelta : 0.000001*tap::algorithms::getSign(error);
     
     yawController.runController(error, de, velocity, dt);
     yawMotor.setDesiredOutput(yawController.getOutput());
@@ -56,9 +56,9 @@ void TurretSubsystem::updateYawController(uint32_t dt) {
 
 void TurretSubsystem::updatePitchController(uint32_t dt) {
     int64_t error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
-    int16_t de = -1 * pitchMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*pitchMotor.getShaftRPM());
+    int16_t de = pitchMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*pitchMotor.getShaftRPM());
     float angle = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
-    float velocity = usingRelativeControl ? lastPitchDelta : 0;
+    float velocity = usingRelativeControl ? lastPitchDelta : 0.000001*tap::algorithms::getSign(error);
 
     pitchController.runController(error, de, velocity, angle, dt);
     pitchMotor.setDesiredOutput(yawController.getOutput());
