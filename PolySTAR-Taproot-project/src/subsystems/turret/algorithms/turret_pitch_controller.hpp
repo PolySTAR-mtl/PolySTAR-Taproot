@@ -2,7 +2,7 @@
 #define TURRET_PITCH_CONTROLLER_HPP_
 
 #include "tap/algorithms/smooth_pid.hpp"
-#include "algorithms/feedForward.hpp"
+#include "algorithms/feed_forward.hpp"
 
 namespace turret
 {

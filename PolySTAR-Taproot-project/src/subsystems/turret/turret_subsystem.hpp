@@ -5,8 +5,8 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "turret_constants.hpp"
-#include "algorithms/turretPitchController.hpp"
-#include "algorithms/turretYawController.hpp"
+#include "algorithms/turret_pitch_controller.hpp"
+#include "algorithms/turret_yaw_controller.hpp"
 
 using turret::algorithms::TurretPitchController;
 using turret::algorithms::TurretYawController;
