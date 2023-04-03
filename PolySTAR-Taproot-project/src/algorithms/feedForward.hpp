@@ -25,14 +25,15 @@ public:
     /**
      * Calculates the FeedForward input.
      *
-     * @param[in] error The desired velocity (in user-defined units) of the controlled system.
+     * @param[in] velocity The desired velocity (in user-defined units) of the controlled system.
      */
     float calculate(float velocity);
 
     /**
      * Calculates the FeedForward input with gravity compensation.
      *
-     * @param[in] error The desired velocity (in user-defined units) of the controlled system.
+     * @param[in] velocity The desired velocity (in user-defined units) of the controlled system.
+     * @param[in] angle The current angle from horizontal (in degrees) of the controlled system with gravity compensation.
      */
     float calculateWithGravity(float velocity, float angle);
 
