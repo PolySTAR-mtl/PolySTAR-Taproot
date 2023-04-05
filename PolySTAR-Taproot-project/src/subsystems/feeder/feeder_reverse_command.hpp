@@ -6,12 +6,12 @@
 #include "feeder_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 
-namespace control
-{
-namespace feeder
-{
-class FeederReverseCommand : public tap::control::Command
-{
+namespace control {
+
+namespace feeder {
+
+class FeederReverseCommand : public tap::control::Command {
+
 public:
     /**
      * Initializes the command with the passed in FeederSubsystem.  Must not
@@ -47,4 +47,3 @@ private:
 }  // namespace control
 
 #endif  // FEEDER_REVERSE_COMMAND_HPP_
-
