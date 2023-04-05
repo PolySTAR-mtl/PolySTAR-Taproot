@@ -3,6 +3,7 @@
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
 #include "control/drivers/drivers.hpp"
+#include "modm/math/filter/pid.hpp"
 
 using namespace tap;
 using tap::communication::serial::Uart;
@@ -29,8 +30,11 @@ void FeederSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* 
         float pidValue = pid->getValue();
         motor->setDesiredOutput(pidValue);
     }
-
 }
+
+void FeederSubsystem::resetPid(float kp, float ki, float kd, float kes, float mo) {
+    feederPid = *new modm::Pid<float>(kp, ki, kd, kes, mo);
+};
 
 /*
     Give desired setpoints for feeder movement.

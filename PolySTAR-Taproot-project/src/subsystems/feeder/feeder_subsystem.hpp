@@ -42,6 +42,8 @@ public:
 
     void setDesiredOutput(float rpm);
 
+    void resetPid(float kp, float ki, float kd, float kes, float mo);
+
     void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM);
 
     const tap::motor::DjiMotor &getFeederMotor() const { return feederMotor; }
