@@ -32,7 +32,7 @@ void  TurretRightAimCommand::execute()
         45 deg = {0..1023}
     */
     turret->setAbsoluteOutput(
-        turret->getYawNeutralPos() - 1023, // Inverted Left-Right
+        turret->getYawNeutralPos() + 1023,
         turret->getPitchNeutralPos() - 300);
 }
 

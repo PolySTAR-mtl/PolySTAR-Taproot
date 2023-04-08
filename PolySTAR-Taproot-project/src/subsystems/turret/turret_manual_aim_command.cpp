@@ -37,6 +37,7 @@ void  TurretManualAimCommand::execute()
 }
 
 void  TurretManualAimCommand::end(bool) {
+    turret->setRelativeOutput(0,0);
     turret->setRelativeControlFlag(false);
 }
 

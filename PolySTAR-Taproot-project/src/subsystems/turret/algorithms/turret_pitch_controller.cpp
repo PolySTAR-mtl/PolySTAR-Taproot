@@ -12,13 +12,13 @@ TurretPitchController::TurretPitchController(const tap::algorithms::SmoothPidCon
 {
 }
 
-float TurretPitchController::runController(float error, float errorDerivative, float velocity, float angle, float dt) {
+void TurretPitchController::runController(float error, float errorDerivative, float velocity, float angle, float dt) {
     float feedForwardOutput = pitchFeedForward.calculateWithGravity(velocity, angle);
     pitchPid.runController(error, errorDerivative, dt);
     output = tap::algorithms::limitVal<float>(pitchPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);
 }
 
-float TurretPitchController::runControllerDerivateError(float error, float velocity, float angle, float dt) {
+void TurretPitchController::runControllerDerivateError(float error, float velocity, float angle, float dt) {
     float feedForwardOutput = pitchFeedForward.calculateWithGravity(velocity, angle);
     pitchPid.runControllerDerivateError(error, dt);
     output = tap::algorithms::limitVal<float>(pitchPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);

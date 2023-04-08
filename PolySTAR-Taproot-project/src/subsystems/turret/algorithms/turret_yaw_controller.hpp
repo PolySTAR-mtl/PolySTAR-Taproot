@@ -14,9 +14,9 @@ class TurretYawController
 public:
     TurretYawController(const tap::algorithms::SmoothPidConfig &pidConfig, const src::algorithms::FeedForwardConfig &ffConfig);
 
-    float runController(float error, float errorDerivative, float velocity, float dt);
+    void runController(float error, float errorDerivative, float velocity, float dt);
 
-    float runControllerDerivateError(float error, float velocity, float dt);
+    void runControllerDerivateError(float error, float velocity, float dt);
 
     float getOutput();
 
@@ -37,8 +37,8 @@ public:
     inline void reset() { yawPid.reset(); }
 
 private:
-    src::algorithms::FeedForward yawFeedForward;
     tap::algorithms::SmoothPid yawPid;
+    src::algorithms::FeedForward yawFeedForward;
 
     float output;
     float maxOutput;

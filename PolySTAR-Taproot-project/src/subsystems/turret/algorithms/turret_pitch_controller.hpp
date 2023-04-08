@@ -14,9 +14,9 @@ class TurretPitchController
 public:
     TurretPitchController(const tap::algorithms::SmoothPidConfig &pidConfig, const src::algorithms::FeedForwardConfig &ffConfig);
 
-    float runController(float error, float errorDerivative, float velocity, float angle, float dt);
+    void runController(float error, float errorDerivative, float velocity, float angle, float dt);
 
-    float runControllerDerivateError(float error, float velocity, float angle, float dt);
+    void runControllerDerivateError(float error, float velocity, float angle, float dt);
 
     float getOutput();
 
@@ -37,8 +37,8 @@ public:
     inline void reset() { pitchPid.reset(); }
 
 private:
-    src::algorithms::FeedForward pitchFeedForward;
     tap::algorithms::SmoothPid pitchPid;
+    src::algorithms::FeedForward pitchFeedForward;
 
     float output;
     float maxOutput;

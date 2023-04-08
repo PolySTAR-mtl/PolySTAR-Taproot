@@ -8,8 +8,8 @@ namespace src
 {
 namespace algorithms
 {
-FeedForward::FeedForward(const FeedForwardConfig &pidConfig)
-    : config(pidConfig)
+FeedForward::FeedForward(const FeedForwardConfig &ffConfig)
+    : config(ffConfig)
 {
 }
 

@@ -7,9 +7,9 @@
  */
 
 static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
-    4.5f, // kP
+    9.0f, // kP
     0.0f, // kI
-    120.0f, // kD
+    150.0f, // kD
     5000.0f, // Max error sum
     16000.0f, // Max output
     1.0f, // TQ Derivative Kalman
@@ -21,9 +21,9 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig PITCH_PID_CONFIG(
-    10.0f, // kP
-    0.035f, // kI
-    80.0f, // kD
+    4.0f, // kP
+    0.0f, // kI
+    75.0f, // kD
     5000.0f, // Max error sum
     16000.0f, // Max output
     1.0f, // TQ Derivative Kalman
@@ -40,17 +40,17 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_PID_CONFIG(
  */
 
 static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
-    0.0f, // kS
-    0.0f, // kV
+    1000.0f, // kS
+    5.0f, // kV
     0.0f, // kG
-    60.0 // maxVelocity
+    1000.0f // maxVelocity
 );
 
 static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
-    0.0f, // kS
-    0.0f, // kV
-    1750.0f, // kG
-    60.0 // maxVelocity
+    900.0f, // kS
+    5.0f, // kV
+    5950.0f, // kG
+    250.0f // maxVelocity
 );
 
 /**

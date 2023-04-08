@@ -12,13 +12,13 @@ TurretYawController::TurretYawController(const tap::algorithms::SmoothPidConfig 
 {
 }
 
-float TurretYawController::runController(float error, float errorDerivative, float velocity, float dt) {
+void TurretYawController::runController(float error, float errorDerivative, float velocity, float dt) {
     float feedForwardOutput = yawFeedForward.calculate(velocity);
     yawPid.runController(error, errorDerivative, dt);
     output = tap::algorithms::limitVal<float>(yawPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);
 }
 
-float TurretYawController::runControllerDerivateError(float error, float velocity, float dt) {
+void TurretYawController::runControllerDerivateError(float error, float velocity, float dt) {
     float feedForwardOutput = yawFeedForward.calculate(velocity);
     yawPid.runControllerDerivateError(error, dt);
     output = tap::algorithms::limitVal<float>(yawPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);

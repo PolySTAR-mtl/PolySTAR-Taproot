@@ -47,9 +47,9 @@ void TurretSubsystem::refresh() {
 
 void TurretSubsystem::updateYawController(uint32_t dt) {
     int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
-    int16_t de = yawMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*yawMotor.getShaftRPM());
-    float velocity = usingRelativeControl ? lastYawDelta : 0.000001*tap::algorithms::getSign(error);
-    
+    int16_t de = yawMotor.getShaftRPM();
+    float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
+
     yawController.runController(error, de, velocity, dt);
     yawMotor.setDesiredOutput(yawController.getOutput());
 }
@@ -58,10 +58,10 @@ void TurretSubsystem::updatePitchController(uint32_t dt) {
     int64_t error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
     int16_t de = pitchMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*pitchMotor.getShaftRPM());
     float angle = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
-    float velocity = usingRelativeControl ? lastPitchDelta : 0.000001*tap::algorithms::getSign(error);
+    float velocity = usingRelativeControl ? lastPitchDelta : 0.001*tap::algorithms::getSign(error);
 
     pitchController.runController(error, de, velocity, angle, dt);
-    pitchMotor.setDesiredOutput(yawController.getOutput());
+    pitchMotor.setDesiredOutput(pitchController.getOutput());
 }
 
 /*
@@ -71,6 +71,8 @@ void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch)
 {
     yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
     pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
+
+    if (fabs<int64_t>(YAW_NEUTRAL_POS-yaw) > YAW_RANGE) {lastYawDelta = 0;}
 }
 
 /*
@@ -83,8 +85,8 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
 
     if (pitchDelta < 0) pitchDelta *= 0.5;
 
-    lastPitchDelta = pitchDelta;
-    lastYawDelta = yawDelta;
+    lastPitchDelta = pitchDelta * PITCH_SCALE_FACTOR;
+    lastYawDelta = yawDelta * YAW_SCALE_FACTOR;
 
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;

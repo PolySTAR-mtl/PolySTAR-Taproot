@@ -16,8 +16,8 @@
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
-// #include "subsystems/turret/turret_left_aim_command.hpp"
-// #include "subsystems/turret/turret_right_aim_command.hpp"
+#include "subsystems/turret/turret_left_aim_command.hpp"
+#include "subsystems/turret/turret_right_aim_command.hpp"
 #include "subsystems/turret/turret_mouse_aim_command.hpp"
 
 // Feeder includes
@@ -59,8 +59,8 @@ chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-// turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
-// turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
+turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
+turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
@@ -74,8 +74,8 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* define command mappings --------------------------------------------------*/
 // HoldCommandMapping feedFeeder(drivers(), {&feederForward}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping flywheelFire(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping reverseFeeder(drivers(), {&feederReverse}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
@@ -118,8 +118,8 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&mouseFireCommandGroup);
     // drivers->commandMapper.addMap(&stopFiring);
     drivers->commandMapper.addMap(&reverseFeeder);
-//    drivers->commandMapper.addMap(&leftAimTurret);
-//    drivers->commandMapper.addMap(&rightAimTurret);
+   drivers->commandMapper.addMap(&leftAimTurret);
+   drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&toggleChassisDrive);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
 }

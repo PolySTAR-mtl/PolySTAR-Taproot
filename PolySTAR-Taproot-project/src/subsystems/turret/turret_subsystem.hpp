@@ -31,7 +31,7 @@ public:
           yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, YAW_IS_INVERTED, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
           yawController(YAW_PID_CONFIG, YAW_FF_CONFIG),
-          pitchController(PITCH_PID_CONFIG, YAW_FF_CONFIG),
+          pitchController(PITCH_PID_CONFIG, PITCH_FF_CONFIG),
           yawDesiredPos(YAW_NEUTRAL_POS),
           pitchDesiredPos(PITCH_NEUTRAL_POS)
     {
@@ -64,7 +64,7 @@ public:
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
-    inline float setRelativeControlFlag( bool relativeControlStatus ) { usingRelativeControl = relativeControlStatus; };
+    inline void setRelativeControlFlag( bool relativeControlStatus ) { usingRelativeControl = relativeControlStatus; };
 
 private:
     ///< Hardware constants, not specific to any particular turret.
