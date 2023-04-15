@@ -40,7 +40,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_PID_CONFIG(
  */
 
 static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
-    1000.0f, // kS
+    1200.0f, // kS
     5.0f, // kV
     0.0f, // kG
     1000.0f // maxVelocity
@@ -49,7 +49,7 @@ static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
 static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
     900.0f, // kS
     5.0f, // kV
-    5950.0f, // kG
+    6050.0f, // kG
     250.0f // maxVelocity
 );
 

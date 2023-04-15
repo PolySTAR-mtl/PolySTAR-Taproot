@@ -91,7 +91,9 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
-    setAbsoluteOutput(newYaw, newPitch);
+    setAbsoluteOutput(
+        yawDelta == 0 ? yawDesiredPos : newYaw,
+        pitchDelta == 0 ? pitchDesiredPos : newPitch);
 }
 
 }  // namespace turret
