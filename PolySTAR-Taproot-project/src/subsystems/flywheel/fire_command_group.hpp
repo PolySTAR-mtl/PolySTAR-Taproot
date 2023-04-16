@@ -11,9 +11,6 @@
 
 namespace control
 {
-/**
- * 
- */
 class FireCommandGroup : public tap::control::ComprisedCommand
 {
 public:

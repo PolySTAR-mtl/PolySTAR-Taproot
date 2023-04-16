@@ -11,10 +11,6 @@
 
 namespace control
 {
-
-/**
- * 
- */
 class FireEndCommandGroup : public tap::control::ComprisedCommand
 {
 public:

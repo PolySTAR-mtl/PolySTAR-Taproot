@@ -20,15 +20,23 @@ void FeederSubsystem::initialize()
 void FeederSubsystem::refresh() {
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
     prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
-    updatePosPid(feederDesiredPos, dt);
+    updateController(feederDesiredPos, dt);
+
+    if (tap::arch::clock::getTimeMilliseconds() - prevDebugMessage > 500) {
+        char buffer[100];
+        int nBytes = sprintf(buffer, "%li %li \n", (int32_t) feederDesiredPos, (int32_t) feederMotor.getEncoderUnwrapped());
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    }
 }
 
-void FeederSubsystem::updatePosPid(float desiredPos, uint32_t dt) {
-    // sets position with pid
+void FeederSubsystem::updateController(float desiredPos, uint32_t dt) {
     float error = desiredPos - feederMotor.getEncoderUnwrapped();
 
-    feederPid.runControllerDerivateError(error, dt);
-    feederMotor.setDesiredOutput(feederPid.getOutput());
+    if (fabs(error) < DEGREE_TO_TICK) error = 0;
+
+    float outputPID = feederPID.runControllerDerivateError(error, dt);
+    float outputFF = feederFF.calculate(error);
+    feederMotor.setDesiredOutput(outputPID + outputFF);
 }
 
 inline float FeederSubsystem::getSetpoint() const {

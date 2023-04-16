@@ -6,7 +6,6 @@
 
 namespace control
 {
-
 FireCommandGroup::FireCommandGroup(
     flywheel::FlywheelSubsystem *const flywheel,
     feeder::FeederSubsystem *const feeder,

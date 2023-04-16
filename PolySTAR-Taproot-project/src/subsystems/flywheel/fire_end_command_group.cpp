@@ -2,7 +2,6 @@
 
 namespace control
 {
-
 FireEndCommandGroup::FireEndCommandGroup(
     flywheel::FlywheelSubsystem *const flywheel,
     feeder::FeederSubsystem *const feeder,
@@ -39,6 +38,5 @@ void FireEndCommandGroup::end(bool interrupted)
 }
 
 }  // namespace control
-
 
 

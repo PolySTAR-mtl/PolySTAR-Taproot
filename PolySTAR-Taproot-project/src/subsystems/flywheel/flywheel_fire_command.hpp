@@ -9,9 +9,7 @@ namespace control
 {
 namespace flywheel
 {
-/**
- * A bare bones Subsystem for interacting with a flywheel.
- */
+
 class FlywheelFireCommand : public tap::control::Command
 {
 public:

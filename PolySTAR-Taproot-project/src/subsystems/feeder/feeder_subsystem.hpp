@@ -28,7 +28,8 @@ public:
     FeederSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, false, "feeder motor"),
-          feederPid(pidConfig),
+          feederPID(FEEDER_PID_CONFIG),
+          feederFF(FEEDER_FF_CONFIG),
           jamChecker(this, JAM_CHECKER_TOLERANCE_TICK, JAM_CHECKER_TOLERANCE_MS)
     {
     }
@@ -43,7 +44,7 @@ public:
 
     void refresh() override;
 
-    void updatePosPid(float desiredPos, uint32_t dt);
+    void updateController(float desiredPos, uint32_t dt);
 
     const tap::motor::DjiMotor &getFeederMotor() const { return feederMotor; }
 
@@ -74,15 +75,12 @@ private:
 
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor feederMotor;
-
-    // Smooth PID configuration
-    tap::algorithms::SmoothPidConfig pidConfig = { FEEDER_PID_KP, FEEDER_PID_KI, FEEDER_PID_KD,
-                                                            FEEDER_PID_MAX_ERROR_SUM, FEEDER_PID_MAX_OUTPUT,
-                                                            FEEDER_TQ_DERIVATIVE_KALMAN, FEEDER_TR_DERIVATIVE_KALMAN,
-                                                            FEEDER_TQ_PROPORTIONAL_KALMAN, FEEDER_TR_PROPORTIONAL_KALMAN };
     
-    // PID controllers for position feedback from motors
-    tap::algorithms::SmoothPid feederPid;
+    // PID controller for position feedback from motor
+    tap::algorithms::SmoothPid feederPID;
+
+    // Feedforward controller for position feedback from motor
+    src::algorithms::FeedForward feederFF;
 
     // Jam Checker
     tap::control::setpoint::SetpointContinuousJamChecker jamChecker;
@@ -92,6 +90,8 @@ private:
 
     uint16_t feederOrigin;
     bool feederCalibrated;
+
+    uint32_t prevDebugMessage = 0;
 
 };  // class FeederSubsystem
 
