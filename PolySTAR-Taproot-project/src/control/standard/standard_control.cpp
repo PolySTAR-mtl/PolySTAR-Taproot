@@ -66,7 +66,7 @@ turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
-feeder::FeederMoveCommand feederMove(&theFeeder, drivers());
+feeder::FeederMoveCommand feederMove(&theFeeder);
 
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 // flywheel::FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
@@ -77,7 +77,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 // HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMove}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
+HoldCommandMapping feedFeeder(drivers(), {&feederMove}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
