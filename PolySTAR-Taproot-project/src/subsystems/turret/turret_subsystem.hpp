@@ -2,13 +2,14 @@
 #define TURRET_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
-#include "tap/algorithms/smooth_pid.hpp"
-#include "modm/math/filter/pid.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "turret_constants.hpp"
+#include "algorithms/turret_pitch_controller.hpp"
+#include "algorithms/turret_yaw_controller.hpp"
 
-//#include "control/control_operator_interface_edu.hpp"
+using turret::algorithms::TurretPitchController;
+using turret::algorithms::TurretYawController;
 
 namespace control
 {
@@ -27,10 +28,10 @@ public:
      */
     TurretSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, true, "yaw motor"),
-          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
-          yawPid(yawPidConfig),
-          pitchPid(pitchPidConfig),
+          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, YAW_IS_INVERTED, "yaw motor"),
+          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
+          yawController(YAW_PID_CONFIG, YAW_FF_CONFIG),
+          pitchController(PITCH_PID_CONFIG, PITCH_FF_CONFIG),
           yawDesiredPos(YAW_NEUTRAL_POS),
           pitchDesiredPos(PITCH_NEUTRAL_POS)
     {
@@ -49,7 +50,8 @@ public:
     void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
-    void updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt);
+    void updateYawController(uint32_t dt);
+    void updatePitchController(uint32_t dt);
 
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
@@ -62,7 +64,7 @@ public:
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
-    float approximateCos(float angle);
+    inline void setRelativeControlFlag( bool relativeControlStatus ) { usingRelativeControl = relativeControlStatus; };
 
 private:
     ///< Hardware constants, not specific to any particular turret.
@@ -77,26 +79,21 @@ private:
     tap::motor::DjiMotor yawMotor;
     tap::motor::DjiMotor pitchMotor;
 
-    // Smooth PID configuration
-    tap::algorithms::SmoothPidConfig yawPidConfig = { TURRET_YAW_PID_KP, TURRET_YAW_PID_KI, TURRET_YAW_PID_KD, 
-                                                      TURRET_YAW_PID_MAX_ERROR_SUM, TURRET_YAW_PID_MAX_OUTPUT, 
-                                                      TURRET_YAW_TQ_DERIVATIVE_KALMAN, TURRET_YAW_TR_DERIVATIVE_KALMAN, 
-                                                      TURRET_YAW_TQ_PROPORTIONAL_KALMAN, TURRET_YAW_TR_PROPORTIONAL_KALMAN };
-    tap::algorithms::SmoothPidConfig pitchPidConfig = { TURRET_PITCH_PID_KP, TURRET_PITCH_PID_KI, TURRET_PITCH_PID_KD, 
-                                                        TURRET_PITCH_PID_MAX_ERROR_SUM, TURRET_PITCH_PID_MAX_OUTPUT, 
-                                                        TURRET_PITCH_TQ_DERIVATIVE_KALMAN, TURRET_PITCH_TR_DERIVATIVE_KALMAN, 
-                                                        TURRET_PITCH_TQ_PROPORTIONAL_KALMAN, TURRET_PITCH_TR_PROPORTIONAL_KALMAN };
-
-    // Smooth PID controllers for position feedback from motors
-    tap::algorithms::SmoothPid yawPid;
-    tap::algorithms::SmoothPid pitchPid;
+    // Motor Controllers for position control (SmoothPID feedback and custom feedforward)
+    TurretYawController yawController;
+    TurretPitchController pitchController;
 
     ///< Any user input is translated into desired position for each motor.
     float yawDesiredPos;
     float pitchDesiredPos;
 
+    // Previous relative input delta, used in feedforward controller
+    float lastYawDelta = 0;
+    float lastPitchDelta = 0;
+    bool usingRelativeControl = false;
+
     uint32_t prevDebugTime;
-    uint32_t prevPidUpdate;
+    uint32_t prevControllerUpdate;
 
 };  // class TurretSubsystem
 

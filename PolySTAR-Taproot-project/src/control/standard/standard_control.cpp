@@ -1,3 +1,5 @@
+#ifdef TARGET_STANDARD
+
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
@@ -15,8 +17,8 @@
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
-// #include "subsystems/turret/turret_left_aim_command.hpp"
-// #include "subsystems/turret/turret_right_aim_command.hpp"
+#include "subsystems/turret/turret_left_aim_command.hpp"
+#include "subsystems/turret/turret_right_aim_command.hpp"
 #include "subsystems/turret/turret_mouse_aim_command.hpp"
 
 // Feeder includes
@@ -61,8 +63,8 @@ chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers()
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-// turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
-// turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
+turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
+turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
@@ -78,7 +80,6 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* define command mappings --------------------------------------------------*/
 // HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 HoldCommandMapping feedFeeder(drivers(), {&feederMove}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
@@ -136,6 +137,11 @@ void initSubsystemCommands(src::Drivers *drivers)
     setDefaultStandardCommands(drivers);
     startStandardCommands(drivers);
     registerStandardIoMappings(drivers);
+    char buffer[50];
+    int nBytes = sprintf(buffer,"Initializing Standard\n");
+    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
 }
 
 }  // namespace control
+
+#endif  // TARGET_STANDARD
