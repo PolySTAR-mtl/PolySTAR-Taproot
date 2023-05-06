@@ -1,7 +1,5 @@
 #ifdef TARGET_HERO
 
-#ifdef TARGET_STANDARD
-
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
