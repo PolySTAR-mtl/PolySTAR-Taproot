@@ -26,6 +26,7 @@
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_reverse_command.hpp"
 #include "subsystems/feeder/feeder_move_command.hpp"
+#include "subsystems/feeder/feeder_subsystem_legacy.hpp"
 
 //Flywheel includes
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
@@ -55,6 +56,7 @@ namespace control
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers());
 feeder::FeederSubsystem topFeeder(drivers());
+feeder::FeederSubsystemLegacy bottomFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
@@ -71,6 +73,8 @@ feeder::FeederMoveUnjamCommand feederMoveUnjam(&topFeeder, drivers());
 feeder::FeederMoveCommand feederMove(&topFeeder);
 
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
+flywheel::FireCommandGroup fireCommandGroup(&theFlywheel, &bottomFeeder, drivers());
+
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -80,6 +84,9 @@ HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapStat
 HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
+HoldCommandMapping heroFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+
+
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -87,6 +94,7 @@ void registerStandardSubsystems(src::Drivers *drivers) {
     drivers->commandScheduler.registerSubsystem(&theTurret);
     drivers->commandScheduler.registerSubsystem(&topFeeder);
     drivers->commandScheduler.registerSubsystem(&theFlywheel);
+    drivers->commandScheduler.registerSubsystem(&bottomFeeder);
 }
 
 /* initialize subsystems ----------------------------------------------------*/
@@ -95,6 +103,7 @@ void initializeSubsystems() {
     theTurret.initialize();
     topFeeder.initialize();
     theFlywheel.initialize();
+    bottomFeeder.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
@@ -117,6 +126,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
 //    drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&toggleChassisDrive);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
+    drivers->commandMapper.addMap(&heroFireCommandGroup);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
