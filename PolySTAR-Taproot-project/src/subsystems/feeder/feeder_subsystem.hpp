@@ -27,7 +27,7 @@ public:
      */
     FeederSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, false, "feeder motor"),
+          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, IS_FEEDER_INVERTED, "feeder motor"),
           feederPID(FEEDER_PID_CONFIG),
           feederFF(FEEDER_FF_CONFIG),
           jamChecker(this, JAM_CHECKER_TOLERANCE_TICK, JAM_CHECKER_TOLERANCE_MS)
