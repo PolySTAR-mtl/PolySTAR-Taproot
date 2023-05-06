@@ -50,4 +50,4 @@ static constexpr float SETPOINT_POS_TOLERANCE_TICK = 1*DEGREE_TO_TICK; // TO BE 
 static constexpr float JAM_CHECKER_TOLERANCE_TICK = 5*DEGREE_TO_TICK;
 static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;
 
-static constexpr bool IS_FEEDER_INVERTED = true;
+static constexpr bool IS_FEEDER_INVERTED = false;

@@ -66,7 +66,9 @@ turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
 turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 
-feeder::FeederMoveUnjamCommand feederMove(&theFeeder, drivers());
+feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
+
+flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 
 FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
 FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
@@ -76,8 +78,10 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /*-Ammo Booster-*/
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMove}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);// HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);// HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
+/*-Flywheel-*/
+HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 /*-Turret-*/
 HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
@@ -120,6 +124,8 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     // drivers->commandMapper.addMap(&remoteFireCommandGroup);
     // drivers->commandMapper.addMap(&mouseFireCommandGroup);
     drivers->commandMapper.addMap(&feedFeeder);
+    /*-Flywheel-*/
+    drivers->commandMapper.addMap(&startFlywheel);
     /*-Turret-*/
     drivers->commandMapper.addMap(&leftAimTurret);
     drivers->commandMapper.addMap(&rightAimTurret);

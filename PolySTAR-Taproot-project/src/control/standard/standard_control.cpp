@@ -79,7 +79,8 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 // HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
-HoldCommandMapping feedFeeder(drivers(), {&feederMove}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
+HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
@@ -123,6 +124,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     // drivers->commandMapper.addMap(&mouseFireCommandGroup);
     // drivers->commandMapper.addMap(&stopFiring);
     drivers->commandMapper.addMap(&feedFeeder);
+    drivers->commandMapper.addMap(&startFlywheel);
 //    drivers->commandMapper.addMap(&leftAimTurret);
 //    drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&toggleChassisDrive);
