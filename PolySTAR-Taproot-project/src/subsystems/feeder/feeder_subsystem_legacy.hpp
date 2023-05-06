@@ -1,5 +1,5 @@
-#ifndef FEEDER_SUBSYSTEM_HPP_
-#define FEEDER_SUBSYSTEM_HPP_
+#ifndef FEEDER_SUBSYSTEM_LEGACY_HPP_
+#define FEEDER_SUBSYSTEM_LEGACY_HPP_
 
 #include "tap/control/subsystem.hpp"
 #include "modm/math/filter/pid.hpp"
@@ -66,4 +66,4 @@ private:
 
 }  // namespace control
 
-#endif  // FEEDER_SUBSYSTEM_HPP_
+#endif  // FEEDER_SUBSYSTEM_LEGACY_HPP_
