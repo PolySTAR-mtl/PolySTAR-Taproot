@@ -26,7 +26,7 @@ static constexpr tap::algorithms::SmoothPidConfig FEEDER_PID_CONFIG(
  */
 
 static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
-    400.0f, // kS
+    500.0f, // kS
     0.0f, // kV
     0.0f, // kG
     1000.0f // maxVelocity
@@ -43,11 +43,17 @@ static constexpr float UNJAM_MAX_WAIT_TIME_MS = 500; // TO BE DETERMINED
 static constexpr float MOVE_DISPLACEMENT_TICK = 90*DEGREE_TO_TICK; // TO BE DETERMINED 
 static constexpr float UNJAM_CYCLES = 4; // TO BE DETERMINED
 static constexpr float UNJAM_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
-static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 100; // TO BE DETERMINED ////////
-static constexpr float MOVE_TIME_MS = 125; // TO BE DETERMINED //////
+static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 500; // TO BE DETERMINED ////////
+static constexpr float MOVE_TIME_MS = 200; // TO BE DETERMINED //////
 static constexpr float SETPOINT_POS_TOLERANCE_TICK = 1*DEGREE_TO_TICK; // TO BE DETERMINED
 
 static constexpr float JAM_CHECKER_TOLERANCE_TICK = 5*DEGREE_TO_TICK;
 static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;
 
-static constexpr bool IS_FEEDER_INVERTED = false;
+static constexpr bool IS_FEEDER_INVERTED = true;
+
+static constexpr float FEEDER_PID_KP = 20.0f;
+static constexpr float FEEDER_PID_KI = 5.0f;
+static constexpr float FEEDER_PID_KD = 0.0f;
+static constexpr float FEEDER_PID_MAX_ERROR_SUM = 5000.0f;
+static constexpr float FEEDER_PID_MAX_OUTPUT = 8000.0f;

@@ -6,7 +6,6 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "feeder_constants.hpp"
-
 namespace control
 {
 namespace feeder
@@ -24,7 +23,7 @@ public:
      */
     FeederSubsystemLegacy(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, false, "feeder motor"),
+          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, IS_FEEDER_INVERTED, "feeder motor"),
           feederPid(FEEDER_PID_KP,FEEDER_PID_KI,FEEDER_PID_KD,FEEDER_PID_MAX_ERROR_SUM,FEEDER_PID_MAX_OUTPUT)
 
     {
@@ -48,7 +47,7 @@ public:
 
 private:
     ///< Hardware constants, not specific to any particular feeder.
-    static constexpr tap::motor::MotorId FEEDER_MOTOR_ID = tap::motor::MOTOR8;
+    static constexpr tap::motor::MotorId FEEDER_MOTOR_ID = tap::motor::MOTOR7;
     static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
     ///< Motors.  Use these to interact with any dji style motors.
