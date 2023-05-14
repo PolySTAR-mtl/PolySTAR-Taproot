@@ -81,18 +81,4 @@ bool CVHandler::decodeToShootOrder()
     return true;
 }
 
-/*
-* Send CV Message over UART.
-* Returns true if message was sent succesfully
-*/
-bool CVHandler::sendCVMessage(CVSerialData::Tx::CVMessageHeader &message) {
-    // TODO waiting for the buffer to empty every time slows us down. It's likely the buffer is big enough that we won't have 
-    // to worry about overflowing it, but needs to be tested
-    if (drivers->uart.isWriteFinished(getUartPort())) {
-        drivers->uart.write(getUartPort(), reinterpret_cast<uint8_t*>(&message), CVSerialData::Tx::DATA_LEN_PREFIX + message.dataLength);
-        return true;
-    }
-    return false;
-} ;
-
 }  // namespace src::communication::cv

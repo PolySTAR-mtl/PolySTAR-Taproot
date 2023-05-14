@@ -126,7 +126,7 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
     Attempts to send IMU and wheel encoder data to CV over UART.
     Returns true if the positionMessage was sent sucessfully.
 */
-bool ChassisSubsystem::sendCVUpdate() {
+void ChassisSubsystem::sendCVUpdate() {
 
     // Get IMU measurements
     float Ax = drivers->mpu6500.getAx();
@@ -187,11 +187,7 @@ bool ChassisSubsystem::sendCVUpdate() {
     positionMessage.backLeftRPM = backLeftRPM;
     positionMessage.backRightRPM = backRightRPM;
 
-    if (drivers->cvHandler.sendCVMessage(positionMessage)) {
-        return true;
-    }
-
-    return false;
+    drivers->uart.write(Uart::UartPort::Uart7, (uint8_t*)(&positionMessage), sizeof(positionMessage));
 }
 
 }  // namespace chassis

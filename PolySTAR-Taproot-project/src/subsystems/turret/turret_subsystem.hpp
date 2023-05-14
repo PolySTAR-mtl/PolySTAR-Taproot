@@ -65,7 +65,7 @@ public:
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
-    bool sendCVUpdate();
+    void sendCVUpdate();
 
     float approximateCos(float angle);
 
