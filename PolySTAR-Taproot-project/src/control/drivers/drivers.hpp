@@ -22,6 +22,7 @@
 
 #include "tap/drivers.hpp"
 #include "control/control_interface.hpp"
+#include "communication/cv_handler.hpp"
 
 namespace src
 {
@@ -34,12 +35,14 @@ public:
 #endif
     Drivers() : 
         tap::Drivers(),
-        controlInterface(this)
+        controlInterface(this),
+        cvHandler(this)
     {
     }
 
 public:
     control::ControlInterface controlInterface;
+    communication::cv::CVHandler cvHandler;
 };  // class Drivers
 
 }  // namespace src

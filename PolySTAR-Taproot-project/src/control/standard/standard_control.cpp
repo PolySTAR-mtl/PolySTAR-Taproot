@@ -12,6 +12,7 @@
 #include "subsystems/chassis/chassis_drive_command.hpp"
 #include "subsystems/chassis/chassis_keyboard_drive_command.hpp"
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+#include "subsystems/chassis/chassis_auto_drive_command.hpp"
 
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
@@ -58,12 +59,16 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+chassis::ChassisAutoDriveCommand chassisAutoDrive(&theChassis, drivers());
+
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
 turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
+
 feeder::FeederFeedCommand feederForward(&theFeeder, drivers());
 feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
+
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 flywheel::FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
 flywheel::FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
@@ -81,6 +86,7 @@ HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, Remote
 HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
+ToggleCommandMapping toggleChassisAuto(drivers(), {&chassisAutoDrive}, RemoteMapState({Remote::Key::R}));
 
 // HoldCommandMapping stopFiring(drivers(), {&fireEndCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::MID));
 
@@ -121,6 +127,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&toggleChassisDrive);
+    drivers->commandMapper.addMap(&toggleChassisAuto);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
 }
 

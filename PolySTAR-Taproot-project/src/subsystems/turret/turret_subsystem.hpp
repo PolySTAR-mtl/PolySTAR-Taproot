@@ -7,6 +7,7 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "turret_constants.hpp"
+#include "control/drivers/drivers.hpp"
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -25,14 +26,15 @@ public:
      * Constructs a new TurretSubsystem with default parameters specified in
      * the private section of this class.
      */
-    TurretSubsystem(tap::Drivers *drivers)
+    TurretSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, true, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, false, "pitch motor"),
           yawPid(yawPidConfig),
           pitchPid(pitchPidConfig),
           yawDesiredPos(YAW_NEUTRAL_POS),
-          pitchDesiredPos(PITCH_NEUTRAL_POS)
+          pitchDesiredPos(PITCH_NEUTRAL_POS),
+          prevCVUpdate(0)
     {
     }
 
@@ -47,6 +49,7 @@ public:
     void refresh() override;
 
     void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
+    void setAbsoluteOutputDegrees(float yaw, float pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
     void updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt);
@@ -62,9 +65,13 @@ public:
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
+    bool sendCVUpdate();
+
     float approximateCos(float angle);
 
 private:
+    src::Drivers *drivers;
+
     ///< Hardware constants, not specific to any particular turret.
     static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
     static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
@@ -97,6 +104,13 @@ private:
 
     uint32_t prevDebugTime;
     uint32_t prevPidUpdate;
+
+    // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
+    static constexpr float YAW_SCALE_FACTOR = 55.0f;
+    static constexpr float PITCH_SCALE_FACTOR = 40.0f;
+
+    // Variables for managing UART messages sent to CV
+    uint32_t prevCVUpdate;
 
 };  // class TurretSubsystem
 

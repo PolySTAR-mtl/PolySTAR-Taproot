@@ -8,6 +8,7 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "chassis_constants.hpp"
+#include "control/drivers/drivers.hpp"
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -36,8 +37,9 @@ public:
      * Constructs a new ChassisSubsystem with default parameters specified in
      * the private section of this class.
      */
-    ChassisSubsystem(tap::Drivers *drivers)
+    ChassisSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
+          drivers(drivers),
           frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CAN_BUS_MOTORS, false, "front left motor"),
           frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CAN_BUS_MOTORS, true, "front right motor"),
           backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CAN_BUS_MOTORS, false, "back left motor"),
@@ -49,7 +51,8 @@ public:
           frontLeftDesiredRpm(0),
           frontRightDesiredRpm(0),
           backLeftDesiredRpm(0),
-          backRightDesiredRpm(0)
+          backRightDesiredRpm(0),
+          prevCVUpdate(0)
     {
     }
 
@@ -69,12 +72,16 @@ public:
     void updateRpmSetpoints();
     void setTargetOutput(float x, float y, float r);
 
+    bool sendCVUpdate();
+
     const tap::motor::DjiMotor &getFrontLeftMotor() const { return frontLeftMotor; }
     const tap::motor::DjiMotor &getFrontRightMotor() const { return frontRightMotor; }
     const tap::motor::DjiMotor &getBackLeftMotor() const { return backLeftMotor; }
     const tap::motor::DjiMotor &getBackRightMotor() const { return backRightMotor; }
 
 private:
+    src::Drivers *drivers;
+
     ///< Hardware constants, not specific to any particular chassis.
     static constexpr tap::motor::MotorId FRONT_LEFT_MOTOR_ID = tap::motor::MOTOR1;
     static constexpr tap::motor::MotorId FRONT_RIGHT_MOTOR_ID = tap::motor::MOTOR2;
@@ -125,6 +132,13 @@ private:
 
     uint32_t prevDebugTime;
     uint32_t prevPidUpdate;
+
+    // Variables for managing UART messages sent to CV
+    uint32_t prevCVUpdate;
+
+    // Conversions for CV Messages
+    const int16_t M_TO_MM = 1000;
+    const float DEG_TO_MILLIRAD = 17.453293;
 
 };  // class ChassisSubsystem
 

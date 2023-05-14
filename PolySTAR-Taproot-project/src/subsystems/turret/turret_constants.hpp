@@ -60,5 +60,12 @@ static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
 /*
  *   Enable UART debug messages for turret
  */
-static constexpr bool TURRET_DEBUG_MESSAGE = true;
+static constexpr bool TURRET_DEBUG_MESSAGE = false;
 static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
+
+ /**
+ * Interval for sending messages over UART to the Computer Vision computer
+ * Time is in milliseconds.
+ */
+
+static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
