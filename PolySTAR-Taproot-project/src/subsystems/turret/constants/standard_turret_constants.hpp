@@ -6,6 +6,9 @@
  * controller are listed below.
  */
 
+float constexpr TURRET_CGX = 1; // TO DETERMINE
+float constexpr TURRET_CGY = 0.95; // TO DETERMINE
+
 static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
     4.5f, // kP
     0.0f, // kI
@@ -56,7 +59,7 @@ static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr int64_t YAW_NEUTRAL_POS = 3470;
+static constexpr int64_t YAW_NEUTRAL_POS = 7570;
 static constexpr int64_t PITCH_NEUTRAL_POS = 6170;
 
 /**

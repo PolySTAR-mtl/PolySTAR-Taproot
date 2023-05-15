@@ -27,20 +27,12 @@ public:
      */
     float calculate(float velocity);
 
-    /**
-     * Calculates the FeedForward input with gravity compensation.
-     *
-     * @param[in] velocity The desired velocity (in user-defined units) of the controlled system.
-     * @param[in] angle The current angle from horizontal (in degrees) of the controlled system with gravity compensation.
-     */
-    float calculateWithGravity(float velocity, float angle);
-
     inline void setKs(float ks) { config.ks = ks; }
     inline void setKv(float kv) { config.kv = kv; }
     inline void setKg(float kg) { config.kg = kg; }
     inline void setMaxVel(float maxVel) { config.maxVelocity = maxVel; }
 
-private:
+protected:
     // gains and constants, to be set by the user
     FeedForwardConfig config;
 

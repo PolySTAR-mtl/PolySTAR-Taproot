@@ -29,7 +29,6 @@
 //Flywheel includes
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
 #include "subsystems/flywheel/flywheel_fire_command.hpp"
-#include "subsystems/flywheel/fire_command_group.hpp"
 
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
@@ -70,8 +69,8 @@ feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 
-FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
-FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
+//FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
+//FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -125,7 +124,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     // drivers->commandMapper.addMap(&mouseFireCommandGroup);
     drivers->commandMapper.addMap(&feedFeeder);
     /*-Flywheel-*/
-    drivers->commandMapper.addMap(&startFlywheel);
+    // drivers->commandMapper.addMap(&startFlywheel);
     /*-Turret-*/
     drivers->commandMapper.addMap(&leftAimTurret);
     drivers->commandMapper.addMap(&rightAimTurret);

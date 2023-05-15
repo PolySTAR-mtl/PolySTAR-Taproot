@@ -6,6 +6,9 @@
  * controller are listed below.
  */
 
+float constexpr TURRET_CGX = 0; // TO DETERMINE
+float constexpr TURRET_CGY = 0; // TO DETERMINE
+
 static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
     4.5f, // kP
     0.0f, // kI

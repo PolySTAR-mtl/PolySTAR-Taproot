@@ -6,6 +6,9 @@
  * controller are listed below.
  */
 
+float constexpr TURRET_CGX = 1; // TO DETERMINE
+float constexpr TURRET_CGY = 0; // TO DETERMINE
+
 static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
     9.0f, // kP
     0.0f, // kI
@@ -49,7 +52,7 @@ static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
 static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
     900.0f, // kS
     5.0f, // kV
-    6050.0f, // kG
+    3375.0f, // kG
     250.0f // maxVelocity
 );
 
@@ -70,7 +73,7 @@ static constexpr int64_t PITCH_RANGE = 400;
 /**
  * Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
  */
-static constexpr float YAW_SCALE_FACTOR = 1000.0f;
+static constexpr float YAW_SCALE_FACTOR = 500.0f;
 static constexpr float PITCH_SCALE_FACTOR = 250.0f;
 
 /**

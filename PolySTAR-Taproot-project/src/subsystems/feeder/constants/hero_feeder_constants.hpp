@@ -51,9 +51,3 @@ static constexpr float JAM_CHECKER_TOLERANCE_TICK = 5*DEGREE_TO_TICK;
 static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;
 
 static constexpr bool IS_FEEDER_INVERTED = true;
-
-static constexpr float FEEDER_PID_KP = 20.0f;
-static constexpr float FEEDER_PID_KI = 5.0f;
-static constexpr float FEEDER_PID_KD = 0.0f;
-static constexpr float FEEDER_PID_MAX_ERROR_SUM = 5000.0f;
-static constexpr float FEEDER_PID_MAX_OUTPUT = 8000.0f;

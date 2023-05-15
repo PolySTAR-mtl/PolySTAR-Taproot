@@ -2,7 +2,7 @@
 #define TURRET_PITCH_CONTROLLER_HPP_
 
 #include "tap/algorithms/smooth_pid.hpp"
-#include "algorithms/feed_forward.hpp"
+#include "algorithms/gravity_feed_forward.hpp"
 
 namespace turret
 {
@@ -38,7 +38,7 @@ public:
 
 private:
     tap::algorithms::SmoothPid pitchPid;
-    src::algorithms::FeedForward pitchFeedForward;
+    src::algorithms::GravityFeedForward pitchFeedForward;
 
     float output;
     float maxOutput;

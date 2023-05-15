@@ -22,11 +22,11 @@ void FeederSubsystem::refresh() {
     prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
     updateController(feederDesiredPos, dt);
 
-    if (tap::arch::clock::getTimeMilliseconds() - prevDebugMessage > 500) {
-        char buffer[100];
-        int nBytes = sprintf(buffer, "%li %li \n", (int32_t) feederDesiredPos, (int32_t) feederMotor.getEncoderUnwrapped());
-        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
-    }
+    // if (tap::arch::clock::getTimeMilliseconds() - prevDebugMessage > 500) {
+    //     char buffer[100];
+    //     int nBytes = sprintf(buffer, "%li %li \n", (int32_t) feederDesiredPos, (int32_t) feederMotor.getEncoderUnwrapped());
+    //     drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    // }
 }
 
 void FeederSubsystem::updateController(float desiredPos, uint32_t dt) {
