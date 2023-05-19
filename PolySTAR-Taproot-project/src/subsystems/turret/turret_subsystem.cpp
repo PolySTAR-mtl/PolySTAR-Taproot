@@ -115,7 +115,7 @@ float TurretSubsystem::approximateCos(float angle) {
     Attempts to send IMU and wheel encoder data to CV over UART.
     Returns true if the positionMessage was sent sucessfully.
 */
-bool TurretSubsystem::sendCVUpdate() {
+void TurretSubsystem::sendCVUpdate() {
 
     // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
     // We take the unwrapped encoder value since turrent range is limited to less than 1 rotation
@@ -133,11 +133,7 @@ bool TurretSubsystem::sendCVUpdate() {
     turretMessage.yaw = static_cast<int16_t>(currentBodyYawDeg*DEG_TO_MILIRAD);
     turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg*DEG_TO_MILIRAD);
 
-    if (drivers->cvHandler.sendCVMessage(turretMessage)) {
-        return true;
-    }
-
-    return false;
+    drivers->uart.write(Uart::UartPort::Uart7, (uint8_t*)(&turretMessage), sizeof(turretMessage));
 }
 
 }  // namespace turret

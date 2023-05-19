@@ -72,7 +72,7 @@ public:
     void updateRpmSetpoints();
     void setTargetOutput(float x, float y, float r);
 
-    bool sendCVUpdate();
+    void sendCVUpdate();
 
     const tap::motor::DjiMotor &getFrontLeftMotor() const { return frontLeftMotor; }
     const tap::motor::DjiMotor &getFrontRightMotor() const { return frontRightMotor; }

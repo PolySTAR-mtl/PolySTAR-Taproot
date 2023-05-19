@@ -46,7 +46,7 @@ static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
  * Time is in milliseconds.
  */
 
-static constexpr uint32_t CHASSIS_CV_UPDATE_PERIOD = 4;
+static constexpr uint32_t CHASSIS_CV_UPDATE_PERIOD = 10;
 
 /**
  * Conversion rates for CV velocities to chassis inputs.
