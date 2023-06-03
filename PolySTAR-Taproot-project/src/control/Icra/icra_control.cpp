@@ -69,16 +69,12 @@ feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 
-//FireCommandGroup fireCommandGroup(&theFlywheel, &theFeeder, drivers());
-//FireEndCommandGroup fireEndCommandGroup(&theFlywheel, &theFeeder, drivers());
-
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /*-Ammo Booster-*/
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);// HoldCommandMapping remoteFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-// HoldCommandMapping mouseFireCommandGroup(drivers(), {&fireCommandGroup}, RemoteMapState(RemoteMapState::MouseButton::LEFT));
+HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 /*-Flywheel-*/
 HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 /*-Turret-*/
@@ -88,6 +84,9 @@ ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMa
 /*-Chassis-*/
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 
+/*-Only used for calibration-*/
+// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -109,7 +108,6 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    // theFeeder.setDefaultCommand(&fireEndCommandGroup);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -120,8 +118,6 @@ void startStandardCommands(src::Drivers *drivers) {
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {  
     /*-Ammo Booster-*/
-    // drivers->commandMapper.addMap(&remoteFireCommandGroup);
-    // drivers->commandMapper.addMap(&mouseFireCommandGroup);
     drivers->commandMapper.addMap(&feedFeeder);
     /*-Flywheel-*/
     // drivers->commandMapper.addMap(&startFlywheel);

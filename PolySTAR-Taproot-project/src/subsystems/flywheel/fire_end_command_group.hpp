@@ -6,7 +6,6 @@
 #include "subsystems/feeder/feeder_feed_command.hpp"
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
-#include "subsystems/feeder/feeder_reverse_command.hpp"
 #include "subsystems/feeder/feeder_subsystem.hpp"
 
 namespace control
@@ -40,8 +39,6 @@ public:
 private:
     // attributes needed to operate the group command 
     flywheel::FlywheelFireCommand fireCommand;
-
-    // feeder::FeederReverseCommand reverseFeedCommand;
 
     src::Drivers *drivers;
 

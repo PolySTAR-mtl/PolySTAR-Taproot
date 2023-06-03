@@ -24,7 +24,6 @@
 // Feeder includes
 #include "subsystems/feeder/feeder_subsystem.hpp"
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
-#include "subsystems/feeder/feeder_reverse_command.hpp"
 #include "subsystems/feeder/feeder_move_command.hpp"
 #include "subsystems/feeder/feeder_subsystem_legacy.hpp"
 
@@ -84,6 +83,9 @@ HoldCommandMapping startFlywheel(drivers(), {&flywheelStart, &feedFeederLegacy},
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 
+/*-Only used for calibration-*/
+// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 
 /* register subsystems here -------------------------------------------------*/
@@ -108,7 +110,6 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    // theFeeder.setDefaultCommand(&fireEndCommandGroup);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/

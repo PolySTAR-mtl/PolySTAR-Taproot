@@ -7,8 +7,7 @@ FireEndCommandGroup::FireEndCommandGroup(
     feeder::FeederSubsystem *const feeder,
     src::Drivers* drivers)
     : tap::control::ComprisedCommand(drivers),
-      fireCommand(flywheel, drivers) //,
-    //   reverseFeedCommand(feeder, drivers)
+      fireCommand(flywheel, drivers)
 {
     this->addSubsystemRequirement(flywheel);
     this->addSubsystemRequirement(feeder);
@@ -18,7 +17,6 @@ FireEndCommandGroup::FireEndCommandGroup(
 
 void FireEndCommandGroup::initialize() {
     this->comprisedCommandScheduler.addCommand(&fireCommand);
-    // this->comprisedCommandScheduler.addCommand(&reverseFeedCommand);
     flywheelDelayTimer.restart(FEEDER_DELAY_MS);
 }
 
@@ -26,7 +24,6 @@ void FireEndCommandGroup::execute()
 {
     if ( flywheelDelayTimer.execute()) {
             this->comprisedCommandScheduler.removeCommand(&fireCommand, false);
-            // this->comprisedCommandScheduler.removeCommand(&reverseFeedCommand, false);
     }
     this->comprisedCommandScheduler.run();
 }
@@ -34,7 +31,6 @@ void FireEndCommandGroup::execute()
 void FireEndCommandGroup::end(bool interrupted)
 {
     this->comprisedCommandScheduler.removeCommand(&fireCommand, interrupted);
-    // this->comprisedCommandScheduler.removeCommand(&reverseFeedCommand, interrupted);
 }
 
 }  // namespace control
