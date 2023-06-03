@@ -7,6 +7,7 @@
 #include "turret_constants.hpp"
 #include "algorithms/turret_pitch_controller.hpp"
 #include "algorithms/turret_yaw_controller.hpp"
+#include "control/drivers/drivers.hpp"
 
 using turret::algorithms::TurretPitchController;
 using turret::algorithms::TurretYawController;
@@ -26,14 +27,15 @@ public:
      * Constructs a new TurretSubsystem with default parameters specified in
      * the private section of this class.
      */
-    TurretSubsystem(tap::Drivers *drivers)
+    TurretSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, YAW_IS_INVERTED, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
           yawController(YAW_PID_CONFIG, YAW_FF_CONFIG),
           pitchController(PITCH_PID_CONFIG, PITCH_FF_CONFIG),
           yawDesiredPos(YAW_NEUTRAL_POS),
-          pitchDesiredPos(PITCH_NEUTRAL_POS)
+          pitchDesiredPos(PITCH_NEUTRAL_POS),
+          prevCVUpdate(0)
     {
     }
 
@@ -48,6 +50,7 @@ public:
     void refresh() override;
 
     void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
+    void setAbsoluteOutputDegrees(float yaw, float pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
     void updateYawController(uint32_t dt);
@@ -65,8 +68,13 @@ public:
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
     inline void setRelativeControlFlag( bool relativeControlStatus ) { usingRelativeControl = relativeControlStatus; };
+    void sendCVUpdate();
+
+    float approximateCos(float angle);
 
 private:
+    src::Drivers *drivers;
+
     ///< Hardware constants, not specific to any particular turret.
     static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
     static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
@@ -94,6 +102,13 @@ private:
 
     uint32_t prevDebugTime;
     uint32_t prevControllerUpdate;
+
+    // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
+    static constexpr float YAW_SCALE_FACTOR = 55.0f;
+    static constexpr float PITCH_SCALE_FACTOR = 40.0f;
+
+    // Variables for managing UART messages sent to CV
+    uint32_t prevCVUpdate;
 
 };  // class TurretSubsystem
 

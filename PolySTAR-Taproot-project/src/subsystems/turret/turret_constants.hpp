@@ -32,3 +32,10 @@ static constexpr float TURRET_PID_KI = 0.2f;
 static constexpr float TURRET_PID_KD = 0.0f;
 static constexpr float TURRET_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
+
+ /**
+ * Interval for sending messages over UART to the Computer Vision computer
+ * Time is in milliseconds.
+ */
+
+static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;

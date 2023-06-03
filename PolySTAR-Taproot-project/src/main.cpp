@@ -112,7 +112,9 @@ static void initializeIo(src::Drivers *drivers)
     drivers->terminalSerial.initialize();
     drivers->schedulerTerminalHandler.init();
     drivers->djiMotorTerminalSerialHandler.init();
-    drivers->uart.init<Uart::UartPort::Uart6, 115200>();
+
+    drivers->uart.init<Uart::UartPort::Uart6, 230400>();
+    drivers->cvHandler.initialize();
 }
 
 static void updateIo(src::Drivers *drivers)
@@ -125,4 +127,6 @@ static void updateIo(src::Drivers *drivers)
     drivers->refSerial.updateSerial();
     drivers->remote.read();
     drivers->mpu6500.read();
+
+    drivers->cvHandler.updateSerial();
 }
