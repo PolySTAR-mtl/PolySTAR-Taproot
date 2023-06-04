@@ -1,0 +1,1 @@
+static constexpr uint32_t DEBUG_MESSAGE_DELAY_MS = 500;

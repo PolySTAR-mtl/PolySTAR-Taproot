@@ -30,6 +30,9 @@
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
 #include "subsystems/flywheel/flywheel_fire_command.hpp"
 
+//Debug includes
+#include "subsystems/debug/debug_subsystem.hpp"
+
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
@@ -54,6 +57,7 @@ chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers());
 feeder::FeederSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
+debug::DebugSubsystem theDebug(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
@@ -89,6 +93,7 @@ void registerStandardSubsystems(src::Drivers *drivers) {
     drivers->commandScheduler.registerSubsystem(&theTurret);
     drivers->commandScheduler.registerSubsystem(&theFeeder);
     drivers->commandScheduler.registerSubsystem(&theFlywheel);
+    drivers->commandScheduler.registerSubsystem(&theDebug);
 }
 
 /* initialize subsystems ----------------------------------------------------*/
@@ -97,6 +102,7 @@ void initializeSubsystems() {
     theTurret.initialize();
     theFeeder.initialize();
     theFlywheel.initialize();
+    theDebug.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
