@@ -3,17 +3,13 @@
 
 #include "tap/control/comprised_command.hpp"
 #include "control/drivers/drivers.hpp"
+#include "subsystems/feeder/feeder_feed_command.hpp"
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
-#include "subsystems/feeder/feeder_reverse_command.hpp"
+#include "subsystems/feeder/feeder_subsystem.hpp"
 
 namespace control
 {
-namespace flywheel
-{
-/**
- * 
- */
 class FireEndCommandGroup : public tap::control::ComprisedCommand
 {
 public:
@@ -24,7 +20,7 @@ public:
      * @param[in] feeder a pointer to the feeder to be passed in that this
      * Command will interact with.
      */
-    FireEndCommandGroup(FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
+    FireEndCommandGroup(flywheel::FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
 
     FireEndCommandGroup(const FireEndCommandGroup &other) = delete;
 
@@ -42,17 +38,13 @@ public:
 
 private:
     // attributes needed to operate the group command 
-    FlywheelFireCommand fireCommand;
-
-    feeder::FeederReverseCommand reverseFeedCommand;
+    flywheel::FlywheelFireCommand fireCommand;
 
     src::Drivers *drivers;
 
     tap::arch::MilliTimeout flywheelDelayTimer;
 
 };  // class FireEndCommandGroup
-
-}  // namespace flywheel
 
 }  // namespace control
 

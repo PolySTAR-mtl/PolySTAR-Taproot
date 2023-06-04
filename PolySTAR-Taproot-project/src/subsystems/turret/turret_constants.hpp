@@ -1,42 +1,14 @@
-/**
- * Turret Pos PID: PID controllera for turret position (pitch and yaw). The PID parameters for the
- * controller are listed below.
- */
+#ifdef TARGET_ICRA
+#include "constants/icra_turret_constants.hpp"
+#endif
 
-static constexpr float TURRET_YAW_PID_KP = 4.5f;
-static constexpr float TURRET_YAW_PID_KI = 0.0f;
-static constexpr float TURRET_YAW_PID_KD = 120.0f;
-static constexpr float TURRET_YAW_PID_MAX_ERROR_SUM = 5000.0f;
-static constexpr float TURRET_YAW_PID_MAX_OUTPUT = 16000.0f;
-static constexpr float TURRET_YAW_TQ_DERIVATIVE_KALMAN = 1.0f;
-static constexpr float TURRET_YAW_TR_DERIVATIVE_KALMAN = 0.0f;
-static constexpr float TURRET_YAW_TQ_PROPORTIONAL_KALMAN = 1.0f;
-static constexpr float TURRET_YAW_TR_PROPORTIONAL_KALMAN = 0.0f;
+#ifdef TARGET_STANDARD
+#include "constants/standard_turret_constants.hpp"
+#endif
 
-static constexpr float TURRET_PITCH_PID_KP = 10.0f;
-static constexpr float TURRET_PITCH_PID_KI = 0.035f;
-static constexpr float TURRET_PITCH_PID_KD = 80.0f;
-static constexpr float TURRET_PITCH_PID_MAX_ERROR_SUM = 5000.0f;
-static constexpr float TURRET_PITCH_PID_MAX_OUTPUT = 16000.0f;
-static constexpr float TURRET_PITCH_TQ_DERIVATIVE_KALMAN = 1.0f;
-static constexpr float TURRET_PITCH_TR_DERIVATIVE_KALMAN = 0.0f;
-static constexpr float TURRET_PITCH_TQ_PROPORTIONAL_KALMAN = 1.0f;
-static constexpr float TURRET_PITCH_TR_PROPORTIONAL_KALMAN = 0.0f;
-static constexpr float TURRET_FEED_FORWARD_GAIN = 1750.0f;
-
-/**
- * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
- */
-static constexpr int64_t YAW_NEUTRAL_POS = 3470;
-static constexpr int64_t PITCH_NEUTRAL_POS = 6170;
-
-/**
- * Range values for YAW and PITCH. Motors are limited to range [NeutralPos - Range, NeutralPos + Range]
- * Value is in encoder ticks, where 8192 is a full revolution
- * TODO : Make this use degrees or radians to be easier to read 
- */
-static constexpr int64_t YAW_RANGE = 1365;
-static constexpr int64_t PITCH_RANGE = 400;
+#ifdef TARGET_HERO
+#include "constants/hero_turret_constants.hpp"
+#endif
 
 /**
  * Right joystick dead zone size. If the absolute value returned by the stick is below
@@ -44,24 +16,22 @@ static constexpr int64_t PITCH_RANGE = 400;
  */
 static constexpr float TURRET_DEAD_ZONE = 0.05;
 
-/**
- * Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
- */
-static constexpr float YAW_SCALE_FACTOR = 1000.0f;
-static constexpr float PITCH_SCALE_FACTOR = 250.0f;
-
-/**
- * Turret mouse aim scale factors: The mouse aim scales factor for the turret. This is used to scale the
- * mouse movement to the turret movement.
- */
-static constexpr float TURRET_MOUSE_X_SCALE_FACTOR = 0.05f;
-static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
-
 /*
  *   Enable UART debug messages for turret
  */
-static constexpr bool TURRET_DEBUG_MESSAGE = false;
+static constexpr bool TURRET_DEBUG_MESSAGE = true;
 static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
+
+/**
+ * Turret RPM PID: A PID controller for turret RPM (pitch and yaw). The PID parameters for the
+ * controller are listed below.
+ */
+
+static constexpr float TURRET_PID_KP = 100.0f;
+static constexpr float TURRET_PID_KI = 0.2f;
+static constexpr float TURRET_PID_KD = 0.0f;
+static constexpr float TURRET_PID_MAX_ERROR_SUM = 5000.0f;
+static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
 
  /**
  * Interval for sending messages over UART to the Computer Vision computer

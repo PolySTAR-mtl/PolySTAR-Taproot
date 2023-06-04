@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "feeder_subsystem.hpp"
+#include "feeder_subsystem_legacy.hpp"
 #include "control/drivers/drivers.hpp"
 
 namespace control
@@ -20,7 +20,7 @@ public:
      * @param[in] feeder a pointer to the feeder to be passed in that this
      *      Command will interact with.
      */
-    FeederFeedCommand(FeederSubsystem *const turret, src::Drivers *drivers);
+    FeederFeedCommand(FeederSubsystemLegacy *const turret, src::Drivers *drivers);
 
     FeederFeedCommand(const FeederFeedCommand &other) = delete;
 
@@ -37,7 +37,7 @@ public:
     bool isFinished() const override;
 
 private:
-    FeederSubsystem *const feeder;
+    FeederSubsystemLegacy *const feeder;
 
     src::Drivers *drivers;
 };  // FeederFeedCommand

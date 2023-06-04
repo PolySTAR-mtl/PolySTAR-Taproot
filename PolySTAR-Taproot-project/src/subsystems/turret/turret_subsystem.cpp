@@ -16,15 +16,15 @@ void TurretSubsystem::initialize()
 {
     yawMotor.initialize();
     pitchMotor.initialize();
-    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
 void TurretSubsystem::refresh() {
 
-    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
-    updatePosPid(&yawPid, &yawMotor, yawDesiredPos, dt);
-    updatePosPid(&pitchPid, &pitchMotor, pitchDesiredPos, dt);
-    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevControllerUpdate;
+    // updatePitchController(dt);
+    updateYawController(dt);
+    prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
     
     if (tap::arch::clock::getTimeMilliseconds() - prevCVUpdate > TURRET_CV_UPDATE_PERIOD ) {
         prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
@@ -51,21 +51,23 @@ void TurretSubsystem::refresh() {
     }
 }
 
-void TurretSubsystem::updatePosPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, int64_t desiredPos, uint32_t dt) 
-{
-    int64_t error = desiredPos - motor->getEncoderWrapped();
-    int16_t de = -1 * motor->degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*motor->getShaftRPM());
-    
-    // Add a feed-forward term to the pitch controller, to compensate for the effect of gravity.
-    // Uses trigonometry to adjust feedforward term based on CG position.
-    float feedForward = 0;
-    if (motor == &pitchMotor) {
-        float pitchAngle = motor->encoderToDegrees<int64_t>(motor->getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
-        feedForward = TURRET_FEED_FORWARD_GAIN*approximateCos(pitchAngle);
-    }
+void TurretSubsystem::updateYawController(uint32_t dt) {
+    int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
+    int16_t de = yawMotor.getShaftRPM();
+    float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
 
-    pid->runController(error, de, dt);
-    motor->setDesiredOutput(pid->getOutput()+feedForward);
+    yawController.runController(error, de, velocity, dt);
+    yawMotor.setDesiredOutput(yawController.getOutput());
+}
+
+void TurretSubsystem::updatePitchController(uint32_t dt) {
+    int64_t error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+    int16_t de = pitchMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*pitchMotor.getShaftRPM());
+    float angle = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
+    float velocity = usingRelativeControl ? lastPitchDelta : 0.001*tap::algorithms::getSign(error);
+
+    pitchController.runController(error, de, velocity, angle, dt);
+    pitchMotor.setDesiredOutput(pitchController.getOutput());
 }
 
 /*
@@ -75,6 +77,8 @@ void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch)
 {
     yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
     pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
+
+    if (fabs<int64_t>(YAW_NEUTRAL_POS-yaw) > YAW_RANGE) {lastYawDelta = 0;}
 }
 
 /*
@@ -96,19 +100,15 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
 
     if (pitchDelta < 0) pitchDelta *= 0.5;
 
+    lastPitchDelta = pitchDelta * PITCH_SCALE_FACTOR;
+    lastYawDelta = yawDelta * YAW_SCALE_FACTOR;
+
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
-    setAbsoluteOutput(newYaw, newPitch);
-}
-
-/*
-    Bahskara I approximation for cosine. Valid for values of +/- 90 degrees.
-    Input angle is in degrees.
-*/
-float TurretSubsystem::approximateCos(float angle) {
-    angle += 90; // Phase shift 90 degrees cosine from sine function
-    return 4*angle*(180-angle)/(40500 - angle*(180-angle)); // Bahskara I sine approximation
+    setAbsoluteOutput(
+        yawDelta == 0 ? yawDesiredPos : newYaw,
+        pitchDelta == 0 ? pitchDesiredPos : newPitch);
 }
 
 /*

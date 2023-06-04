@@ -6,15 +6,11 @@
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
 #include "fire_end_command_group.hpp"
-#include "subsystems/feeder/feeder_feed_command.hpp"
+#include "subsystems/feeder/feeder_move_unjam_command.hpp"
+#include "subsystems/feeder/feeder_subsystem.hpp"
 
 namespace control
 {
-namespace flywheel
-{
-/**
- * 
- */
 class FireCommandGroup : public tap::control::ComprisedCommand
 {
 public:
@@ -25,7 +21,7 @@ public:
      * @param[in] feeder a pointer to the feeder to be passed in that this
      * Command will interact with.
      */
-    FireCommandGroup(FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
+    FireCommandGroup(flywheel::FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
 
     FireCommandGroup(const FireCommandGroup &other) = delete;
 
@@ -43,11 +39,9 @@ public:
 
 private:
     // attributes needed to operate the group command 
-    FlywheelFireCommand fireCommand;
+    flywheel::FlywheelFireCommand fireCommand;
 
-    feeder::FeederFeedCommand feedCommand;
-
-    FireEndCommandGroup fireEndCommand;
+    feeder::FeederMoveUnjamCommand feedCommand;
 
     src::Drivers *drivers;
 
@@ -56,8 +50,6 @@ private:
     bool feederIsFeeding;
 
 };  // class FireCommandGroup
-
-}  // namespace flywheel
 
 }  // namespace control
 
