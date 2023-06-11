@@ -6,7 +6,7 @@
  * controller are listed below.
  */
 
-float constexpr TURRET_CGX = 0; // TO DETERMINE
+float constexpr TURRET_CGX = 1; // TO DETERMINE
 float constexpr TURRET_CGY = 0; // TO DETERMINE
 
 static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
@@ -52,35 +52,35 @@ static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
 static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
     0.0f, // kS
     0.0f, // kV
-    1750.0f, // kG
+    7250.0f, // kG
     60.0 // maxVelocity
 );
 
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr int64_t YAW_NEUTRAL_POS = 3470;
-static constexpr int64_t PITCH_NEUTRAL_POS = 6170;
+static constexpr int64_t YAW_NEUTRAL_POS = 5300;
+static constexpr int64_t PITCH_NEUTRAL_POS = 6834;
 
 /**
  * Range values for YAW and PITCH. Motors are limited to range [NeutralPos - Range, NeutralPos + Range]
  * Value is in encoder ticks, where 8192 is a full revolution
  * TODO : Make this use degrees or radians to be easier to read 
  */
-static constexpr int64_t YAW_RANGE = 1365;
+static constexpr int64_t YAW_RANGE = 750;
 static constexpr int64_t PITCH_RANGE = 400;
 
 /**
  * Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
  */
-static constexpr float YAW_SCALE_FACTOR = 1000.0f;
-static constexpr float PITCH_SCALE_FACTOR = 250.0f;
+static constexpr float YAW_SCALE_FACTOR = 50.0f;
+static constexpr float PITCH_SCALE_FACTOR = 50.0f;
 
 /**
  * Inverted directions
  */
 
-static constexpr float YAW_IS_INVERTED = true;
+static constexpr float YAW_IS_INVERTED = false;
 static constexpr float PITCH_IS_INVERTED = false;
 
 /**

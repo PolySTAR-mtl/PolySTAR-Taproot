@@ -10,7 +10,7 @@ namespace algorithms
 {
 
 GravityFeedForward::GravityFeedForward(const FeedForwardConfig &ffConfig, float x, float y): 
-    offsetAngle(atan(y/x)), 
+    offsetAngle(atanf(y/x)), 
     FeedForward(ffConfig) 
 {}
 
