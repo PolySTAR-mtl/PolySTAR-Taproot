@@ -119,7 +119,7 @@ private:
     tap::algorithms::Ramp rInputRamp;
 
     // previous update time for ramp
-    float prevUpdate = 0.0f;
+    float prevRampUpdate = 0.0f;
 
     // Ramp time
     static constexpr float RAMP_TIME_MS = 500.0f;
@@ -128,7 +128,7 @@ private:
     static constexpr float RAMP_SLOPE = 1.0f / RAMP_TIME_MS;
 
     // Scale factor for converting joystick movement into RPM setpoint
-    static constexpr float RPM_SCALE_FACTOR = 4000.0f;
+    static constexpr float rpmScaleFactor = 3500.0f;
 
     uint32_t prevDebugTime;
     uint32_t prevPidUpdate;

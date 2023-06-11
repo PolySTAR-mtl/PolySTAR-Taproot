@@ -19,7 +19,7 @@ void ChassisSubsystem::initialize()
     frontRightMotor.initialize();
     backLeftMotor.initialize();
     backRightMotor.initialize();
-    prevUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevRampUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
 void ChassisSubsystem::refresh() {
@@ -43,7 +43,7 @@ void ChassisSubsystem::refresh() {
     if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
         prevDebugTime = tap::arch::clock::getTimeMilliseconds();
         char buffer[500];
-        
+
         // Front right debug message
         int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
                               frontRightMotor.getShaftRPM(),
@@ -78,14 +78,14 @@ void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor:
 }
 
 void ChassisSubsystem::updateRpmSetpoints() {
-    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevUpdate;
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevRampUpdate;
 
     if(xInputRamp.isTargetReached() == false) { xInputRamp.update(RAMP_SLOPE * dt); }
     if(yInputRamp.isTargetReached() == false) { yInputRamp.update(RAMP_SLOPE * dt); }
     if(rInputRamp.isTargetReached() == false) { rInputRamp.update(RAMP_SLOPE * dt); }
     
     setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
-    prevUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevRampUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
 void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
@@ -116,10 +116,10 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
 
     y = IS_Y_INVERTED ? -y : y;
 
-    frontLeftDesiredRpm = (x-y-r)*RPM_SCALE_FACTOR;
-    frontRightDesiredRpm = (x+y+r)*RPM_SCALE_FACTOR;
-    backLeftDesiredRpm = (x+y-r)*RPM_SCALE_FACTOR;
-    backRightDesiredRpm = (x-y+r)*RPM_SCALE_FACTOR;
+    frontLeftDesiredRpm = (x-y-r)*rpmScaleFactor;
+    frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
+    backLeftDesiredRpm = (x+y-r)*rpmScaleFactor;
+    backRightDesiredRpm = (x-y+r)*rpmScaleFactor;
 }
 
 /*
