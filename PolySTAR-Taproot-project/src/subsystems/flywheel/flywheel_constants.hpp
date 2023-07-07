@@ -7,7 +7,7 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.5;
 #endif
 
 #ifdef TARGET_STANDARD
-constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.6;
+constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.48;
 #endif
 
 #ifdef TARGET_HERO

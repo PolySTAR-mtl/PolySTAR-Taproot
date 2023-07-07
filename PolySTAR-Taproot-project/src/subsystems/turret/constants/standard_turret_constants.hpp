@@ -52,7 +52,7 @@ static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
 static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
     1000.0f, // kS
     10.0f, // kV
-    10500.0f, // kG
+    14000.0f, // kG
     60.0 // maxVelocity
 );
 
@@ -67,7 +67,7 @@ static constexpr int64_t PITCH_NEUTRAL_POS = 6800;
  * Value is in encoder ticks, where 8192 is a full revolution
  * TODO : Make this use degrees or radians to be easier to read 
  */
-static constexpr int64_t YAW_RANGE = 1365;
+static constexpr int64_t YAW_RANGE = 500;
 static constexpr int64_t PITCH_RANGE = 400;
 
 /**

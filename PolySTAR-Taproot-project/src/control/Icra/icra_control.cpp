@@ -83,7 +83,7 @@ HoldRepeatCommandMapping startFiring(drivers(), {&feederMoveUnjam, &flywheelStar
 /*-Flywheel-*/
 // HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 /*-Chassis-*/
-HoldCommandMapping toggleAutoControl(drivers(), {&chassisAutoDrive,&turretAutoAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH,Remote::SwitchState::UP));
+HoldCommandMapping toggleAutoControl(drivers(), {&chassisAutoDrive,&turretAutoAim, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH,Remote::SwitchState::UP));
 
 /*-Only used for calibration-*/
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));

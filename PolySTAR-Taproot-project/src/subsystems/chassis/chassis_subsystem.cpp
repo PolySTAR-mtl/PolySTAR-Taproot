@@ -114,6 +114,10 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
         y = y / norm;
     }
 
+    #ifdef TARGET_HERO
+        x = -x;
+    #endif
+
     y = IS_Y_INVERTED ? -y : y;
 
     frontLeftDesiredRpm = (x-y-r)*rpmScaleFactor;

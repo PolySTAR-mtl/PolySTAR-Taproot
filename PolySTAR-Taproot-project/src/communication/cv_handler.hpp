@@ -64,11 +64,6 @@ public:
     */
     mockable bool getShootOrderFlag() const { return shootOrderFlag; };
 
-    /*
-    * Clears the shoot order flag
-    */
-    void clearShootOrderFlag() { shootOrderFlag = false; };
-
 private:
     Rx::TurretData turretData;
     Rx::MovementData movementData;
@@ -84,7 +79,7 @@ private:
     /**
      * Decodes CV serial message containing order to fire
      */
-    bool decodeToShootOrder();
+    bool decodeToShootOrder(const ReceivedSerialMessage& message);
 };
 
 }  // namespace src::communication::cv
