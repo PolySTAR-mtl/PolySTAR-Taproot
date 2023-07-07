@@ -1,3 +1,6 @@
+#ifndef TURRET_CONSTANTS_HPP
+#define TURRET_CONSTANTS_HPP
+
 #ifdef TARGET_ICRA
 #include "constants/icra_turret_constants.hpp"
 #endif
@@ -28,8 +31,8 @@ static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
  */
 
 static constexpr float TURRET_PID_KP = 100.0f;
-static constexpr float TURRET_PID_KI = 0.2f;
-static constexpr float TURRET_PID_KD = 0.0f;
+static constexpr float TURRET_PID_KI = 0.0f;
+static constexpr float TURRET_PID_KD = 2.0f;
 static constexpr float TURRET_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
 
@@ -38,4 +41,6 @@ static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
  * Time is in milliseconds.
  */
 
-static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
+static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 4;
+
+#endif

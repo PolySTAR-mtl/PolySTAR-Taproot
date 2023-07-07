@@ -1,0 +1,223 @@
+{
+    "sof": "0xFC",
+    "commands": [
+        {
+            "id": 1,
+            "name": "Game Status",
+            "length": 14,
+            "data": [
+                {
+                    "name": "Robot Type",
+                    "size": 1,
+                    "type": "uint8_t",
+                    "unit": ""
+                },
+                {
+                    "name": "Red STD HP",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "Red HRO HP",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "Red STY HP",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "Blue STD HP",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "Blue HRO HP",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "Blue STY HP",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "Control Mode",
+                    "size": 1,
+                    "type": "enum",
+                    "enum": [
+                        "Manual",
+                        "Auto Aim",
+                        "Auto Shoot",
+                        "Full Auto"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Event",
+            "length": 1,
+            "data": [
+                {
+                    "name": "Game Stage",
+                    "size": 1,
+                    "type": "enum",
+                    "enum": [
+                        "Prematch",
+                        "Setup",
+                        "Initialization",
+                        "Countdown",
+                        "In Game",
+                        "End Game"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Turret Feedback",
+            "length": 1,
+            "data": [
+                {
+                    "name": "Pitch",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mrad"
+                },
+                {
+                    "name": "Yaw",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mrad"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Position Feedback",
+            "length": 1,
+            "data": [
+                {
+                    "name": "Ax",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mm/s2"
+                },
+                {
+                    "name": "Ay",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mm/s2"
+                },
+                {
+                    "name": "Az",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mm/s2"
+                },
+                {
+                    "name": "Rx",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mrad/s"
+                },
+                {
+                    "name": "Ry",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mrad/s"
+                },
+                {
+                    "name": "Rz",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "mrad/s"
+                },
+                {
+                    "name": "FL Enc.",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "FL Rev.",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "FR Enc.",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "FR Rev.",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "BL Enc.",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "BL Rev.",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "BR Enc.",
+                    "size": 2,
+                    "type": "uint16_t",
+                    "unit": ""
+                },
+                {
+                    "name": "BR Rev.",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "rpm"
+                },
+                {
+                    "name": "FL RPM",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "rpm"
+                },
+                {
+                    "name": "FR RPM",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "rpm"
+                },
+                {
+                    "name": "BL RPM",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "rpm"
+                },
+                {
+                    "name": "BR RPM",
+                    "size": 2,
+                    "type": "int16_t",
+                    "unit": "rpm"
+                },
+                {
+                    "name": "padding",
+                    "size": 1
+                }
+            ]
+        }
+    ]
+}

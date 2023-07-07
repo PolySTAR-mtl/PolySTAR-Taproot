@@ -1,0 +1,2 @@
+if None:
+    print("Bob")

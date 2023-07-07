@@ -59,7 +59,7 @@ static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr int64_t YAW_NEUTRAL_POS = 4800;
+static constexpr int64_t YAW_NEUTRAL_POS = 716;
 static constexpr int64_t PITCH_NEUTRAL_POS = 6800;
 
 /**

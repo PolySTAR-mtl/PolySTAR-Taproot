@@ -3,11 +3,11 @@
 
 // Default flywheel velocity represented as a throttle value between 0 and 1
 #ifdef TARGET_ICRA
-constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.8;
+constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.5;
 #endif
 
 #ifdef TARGET_STANDARD
-constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.9;
+constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.6;
 #endif
 
 #ifdef TARGET_HERO

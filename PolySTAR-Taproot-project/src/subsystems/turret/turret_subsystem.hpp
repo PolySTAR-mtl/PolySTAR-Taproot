@@ -33,8 +33,8 @@ public:
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
           yawController(YAW_PID_CONFIG, YAW_FF_CONFIG),
           pitchController(PITCH_PID_CONFIG, PITCH_FF_CONFIG),
-          yawDesiredPos(YAW_NEUTRAL_POS),
-          pitchDesiredPos(PITCH_NEUTRAL_POS),
+          yawDesiredRpm(YAW_NEUTRAL_POS),
+          pitchDesiredRpm(PITCH_NEUTRAL_POS),
           prevCVUpdate(0)
     {
     }
@@ -92,8 +92,8 @@ private:
     TurretPitchController pitchController;
 
     ///< Any user input is translated into desired position for each motor.
-    float yawDesiredPos;
-    float pitchDesiredPos;
+    float yawDesiredRpm;
+    float pitchDesiredRpm;
 
     // Previous relative input delta, used in feedforward controller
     float lastYawDelta = 0;

@@ -17,12 +17,17 @@ void TurretSubsystem::initialize()
     yawMotor.initialize();
     pitchMotor.initialize();
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
+
+    char buffer[500];
+    int nBytes = sprintf (buffer, "Turret Offset angle: %i\n",
+                              (int)(100*atanf(TURRET_CGY/TURRET_CGX)));
+        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
 }
 
 void TurretSubsystem::refresh() {
 
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevControllerUpdate;
-    // updatePitchController(dt);
+    updatePitchController(dt);
     updateYawController(dt);
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
     
@@ -34,6 +39,7 @@ void TurretSubsystem::refresh() {
     // Skip sending debug messages if flag is disabled 
     if (TURRET_DEBUG_MESSAGE == false) return;
 
+    // Turret debug messages
     if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > TURRET_DEBUG_MESSAGE_DELAY_MS) {
         prevDebugTime = tap::arch::clock::getTimeMilliseconds();
         char buffer[500];
@@ -41,18 +47,18 @@ void TurretSubsystem::refresh() {
         // Yaw debug message
         int nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
                               (int)(yawMotor.getEncoderWrapped()-YAW_NEUTRAL_POS),
-                              (int)(yawDesiredPos - YAW_NEUTRAL_POS));
+                              (int)(yawDesiredRpm - YAW_NEUTRAL_POS));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
         // Pitch debug message
         nBytes = sprintf (buffer, "Pitch: %i, Setpoint: %i\n",
                               (int)(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS),
-                              (int)(pitchDesiredPos - PITCH_NEUTRAL_POS));
+                              (int)(pitchDesiredRpm - PITCH_NEUTRAL_POS));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
     }
 }
 
 void TurretSubsystem::updateYawController(uint32_t dt) {
-    int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
+    int64_t error = yawDesiredRpm - yawMotor.getEncoderWrapped();
     int16_t de = yawMotor.getShaftRPM();
     float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
 
@@ -61,13 +67,14 @@ void TurretSubsystem::updateYawController(uint32_t dt) {
 }
 
 void TurretSubsystem::updatePitchController(uint32_t dt) {
-    int64_t error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+    int64_t error = pitchDesiredRpm - pitchMotor.getEncoderWrapped();
     int16_t de = pitchMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*pitchMotor.getShaftRPM());
     float angle = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
     float velocity = usingRelativeControl ? lastPitchDelta : 0.001*tap::algorithms::getSign(error);
 
     pitchController.runController(error, de, velocity, angle, dt);
-    pitchMotor.setDesiredOutput(pitchController.getOutput());
+    float controllerOutput = pitchController.getOutput();
+    pitchMotor.setDesiredOutput(controllerOutput);
 }
 
 /*
@@ -75,8 +82,8 @@ void TurretSubsystem::updatePitchController(uint32_t dt) {
 */
 void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch) 
 {
-    yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
-    pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
+    yawDesiredRpm = tap::algorithms::limitVal<uint64_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
+    pitchDesiredRpm = tap::algorithms::limitVal<uint64_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
 
     if (fabs<int64_t>(YAW_NEUTRAL_POS-yaw) > YAW_RANGE) {lastYawDelta = 0;}
 }
@@ -107,8 +114,8 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
     setAbsoluteOutput(
-        yawDelta == 0 ? yawDesiredPos : newYaw,
-        pitchDelta == 0 ? pitchDesiredPos : newPitch);
+        yawDelta == 0 ? yawDesiredRpm : newYaw,
+        pitchDelta == 0 ? pitchDesiredRpm : newPitch);
 }
 
 /*
