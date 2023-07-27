@@ -74,6 +74,8 @@ flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
+HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT),true);
+HoldCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
 HoldCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping startFlywheel(drivers(), {&flywheelStart, &feedFeederLegacy}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive,&turretMouseAim}, RemoteMapState({Remote::Key::G}));
@@ -110,6 +112,8 @@ void startStandardCommands(src::Drivers *drivers) {
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {  
     drivers->commandMapper.addMap(&feedFeeder);
+    drivers->commandMapper.addMap(&mouseFeedFeeder);
+    drivers->commandMapper.addMap(&mouseStartFlywheel);
     drivers->commandMapper.addMap(&startFlywheel);
     drivers->commandMapper.addMap(&toggleClientAiming);
 }
@@ -122,9 +126,9 @@ void initSubsystemCommands(src::Drivers *drivers)
     setDefaultStandardCommands(drivers);
     startStandardCommands(drivers);
     registerStandardIoMappings(drivers);
-    char buffer[50];
-    int nBytes = sprintf(buffer,"Initializing Hero\n");
-    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    // char buffer[50];
+    // int nBytes = sprintf(buffer,"Initializing Hero\n");
+    //drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
 }
 
 }  // namespace control

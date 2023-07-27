@@ -138,9 +138,9 @@ void initSubsystemCommands(src::Drivers *drivers)
     setDefaultStandardCommands(drivers);
     startStandardCommands(drivers);
     registerStandardIoMappings(drivers);
-    char buffer[50];
-    int nBytes = sprintf(buffer,"Initializing ICRA\n");
-    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    // char buffer[50];
+    // int nBytes = sprintf(buffer,"Initializing ICRA\n");
+    // drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
 }
 
 }  // namespace control

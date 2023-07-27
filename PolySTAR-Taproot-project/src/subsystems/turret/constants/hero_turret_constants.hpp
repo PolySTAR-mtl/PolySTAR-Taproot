@@ -52,7 +52,7 @@ static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
 static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
     0.0f, // kS
     0.0f, // kV
-    7250.0f, // kG
+    9000.0f, // kG
     60.0 // maxVelocity
 );
 
