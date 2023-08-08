@@ -16,12 +16,16 @@ TurretPitchController::TurretPitchController(const tap::algorithms::SmoothPidCon
 
 void TurretPitchController::runController(float error, float errorDerivative, float velocity, float angle, float dt) {
     float feedForwardOutput = pitchFeedForward.calculate(velocity, angle);
+    if (error >= tap::motor::DjiMotor::ENC_RESOLUTION/2) { error -= tap::motor::DjiMotor::ENC_RESOLUTION; }
+    if (error <= -tap::motor::DjiMotor::ENC_RESOLUTION/2) { error += tap::motor::DjiMotor::ENC_RESOLUTION; }
     pitchPid.runController(error, errorDerivative, dt);
     output = tap::algorithms::limitVal<float>(pitchPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);
 }
 
 void TurretPitchController::runControllerDerivateError(float error, float velocity, float angle, float dt) {
     float feedForwardOutput = pitchFeedForward.calculate(velocity, angle);
+    if (error >= tap::motor::DjiMotor::ENC_RESOLUTION/2) { error -= tap::motor::DjiMotor::ENC_RESOLUTION; }
+    if (error <= -tap::motor::DjiMotor::ENC_RESOLUTION/2) { error += tap::motor::DjiMotor::ENC_RESOLUTION; }
     pitchPid.runControllerDerivateError(error, dt);
     output = tap::algorithms::limitVal<float>(pitchPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);
 }
