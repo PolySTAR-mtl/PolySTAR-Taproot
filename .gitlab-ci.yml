@@ -1,82 +1,83 @@
-# Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+# Copyright (c) 2022-2023 PolySTAR-Mtl
 #
-# This file is part of aruw-mcb.
+# This file is part of PolySTAR-Taproot.
 #
-# aruw-mcb is free software: you can redistribute it and/or modify
+# PolySTAR-Taproot is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# aruw-mcb is distributed in the hope that it will be useful,
+# PolySTAR-Taproot is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with aruw-mcb.  If not, see <https://www.gnu.org/licenses/>.
+# along with PolySTAR-Taproot.  If not, see <https://www.gnu.org/licenses/>.
 
 default:
-  image: aruw/mcb-2020-gitlab-ci:2021-03-20.1
+  image: aruw/mcb-2020-gitlab-ci:2021-06-02.1
 
 variables:
   ARTIFACT_PATH: isolated-deploy
   GIT_SUBMODULE_STRATEGY: normal
-  DEFAULT_BUILD_ELF_FILE: build/hardware/release/template-project.elf
-  DEFAULT_TESTS_BUILD_ELF_FILE: build/tests/fast/template-project.elf
+  DEFAULT_BUILD_ELF_FILE: build/hardware/scons-release/PolySTAR-Taproot-project.elf
+  DEFAULT_TESTS_BUILD_ELF_FILE: build/tests/scons-fast/PolySTAR-Taproot-project-tests.elf
   NUM_JOBS: 4
 
-.default_only: &default_only
-  - merge_requests
-  - master
-  - develop
+.verification_except: &verification_except
   - schedules
 
-.verification_only: &verification_only
-  - merge_requests
-  - master
-  - develop
-
-.verification_except: &verification_except
-  - schedules 
-
 stages:
-  - Initial Verification
-  - Build all Targets
+  - Build
+  - Test
+  - Quality
   - Deploy Pages
 
 before_script:
-  - python -V # Print out python version for debugging
+  - python3 -V # Print out python version for debugging
 
-# Initial verification
+# Quality
+# Last stage, but configured to not depend on preceding jobs
 
 clang-format:
-  stage: Initial Verification
+  stage: Quality
+  needs: []
   script:
-    - python3 /run-clang-format.py --clang-format-executable clang-format-10 -r template-project/src/ template-project/test/
-  only: *verification_only
+    - python3 /run-clang-format.py --clang-format-executable clang-format-10 -r PolySTAR-Taproot-project/src/ PolySTAR-Taproot-project/test/
   except: *verification_except
 
-Policy Checks:
-  stage: Initial Verification
-  script:
-    - python3 ./scripts/check_singleton_drivers.py ./template-project/src/ 
-    - python3 ./scripts/check_license_headers.py
+"Policy Checks":
+  stage: Quality
   variables:
-    GIT_SUBMODULE_STRATEGY: none
-  only: *verification_only
+    GIT_SUBMODULE_STRATEGY: recursive
+  script:
+    - python3 ./taproot-scripts/check_singleton_drivers.py DoNotUse_getDrivers
+        -p ./PolySTAR-Taproot-project/src/
+        -w drivers_singleton.cpp
+            drivers_singleton.hpp
+            main.cpp
+
+    - python3 ./taproot-scripts/check_license_headers.py
+        -p PolySTAR-Taproot
+        -i './**/__init__.py' 'taproot/**/*' 'taproot-scripts/**/*' 'PolySTAR-Taproot-project/taproot/**/*' 'docs/**/*' 'PolySTAR-Taproot-project/robot-type/robot_type.hpp'
+        -o 'Advanced Robotics at the University of Washington'
+
+    - python3 ./taproot-scripts/check_header_guard.py PolySTAR-Taproot-project/src PolySTAR-Taproot-project/test/
+
+    - ./taproot-scripts/check_taproot_submodule.sh ./PolySTAR-Taproot-project ./taproot
   except: *verification_except
 
 # Hidden jobs to be extended for each robot
 
-.mcb build:
-  stage: Build all Targets
-  only: *default_only
+.hw_build:
+  stage: Build
   script:
-    - cd template-project
+    - cd PolySTAR-Taproot-project
     - python3 $(which scons) build robot=TARGET_$ROBOT -j${NUM_JOBS} additional-ccflags=-Werror
     - python3 $(which scons) size robot=TARGET_$ROBOT -j${NUM_JOBS} additional-ccflags=-Werror > size.txt
-    - python3 ../scripts/parse_metrics.py $ROBOT
-    - cp $DEFAULT_BUILD_ELF_FILE ../$ARTIFACT_PATH/template-project-$ROBOT.elf
+    - python3 ../taproot-scripts/parse_metrics.py -i size.txt -o metrics.txt --identifier $ROBOT
+    - cp $DEFAULT_BUILD_ELF_FILE ../$ARTIFACT_PATH/PolySTAR-Taproot-project-$ROBOT.elf
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME-$ROBOT-mcb"
     paths:
@@ -85,149 +86,186 @@ Policy Checks:
     reports:
       metrics: metrics.txt
 
-.sim build:
-  stage: Build all Targets
-  only: *default_only
+.sim_build:
+  stage: Build
   script:
-    - cd template-project
+    - cd PolySTAR-Taproot-project
     - python3 $(which scons) build-sim profile=fast robot=TARGET_$ROBOT -j${NUM_JOBS}
 
-.test build:
-  stage: Build all Targets
-  only: *default_only
+.test_build:
+  stage: Build
   script:
-    - cd template-project
+    - cd PolySTAR-Taproot-project
     - python3 $(which scons) build-tests profile=fast robot=TARGET_$ROBOT -j${NUM_JOBS}
+  artifacts:
+    paths:
+      - PolySTAR-Taproot-project/$DEFAULT_TESTS_BUILD_ELF_FILE
+
+.test_run:
+  stage: Test
+  script:
+    - cd PolySTAR-Taproot-project
     - valgrind --leak-check=full --error-exitcode=1 --show-leak-kinds=all $DEFAULT_TESTS_BUILD_ELF_FILE
 
-# Soldier build
 
-Soldier MCB Build:
+# Standard
+
+"Standard: build for hardware":
   extends:
-    - .mcb build
+    - .hw_build
   variables:
-    ROBOT: SOLDIER
+    ROBOT: STANDARD
 
-Soldier Sim Build:
+"Standard: build for sim":
   extends:
-    - .sim build
+    - .sim_build
   variables:
-    ROBOT: SOLDIER
+    ROBOT: STANDARD
 
-Soldier Test Build:
-  stage: Build all Targets
-  only: *default_only
+"Standard: build for tests":
+  extends:
+    - .test_build
+  variables:
+    ROBOT: STANDARD
+
+"Standard: run tests":
+  # The Standard's test run is also evaluated for code coverage and used as the repo-level coverage report
+  needs: [ "Standard: build for tests" ]
+  dependencies: [ "Standard: build for tests" ]
+  extends:
+    - .test_run
+  variables:
+    ROBOT: STANDARD
   script:
-    - cd template-project
-    - python3 $(which scons) run-tests-gcov profile=fast robot=TARGET_SOLDIER -j${NUM_JOBS}
+    - cd PolySTAR-Taproot-project
     - valgrind --leak-check=full --error-exitcode=1 --show-leak-kinds=all $DEFAULT_TESTS_BUILD_ELF_FILE
     - cd .. && gcovr -g --xml > cobertura.xml
-    - 'sed -i "s=<source>.</source>=<source>./template-project</source>=g" cobertura.xml'
-    - 'sed -i "s;filename=\";filename=\"template-project/;g" cobertura.xml'
+    - 'sed -i "s=<source>.</source>=<source>./PolySTAR-Taproot-project</source>=g" cobertura.xml'
+    - 'sed -i "s;filename=\";filename=\"PolySTAR-Taproot-project/;g" cobertura.xml'
+  coverage: '/\s+Total:\|(\d+.\d+\%).+\|.+\|.+/'
   artifacts:
-    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME-soldier-tests"
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME-standard-tests"
     reports:
-      cobertura: cobertura.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: cobertura.xml
+    expire_in: 2 weeks
 
-# Drone build
+# Drone
 
-Drone MCB Build:
+"Drone: build for hardware":
   extends:
-    - .mcb build
+    - .hw_build
   variables:
     ROBOT: DRONE
 
-Drone Sim Build:
+"Drone: build for sim":
   extends:
-    - .sim build
+    - .sim_build
   variables:
     ROBOT: DRONE
 
-Drone Test Build:
+"Drone: build for tests":
   extends:
-    - .test build
+    - .test_build
   variables:
     ROBOT: DRONE
 
-# Engineer build
-
-Engineer MCB Build:
+"Drone: run tests":
+  needs: [ "Drone: build for tests" ]
+  dependencies: [ "Drone: build for tests" ]
   extends:
-    - .mcb build
+    - .test_run
+  variables:
+    ROBOT: DRONE
+
+
+# Engineer
+
+"Engineer: build for hardware":
+  extends:
+    - .hw_build
   variables:
     ROBOT: ENGINEER
 
-Engineer Sim Build:
+"Engineer: build for sim":
   extends:
-    - .sim build
+    - .sim_build
   variables:
     ROBOT: ENGINEER
 
-Engineer Test Build:
+"Engineer: build for tests":
   extends:
-    - .test build
+    - .test_build
   variables:
     ROBOT: ENGINEER
 
-# Hero build
-
-Hero MCB Build:
+"Engineer: run tests":
+  needs: [ "Engineer: build for tests" ]
+  dependencies: [ "Engineer: build for tests" ]
   extends:
-    - .mcb build
+    - .test_run
+  variables:
+    ROBOT: ENGINEER
+
+
+# Hero
+
+"Hero: build for hardware":
+  extends:
+    - .hw_build
   variables:
     ROBOT: HERO
 
-Hero Sim Build:
+"Hero: build for sim":
   extends:
-    - .sim build
+    - .sim_build
   variables:
     ROBOT: HERO
 
-Hero Test Build:
+"Hero: build for tests":
   extends:
-    - .test build
+    - .test_build
   variables:
     ROBOT: HERO
 
-# Old Soldier build
-
-Old Soldier MCB Build:
+"Hero: run tests":
+  needs: [ "Hero: build for tests" ]
+  dependencies: [ "Hero: build for tests" ]
   extends:
-    - .mcb build
+    - .test_run
   variables:
-    ROBOT: OLD_SOLDIER
+    ROBOT: HERO
 
-Old Soldier Sim Build:
+
+# Sentry
+
+"Sentry: build for hardware":
   extends:
-    - .sim build
+    - .hw_build
   variables:
-    ROBOT: OLD_SOLDIER
+    ROBOT: SENTRY
 
-Old Soldier Test Build:
+"Sentry: build for sim":
   extends:
-    - .test build
+    - .sim_build
   variables:
-    ROBOT: OLD_SOLDIER
+    ROBOT: SENTRY
 
-# Sentinel build
-
-Sentinel MCB Build:
+"Sentry: build for tests":
   extends:
-    - .mcb build
+    - .test_build
   variables:
-    ROBOT: SENTINEL
+    ROBOT: SENTRY
 
-Sentinel Sim Build:
+"Sentry: run tests":
+  needs: [ "Sentry: build for tests" ]
+  dependencies: [ "Sentry: build for tests" ]
   extends:
-    - .sim build
+    - .test_run
   variables:
-    ROBOT: SENTINEL
+    ROBOT: SENTRY
 
-Sentinel Test Build:
-  extends:
-    - .test build
-  variables:
-    ROBOT: SENTINEL
 
 # Pages deploy
 
