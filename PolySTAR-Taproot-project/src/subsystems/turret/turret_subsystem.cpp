@@ -123,7 +123,7 @@ void TurretSubsystem::sendCVUpdate() {
     float currentBodyPitchDeg = pitchMotor.encoderToDegrees(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
 
     // Get time elapsed since last message. Store current time for calculation of next dt.
-    int32_t currentTime = tap::arch::clock::getTimeMicroseconds();
+    // int32_t currentTime = tap::arch::clock::getTimeMicroseconds();
     
     // Convert encoder data to int16_t for transmission
     // Convert from ticks to milirads
