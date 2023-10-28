@@ -57,8 +57,6 @@ pipenv install
 pipenv shell
 # Build for hardware
 scons build
-# Run automated tests
-scons run-tests
 ```
 
 ### Returning to the development environment
