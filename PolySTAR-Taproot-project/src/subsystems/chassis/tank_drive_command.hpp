@@ -12,7 +12,7 @@ class TankDriveCommand : public tap::control::Command
 {
 public:
 
-    TankDriveCommand()
+    TankDriveCommand();
 
     ~TankDriveCommand() = default;
 

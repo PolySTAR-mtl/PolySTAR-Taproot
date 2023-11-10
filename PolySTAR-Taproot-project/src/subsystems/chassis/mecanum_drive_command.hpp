@@ -12,7 +12,7 @@ class MecanumDriveCommand : public tap::control::Command
 {
 public:
 
-    MecanumDriveCommand()
+    MecanumDriveCommand();
 
     ~MecanumDriveCommand() = default;
 
