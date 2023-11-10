@@ -22,8 +22,29 @@ void ChassisSubsystem::initialize()
     prevRampUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
+void ChassisSubsystem::adjustPowerConsumption() {
+
+    const auto &robotData = drivers->refSerial.getRobotData();
+    const auto &chassisData = robotData.chassis;
+    // calculate reduction factor for power consumption
+    bool limitReached = chassisData.power > chassisData.powerConsumptionLimit;
+ 
+    // autoAdjustChassisConsumption if power exceeds limit
+    if (limitReached) {
+        // Adjust the chassis speed to bring power below the consumption power limit
+        float reductionFactor = chassisData.powerConsumptionLimit / chassisData.power;
+        // adjust the ramp
+        xInputRamp.setTarget(xInputRamp.getTarget() * reductionFactor);
+        yInputRamp.setTarget(yInputRamp.getTarget() * reductionFactor);
+        rInputRamp.setTarget(rInputRamp.getTarget() * reductionFactor);
+    }
+}
+
+
 void ChassisSubsystem::refresh() {
-    updateRpmSetpoints();
+
+    adjustPowerConsumption();
+    updateRpmSetpoint();
 
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
     updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
@@ -77,7 +98,7 @@ void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor:
     }
 }
 
-void ChassisSubsystem::updateRpmSetpoints() {
+void ChassisSubsystem::updateRpmSetpoint() {
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevRampUpdate;
 
     if(xInputRamp.isTargetReached() == false) { xInputRamp.update(RAMP_SLOPE * dt); }
