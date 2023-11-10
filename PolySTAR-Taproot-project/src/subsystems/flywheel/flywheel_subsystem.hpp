@@ -44,6 +44,8 @@ public:
     void stopFiring();
 
     void setThrottle(float throttle);
+    
+    void adjustBulletVelocity();
 
     float getCurrentThrottle() const;
 
