@@ -14,11 +14,12 @@ namespace flywheel
 {
 void FlywheelSubsystem::initialize() { snailMotor.init(); }
 
-void FlywheelSubsystem::refresh() {}
+void FlywheelSubsystem::refresh() {
+    adjustBulletVelocity();
+}
 
 void FlywheelSubsystem::startFiring()
 {
-    adjustBulletVelocity();
     snailMotor.setThrottle(currentThrottle);
 }
 

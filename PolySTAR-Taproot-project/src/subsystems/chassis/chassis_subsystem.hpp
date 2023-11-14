@@ -68,7 +68,7 @@ public:
 
     void setDesiredOutput(float x, float y, float r);
 
-    void adjustPowerConsumption();
+    void checkPowerConsumption();
 
     void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
 
@@ -127,6 +127,15 @@ private:
 
     // Ramp time
     static constexpr float RAMP_TIME_MS = 500.0f;
+
+    // Delta for the power consumption
+    static constexpr uint16_t POWER_DELTA = 0; 
+
+    // power consumption reached
+    bool powerReached = false;
+
+    // power reduction factor
+    float powerReductionFactor = 0.0f;
 
     // Slope for ramp
     static constexpr float RAMP_SLOPE = 1.0f / RAMP_TIME_MS;
