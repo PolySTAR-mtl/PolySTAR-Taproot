@@ -28,8 +28,23 @@ void ChassisSubsystem::checkPowerConsumption()
     const auto &robotData = drivers->refSerial.getRobotData();
     const auto &chassisData = robotData.chassis;
     // calculate reduction factor for power consumption
-    uint16_t powerConsumptionThreshold = chassisData.powerConsumptionLimit - POWER_DELTA;
+    // uint16_t powerConsumptionThreshold = chassisData.powerConsumptionLimit - POWER_DELTA;
+    uint16_t powerConsumptionThreshold = 60 - POWER_DELTA;
     powerReached = chassisData.power > powerConsumptionThreshold;
+
+    if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
+        prevDebugTime = tap::arch::clock::getTimeMilliseconds();
+        char buffer[500];
+
+        int nBytes = sprintf(
+            buffer,
+            "POWER CONSUMPTION THRESH: %d, CURRENT POWER: %d\n POWER REACHED: %d",
+            powerConsumptionThreshold,
+            chassisData.power,
+            powerReached);
+        drivers->uart.write(Uart::UartPort::Uart6, (uint8_t *)buffer, nBytes + 1);
+    }
+    
     powerReductionFactor = powerConsumptionThreshold / chassisData.power;
 }
 
