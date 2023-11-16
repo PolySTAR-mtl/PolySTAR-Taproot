@@ -2,7 +2,10 @@
 #define CHASSIS_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
+#include "tap/motor/dji_motor.hpp"
 #include "chassis_constants.hpp"
+#include "modm/math/filter/pid.hpp"
+#include "control/drivers/drivers.hpp"
 
 namespace control
 {
@@ -24,7 +27,7 @@ public:
     BLController(CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD, CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT),
     BRController(CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD, CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT),
     FLController(CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD, CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT),
-    FRController(CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD, CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT),
+    FRController(CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD, CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT)
     {}
 
     ~ChassisSubsystem() = default;
@@ -51,8 +54,6 @@ private:
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-   /// Desired wheel output for each motor
-    //std::array<float, static_cast<uint8_t>(MotorId::NUM_MOTORS)> desiredOutput;
 
     ///< MotorContollers
     modm::Pid<float> BLController;
