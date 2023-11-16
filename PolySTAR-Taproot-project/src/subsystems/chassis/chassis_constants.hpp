@@ -13,7 +13,8 @@
 
  /**
  * Inverted directions (????)
+ * Pk float?
  */
-static constexpr float CHASSIS_MOTOR_IS_INVERTED = false; // Pk float?
+static constexpr float CHASSIS_MOTOR_IS_INVERTED = false;
 
 #endif
