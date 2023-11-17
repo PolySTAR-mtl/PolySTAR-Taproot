@@ -8,6 +8,10 @@
 #include "control/drivers/drivers.hpp"
 #include "control/safe_disconnect.hpp"
 
+#include "subsystems/chassis/chassis_subsystem.hpp"
+#include "subsystems/chassis/chassis_start_move_command.hpp"
+#include "subsystems/chassis/chassis_stop_move_command.hpp"
+
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
@@ -28,8 +32,11 @@ static src::driversFunc drivers = src::DoNotUse_getDrivers;
 namespace control
 {
 /* define subsystems --------------------------------------------------------*/
+ChassisSubsystem chassis(drivers());
 
 /* define commands ----------------------------------------------------------*/
+ChassisStartCommand chassisStartCommand(chassis, drivers());
+//ChassisStopCommand  chassisStopCommand(chassis);
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -37,7 +44,10 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* define command mappings --------------------------------------------------*/
 
 /* register subsystems here -------------------------------------------------*/
-void registerStandardSubsystems(src::Drivers *drivers) {}
+void registerStandardSubsystems(src::Drivers *drivers) {
+    drivers->commandScheduler.registerSubsystem(&chassis);
+
+}
 
 /* initialize subsystems ----------------------------------------------------*/
 void initializeSubsystems() {}
@@ -53,6 +63,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {} // should be empty
 
 void initSubsystemCommands(src::Drivers *drivers)
 {
+
     drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
     initializeSubsystems();
     registerStandardSubsystems(drivers);
