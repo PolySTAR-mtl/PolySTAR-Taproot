@@ -35,7 +35,11 @@ private:
 
     float linear = 0;
     float rotation = 0;
-    tap::motor::DjiMotor motors[NUM_MOTORS];
+    tap::motor::DjiMotor motor1;
+    tap::motor::DjiMotor motor2;
+    tap::motor::DjiMotor motor3;
+    tap::motor::DjiMotor motor4;
+    tap::motor::DjiMotor *motors[NUM_MOTORS];
 };
 
 #endif //CHASSIS_SUBSYSTEM_H

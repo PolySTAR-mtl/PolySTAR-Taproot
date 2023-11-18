@@ -53,7 +53,9 @@ void registerStandardSubsystems(src::Drivers *drivers) {
 void initializeSubsystems() {}
 
 /* set any default commands to subsystems here ------------------------------*/
-void setDefaultStandardCommands(src::Drivers *) {}
+void setDefaultStandardCommands(src::Drivers *) {
+    chassis.setDefaultCommand(&chassisStartCommand);
+}
 
 /* add any starting commands to the scheduler here --------------------------*/
 void startStandardCommands(src::Drivers *drivers) {}
