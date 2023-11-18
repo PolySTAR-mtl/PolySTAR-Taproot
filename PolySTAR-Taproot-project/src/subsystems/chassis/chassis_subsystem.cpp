@@ -47,6 +47,26 @@ void ChassisSubsystem::refresh()
     chassisMotorFR.setDesiredOutput(pidValue);       // Set motor output to value determined by PID
 }
 
+void ChassisSubsystem::setDesiredOutputBLMotor(float rpm)
+{
+    blDesiredRpm = rpm;
+}
+
+void ChassisSubsystem::setDesiredOutputBRMotor(float rpm)
+{
+    brDesiredRpm = rpm;
+}
+
+void ChassisSubsystem::setDesiredOutputFLMotor(float rpm)
+{
+    flDesiredRpm = rpm;
+}
+
+void ChassisSubsystem::setDesiredOutputFRMotor(float rpm)
+{
+    frDesiredRpm = rpm;
+}
+
 } // namespace chassis
 
 } // namespace control
