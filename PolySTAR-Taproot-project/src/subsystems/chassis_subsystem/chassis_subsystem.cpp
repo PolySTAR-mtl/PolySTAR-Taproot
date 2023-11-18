@@ -38,14 +38,24 @@ namespace control {
             chassisMotorBackRight.setDesiredOutput(pidValueBackRight);        // Set motor output to value determined by PID
         };
 
-        /** Public function used to set the desired RPM of the feeder motor. Used by commands. */
-        void ChassisSubsystem::setDesiredOutput(float rpm1, float rpm2, float rpm3, float rpm4) {
-            DesiredRpmFrontLeft = rpm1;
-            DesiredRpmFrontRight = rpm2;
-            DesiredRpmBackLeft = rpm3;
-            DesiredRpmBackRight = rpm4;
+        /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+        void ChassisSubsystem::setDesiredOutputFrontLeft(float rpmFrontLeft) {
+            DesiredRpmFrontLeft = rpmFrontLeft;
         };
 
-        
+        /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+        void ChassisSubsystem::setDesiredOutputFrontRight(float rpmFrontRight) {
+            DesiredRpmFrontLeft = rpmFrontRight;
+        };
+
+        /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+        void ChassisSubsystem::setDesiredOutputBackLeft(float rpmBackLeft) {
+            DesiredRpmFrontLeft = rpmBackLeft;
+        };
+
+        /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+        void ChassisSubsystem::setDesiredOutputBackRight(float rpmBackRight) {
+            DesiredRpmFrontLeft = rpmBackRight;
+        };
     }
 }

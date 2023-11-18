@@ -9,10 +9,10 @@ namespace control {
         public:
             ChassisSubsystem(tap::Drivers *drivers)
                 : tap::control::Subsystem(drivers),
-                    chassisMotorFrontLeft(drivers, CHASSIS_MOTOR_FRONT_LEFT, CAN_BUS_CHASSIS_MOTORS, false, "chassis motor front left"),
-                    chassisMotorFrontRight(drivers, CHASSIS_MOTOR_FRONT_RIGHT, CAN_BUS_CHASSIS_MOTORS, false, "chassis motor front right"),
-                    chassisMotorBackLeft(drivers, CHASSIS_MOTOR_BACK_LEFT, CAN_BUS_CHASSIS_MOTORS, false, "chassis motor back left"),
-                    chassisMotorBackRight(drivers, CHASSIS_MOTOR_BACK_RIGHT, CAN_BUS_CHASSIS_MOTORS, false, "chassis motor back right"),
+                    chassisMotorFrontLeft(drivers, CHASSIS_MOTOR_FRONT_LEFT, CAN_BUS_CHASSIS_MOTORS, IS_CHASSIS_LEFT_MOTORS_INVERTED, "chassis motor front left"),
+                    chassisMotorFrontRight(drivers, CHASSIS_MOTOR_FRONT_RIGHT, CAN_BUS_CHASSIS_MOTORS, IS_CHASSIS_RIGHT_MOTORS_INVERTED, "chassis motor front right"),
+                    chassisMotorBackLeft(drivers, CHASSIS_MOTOR_BACK_LEFT, CAN_BUS_CHASSIS_MOTORS, IS_CHASSIS_LEFT_MOTORS_INVERTED, "chassis motor back left"),
+                    chassisMotorBackRight(drivers, CHASSIS_MOTOR_BACK_RIGHT, CAN_BUS_CHASSIS_MOTORS, IS_CHASSIS_RIGHT_MOTORS_INVERTED, "chassis motor back right"),
                     chassisPidFrontLeft(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
                     chassisPidFrontRight(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
                     chassisPidBackLeft(CHASSIS_PID_KP,CHASSIS_PID_KI,CHASSIS_PID_KD,CHASSIS_PID_MAX_ERROR_SUM,CHASSIS_PID_MAX_OUTPUT),
@@ -35,8 +35,17 @@ namespace control {
              */
             void refresh() override;
 
-            /** Public function used to set the desired RPM of the feeder motor. Used by commands. */
-            void setDesiredOutput(float rpm1, float rpm2, float rpm3, float rpm4);
+            /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+            void setDesiredOutputFrontLeft(float rpmFrontLeft);
+
+            /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+            void setDesiredOutputFrontRight(float rpmFrontRight);
+
+            /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+            void setDesiredOutputBackLeft(float rpmBackLeft);
+
+            /** Public function used to set the desired RPM of the chassis motor. Used by commands. */
+            void setDesiredOutputBackRight(float rpmBackRight);
 
         private:
         // Components (e.g. motor controllers and sensors) should generally be
