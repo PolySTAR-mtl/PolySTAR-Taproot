@@ -1,42 +1,57 @@
 {
-    "configurations": [
-        {
-            "name": "Test",
-            "defines": ["${default}", "ENV_UNIT_TESTS", "PLATFORM_HOSTED", "RUN_WITH_PROFILING"],
-            "includePath": [
-                "${default}",
-                "PolySTAR-Taproot-project/taproot/sim-modm/hosted-linux/modm/src",
-                "PolySTAR-Taproot-project/taproot/test",
-                "PolySTAR-Taproot-project/test"
-            ],
-            "compilerPath": "g++",
-            "intelliSenseMode": "gcc-x64",
-            "browse": { "limitSymbolsToIncludedHeaders": true }
-        },
-        {
-            "name": "Sim",
-            "defines": ["${default}", "PLATFORM_HOSTED", "RUN_WITH_PROFILING"],
-            "includePath": [
-                "${default}",
-                "PolySTAR-Taproot-project/taproot/sim-modm/hosted-linux/modm/src"
-            ],
-            "compilerPath": "g++",
-            "intelliSenseMode": "gcc-x64",
-            "browse": { "limitSymbolsToIncludedHeaders": true }
-        },
-        {
-            "name": "Hardware",
-            "includePath": [
-                "${default}",
-                "PolySTAR-Taproot-project/taproot/modm/src",
-                "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/core",
-                "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/device",
-                "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/dsp"        
-            ],
-            "compilerPath": "arm-none-eabi-g++",
-            "intelliSenseMode": "gcc-arm",
-            "browse": { "limitSymbolsToIncludedHeaders": true }
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "windows-gcc-x64",
+      "defines": [
+        "${default}",
+        "ENV_UNIT_TESTS",
+        "PLATFORM_HOSTED",
+        "RUN_WITH_PROFILING"
+      ],
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/taproot/modm/src"
+      ],
+      "compilerPath": "C:/mingw64/bin/gcc.exe",
+      "intelliSenseMode": "windows-gcc-x64",
+      "browse": {
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "cStandard": "${default}",
+      "cppStandard": "${default}"
+    },
+    {
+      "name": "Sim",
+      "defines": [
+        "${default}",
+        "PLATFORM_HOSTED",
+        "RUN_WITH_PROFILING"
+      ],
+      "includePath": [
+        "${default}",
+        "PolySTAR-Taproot-project/taproot/sim-modm/hosted-linux/modm/src"
+      ],
+      "compilerPath": "g++",
+      "intelliSenseMode": "gcc-x64",
+      "browse": {
+        "limitSymbolsToIncludedHeaders": true
+      }
+    },
+    {
+      "name": "Hardware",
+      "includePath": [
+        "${default}",
+        "PolySTAR-Taproot-project/taproot/modm/src",
+        "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/core",
+        "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/device",
+        "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/dsp"
+      ],
+      "compilerPath": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-g++.exe",
+      "intelliSenseMode": "gcc-arm",
+      "browse": {
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ],
+  "version": 4
 }
