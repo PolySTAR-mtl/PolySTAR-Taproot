@@ -28,7 +28,7 @@ void TankDriveCommand::end(bool interrupted) // Toujours interrompu (?)
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FR, 0.0f);
 }
 
-bool isFinished()
+bool TankDriveCommand::isFinished() const
 {
     return false;
 }

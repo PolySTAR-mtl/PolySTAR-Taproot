@@ -60,7 +60,6 @@ private:
     static constexpr tap::motor::MotorId CHASSIS_MOTOR_ID_BR = tap::motor::MOTOR2;
     static constexpr tap::motor::MotorId CHASSIS_MOTOR_ID_FL = tap::motor::MOTOR3;
     static constexpr tap::motor::MotorId CHASSIS_MOTOR_ID_FR = tap::motor::MOTOR4;
-
 };
 
 } // namespace chassis
