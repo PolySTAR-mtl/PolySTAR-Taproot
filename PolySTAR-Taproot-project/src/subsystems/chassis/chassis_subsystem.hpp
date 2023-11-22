@@ -46,10 +46,7 @@ public:
      */
     void refresh() override;
 
-    void setDesiredOutputBLMotor(float rpm);
-    void setDesiredOutputBRMotor(float rpm);
-    void setDesiredOutputFLMotor(float rpm);
-    void setDesiredOutputFRMotor(float rpm);
+    void setDesiredOutputAllMotors(float rpmBL, float rpmBR, float rpmFL, float rpmFR);
 
 private:
     ///< Hardware constants
