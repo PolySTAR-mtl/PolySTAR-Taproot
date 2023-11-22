@@ -46,7 +46,7 @@ public:
      */
     void refresh() override;
 
-    void setDesiredOutputAllMotors(float rpmBL, float rpmBR, float rpmFL, float rpmFR);
+    void setDesiredOutputMotor(tap::motor::MotorId motorId, float rpm);
 
 private:
     ///< Hardware constants

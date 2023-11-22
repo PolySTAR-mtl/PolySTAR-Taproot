@@ -47,12 +47,26 @@ void ChassisSubsystem::refresh()
     chassisMotorFR.setDesiredOutput(pidValue);       // Set motor output to value determined by PID
 }
 
-void ChassisSubsystem::setDesiredOutputAllMotors(float rpmBL, float rpmBR, float rpmFL, float rpmFR)
+void ChassisSubsystem::setDesiredOutputMotor(tap::motor::MotorId motorId, float rpm)
 {
-    blDesiredRpm = rpmBL;
-    brDesiredRpm = rpmBR;
-    flDesiredRpm = rpmFL;
-    frDesiredRpm = rpmFR;
+    switch (motorId) 
+    {
+        case CHASSIS_MOTOR_ID_BL:
+            blDesiredRpm = rpm;
+            break;
+
+        case CHASSIS_MOTOR_ID_BR:
+            brDesiredRpm = rpm;
+            break;
+
+        case CHASSIS_MOTOR_ID_FL:
+            flDesiredRpm = rpm;
+            break;
+
+        case CHASSIS_MOTOR_ID_FR:
+            frDesiredRpm = rpm;
+            break;    
+    }
 }
 
 } // namespace chassis
