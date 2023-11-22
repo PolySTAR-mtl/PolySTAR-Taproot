@@ -4,15 +4,11 @@ namespace control
 {
 namespace chassis
 {
-void TankDriveCommand::initialize() {
-
-}
-
 void TankDriveCommand::execute()
 {
     //Get right stick vertical --> getTurretYInput
     float rigthMotorsDesiredRpm = controlInterface.getTurretYInput() * rpmScaleFactor;
-    
+
     //Get left stick vertical  --> getChassisYInput
     float leftMotorsDesiredRpm = controlInterface.getChassisYInput() * rpmScaleFactor;
 
