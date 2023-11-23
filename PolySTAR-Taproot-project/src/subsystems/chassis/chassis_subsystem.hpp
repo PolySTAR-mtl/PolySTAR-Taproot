@@ -4,10 +4,11 @@
 #include "tap/control/subsystem.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "modm/math/filter/pid.hpp"
+#include "control/drivers/drivers.hpp"
 
 class PidMotor : public tap::motor::DjiMotor{
 public:
-    PidMotor(tap::Drivers* drivers, tap::motor::MotorId desMotorIdentifier, tap::can::CanBus motorCanBus, bool isInverted, const char* name);
+    PidMotor(src::Drivers* drivers, tap::motor::MotorId desMotorIdentifier, tap::can::CanBus motorCanBus, bool isInverted, const char* name);
 
     void computeOutput(float desiredRPM);
 
@@ -18,13 +19,13 @@ private:
     static constexpr float PID_MAX_ERROR_SUM = 5000.0f;
     static constexpr float PID_MAX_OUTPUT = 16000.0f;
 
+    src::Drivers* drivers;
     modm::Pid<float> pidController;
-    tap::Drivers* drivers;
 };
 
 class ChassisSubsystem : public tap::control::Subsystem{
 public:
-    ChassisSubsystem(tap::Drivers* drivers);
+    ChassisSubsystem(src::Drivers* drivers);
     ~ChassisSubsystem() = default;
 
     /* Called once when the subsystem is added to the scheduler */

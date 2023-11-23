@@ -62,7 +62,9 @@ void startStandardCommands(src::Drivers *drivers) {
 }
 
 /* register io mappings here ------------------------------------------------*/
-void registerStandardIoMappings(src::Drivers *drivers) {} // should be empty
+void registerStandardIoMappings(src::Drivers *drivers) {
+    (void) drivers;
+} // should be empty
 
 void initSubsystemCommands(src::Drivers *drivers)
 {

@@ -24,6 +24,9 @@ class ControlInterface
 public:
     ControlInterface(tap::Drivers *drivers) : drivers(drivers) {}
 
+    mockable float getLeftVertical();
+    mockable float getRightHorizontal();
+
     /**
      * Returns the value used for chassis movement forward and backward,
      * between -1 and 1. Positive is forward.
