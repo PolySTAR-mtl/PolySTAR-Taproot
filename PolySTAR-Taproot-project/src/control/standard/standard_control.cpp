@@ -35,7 +35,6 @@ ChassisSubsystem chassis(drivers());
 
 /* define commands ----------------------------------------------------------*/
 ChassisMoveCommand chassisMoveCommand(chassis, drivers());
-//ChassisStopCommand  chassisStopCommand(chassis);
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
