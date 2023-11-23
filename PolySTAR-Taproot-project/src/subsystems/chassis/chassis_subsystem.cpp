@@ -39,8 +39,8 @@ void ChassisSubsystem::initialize() {
 
 void ChassisSubsystem::refresh() {
     for(unsigned int i = 0; i < ChassisSubsystem::NUM_MOTORS; i++){
-        float vel = (i < NUM_MOTORS / 2) ? (this->linear + this->rotation) : (this->linear - this->rotation);
-        this->motors[i]->computeOutput(4000);
+        //float vel = (i < NUM_MOTORS / 2) ? (this->linear + this->rotation) : (this->linear - this->rotation);
+        this->motors[i]->computeOutput(this->linear);
     }
 }
 
