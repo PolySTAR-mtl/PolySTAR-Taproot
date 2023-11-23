@@ -6,10 +6,10 @@
 
 #include "chassis_subsystem.hpp"
 
-class ChassisStartCommand : public tap::control::Command{
+class ChassisMoveCommand : public tap::control::Command{
 public:
-    ChassisStartCommand(ChassisSubsystem &chassisSubsystem, tap::Drivers* driver);
-    ~ChassisStartCommand() = default;
+    ChassisMoveCommand(ChassisSubsystem &chassisSubsystem, tap::Drivers* driver);
+    ~ChassisMoveCommand() = default;
 
     void initialize() override;
     const char *getName() const;
@@ -18,7 +18,7 @@ public:
     bool isFinished() const override;
 
 private:
-    static constexpr float MAX_RPM = 10;
+    static constexpr float MAX_RPM = 4000;
 
     ChassisSubsystem &chassisSubsystem;
     tap::Drivers *drivers = nullptr;

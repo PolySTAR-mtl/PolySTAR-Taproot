@@ -9,8 +9,7 @@
 #include "control/safe_disconnect.hpp"
 
 #include "subsystems/chassis/chassis_subsystem.hpp"
-#include "subsystems/chassis/chassis_start_move_command.hpp"
-#include "subsystems/chassis/chassis_stop_move_command.hpp"
+#include "subsystems/chassis/chassis_move_command.hpp"
 
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
@@ -35,7 +34,7 @@ namespace control
 ChassisSubsystem chassis(drivers());
 
 /* define commands ----------------------------------------------------------*/
-ChassisStartCommand chassisStartCommand(chassis, drivers());
+ChassisMoveCommand chassisMoveCommand(chassis, drivers());
 //ChassisStopCommand  chassisStopCommand(chassis);
 
 /* safe disconnect function -------------------------------------------------*/
@@ -46,15 +45,16 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
     drivers->commandScheduler.registerSubsystem(&chassis);
-
 }
 
 /* initialize subsystems ----------------------------------------------------*/
-void initializeSubsystems() {}
+void initializeSubsystems() {
+    chassis.initialize();
+}
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    chassis.setDefaultCommand(&chassisStartCommand);
+    chassis.setDefaultCommand(&chassisMoveCommand);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
