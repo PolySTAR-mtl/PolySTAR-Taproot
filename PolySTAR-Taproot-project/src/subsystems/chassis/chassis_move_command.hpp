@@ -8,7 +8,7 @@
 
 class ChassisMoveCommand : public tap::control::Command{
 public:
-    ChassisMoveCommand(ChassisSubsystem &chassisSubsystem, tap::Drivers* driver);
+    ChassisMoveCommand(ChassisSubsystem *chassisSubsystem, tap::Drivers* driver);
     ~ChassisMoveCommand() = default;
 
     void initialize() override;
@@ -20,7 +20,7 @@ public:
 private:
     static constexpr float MAX_RPM = 4000;
 
-    ChassisSubsystem &chassisSubsystem;
+    ChassisSubsystem *chassisSubsystem;
     tap::Drivers *drivers = nullptr;
 };
 

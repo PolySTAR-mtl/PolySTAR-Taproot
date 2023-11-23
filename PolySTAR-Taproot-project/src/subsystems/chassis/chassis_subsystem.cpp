@@ -41,7 +41,7 @@ void ChassisSubsystem::refresh() {
     static float time = 0;
     for(unsigned int i = 0; i < ChassisSubsystem::NUM_MOTORS; i++){
         //float vel = (i < NUM_MOTORS / 2) ? (this->linear + this->rotation) : (this->linear - this->rotation);
-        this->motors[i]->computeOutput(4000 * sinf(time));
+        this->motors[i]->computeOutput(this->linear);
         time += 0.001f;
         if(time >= 2 * 3.1415) time = 0;
     }

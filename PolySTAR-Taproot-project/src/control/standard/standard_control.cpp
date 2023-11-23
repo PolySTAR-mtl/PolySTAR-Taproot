@@ -34,7 +34,7 @@ namespace control
 ChassisSubsystem chassis(drivers());
 
 /* define commands ----------------------------------------------------------*/
-ChassisMoveCommand chassisMoveCommand(chassis, drivers());
+ChassisMoveCommand chassisMoveCommand(&chassis, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -57,7 +57,9 @@ void setDefaultStandardCommands(src::Drivers *) {
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *drivers) {}
+void startStandardCommands(src::Drivers *drivers) {
+    drivers->commandScheduler.addCommand(&chassisMoveCommand);
+}
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {} // should be empty
