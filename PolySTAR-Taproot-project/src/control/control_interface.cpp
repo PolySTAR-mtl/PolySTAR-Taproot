@@ -13,6 +13,15 @@ float ControlInterface::getTurretXInput()
     return drivers->remote.getChannel(tap::communication::serial::Remote::Channel::RIGHT_HORIZONTAL);
 }
 
+float ControlInterface::getChassisYInput()
+{
+    return drivers->remote.getChannel(tap::communication::serial::Remote::Channel::LEFT_HORIZONTAL);
+}
+
+float ControlInterface::getChassisXInput()
+{
+    return drivers->remote.getChannel(tap::communication::serial::Remote::Channel::LEFT_VERTICAL);
+}
 
 }  // namespace control
 

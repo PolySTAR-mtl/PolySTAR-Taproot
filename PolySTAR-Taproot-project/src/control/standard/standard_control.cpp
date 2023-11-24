@@ -7,6 +7,8 @@
 #include "control/drivers/drivers_singleton.hpp"
 #include "control/drivers/drivers.hpp"
 #include "control/safe_disconnect.hpp"
+#include "subsystems/chassis/chassis_subsystem.hpp"
+#include "subsystems/chassis/chassis_tank_command.hpp"
 
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
@@ -28,28 +30,40 @@ static src::driversFunc drivers = src::DoNotUse_getDrivers;
 namespace control
 {
 /* define subsystems --------------------------------------------------------*/
-
+ChassisSubsystem chassisSubsystem(drivers());
 /* define commands ----------------------------------------------------------*/
-
+ChassisTankCommand chassisTankCommand(&chassisSubsystem, drivers());
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 
 /* register subsystems here -------------------------------------------------*/
-void registerStandardSubsystems(src::Drivers *drivers) {}
+void registerStandardSubsystems(src::Drivers *drivers) 
+{
+    drivers->commandScheduler.registerSubsystem(&chassisSubsystem);
+}
 
 /* initialize subsystems ----------------------------------------------------*/
-void initializeSubsystems() {}
+void initializeSubsystems() 
+{
+    chassisSubsystem.initialize();
+}
 
 /* set any default commands to subsystems here ------------------------------*/
-void setDefaultStandardCommands(src::Drivers *) {}
+void setDefaultStandardCommands(src::Drivers * drivers) 
+{
+    chassisSubsystem.setDefaultCommand(&chassisTankCommand);
+}
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *drivers) {}
+void startStandardCommands(src::Drivers *drivers) {} // should be empty
 
 /* register io mappings here ------------------------------------------------*/
-void registerStandardIoMappings(src::Drivers *drivers) {} // should be empty
+void registerStandardIoMappings(src::Drivers *drivers) 
+{
+    
+} 
 
 void initSubsystemCommands(src::Drivers *drivers)
 {
