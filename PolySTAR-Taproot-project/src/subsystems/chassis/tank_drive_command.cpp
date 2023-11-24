@@ -16,8 +16,6 @@ void TankDriveCommand::execute()
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BR, rigthMotorsDesiredRpm);
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FL, leftMotorsDesiredRpm);
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FR, rigthMotorsDesiredRpm);
-
-    chassis->refresh();
 }
 
 void TankDriveCommand::end(bool interrupted) // Toujours interrompu (?)

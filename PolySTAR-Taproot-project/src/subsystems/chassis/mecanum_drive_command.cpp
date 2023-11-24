@@ -24,8 +24,6 @@ void MecanumDriveCommand::execute()
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BR, (yDesiredOutput + xDesiredOutput + rDesiredOutput) * rpmScaleFactor / denominator);
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FL, (yDesiredOutput - xDesiredOutput - rDesiredOutput) * rpmScaleFactor / denominator);
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FR, (yDesiredOutput + xDesiredOutput - rDesiredOutput) * rpmScaleFactor / denominator);
-
-    chassis->refresh();
 }
 
 void MecanumDriveCommand::end(bool interrupted) // Toujours interrompu (?)
