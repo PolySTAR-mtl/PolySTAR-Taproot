@@ -20,10 +20,10 @@ void MecanumDriveCommand::execute()
     denominator = denominator > 1 ? denominator : 1;
 
     // Set motors desired output    
-    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BL, (yDesiredOutput - xDesiredOutput + rDesiredOutput) / denominator);
-    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BR, (yDesiredOutput + xDesiredOutput + rDesiredOutput) / denominator);
-    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FL, (yDesiredOutput - xDesiredOutput - rDesiredOutput) / denominator);
-    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FR, (yDesiredOutput + xDesiredOutput - rDesiredOutput) / denominator);
+    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BL, (yDesiredOutput - xDesiredOutput + rDesiredOutput) * rpmScaleFactor / denominator);
+    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BR, (yDesiredOutput + xDesiredOutput + rDesiredOutput) * rpmScaleFactor / denominator);
+    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FL, (yDesiredOutput - xDesiredOutput - rDesiredOutput) * rpmScaleFactor / denominator);
+    chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_FR, (yDesiredOutput + xDesiredOutput - rDesiredOutput) * rpmScaleFactor / denominator);
 
     chassis->refresh();
 }
