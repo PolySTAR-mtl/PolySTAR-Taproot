@@ -8,6 +8,10 @@
 #include "control/drivers/drivers.hpp"
 #include "control/safe_disconnect.hpp"
 
+#include "subsystems/chassis/chassis_subsystem.hpp"
+#include "subsystems/chassis/tank_drive_command.hpp"
+#include "subsystems/chassis/mecanum_drive_command.hpp"
+
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
@@ -28,28 +32,43 @@ static src::driversFunc drivers = src::DoNotUse_getDrivers;
 namespace control
 {
 /* define subsystems --------------------------------------------------------*/
+chassis::ChassisSubsystem chassisSubsystem(drivers());
 
 /* define commands ----------------------------------------------------------*/
+chassis::TankDriveCommand tankCommand(&chassisSubsystem, drivers());
+chassis::MecanumDriveCommand mecanumCommand(&chassisSubsystem, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
+tap::control::HoldCommandMapping rightSwitchUp(
+    drivers(),
+    {&tankCommand},
+    RemoteMapState(tap::communication::serial::Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 
 /* register subsystems here -------------------------------------------------*/
-void registerStandardSubsystems(src::Drivers *drivers) {}
+void registerStandardSubsystems(src::Drivers *drivers) {
+    drivers->commandScheduler.registerSubsystem(&chassisSubsystem);
+}
 
 /* initialize subsystems ----------------------------------------------------*/
-void initializeSubsystems() {}
+void initializeSubsystems() {
+    chassisSubsystem.initialize();
+}
 
 /* set any default commands to subsystems here ------------------------------*/
-void setDefaultStandardCommands(src::Drivers *) {}
+void setDefaultStandardCommands(src::Drivers *) {
+    chassisSubsystem.setDefaultCommand(&mecanumCommand);
+}
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *drivers) {}
+void startStandardCommands(src::Drivers *drivers) {} // should be empty
 
 /* register io mappings here ------------------------------------------------*/
-void registerStandardIoMappings(src::Drivers *drivers) {} // should be empty
+void registerStandardIoMappings(src::Drivers *drivers) {
+    drivers->commandMapper.addMap(&rightSwitchUp);
+} 
 
 void initSubsystemCommands(src::Drivers *drivers)
 {

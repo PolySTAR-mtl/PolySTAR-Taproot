@@ -4,16 +4,18 @@ namespace control
 {
 namespace chassis
 {
+
+void MecanumDriveCommand::initialize() {}
 void MecanumDriveCommand::execute()
 {
     // Get remote values
-    float yDesiredOutput = controlInterface.getChassisYInput();
+    float yDesiredOutput = drivers->controlInterface.getChassisYInput();
     float yAbs = yDesiredOutput > 0 ? yDesiredOutput : -yDesiredOutput;
 
-    float xDesiredOutput = controlInterface.getChassisXInput();
+    float xDesiredOutput = drivers->controlInterface.getChassisXInput();
     float xAbs = xDesiredOutput > 0 ? xDesiredOutput : -xDesiredOutput;
      
-    float rDesiredOutput = controlInterface.getChassisRInput();
+    float rDesiredOutput = drivers->controlInterface.getChassisRInput();
     float rAbs = rDesiredOutput > 0 ? rDesiredOutput : -rDesiredOutput;
 
     float denominator = yAbs + xAbs + rAbs;

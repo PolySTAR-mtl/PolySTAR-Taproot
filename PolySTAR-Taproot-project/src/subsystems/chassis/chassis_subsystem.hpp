@@ -34,7 +34,7 @@ public:
     frDesiredRpm(0.0f)
     {}
 
-    ~ChassisSubsystem() = default;
+    virtual ~ChassisSubsystem() = default;
 
     /**
      * Called once when the subsystem is added to the scheduler.

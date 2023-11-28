@@ -7,10 +7,10 @@ namespace chassis
 void TankDriveCommand::execute()
 {
     //Get right stick vertical --> getTurretYInput
-    float rigthMotorsDesiredRpm = controlInterface.getTurretYInput() * rpmScaleFactor;
+    float rigthMotorsDesiredRpm = drivers->controlInterface.getTurretYInput() * rpmScaleFactor;
 
     //Get left stick vertical  --> getChassisYInput
-    float leftMotorsDesiredRpm = controlInterface.getChassisYInput() * rpmScaleFactor;
+    float leftMotorsDesiredRpm = drivers->controlInterface.getChassisYInput() * rpmScaleFactor;
 
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BL, leftMotorsDesiredRpm);
     chassis->setDesiredOutputMotor(CHASSIS_MOTOR_ID_BR, rigthMotorsDesiredRpm);

@@ -3,7 +3,6 @@
 
 #include "tap/control/command.hpp"
 #include "chassis_subsystem.hpp"
-#include "control_interface.hpp"
 
 namespace control 
 {
@@ -14,8 +13,8 @@ class TankDriveCommand : public tap::control::Command
 {
 public:
 
-    TankDriveCommand(ChassisSubsystem* const chassis, Drivers* drivers)
-    : chassis(chassis), controlInterface(drivers)
+    TankDriveCommand(ChassisSubsystem* const chassis, src::Drivers* drivers)
+    : chassis(chassis), drivers(drivers)
     {
         if (chassis == nullptr)
         {
@@ -24,7 +23,7 @@ public:
         this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem*>(chassis));
     }
 
-    ~TankDriveCommand() = default;
+    virtual ~TankDriveCommand() = default;
 
     /**
      * Called once when the subsystem is added to the scheduler.
@@ -54,7 +53,8 @@ public:
 
 private:
     ChassisSubsystem* chassis;
-    src::control::ControlInterface controlInterface;
+    //src::control::ControlInterface controlInterface;
+    src::Drivers* drivers;
 
     static constexpr tap::motor::MotorId CHASSIS_MOTOR_ID_BL = tap::motor::MOTOR1;
     static constexpr tap::motor::MotorId CHASSIS_MOTOR_ID_BR = tap::motor::MOTOR2;
