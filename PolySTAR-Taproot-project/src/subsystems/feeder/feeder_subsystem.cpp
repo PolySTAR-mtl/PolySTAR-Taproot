@@ -6,6 +6,7 @@
 
 using namespace tap;
 using tap::communication::serial::Uart;
+using tap::communication::serial::RefSerialData;
 
 namespace control
 {
@@ -60,12 +61,40 @@ bool FeederSubsystem::isJammed()  {
 };
 
 void FeederSubsystem::checkHeat() {
+    // TODO : Checker si les auto font pas crash ici lol
     const auto &robotData = drivers->refSerial.getRobotData();
     const auto &turretData = robotData.turret;
+    const auto &barrel = turretData.launchMechanismID;
 
-    if (turretData->heat17ID1 + FEEDER_HEAT_INCREASE_17MM > turretData.heatLimit17ID1)
-        isOverheating = true; 
+    uint16_t currentHeat;
+    uint16_t heatLimit;
+    uint16_t heatIncrease;
 
+
+    switch (barrel)
+        {
+            case RefSerialData::Rx::MechanismID::TURRET_17MM_1:
+                currentHeat = turretData.heat17ID1;
+                heatLimit = turretData.heatLimit17ID1;
+                heatIncrease = FEEDER_HEAT_INCREASE_17MM;
+                break;
+            case RefSerialData::Rx::MechanismID::TURRET_17MM_2:
+                currentHeat = turretData.heat17ID2;
+                heatLimit = turretData->heatLimit17ID2;
+                heatIncrease = FEEDER_HEAT_INCREASE_17MM;
+                break;
+            case RefSerialData::Rx::MechanismID::TURRET_42MM:
+                currentHeat = turretData.heat42;
+                heatLimit = turretData.heatLimit42;
+                heatIncrease = FEEDER_HEAT_INCREASE_42MM;
+                break;
+        }
+
+    if (currentHeat + FEEDER_HEAT_INCREASE_17MM > heatLimit)
+        isOverheating = true;
+
+    if (isOverheating && currentHeat >= (heatLimit / 2))
+        isOverheating = false;
 }
 
 void FeederSubsystem::clearJam()  {
