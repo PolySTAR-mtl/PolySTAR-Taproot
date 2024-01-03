@@ -19,4 +19,7 @@ static constexpr float FEEDER_PID_KD = 0.0f;
 static constexpr float FEEDER_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float FEEDER_PID_MAX_OUTPUT = 8000.0f;
 
+static constexpr int FEEDER_HEAT_INCREASE_17MM = 10;
+static constexpr int FEEDER_HEAT_INCREASE_42MM = 10;
+
 #endif

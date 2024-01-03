@@ -27,7 +27,10 @@ void  FeederFeedCommand::execute() {}
 
 void  FeederFeedCommand::end(bool) { feeder->setDesiredOutput(0); }
 
-bool  FeederFeedCommand::isFinished() const { return false; }
+bool  FeederFeedCommand::isFinished() const { 
+    feeder->checkHeat()
+    return feeder->isOverheating; 
+    }
 }  // namespace feeder
 }  // namespace control
 

@@ -59,6 +59,15 @@ bool FeederSubsystem::isJammed()  {
     return jamChecker.check();
 };
 
+void FeederSubsystem::checkHeat() {
+    const auto &robotData = drivers->refSerial.getRobotData();
+    const auto &turretData = robotData.turret;
+
+    if (turretData->heat17ID1 + FEEDER_HEAT_INCREASE_17MM > turretData.heatLimit17ID1)
+        isOverheating = true; 
+
+}
+
 void FeederSubsystem::clearJam()  {
     jamChecker.restart(); // Unsure, if bug look here
 };

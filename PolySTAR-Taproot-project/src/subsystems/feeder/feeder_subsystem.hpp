@@ -62,6 +62,8 @@ public:
 
     void clearJam() override;
 
+    void checkHeat();
+
     inline bool isCalibrated() override;
 
     inline bool isOnline() override;
@@ -90,6 +92,8 @@ private:
 
     uint16_t feederOrigin;
     bool feederCalibrated;
+
+    bool isOverheating;
 
     uint32_t prevDebugMessage = 0;
 
