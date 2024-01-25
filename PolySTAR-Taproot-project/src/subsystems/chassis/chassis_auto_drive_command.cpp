@@ -26,6 +26,11 @@ void  ChassisAutoDriveCommand::initialize() {}
 
 void  ChassisAutoDriveCommand::execute()
 {
+    if (!IS_IN_TESTING && drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
+    {
+        chassis->setTargetOutput(0, 0, 0);
+        return;
+    }
     // Acquire setpoints received from CV over serial through CVHandler
     // And convert velocities to chassis inputs
     CVSerialData::Rx::MovementData movementData = drivers->cvHandler.getMovementData();
