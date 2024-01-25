@@ -26,6 +26,11 @@ void  TurretAutoAimCommand::initialize() {}
 
 void  TurretAutoAimCommand::execute()
 {
+    if (!IS_IN_TESTING && drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
+    {
+        turret->setAbsoluteOutputDegrees(turret->getYawNeutralPos(), turret->getPitchNeutralPos());
+        return;
+    }
     // Acquire setpoints received from CV over serial through CVHandler
     CVSerialData::Rx::TurretData turretData = drivers->cvHandler.getTurretData();
     float pitchSetpoint = turretData.pitchSetpoint*MRAD_TO_DEGREES;
