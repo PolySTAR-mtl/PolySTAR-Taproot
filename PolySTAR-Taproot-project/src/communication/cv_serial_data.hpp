@@ -135,6 +135,10 @@ public:
             int16_t rSetpoint;
         };
 
+        struct ShootOrderData {
+            uint8_t shootOrder;
+        };
+
     };  // Class Rx
 }; // Class CVSerialData
 }  // Namespace src::communication::cv

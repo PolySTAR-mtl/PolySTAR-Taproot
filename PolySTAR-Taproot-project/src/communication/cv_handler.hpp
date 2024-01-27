@@ -59,20 +59,26 @@ public:
      */
     mockable const Rx::MovementData& getMovementData() const { return movementData; };
 
+     /**
+     * Returns a reference to the most up to date movement setpoint struct.
+     */
+    mockable const Rx::ShootOrderData& getShootOrderData() const { return shootOrderData; };
+
     /*
     *  Returns value of flag indicating if CV has requested robot to fire
     */
-    mockable bool getShootOrderFlag() const { return shootOrderFlag; };
+    // mockable const Rx:ShootOrderData& getShootOrderFlag() const { return shootOrder; };
 
     /*
     * Clears the shoot order flag
     */
-    void clearShootOrderFlag() { shootOrderFlag = false; };
+    // void clearShootOrderFlag() { shootOrderFlag = false; };
 
 private:
     Rx::TurretData turretData;
     Rx::MovementData movementData;
-    bool shootOrderFlag;
+    Rx::ShootOrderData shootOrderData;
+    // bool shootOrderFlag;
     /**
      * Decodes CV serial message containing turret yaw and pitch setpoints
      */
@@ -84,7 +90,7 @@ private:
     /**
      * Decodes CV serial message containing order to fire
      */
-    bool decodeToShootOrder();
+    bool decodeToShootOrder(const ReceivedSerialMessage& message);
 };
 
 }  // namespace src::communication::cv

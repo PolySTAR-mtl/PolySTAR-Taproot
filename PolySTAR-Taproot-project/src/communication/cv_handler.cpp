@@ -11,7 +11,7 @@ CVHandler::CVHandler(Drivers* drivers)
     : CVSerial(drivers, tap::communication::serial::Uart::UartPort::Uart7),
       turretData(),
       movementData(),
-      shootOrderFlag(false)
+      shootOrderData()
 {
 }
 
@@ -35,7 +35,7 @@ void CVHandler::messageReceiveCallback(const ReceivedSerialMessage& completeMess
         }
         case CVSerialData::Rx::SHOOT_MESSAGE:
         {
-            decodeToShootOrder();
+            decodeToShootOrder(completeMessage);
             // nBytes = sprintf(buffer,"Shoot Message Received\n");
             break;
         }
@@ -75,9 +75,13 @@ bool CVHandler::decodeToMovementData(const ReceivedSerialMessage& message)
     return true;
 }
 
-bool CVHandler::decodeToShootOrder()
+bool CVHandler::decodeToShootOrder(const ReceivedSerialMessage& message)
 {
-    shootOrderFlag = true;
+    if (message.header.dataLength != sizeof(Rx::ShootOrderData))
+    {
+        return false;
+    }
+    convertFromLittleEndian(&shootOrderData.shootOrder, message.data);
     return true;
 }
 
