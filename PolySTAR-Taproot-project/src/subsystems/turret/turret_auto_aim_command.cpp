@@ -26,7 +26,7 @@ void  TurretAutoAimCommand::initialize() {}
 
 void  TurretAutoAimCommand::execute()
 {
-    if (!IS_IN_TESTING && drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
+    if (drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
     {
         turret->setAbsoluteOutputDegrees(turret->getYawNeutralPos(), turret->getPitchNeutralPos());
         return;

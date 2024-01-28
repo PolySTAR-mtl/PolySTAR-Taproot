@@ -42,6 +42,4 @@
 
 #define UNUSED(var) (void)(var)
 
-#define IS_IN_TESTING true
-
 #endif  // TAPROOT_UTIL_MACROS_HPP_
