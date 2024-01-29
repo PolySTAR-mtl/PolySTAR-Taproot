@@ -34,6 +34,8 @@
 #include "tap/architecture/profiler.hpp"
 
 /* communication includes ---------------------------------------------------*/
+#include "tap/communication/serial/ref_serial.hpp"
+
 #include "control/drivers/drivers.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 
@@ -42,7 +44,11 @@
 
 /* control includes ---------------------------------------------------------*/
 #include "tap/architecture/clock.hpp"
+
 #include "control/robot_control.hpp"
+
+using src::communication::cv::CVSerialData;
+using tap::communication::serial::RefSerialData;
 
 /* define timers here -------------------------------------------------------*/
 tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
@@ -50,6 +56,8 @@ tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
 // Place any sort of input/output initialization here. For example, place
 // serial init stuff here.
 static void initializeIo(src::Drivers *drivers);
+
+static void sendCVUpdate(src::Drivers *drivers);
 
 // Anything that you would like to be called place here. It will be called
 // very frequently. Use PeriodicMilliTimers if you don't want something to be
@@ -98,6 +106,15 @@ int main()
     return 0;
 }
 
+static void sendCVUpdate(src::Drivers *drivers)
+{
+    CVSerialData::Tx::EventMessage eventMessage;
+    RefSerialData::Rx::GameData gameData = drivers->refSerial.getGameData();
+    eventMessage.gameStage = gameData.gameStage;
+
+    drivers->uart.write(Uart::UartPort::Uart7, (uint8_t *)(&eventMessage), sizeof(eventMessage));
+}
+
 static void initializeIo(src::Drivers *drivers)
 {
     drivers->analog.init();
@@ -129,4 +146,6 @@ static void updateIo(src::Drivers *drivers)
     drivers->mpu6500.read();
 
     drivers->cvHandler.updateSerial();
+
+    sendCVUpdate(drivers);
 }
