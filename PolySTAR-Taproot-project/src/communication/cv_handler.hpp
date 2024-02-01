@@ -48,6 +48,11 @@ public:
      * Handles the types of messages defined above in the RX message handlers section.
      */
     void messageReceiveCallback(const ReceivedSerialMessage& completeMessage) override;
+    
+    /**
+     * Checks if the game stage has changed and sends the new GameStage to CV if necessary.
+    */
+    void CVHandler::processGameStage();
 
     /**
      * Returns a reference to the most up to date turret setpoint struct.
@@ -60,25 +65,15 @@ public:
     mockable const Rx::MovementData& getMovementData() const { return movementData; };
 
      /**
-     * Returns a reference to the most up to date movement setpoint struct.
+     * Returns a reference to the most up to date shoot order struct.
      */
     mockable const Rx::ShootOrderData& getShootOrderData() const { return shootOrderData; };
-
-    /*
-    *  Returns value of flag indicating if CV has requested robot to fire
-    */
-    // mockable const Rx:ShootOrderData& getShootOrderFlag() const { return shootOrder; };
-
-    /*
-    * Clears the shoot order flag
-    */
-    // void clearShootOrderFlag() { shootOrderFlag = false; };
 
 private:
     Rx::TurretData turretData;
     Rx::MovementData movementData;
     Rx::ShootOrderData shootOrderData;
-    // bool shootOrderFlag;
+    RefSerialData::Rx::GameStage lastGameStage = RefSerialData::Rx::GameStage::END_GAME;
     /**
      * Decodes CV serial message containing turret yaw and pitch setpoints
      */

@@ -106,14 +106,7 @@ int main()
     return 0;
 }
 
-static void sendCVUpdate(src::Drivers *drivers)
-{
-    CVSerialData::Tx::EventMessage eventMessage;
-    RefSerialData::Rx::GameData gameData = drivers->refSerial.getGameData();
-    eventMessage.gameStage = gameData.gameStage;
 
-    drivers->uart.write(Uart::UartPort::Uart7, (uint8_t *)(&eventMessage), sizeof(eventMessage));
-}
 
 static void initializeIo(src::Drivers *drivers)
 {
@@ -146,6 +139,5 @@ static void updateIo(src::Drivers *drivers)
     drivers->mpu6500.read();
 
     drivers->cvHandler.updateSerial();
-
-    sendCVUpdate(drivers);
+    drivers->cvHandler.processGameStage();
 }

@@ -34,7 +34,8 @@ public:
             DATA_LEN_GAME = 14,
             DATA_LEN_EVENT = 2,
             DATA_LEN_TURRET = 4,
-            DATA_LEN_POSITION = 22,
+            DATA_LEN_POSITION = 42,
+            DATA_LEN_PREFIX = 3
         };
 
         // Aiming mode IDs
