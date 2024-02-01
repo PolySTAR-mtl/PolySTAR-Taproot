@@ -52,7 +52,7 @@ public:
     /**
      * Checks if the game stage has changed and sends the new GameStage to CV if necessary.
     */
-    void CVHandler::processGameStage();
+    void processGameStage();
 
     /**
      * Returns a reference to the most up to date turret setpoint struct.
