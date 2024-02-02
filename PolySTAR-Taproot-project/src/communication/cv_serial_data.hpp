@@ -57,7 +57,6 @@ public:
                   commandID(commandID),
                   dataLength(dataLength){};
             uint8_t startOfFrame;
-            ;
             uint8_t commandID;
             uint8_t dataLength;
         } modm_packed;

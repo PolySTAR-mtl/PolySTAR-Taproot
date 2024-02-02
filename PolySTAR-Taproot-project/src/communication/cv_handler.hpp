@@ -69,6 +69,11 @@ public:
      */
     mockable const Rx::ShootOrderData& getShootOrderData() const { return shootOrderData; };
 
+    /**
+     * Returns true if the CV has sent a shoot order.
+     */
+    bool shouldShoot() const { return shootOrderData.shootOrder != 0; }
+
 private:
     Rx::TurretData turretData;
     Rx::MovementData movementData;

@@ -33,9 +33,6 @@
 #include "tap/architecture/periodic_timer.hpp"
 #include "tap/architecture/profiler.hpp"
 
-/* communication includes ---------------------------------------------------*/
-#include "tap/communication/serial/ref_serial.hpp"
-
 #include "control/drivers/drivers.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 
