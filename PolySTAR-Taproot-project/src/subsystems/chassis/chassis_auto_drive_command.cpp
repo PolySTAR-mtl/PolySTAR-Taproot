@@ -1,7 +1,5 @@
 #include "chassis_auto_drive_command.hpp"
 
-using src::communication::cv::CVSerialData;
-
 namespace control
 {
 namespace chassis

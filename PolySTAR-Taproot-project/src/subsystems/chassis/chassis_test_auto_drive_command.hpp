@@ -1,10 +1,6 @@
 #ifndef CHASSIS_TEST_AUTO_DRIVE_COMMAND_HPP_
 #define CHASSIS_TEST_AUTO_DRIVE_COMMAND_HPP_
 
-#include "tap/control/command.hpp"
-
-#include "chassis_subsystem.hpp"
-#include "control/drivers/drivers.hpp"
 #include "generic_auto_drive_command.hpp"
 
 namespace control

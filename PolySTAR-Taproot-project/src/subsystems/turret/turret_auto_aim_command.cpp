@@ -3,8 +3,6 @@
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
 
-using src::communication::cv::CVSerialData;
-
 namespace control
 {
 namespace turret
