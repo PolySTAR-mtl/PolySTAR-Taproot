@@ -12,17 +12,9 @@ namespace turret
 TurretAutoAimCommand::TurretAutoAimCommand(
     TurretSubsystem *const turret,
     src::Drivers *drivers)
-    : turret(turret),
-      drivers(drivers)
+    : GenericAutoAimCommand(turret, drivers)
 {
-    if (turret == nullptr)
-    {
-        return;
-    }
-    this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
-
-void  TurretAutoAimCommand::initialize() {}
 
 void  TurretAutoAimCommand::execute()
 {
@@ -32,19 +24,8 @@ void  TurretAutoAimCommand::execute()
         return;
     }
     // Acquire setpoints received from CV over serial through CVHandler
-    CVSerialData::Rx::TurretData turretData = drivers->cvHandler.getTurretData();
-    float pitchSetpoint = turretData.pitchSetpoint*MRAD_TO_DEGREES;
-    float yawSetpoint = turretData.yawSetpoint*MRAD_TO_DEGREES;
-
-    turret->setAbsoluteOutputDegrees(yawSetpoint, pitchSetpoint);
+    GenericAutoAimCommand::execute();
 }
-
-void  TurretAutoAimCommand::end(bool) {
-    // Do nothing when switching back to manual aim, 
-    // ie leave current setpoints where they are.
-}
-
-bool  TurretAutoAimCommand::isFinished() const { return false; }
 }  // namespace turret
 }  // namespace control
 
