@@ -1,16 +1,13 @@
-#ifndef TURRET_AUTO_AIM_COMMAND_HPP_
-#define TURRET_AUTO_AIM_COMMAND_HPP_
+#ifndef TURRET_TEST_AUTO_AIM_COMMAND_HPP_
+#define TURRET_TEST_AUTO_AIM_COMMAND_HPP_
 
-#include "tap/control/command.hpp"
-
-#include "turret_subsystem.hpp"
-#include "control/drivers/drivers.hpp"
+#include "generic_auto_aim_command.hpp"
 
 namespace control
 {
 namespace turret
 {
-class TurretTestAutoAimCommand : public tap::control::Command
+class TurretTestAutoAimCommand : public GenericAutoAimCommand
 {
 public:
     /**
@@ -26,22 +23,9 @@ public:
 
     TurretTestAutoAimCommand &operator=(const TurretTestAutoAimCommand &other) = delete;
 
-    void initialize() override;
-
-    const char *getName() const { return "turret auto aim command"; }
+    const char *getName() const { return "turret test auto aim command"; }
 
     void execute() override;
-
-    void end(bool) override;
-
-    bool isFinished() const override;
-
-private:
-    TurretSubsystem *const turret;
-
-    src::Drivers *drivers;
-
-    const float MRAD_TO_DEGREES = 0.0572958;
 
 };  // TurretTestAutoAimCommand
 
@@ -49,5 +33,5 @@ private:
 
 }  // namespace control
 
-#endif  // TURRET_AUTO_AIM_COMMAND_HPP_
+#endif  // TURRET_TEST_AUTO_AIM_COMMAND_HPP_
 

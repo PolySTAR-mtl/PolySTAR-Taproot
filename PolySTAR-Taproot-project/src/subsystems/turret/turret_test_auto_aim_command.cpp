@@ -12,17 +12,9 @@ namespace turret
 TurretTestAutoAimCommand::TurretTestAutoAimCommand(
     TurretSubsystem *const turret,
     src::Drivers *drivers)
-    : turret(turret),
-      drivers(drivers)
+    : GenericAutoAimCommand(turret, drivers)
 {
-    if (turret == nullptr)
-    {
-        return;
-    }
-    this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
-
-void  TurretTestAutoAimCommand::initialize() {}
 
 void  TurretTestAutoAimCommand::execute()
 {
@@ -33,13 +25,6 @@ void  TurretTestAutoAimCommand::execute()
 
     turret->setAbsoluteOutputDegrees(yawSetpoint, pitchSetpoint);
 }
-
-void  TurretTestAutoAimCommand::end(bool) {
-    // Do nothing when switching back to manual aim, 
-    // ie leave current setpoints where they are.
-}
-
-bool  TurretTestAutoAimCommand::isFinished() const { return false; }
 }  // namespace turret
 }  // namespace control
 
