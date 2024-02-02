@@ -91,7 +91,7 @@ ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMa
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 // ToggleCommandMapping toggleChassisAuto(drivers(), {&chassisAutoDrive}, RemoteMapState({Remote::Key::R}));
 ToggleCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-ToggleCommandMapping toggleTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+ToggleCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 
 /*-Only used for calibration-*/
@@ -137,7 +137,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
     drivers->commandMapper.addMap(&toggleChassisDrive);
-    drivers->commandMapper.addMap(&toggleTestCommands);
+    drivers->commandMapper.addMap(&toggleAutoTestCommands);
     drivers->commandMapper.addMap(&toggleAutoCommands);
 
 }
