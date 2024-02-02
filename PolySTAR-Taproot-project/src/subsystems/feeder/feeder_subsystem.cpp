@@ -79,7 +79,7 @@ void FeederSubsystem::checkHeat() {
                 break;
             case RefSerialData::Rx::MechanismID::TURRET_17MM_2:
                 currentHeat = turretData.heat17ID2;
-                heatLimit = turretData->heatLimit17ID2;
+                heatLimit = turretData.heatLimit17ID2;
                 heatIncrease = FEEDER_HEAT_INCREASE_17MM;
                 break;
             case RefSerialData::Rx::MechanismID::TURRET_42MM:
