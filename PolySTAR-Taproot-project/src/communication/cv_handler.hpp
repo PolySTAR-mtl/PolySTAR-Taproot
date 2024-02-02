@@ -48,6 +48,11 @@ public:
      * Handles the types of messages defined above in the RX message handlers section.
      */
     void messageReceiveCallback(const ReceivedSerialMessage& completeMessage) override;
+    
+    /**
+     * Checks if the game stage has changed and sends the new GameStage to CV if necessary.
+    */
+    void processGameStage();
 
     /**
      * Returns a reference to the most up to date turret setpoint struct.
@@ -59,20 +64,21 @@ public:
      */
     mockable const Rx::MovementData& getMovementData() const { return movementData; };
 
-    /*
-    *  Returns value of flag indicating if CV has requested robot to fire
-    */
-    mockable bool getShootOrderFlag() const { return shootOrderFlag; };
+     /**
+     * Returns a reference to the most up to date shoot order struct.
+     */
+    mockable const Rx::ShootOrderData& getShootOrderData() const { return shootOrderData; };
 
-    /*
-    * Clears the shoot order flag
-    */
-    void clearShootOrderFlag() { shootOrderFlag = false; };
+    /**
+     * Returns true if the CV has sent a shoot order.
+     */
+    bool shouldShoot() const { return shootOrderData.shootOrder != 0; }
 
 private:
     Rx::TurretData turretData;
     Rx::MovementData movementData;
-    bool shootOrderFlag;
+    Rx::ShootOrderData shootOrderData;
+    RefSerialData::Rx::GameStage lastGameStage = RefSerialData::Rx::GameStage::END_GAME;
     /**
      * Decodes CV serial message containing turret yaw and pitch setpoints
      */
@@ -84,7 +90,7 @@ private:
     /**
      * Decodes CV serial message containing order to fire
      */
-    bool decodeToShootOrder();
+    bool decodeToShootOrder(const ReceivedSerialMessage& message);
 };
 
 }  // namespace src::communication::cv
