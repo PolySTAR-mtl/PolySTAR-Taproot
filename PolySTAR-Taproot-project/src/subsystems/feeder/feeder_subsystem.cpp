@@ -70,7 +70,6 @@ void FeederSubsystem::checkHeat() {
     uint16_t heatLimit;
     uint16_t heatIncrease;
 
-
     switch (barrel)
         {
             case RefSerialData::Rx::MechanismID::TURRET_17MM_1:
@@ -89,12 +88,12 @@ void FeederSubsystem::checkHeat() {
                 heatIncrease = FEEDER_HEAT_INCREASE_42MM;
                 break;
         }
-
-    if (currentHeat + FEEDER_HEAT_INCREASE_17MM > heatLimit)
-        isOverheating = true;
-
-    if (isOverheating && currentHeat >= (heatLimit / 2))
+    
+    if (isOverheating && currentHeat <= (heatLimit / 2))
         isOverheating = false;
+
+    else if (currentHeat + heatIncrease > heatLimit)
+        isOverheating = true;
 }
 
 void FeederSubsystem::clearJam()  {
