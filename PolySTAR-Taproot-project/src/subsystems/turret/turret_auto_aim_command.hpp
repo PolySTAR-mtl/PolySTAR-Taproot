@@ -11,7 +11,7 @@ class TurretAutoAimCommand : public GenericAutoAimCommand
 {
 public:
     /**
-     * Initializes the command with the passed in ChassisSubsystem.  Must not
+     * Initializes the command with the passed in TurretSubsystem.  Must not
      * be nullptr.
      *
      * @param[in] turret a pointer to the chassis to be passed in that this
