@@ -60,6 +60,7 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisAutoDriveCommand chassisAutoDrive(&theChassis, drivers());
+chassis::ChassisTestDriveCommand chassisTestAutoDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
@@ -67,6 +68,8 @@ turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
 turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
+turret::TurretAutoAimCommand turretAutoAim(&theTurret, drivers());
+turret::TurretTestAutoAimCommand turretTestAutoAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
@@ -86,7 +89,9 @@ HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Rem
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 /*-Chassis-*/
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
-ToggleCommandMapping toggleChassisAuto(drivers(), {&chassisAutoDrive}, RemoteMapState({Remote::Key::R}));
+// ToggleCommandMapping toggleChassisAuto(drivers(), {&chassisAutoDrive}, RemoteMapState({Remote::Key::R}));
+ToggleCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+ToggleCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 
 /*-Only used for calibration-*/
@@ -132,7 +137,8 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
     drivers->commandMapper.addMap(&toggleChassisDrive);
-    drivers->commandMapper.addMap(&toggleChassisAuto);
+    drivers->commandMapper.addMap(&toggleAutoTestCommands);
+    drivers->commandMapper.addMap(&toggleAutoCommands);
 
 }
 
