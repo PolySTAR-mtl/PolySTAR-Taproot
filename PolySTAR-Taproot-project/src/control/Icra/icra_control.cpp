@@ -58,18 +58,23 @@ feeder::FeederSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
+
+/* chassis ------------------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisAutoDriveCommand chassisAutoDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
+/* turret -------------------------------------------------------------------*/
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
 turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 
+/* feeder -------------------------------------------------------------------*/
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
+/* flywheel -----------------------------------------------------------------*/
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
