@@ -11,7 +11,7 @@ CVHandler::CVHandler(Drivers* drivers)
     : CVSerial(drivers, tap::communication::serial::Uart::UartPort::Uart7),
       turretData(),
       movementData(),
-      shootOrderFlag(false)
+      shootOrderData()
 {
 }
 
@@ -35,7 +35,7 @@ void CVHandler::messageReceiveCallback(const ReceivedSerialMessage& completeMess
         }
         case CVSerialData::Rx::SHOOT_MESSAGE:
         {
-            decodeToShootOrder();
+            decodeToShootOrder(completeMessage);
             // nBytes = sprintf(buffer,"Shoot Message Received\n");
             break;
         }
@@ -75,10 +75,26 @@ bool CVHandler::decodeToMovementData(const ReceivedSerialMessage& message)
     return true;
 }
 
-bool CVHandler::decodeToShootOrder()
+bool CVHandler::decodeToShootOrder(const ReceivedSerialMessage& message)
 {
-    shootOrderFlag = true;
+    if (message.header.dataLength != sizeof(Rx::ShootOrderData))
+    {
+        return false;
+    }
+    shootOrderData.shootOrder = static_cast<uint8_t>(message.data[0]);
     return true;
+}
+
+void CVHandler::processGameStage()
+{
+    RefSerialData::Rx::GameData gameData = drivers->refSerial.getGameData();
+    if (gameData.gameStage != lastGameStage)
+    {
+        CVSerialData::Tx::EventMessage eventMessage;
+        eventMessage.gameStage = gameData.gameStage;
+        drivers->uart.write(Uart::UartPort::Uart7, (uint8_t *)(&eventMessage), sizeof(eventMessage));
+        lastGameStage = gameData.gameStage;
+    }
 }
 
 }  // namespace src::communication::cv
