@@ -27,7 +27,7 @@
 #include "subsystems/turret/turret_test_auto_aim_command.hpp"
 
 // Feeder includes
-#include "subsystems/feeder/feeder_subsystem.hpp"
+#include "subsystems/feeder/feeder_position_subsystem.hpp"
 #include "subsystems/feeder/feeder_move_command.hpp"
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_auto_feed_command.hpp"
@@ -59,9 +59,9 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers());
-feeder::FeederSubsystem theFeeder(drivers());
+feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
-feeder::FeederSubsystemLegacy theFeederLegacy(drivers());
+feeder::FeederVelocitySubsystem theFeederLegacy(drivers());
 
 /* define commands ----------------------------------------------------------*/
 

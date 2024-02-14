@@ -10,7 +10,7 @@ namespace control
 namespace feeder
 {
 FeederAutoFeedTestCommand::FeederAutoFeedTestCommand(
-    FeederSubsystemLegacy *const feeder,
+    FeederVelocitySubsystem *const feeder,
     src::Drivers *drivers)
     : GenericAutoFeedCommand(feeder, drivers)
 {

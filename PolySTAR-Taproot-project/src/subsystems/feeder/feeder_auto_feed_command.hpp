@@ -3,7 +3,7 @@
 
 #include "tap/control/comprised_command.hpp"
 
-#include "feeder_subsystem_legacy.hpp"
+#include "feeder_velocity_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "generic_auto_feed_command.hpp"
 
@@ -15,13 +15,13 @@ class FeederAutoFeedCommand : public GenericAutoFeedCommand
 {
 public:
     /**
-     * Initializes the command with the passed in FeederSubsystem.  Must not
+     * Initializes the command with the passed in FeederVelocitySubsystem.  Must not
      * be nullptr.
      *
      * @param[in] feeder a pointer to the feeder to be passed in that this
      *      Command will interact with.
      */
-    FeederAutoFeedCommand(FeederSubsystemLegacy *const feeder, src::Drivers *drivers);
+    FeederAutoFeedCommand(FeederVelocitySubsystem *const feeder, src::Drivers *drivers);
 
     FeederAutoFeedCommand(const FeederAutoFeedCommand &other) = delete;
 
@@ -32,11 +32,11 @@ public:
 
     void execute() override;
 
-};  // FeederFeedCommand
+};  // FeederAutoFeedCommand
 
 }  // namespace feeder
 
 }  // namespace control
 
-#endif  // GENERIC_AUTO_FEED_COMMAND_HPP_
+#endif  // FEEDER_AUTO_FEED_COMMAND_HPP_
 
