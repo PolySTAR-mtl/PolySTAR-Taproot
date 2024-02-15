@@ -36,11 +36,19 @@ public:
     void updateYaw(float posError, float currentRpm, float dt);
     void updatePitch(tap::motor::DjiMotor* const motor, float desiredPos, uint32_t dt);
     float getOutput() { return innerPid.getOutput(); }
+    /*
+    float getYawOutput() { return yawOutput;}
+    float getPitchOutput() { return pitchOuput;}
+    */
 protected:
    
  // PID controller for position feedback from motor
     tap::algorithms::SmoothPid innerPid;
     tap::algorithms::SmoothPid outerPid;
+
+ // PID output for pitch and yaw
+    float yawOutput = 0.0f;
+    float pitchOuput = 0.0f;
 
     src::Drivers *drivers;
 };
