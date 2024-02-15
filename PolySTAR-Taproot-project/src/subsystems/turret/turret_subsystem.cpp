@@ -57,6 +57,7 @@ void TurretSubsystem::updateYawController(uint32_t dt) {
     float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
 
     yawController.runController(error, de, velocity, dt);
+    // devient : yawController.runController(error, de, dt)
     yawMotor.setDesiredOutput(yawController.getOutput());
 }
 

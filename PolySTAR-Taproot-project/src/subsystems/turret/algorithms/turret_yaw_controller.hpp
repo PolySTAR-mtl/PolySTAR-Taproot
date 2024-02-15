@@ -3,6 +3,7 @@
 
 #include "tap/algorithms/smooth_pid.hpp"
 #include "algorithms/feed_forward.hpp"
+#include "cascaded_pid.hpp"
 
 namespace turret
 {
@@ -38,6 +39,8 @@ public:
 
 private:
     tap::algorithms::SmoothPid yawPid;
+    // devient src::algorithms::CascadedPid yapPid;
+
     src::algorithms::FeedForward yawFeedForward;
 
     float output;

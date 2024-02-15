@@ -20,6 +20,12 @@ void TurretYawController::runController(float error, float errorDerivative, floa
     float feedForwardOutput = yawFeedForward.calculate(velocity);
     yawPid.runController(error, errorDerivative, dt);
     output = tap::algorithms::limitVal<float>(yawPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);
+    /*
+    // yawPid est de type CascadedPid
+    yawPid.runController(posError, currentRpm, dt)
+    // currentRpm est en fait errorDerivative ??
+    output = yawPid.getOutput();
+    */
 }
 
 void TurretYawController::runControllerDerivateError(float error, float velocity, float dt) {

@@ -8,9 +8,11 @@ namespace src
 {
 namespace algorithms
 {
-void CascadedPid::updateYaw(float desiredPos, float currentPos, float currentRpm, float deltaTime)
+void CascadedPid::updateYaw(float posError, float currentRpm, float dt)
 {
-
+    outerPid.runControllerDerivateError(posError, dt);
+    float rpmError = outerPid.getOutput() - currentRpm;
+    innerPid.runControllerDerivateError(rpmError, dt);
 }
 
 void CascadedPid::updatePitch(tap::motor::DjiMotor* const motor, float pitchDesiredPos, uint32_t dt)

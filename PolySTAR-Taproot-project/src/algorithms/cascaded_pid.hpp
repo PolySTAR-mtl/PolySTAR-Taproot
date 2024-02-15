@@ -33,8 +33,9 @@ class CascadedPid
     CascadedPid &operator=(const CascadedPid &other) = delete;
 
 public:
-    void updateYaw(float desiredPos, float currentPos, float currentRpm, float deltaTime);
+    void updateYaw(float posError, float currentRpm, float dt);
     void updatePitch(tap::motor::DjiMotor* const motor, float desiredPos, uint32_t dt);
+    float getOutput() { return innerPid.getOutput(); }
 protected:
    
  // PID controller for position feedback from motor
