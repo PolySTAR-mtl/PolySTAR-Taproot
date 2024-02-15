@@ -33,7 +33,6 @@
 #include "tap/architecture/periodic_timer.hpp"
 #include "tap/architecture/profiler.hpp"
 
-/* communication includes ---------------------------------------------------*/
 #include "control/drivers/drivers.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 
@@ -42,6 +41,7 @@
 
 /* control includes ---------------------------------------------------------*/
 #include "tap/architecture/clock.hpp"
+
 #include "control/robot_control.hpp"
 
 /* define timers here -------------------------------------------------------*/
@@ -98,6 +98,8 @@ int main()
     return 0;
 }
 
+
+
 static void initializeIo(src::Drivers *drivers)
 {
     drivers->analog.init();
@@ -129,4 +131,5 @@ static void updateIo(src::Drivers *drivers)
     drivers->mpu6500.read();
 
     drivers->cvHandler.updateSerial();
+    drivers->cvHandler.processGameStage();
 }
