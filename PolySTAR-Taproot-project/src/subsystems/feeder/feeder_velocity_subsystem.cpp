@@ -1,4 +1,4 @@
-#include "feeder_subsystem_legacy.hpp"
+#include "feeder_velocity_subsystem.hpp"
 
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
@@ -11,16 +11,16 @@ namespace control
 {
 namespace feeder
 {
-void FeederSubsystemLegacy::initialize()
+void FeederVelocitySubsystem::initialize()
 {
     feederMotor.initialize();
 }
 
-void FeederSubsystemLegacy::refresh() {
+void FeederVelocitySubsystem::refresh() {
     updateRpmPid(&feederPid, &feederMotor, feederDesiredRpm);
 }
 
-void FeederSubsystemLegacy::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM) {
+void FeederVelocitySubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM) {
     int16_t shaftRPM = motor->getShaftRPM();
     if (desiredRPM == 0) {
         motor->setDesiredOutput(0);
@@ -35,7 +35,7 @@ void FeederSubsystemLegacy::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiM
 /*
     Give desired setpoints for feeder movement.
 */
-void FeederSubsystemLegacy::setDesiredOutput(float rpm) 
+void FeederVelocitySubsystem::setDesiredOutput(float rpm) 
 {
     feederDesiredRpm = rpm;
 }

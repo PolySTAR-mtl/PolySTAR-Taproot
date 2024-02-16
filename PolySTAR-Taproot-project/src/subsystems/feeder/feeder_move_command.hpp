@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "feeder_subsystem.hpp"
+#include "feeder_position_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "tap/control/setpoint/commands/move_command.hpp"
 
@@ -14,7 +14,7 @@ namespace feeder
 class FeederMoveCommand : public tap::control::setpoint::MoveCommand
 {
 public:
-FeederMoveCommand(FeederSubsystem *const feeder);
+FeederMoveCommand(FeederPositionSubsystem *const feeder);
 
 private:
 
