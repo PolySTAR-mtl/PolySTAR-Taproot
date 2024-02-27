@@ -13,7 +13,7 @@ namespace feeder
 /**
  * A bare bones Subsystem for interacting with a feeder.
  */
-class FeederSubsystemLegacy : public tap::control::Subsystem
+class FeederVelocitySubsystem : public tap::control::Subsystem
 {
 public:
 
@@ -21,7 +21,7 @@ public:
      * Constructs a new FeederSubsystem with default parameters specified in
      * the private section of this class.
      */
-    FeederSubsystemLegacy(tap::Drivers *drivers)
+    FeederVelocitySubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, IS_FEEDER_INVERTED, "feeder motor"),
           feederPid(FEEDER_PID_KP,FEEDER_PID_KI,FEEDER_PID_KD,FEEDER_PID_MAX_ERROR_SUM,FEEDER_PID_MAX_OUTPUT)
@@ -29,11 +29,11 @@ public:
     {
     }
 
-    FeederSubsystemLegacy(const FeederSubsystemLegacy &other) = delete;
+    FeederVelocitySubsystem(const FeederVelocitySubsystem &other) = delete;
 
-    FeederSubsystemLegacy &operator=(const FeederSubsystemLegacy &other) = delete;
+    FeederVelocitySubsystem &operator=(const FeederVelocitySubsystem &other) = delete;
 
-    ~FeederSubsystemLegacy() = default;
+    ~FeederVelocitySubsystem() = default;
 
     void initialize() override;
 

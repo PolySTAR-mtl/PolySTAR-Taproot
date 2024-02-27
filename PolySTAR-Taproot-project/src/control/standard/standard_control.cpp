@@ -22,7 +22,7 @@
 #include "subsystems/turret/turret_mouse_aim_command.hpp"
 
 // Feeder includes
-#include "subsystems/feeder/feeder_subsystem.hpp"
+#include "subsystems/feeder/feeder_position_subsystem.hpp"
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_move_command.hpp"
 
@@ -52,7 +52,7 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers());
-feeder::FeederSubsystem theFeeder(drivers());
+feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
