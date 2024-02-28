@@ -67,12 +67,13 @@ void TurretSubsystem::updatePitchController(uint32_t dt) {
     float angle = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
     float velocity = usingRelativeControl ? lastPitchDelta : 0.001*tap::algorithms::getSign(error);
 
-    pitchController.runController(error, de, velocity, angle, dt);
+    // pitchController.runController(error, de, velocity, angle, dt);
 
     // call cascadedPID instead with correct parameters ...
-    // float angleError = pitchMotor->encoderToDegrees<int64_t>(error) - angle;
-    // pitchController.updatePitch(angleError, de, dt);
-    pitchMotor.setDesiredOutput(pitchController.getOutput());
+    float angleError = pitchMotor.encoderToDegrees<int64_t>(error) - angle;
+    cascadedPitchController.updatePitch(angleError, de, dt);
+    // pitchMotor.setDesiredOutput(pitchController.getOutput());
+    pitchMotor.setDesiredOutput(cascadedPitchController.getPitchOutput());
 }
 
 /*

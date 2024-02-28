@@ -8,9 +8,11 @@
 #include "algorithms/turret_pitch_controller.hpp"
 #include "algorithms/turret_yaw_controller.hpp"
 #include "control/drivers/drivers.hpp"
+#include "algorithms/cascaded_pid.hpp"
 
 using turret::algorithms::TurretPitchController;
 using turret::algorithms::TurretYawController;
+using turret::algorithms::CascadedPid;
 
 namespace control
 {
@@ -33,6 +35,7 @@ public:
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
           yawController(YAW_PID_CONFIG, YAW_FF_CONFIG),
           pitchController(PITCH_PID_CONFIG, PITCH_FF_CONFIG),
+          cascadedPitchController(),
           yawDesiredPos(YAW_NEUTRAL_POS),
           pitchDesiredPos(PITCH_NEUTRAL_POS),
           prevCVUpdate(0)
@@ -90,6 +93,7 @@ private:
     // Motor Controllers for position control (SmoothPID feedback and custom feedforward)
     TurretYawController yawController;
     TurretPitchController pitchController;
+    CascadedPid cascadedPitchController;
 
     ///< Any user input is translated into desired position for each motor.
     float yawDesiredPos;

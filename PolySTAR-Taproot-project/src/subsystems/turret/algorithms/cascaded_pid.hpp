@@ -6,24 +6,18 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
 #include "algorithms_constants.hpp"
-#include "../subsystems/turret/turret_constants.hpp"
+#include "../turret_constants.hpp"
 
 
-namespace src
-{
-class Drivers;
-}
-
-namespace src
+namespace turret
 {
 namespace algorithms
 {
 
 class CascadedPid
 {
-    // constructor
-    CascadedPid(Drivers* drivers): 
-    drivers(drivers), 
+public:
+    CascadedPid(): 
     innerPid(INNER_PID_CONFIG),
     outerPid(OUTER_PID_CONFIG)
     {
@@ -32,14 +26,14 @@ class CascadedPid
     CascadedPid(const CascadedPid &other) = delete;
     CascadedPid &operator=(const CascadedPid &other) = delete;
 
-public:
     void updateYaw(float posError, float currentRpm, float dt);
     void updatePitch(tap::motor::DjiMotor* const motor, float desiredPos, uint32_t dt);
+    void updatePitch(int64_t angleError, int16_t currentRpm, uint32_t dt);
     float getOutput() { return innerPid.getOutput(); }
     /*
     float getYawOutput() { return yawOutput;}
-    float getPitchOutput() { return pitchOuput;}
     */
+    float getPitchOutput() { return pitchOutput;}
 protected:
    
  // PID controller for position feedback from motor
@@ -48,13 +42,12 @@ protected:
 
  // PID output for pitch and yaw
     float yawOutput = 0.0f;
-    float pitchOuput = 0.0f;
+    float pitchOutput = 0.0f;
 
-    src::Drivers *drivers;
 };
 
 }  // namespace algorithms
 
-}  // namespace src
+}  // namespace turret
 
 #endif  // CASCADED_PID_HPP_

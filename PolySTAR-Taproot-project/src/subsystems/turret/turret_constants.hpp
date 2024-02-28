@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef TARGET_ICRA
 #include "constants/icra_turret_constants.hpp"
 #endif
@@ -9,7 +11,6 @@
 #ifdef TARGET_HERO
 #include "constants/hero_turret_constants.hpp"
 #endif
-
 /**
  * Right joystick dead zone size. If the absolute value returned by the stick is below
  * this value, it is considered zero.  
