@@ -59,9 +59,12 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers());
-feeder::FeederPositionSubsystem theFeeder(drivers());
-flywheel::FlywheelSubsystem theFlywheel(drivers());
-feeder::FeederVelocitySubsystem theFeederLegacy(drivers());
+feeder::FeederPositionSubsystem theLeftFeeder(drivers());
+feeder::FeederPositionSubsystem theRightFeeder(drivers());
+feeder::FeederVelocitySubsystem theLeftFeederLegacy(drivers());
+feeder::FeederVelocitySubsystem theRightFeederLegacy(drivers());
+flywheel::FlywheelSubsystem theLeftFlywheel(drivers());
+flywheel::FlywheelSubsystem theRightFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
 
@@ -81,22 +84,27 @@ turret::TurretAutoAimCommand turretAutoAim(&theTurret, drivers());
 turret::TurretTestAutoAimCommand turretTestAutoAim(&theTurret, drivers());
 
 /* feeder -------------------------------------------------------------------*/
-feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
-feeder::FeederAutoFeedCommand feederAutoFeed(&theFeederLegacy, drivers());
-feeder::FeederAutoFeedTestCommand feederAutoFeedTest(&theFeederLegacy, drivers());
+feeder::FeederMoveUnjamCommand leftFeederMoveUnjam(&theLeftFeeder, drivers());
+feeder::FeederAutoFeedCommand leftFeederAutoFeed(&theLeftFeederLegacy, drivers());
+feeder::FeederAutoFeedTestCommand leftFeederAutoFeedTest(&theLeftFeederLegacy, drivers());
+
+feeder::FeederMoveUnjamCommand rightFeederMoveUnjam(&theRightFeeder, drivers());
+feeder::FeederAutoFeedCommand rightFeederAutoFeed(&theRightFeederLegacy, drivers());
+feeder::FeederAutoFeedTestCommand rightFeederAutoFeedTest(&theRightFeederLegacy, drivers());
 
 /* flywheel -----------------------------------------------------------------*/
-flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
+flywheel::FlywheelFireCommand leftFlywheelStart(&theLeftFlywheel, drivers());
+flywheel::FlywheelFireCommand rightFlywheelStart(&theRightFlywheel, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /*-Ammo Booster-*/
-// HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam},
+// HoldRepeatCommandMapping feedFeeder(drivers(), {&leftFeederMoveUnjam, &rightFeederMoveUnjam},
 // RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 /*-Flywheel-*/
-// HoldCommandMapping startFlywheel(drivers(), {&flywheelStart},
+// HoldCommandMapping startFlywheel(drivers(), {&leftFlywheelStart, &rightFlywheelStart},
 // RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 /*-Turret-*/
 HoldCommandMapping rightAimTurret(
@@ -120,11 +128,11 @@ ToggleCommandMapping toggleChassisDrive(
 // RemoteMapState({Remote::Key::R}));
 ToggleCommandMapping toggleAutoCommands(
     drivers(),
-    {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed},
+    {&chassisAutoDrive, &turretAutoAim, &leftFeederAutoFeed, &rightFeederAutoFeed},
     RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 ToggleCommandMapping toggleAutoTestCommands(
     drivers(),
-    {&chassisTestAutoDrive, &turretTestAutoAim, &feederAutoFeedTest},
+    {&chassisTestAutoDrive, &turretTestAutoAim, &leftFeederAutoFeedTest, &rightFeederAutoFeedTest},
     RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 /*-Only used for calibration-*/
@@ -138,8 +146,10 @@ void registerStandardSubsystems(src::Drivers *drivers)
 {
     drivers->commandScheduler.registerSubsystem(&theChassis);
     drivers->commandScheduler.registerSubsystem(&theTurret);
-    drivers->commandScheduler.registerSubsystem(&theFeeder);
-    drivers->commandScheduler.registerSubsystem(&theFlywheel);
+    drivers->commandScheduler.registerSubsystem(&theLeftFeeder);
+    drivers->commandScheduler.registerSubsystem(&theRightFeeder);
+    drivers->commandScheduler.registerSubsystem(&theLeftFlywheel);
+    drivers->commandScheduler.registerSubsystem(&theRightFlywheel);
 }
 
 /* initialize subsystems ----------------------------------------------------*/
@@ -147,8 +157,10 @@ void initializeSubsystems()
 {
     theChassis.initialize();
     theTurret.initialize();
-    theFeeder.initialize();
-    theFlywheel.initialize();
+    theLeftFeeder.initialize();
+    theRightFeeder.initialize();
+    theLeftFlywheel.initialize();
+    theRightFlywheel.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
@@ -156,7 +168,8 @@ void setDefaultStandardCommands(src::Drivers *)
 {
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    theFlywheel.setDefaultCommand(&flywheelStart);
+    theLeftFlywheel.setDefaultCommand(&leftFlywheelStart);
+    theRightFlywheel.setDefaultCommand(&rightFlywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -169,9 +182,11 @@ void startStandardCommands(src::Drivers *drivers)
 void registerStandardIoMappings(src::Drivers *drivers)
 {
     /*-Ammo Booster-*/
-    // drivers->commandMapper.addMap(&feedFeeder);
+    // drivers->commandMapper.addMap(&feedLeftFeeder);
+    // drivers->commandMapper.addMap(&feedRightFeeder);
     /*-Flywheel-*/
-    // drivers->commandMapper.addMap(&startFlywheel);
+    // drivers->commandMapper.addMap(&startLeftFlywheel);
+    // drivers->commandMapper.addMap(&startRightFlywheel);
     /*-Turret-*/
     drivers->commandMapper.addMap(&leftAimTurret);
     drivers->commandMapper.addMap(&rightAimTurret);
