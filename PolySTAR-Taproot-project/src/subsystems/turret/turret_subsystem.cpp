@@ -54,11 +54,11 @@ void TurretSubsystem::refresh() {
 void TurretSubsystem::updateYawController(uint32_t dt) {
     int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
     int16_t de = yawMotor.getShaftRPM();
-    float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
+    // float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
 
-    yawController.runController(error, de, velocity, dt);
-    // devient : yawController.runController(error, de, dt)
-    yawMotor.setDesiredOutput(yawController.getOutput());
+    //yawController.runController(error, de, velocity, dt);
+    cascadedYawController.updateYaw(error, de, dt);
+    yawMotor.setDesiredOutput(cascadedYawController.getYawOutput());
 }
 
 void TurretSubsystem::updatePitchController(uint32_t dt) {

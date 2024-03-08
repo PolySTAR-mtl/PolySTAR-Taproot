@@ -12,7 +12,7 @@ void CascadedPid::updateYaw(float posError, float currentRpm, float dt)
     outerPid.runControllerDerivateError(posError, dt);
     float rpmError = outerPid.getOutput() - currentRpm;
     innerPid.runControllerDerivateError(rpmError, dt);
-    // yawOutput =  innerPid.getOutput();
+    yawOutput =  innerPid.getOutput();
 }
 
 // void CascadedPid::updatePitch(tap::motor::DjiMotor* const motor, float pitchDesiredPos, uint32_t dt)
