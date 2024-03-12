@@ -27,7 +27,7 @@ public:
     CascadedPid &operator=(const CascadedPid &other) = delete;
 
     void updateYaw(float posError, float currentRpm, float dt);
-    void updatePitch(tap::motor::DjiMotor* const motor, float desiredPos, uint32_t dt);
+    // void updatePitch(tap::motor::DjiMotor* const motor, float desiredPos, uint32_t dt);
     void updatePitch(int64_t angleError, int16_t currentRpm, uint32_t dt);
 
     float getOutput() { return innerPid.getOutput(); }
