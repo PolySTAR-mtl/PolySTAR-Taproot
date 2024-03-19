@@ -6,11 +6,18 @@ namespace turret
 {
 namespace algorithms
 {
+
+CascadedPid::CascadedPid(const tap::algorithms::SmoothPidConfig& outerConfig,
+                         const tap::algorithms::SmoothPidConfig& innerConfig)
+    : outerPid(outerConfig), innerPid(innerConfig)
+{
+}
+
 void CascadedPid::updateYaw(float posError, float currentRpm, float dt)
 {
-    outerPid.runControllerDerivateError(posError, dt);
-    float rpmError = outerPid.getOutput() - currentRpm;
-    innerPid.runControllerDerivateError(rpmError, dt);
+    // outerPid.runControllerDerivateError(posError, dt);
+    // float rpmError = outerPid.getOutput() - currentRpm;
+    innerPid.runControllerDerivateError(posError, dt);
     yawOutput = innerPid.getOutput();
 }
 

@@ -17,14 +17,15 @@ namespace algorithms
 class CascadedPid
 {
 public:
-    CascadedPid(): 
-    innerPid(INNER_PID_CONFIG),
-    outerPid(OUTER_PID_CONFIG)
-    {
-    };
-    ~CascadedPid() = default;
-    CascadedPid(const CascadedPid &other) = delete;
-    CascadedPid &operator=(const CascadedPid &other) = delete;
+    // CascadedPid(): 
+    // innerPid(INNER_PID_CONFIG),
+    // outerPid(OUTER_PID_CONFIG)
+    // {
+    // };
+    CascadedPid(const tap::algorithms::SmoothPidConfig &innerPidConfig,const tap::algorithms::SmoothPidConfig &outerPidConfig );
+    // ~CascadedPid() = default;
+    // CascadedPid(const CascadedPid &other) = delete;
+    // CascadedPid &operator=(const CascadedPid &other) = delete;
 
     void updateYaw(float posError, float currentRpm, float dt);
     // void updatePitch(tap::motor::DjiMotor* const motor, float desiredPos, uint32_t dt);
@@ -54,8 +55,8 @@ public:
 protected:
    
  // PID controller for position feedback from motor
-    tap::algorithms::SmoothPid innerPid;
     tap::algorithms::SmoothPid outerPid;
+    tap::algorithms::SmoothPid innerPid;
 
  // PID output for pitch and yaw
     float yawOutput = 0.0f;

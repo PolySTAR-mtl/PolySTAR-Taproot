@@ -56,9 +56,10 @@ void TurretSubsystem::updateYawController(uint32_t dt) {
     int16_t de = yawMotor.getShaftRPM();
     // float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
 
-    //yawController.runController(error, de, velocity, dt);
+    // yawController.runController(error, de, velocity, dt);
     cascadedYawController.updateYaw(error, de, dt);
     yawMotor.setDesiredOutput(cascadedYawController.getYawOutput());
+    // yawMotor.setDesiredOutput(yawController.getOutput());
 }
 
 void TurretSubsystem::updatePitchController(uint32_t dt) {
@@ -69,10 +70,10 @@ void TurretSubsystem::updatePitchController(uint32_t dt) {
 
     // pitchController.runController(error, de, velocity, angle, dt);
 
-    float angleError = pitchMotor.encoderToDegrees<int64_t>(error) - angle;
-    cascadedPitchController.updatePitch(angleError, de, dt);
+    // float angleError = pitchMotor.encoderToDegrees<int64_t>(error) - angle;
+    // cascadedPitchController.updatePitch(error, de, dt);
     // pitchMotor.setDesiredOutput(pitchController.getOutput());
-    pitchMotor.setDesiredOutput(cascadedPitchController.getPitchOutput());
+    // pitchMotor.setDesiredOutput(cascadedPitchController.getPitchOutput());
 }
 
 /*
