@@ -22,7 +22,7 @@ void TurretSubsystem::initialize()
 void TurretSubsystem::refresh() {
 
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevControllerUpdate;
-    // updatePitchController(dt);
+    updatePitchController(dt);
     updateYawController(dt);
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
     
