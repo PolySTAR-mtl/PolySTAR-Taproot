@@ -23,9 +23,9 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
     0.0f // Error derivative floor
 );
 static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
-    0.0f, // kP
+    3.0f, // kP
     0.0f, // kI
-    0.0f, // kD
+    2.0f, // kD
     5000.0f, // Max error sum
     16000.0f, // Max output
     1.0f, // TQ Derivative Kalman
@@ -35,10 +35,11 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
     0.0f, // Error Deadzone
     0.0f // Error derivative floor
 );
+
 static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
-    75.0f, // kP
+    100.0f, // kP 
     0.0f, // kI
-    300.0f, // kD
+    150.0f, // kD
     5000.0f, // Max error sum
     16000.0f, // Max output
     1.0f, // TQ Derivative Kalman

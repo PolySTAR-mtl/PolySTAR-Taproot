@@ -15,9 +15,10 @@ CascadedPid::CascadedPid(const tap::algorithms::SmoothPidConfig& outerConfig,
 
 void CascadedPid::updateYaw(float posError, float currentRpm, float dt)
 {
-    // outerPid.runControllerDerivateError(posError, dt);
+    outerPid.runController(posError, currentRpm, dt);
     // float rpmError = outerPid.getOutput() - currentRpm;
-    innerPid.runControllerDerivateError(posError, dt);
+    // innerPid.runControllerDerivateError(posError, dt);
+    innerPid.runController(outerPid.getOutput(), currentRpm, dt);
     yawOutput = innerPid.getOutput();
 }
 
