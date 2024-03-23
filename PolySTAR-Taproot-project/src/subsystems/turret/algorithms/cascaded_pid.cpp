@@ -9,17 +9,15 @@ namespace algorithms
 
 CascadedPid::CascadedPid(const tap::algorithms::SmoothPidConfig& outerConfig,
                          const tap::algorithms::SmoothPidConfig& innerConfig)
-    : outerPid(outerConfig), innerPid(innerConfig)
+    : outerPid(outerConfig), innerPid(innerConfig), maxOutput(outerConfig.maxOutput)
 {
 }
 
-void CascadedPid::updateYaw(float posError, float currentRpm, float dt)
-{
-    outerPid.runController(posError, currentRpm, dt);
-    // float rpmError = outerPid.getOutput() - currentRpm;
-    // innerPid.runControllerDerivateError(posError, dt);
-    innerPid.runController(outerPid.getOutput(), currentRpm, dt);
-    yawOutput = innerPid.getOutput();
+void CascadedPid::updateYaw(float posError, float currentRate, float dt) {
+    outerPid.runController(posError,currentRate, dt);
+    float rateError = outerPid.getOutput() - currentRate;
+    innerPid.runController(rateError, currentRate, dt); 
+    yawOutput = tap::algorithms::limitVal<float>(innerPid.getOutput(), -maxOutput, maxOutput);
 }
 
 // void CascadedPid::updatePitch(tap::motor::DjiMotor* const motor, float pitchDesiredPos, uint32_t
@@ -29,7 +27,7 @@ void CascadedPid::updateYaw(float posError, float currentRpm, float dt)
 //     float currentPitchAngle = motor->encoderToDegrees<int64_t>(motor->getEncoderUnwrapped() -
 //     PITCH_NEUTRAL_POS);
 
-//     // Outer loop: Control pitch anglec -- should probably change pitchDesiredPos to degree to
+//     // Outer loop: Control pitch angle -- should probably change pitchDesiredPos to degree to
 //     calculate the angle error float angleError = pitchDesiredPos - currentPitchAngle;
 //     outerPid.runControllerDerivateError(angleError, dt);
 //     float outerOutput = outerPid.getOutput();
@@ -47,10 +45,10 @@ void CascadedPid::updateYaw(float posError, float currentRpm, float dt)
 // Second version for pitch cascadedPid
 void CascadedPid::updatePitch(int64_t angleError, int16_t currentRpm, uint32_t dt)
 {
-    outerPid.runControllerDerivateError(angleError, dt);
+    outerPid.runController(angleError, currentRpm, dt);
     float rpmError = outerPid.getOutput() - currentRpm;
     innerPid.runControllerDerivateError(rpmError, dt);
-    pitchOutput = innerPid.getOutput();
+    pitchOutput = tap::algorithms::limitVal<float>(innerPid.getOutput(), -maxOutput, maxOutput);
 }
 }  // namespace algorithms
 
