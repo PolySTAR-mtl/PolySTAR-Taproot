@@ -14,45 +14,48 @@ namespace turret
 namespace algorithms
 {
 
+/* Cascaded PID controller for turret control
+   First PID takes position error as input and outputs RPM setpoint
+   Second PID takes RPM error as input and outputs motor voltage
+   Normally velocity controller is a PI controller and position controller is a PD controller
+   Notes on maximum values : 
+    positionConfig.maxOutput is the maximum RPM output of the outer PID controller
+    velocityConfig.maxOutput is the maximum voltage output of the inner PID controller */
 class CascadedPid
 {
 public:
-    CascadedPid(const tap::algorithms::SmoothPidConfig &innerPidConfig,const tap::algorithms::SmoothPidConfig &outerPidConfig );
-    void updateYaw(float posError, float currentRate, float dt);
-    // void updatePitch(tap::motor::DjiMotor* const motor, float desiredPos, uint32_t dt);
-    void updatePitch(int64_t angleError, int16_t currentRpm, uint32_t dt);
+    CascadedPid(const tap::algorithms::SmoothPidConfig &velocityConfig,const tap::algorithms::SmoothPidConfig &positionConfig );
 
-    float getOutput() { return innerPid.getOutput(); }
-    float getYawOutput() { return yawOutput;}
-    float getPitchOutput() { return pitchOutput;}
+    // Calculate output from position error and current RPM
+    void update(float positionError, float currentRpm, float dt);
+    // Get current output of controller
+    float getOutput() { return output; }
 
-     // PID setters
-    inline void setInnerP(float p) { innerPid.setP(p); }
-    inline void setInnerI(float i) { innerPid.setI(i); }
-    inline void setInnerD(float d) { innerPid.setD(d); }
+    // PID configuration setters
+    inline void setVelocityP(float p) { velocityController.setP(p); }
+    inline void setVelocityI(float i) { velocityController.setI(i); }
+    inline void setVelocityD(float d) { velocityController.setD(d); }
 
-    inline void setOuterP(float p) { outerPid.setP(p); }
-    inline void setOuterI(float i) { outerPid.setI(i); }
-    inline void setOuterD(float d) { outerPid.setD(d); }
+    inline void setPositionP(float p) { positionController.setP(p); }
+    inline void setPositionI(float i) { positionController.setI(i); }
+    inline void setPositionD(float d) { positionController.setD(d); }
 
-    inline void setInnerMaxICumulative(float maxICumulative) { innerPid.setMaxICumulative(maxICumulative); }
-    inline void setInnerMaxOutput(float maxOutput) { innerPid.setMaxOutput(maxOutput); }
-    inline void setInnerErrDeadzone(float errDeadzone) { innerPid.setErrDeadzone(errDeadzone); }
+    inline void setVelocityMaxICumulative(float maxICumulative) { velocityController.setMaxICumulative(maxICumulative); }
+    inline void setVelocityMaxOutput(float maxOutput)           { velocityController.setMaxOutput(maxOutput); }
+    inline void setVelocityErrDeadzone(float errDeadzone)       { velocityController.setErrDeadzone(errDeadzone); }
 
-    inline void setOuterMaxICumulative(float maxICumulative) { outerPid.setMaxICumulative(maxICumulative); }
-    inline void setOuterMaxOutput(float maxOutput) { outerPid.setMaxOutput(maxOutput); }
-    inline void setOuterErrDeadzone(float errDeadzone) { outerPid.setErrDeadzone(errDeadzone); }
+    inline void setPositionMaxICumulative(float maxICumulative) { positionController.setMaxICumulative(maxICumulative); }
+    inline void setPositionMaxOutput(float maxOutput)           { positionController.setMaxOutput(maxOutput); }
+    inline void setPositionErrDeadzone(float errDeadzone)       { positionController.setErrDeadzone(errDeadzone); }
 
 protected:
    
- // PID controller for position feedback from motor
-    tap::algorithms::SmoothPid outerPid;
-    tap::algorithms::SmoothPid innerPid;
+    // Inner and outer control loops
+    tap::algorithms::SmoothPid positionController;
+    tap::algorithms::SmoothPid velocityController;
 
- // PID output for pitch and yaw
-    float yawOutput = 0.0f;
-    float pitchOutput = 0.0f;
-    float maxOutput;
+    // Voltage Output
+    float output;
 };
 
 }  // namespace algorithms
