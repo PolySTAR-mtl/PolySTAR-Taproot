@@ -5,8 +5,10 @@
 #include "control/drivers/drivers.hpp"
 #include "communication/cv_handler.hpp"
 
-using namespace tap;
 using tap::communication::serial::Uart;
+using tap::algorithms::limitVal;
+using tap::algorithms::getSign;
+using tap::motor::DjiMotor;
 
 namespace control
 {
@@ -57,12 +59,12 @@ void TurretSubsystem::refresh() {
     Run yaw controller and update motor output.
 */
 void TurretSubsystem::runYawController(uint32_t dt) {
-    int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
-    if (abs(error) >= tap::motor::DjiMotor::ENC_RESOLUTION/2) {
+    float error = yawDesiredPos - yawMotor.getEncoderWrapped();
+    if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
         // If error is greater than 180deg then the shortest path to setpoint crosses zero
         // So we add +/- 360deg to error to get the correct direction
         // Avoids turret whipping around when position crosses zero
-        error =  error - tap::motor::DjiMotor::ENC_RESOLUTION * tap::algorithms::getSign(error);
+        error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
     }
     int16_t currentRPM = yawMotor.getShaftRPM();
 
@@ -86,10 +88,10 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
 /*
     Set desired position setpoints for turret. Values are in encoder ticks.
 */
-void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch) 
+void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) 
 {
-    yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
-    pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
+    yawDesiredPos = limitVal<uint16_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
+    pitchDesiredPos = limitVal<uint16_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
 }
 
 /*
@@ -125,8 +127,8 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
 void TurretSubsystem::sendCVUpdate() {
 
     // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
-    float currentBodyYawDeg = yawMotor.encoderToDegrees(yawMotor.getEncoderUnwrapped()-YAW_NEUTRAL_POS);
-    float currentBodyPitchDeg = pitchMotor.encoderToDegrees(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
+    float currentBodyYawDeg = yawMotor.encoderToDegrees<uint16_t>(yawMotor.getEncoderUnwrapped()-YAW_NEUTRAL_POS);
+    float currentBodyPitchDeg = pitchMotor.encoderToDegrees<uint16_t>(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
 
     src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage;
     // CV protocol expects angles in milliradians
@@ -159,16 +161,16 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
 }
 
 /*
-    Velocity Debug information, used during tuning of the inner loop.
+    Velocity Control debug information, used during tuning of the inner loops.
 */
 void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold) {
     char buffer[500];
     int nBytes;
 
     if (sendYaw) {
-        int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
-        if (abs(error) >= tap::motor::DjiMotor::ENC_RESOLUTION/2) {
-            error =  error - tap::motor::DjiMotor::ENC_RESOLUTION * tap::algorithms::getSign(error);
+        float error = yawDesiredPos - yawMotor.getEncoderWrapped();
+        if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
+            error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
         }
         float yawDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
         nBytes = sprintf (buffer, "Yaw RPM: %i, Setpoint: %i\n",
@@ -192,8 +194,8 @@ void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float ve
 */
 void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
     int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
-    if (abs(error) >= tap::motor::DjiMotor::ENC_RESOLUTION/2) {
-        error =  error - tap::motor::DjiMotor::ENC_RESOLUTION * tap::algorithms::getSign(error);
+    if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
+        error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
     }
     int16_t currentRPM = yawMotor.getShaftRPM();
 

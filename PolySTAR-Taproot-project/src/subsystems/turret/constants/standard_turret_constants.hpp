@@ -63,8 +63,8 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr int64_t YAW_NEUTRAL_POS = 4072;
-static constexpr int64_t PITCH_NEUTRAL_POS = 6556;
+static constexpr uint16_t YAW_NEUTRAL_POS = 4072;
+static constexpr uint16_t PITCH_NEUTRAL_POS = 6556;
 
 /**
  * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
@@ -73,10 +73,10 @@ static constexpr float YAW_RANGE_DEGREES = 90;
 static constexpr float PITCH_RANGE_DEGREES = 20;
 
 /**
- * Range values in encoder ticks, where 8192 is a full revolution
+ * Range values in encoder ticks, where 0..8191 is a full revolution
  */
-static constexpr int64_t YAW_RANGE = (int64_t)(YAW_RANGE_DEGREES * 8192.0f / 360.0f);
-static constexpr int64_t PITCH_RANGE = (int64_t)(PITCH_RANGE_DEGREES * 8192.0f / 360.0f);
+static constexpr uint16_t YAW_RANGE = (uint16_t)(YAW_RANGE_DEGREES * 8192.0f / 360.0f);
+static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f / 360.0f);
 
 /**
  * Scale factor for converting user inputs into position setpoint deltas. 
@@ -84,6 +84,10 @@ static constexpr int64_t PITCH_RANGE = (int64_t)(PITCH_RANGE_DEGREES * 8192.0f /
  */
 static constexpr float YAW_SCALE_FACTOR = 55.0f;
 static constexpr float PITCH_SCALE_FACTOR = 40.0f;
+
+/*
+ * Mouse sensitivity
+ */
 static constexpr float TURRET_MOUSE_X_SCALE_FACTOR = 0.05f;
 static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
 

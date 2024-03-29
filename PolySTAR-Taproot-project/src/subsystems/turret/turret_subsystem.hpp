@@ -49,7 +49,7 @@ public:
     void refresh() override;
 
     // Position Setters
-    void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
+    void setAbsoluteOutput(uint16_t yaw, uint16_t pitch);
     void setAbsoluteOutputDegrees(float yaw, float pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
