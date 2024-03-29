@@ -14,7 +14,7 @@ CascadedPid::CascadedPid(const tap::algorithms::SmoothPidConfig& positionConfig,
 {
 }
 
-// Run the cascaded PID controller. Updates motor output based on the position error and current RPM
+// Run the cascaded PID controller. Updates output based on the position error and current RPM.
 void CascadedPid::update(float positionError, float currentRPM, float dt) {
     // Obtain Desired RPM from position error
     positionController.runController(positionError, currentRPM, dt);
@@ -27,7 +27,7 @@ void CascadedPid::update(float positionError, float currentRPM, float dt) {
 }
 
 // Method used for tuning the inner (velocity) loop of the cascaded PID controller
-// Controls the motor using only the inner controller and a fixed velocity setpoint
+// Control only applies inner control loop and a fixed velocity setpoint
 void CascadedPid::testInnerLoop(float positionError, float currentRPM, float dt, float desiredRPM, float threshold) {
     
     if (abs(positionError) < threshold) {
@@ -93,6 +93,7 @@ void CascadedPid::setParameter(Controller controller, Parameter param, float val
         break;
         }
     }
+}
 
 }  // namespace algorithms
 

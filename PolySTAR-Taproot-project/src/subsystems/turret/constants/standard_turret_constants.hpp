@@ -1,5 +1,4 @@
 #include "tap/algorithms/smooth_pid.hpp"
-#include "algorithms/feed_forward.hpp"
 
 /**
  * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
@@ -64,7 +63,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr int64_t YAW_NEUTRAL_POS = 4800;
+static constexpr int64_t YAW_NEUTRAL_POS = 4072;
 static constexpr int64_t PITCH_NEUTRAL_POS = 6556;
 
 /**
@@ -83,8 +82,8 @@ static constexpr int64_t PITCH_RANGE = (int64_t)(PITCH_RANGE_DEGREES * 8192.0f /
  * Scale factor for converting user inputs into position setpoint deltas. 
  * In other words, input sensitivity.
  */
-static constexpr float YAW_SCALE_FACTOR = 2000.0f;
-static constexpr float PITCH_SCALE_FACTOR = 250.0f;
+static constexpr float YAW_SCALE_FACTOR = 55.0f;
+static constexpr float PITCH_SCALE_FACTOR = 40.0f;
 static constexpr float TURRET_MOUSE_X_SCALE_FACTOR = 0.05f;
 static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
 

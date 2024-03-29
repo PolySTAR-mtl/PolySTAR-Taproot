@@ -14,8 +14,10 @@ namespace control
 {
 namespace turret
 {
+
 /**
- * A bare bones Subsystem for interacting with a 4 wheeled chassis.
+ * Subsytem class for the turret. Controls both turret motors and sends data to
+ * the computer vision system.
  */
 class TurretSubsystem : public tap::control::Subsystem
 {
@@ -46,41 +48,47 @@ public:
 
     void refresh() override;
 
+    // Position Setters
     void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
     void setAbsoluteOutputDegrees(float yaw, float pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
-    void runYawController(uint32_t dt);
-    void runPitchController(uint32_t dt);
-
+    // Getters
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
-
     int64_t getYawNeutralPos() { return YAW_NEUTRAL_POS; }
     int64_t getPitchNeutralPos() { return PITCH_NEUTRAL_POS; }
-
     int64_t getYawUnwrapped() { return yawMotor.getEncoderUnwrapped(); }
     int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
-    void sendCVUpdate();
 
 private:
-    src::Drivers *drivers;
+    // Controller Functions
+    void runYawController(uint32_t dt);
+    void runPitchController(uint32_t dt);
 
-    // Hardware configuration
+    // Debugging and Communication
+    void sendCVUpdate();
+    void sendDebugInfo(bool sendYaw, bool sendPitch);
+
+    // Methods used when tuning the inner loop of the cascaded PID controller
+    void yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
+    void pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
+    void sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold);
+
+    // Hardware constants
     static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
     static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
     static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
     
+    // Hardware interfaces
+    src::Drivers *drivers;
     tap::motor::DjiMotor yawMotor;
     tap::motor::DjiMotor pitchMotor;
 
-    // Unit conversion constant from RPM to deg/ms
-    static constexpr float RPM_TO_DEGPERMS = 0.006;
-
-    // Motor Controllers for position control (SmoothPID feedback and custom feedforward)
+    // Motor Controllers for position control
     CascadedPid cascadedPitchController;
     CascadedPid cascadedYawController;
 
@@ -88,12 +96,8 @@ private:
     float yawDesiredPos;
     float pitchDesiredPos;
 
-    // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
-    static constexpr float YAW_SCALE_FACTOR = 55.0f;
-    static constexpr float PITCH_SCALE_FACTOR = 40.0f;
-
     // Time variables for fixed rate tasks
-    uint32_t prevDebugTime;
+    uint32_t prevDebugUpdate;
     uint32_t prevControllerUpdate;
     uint32_t prevCVUpdate;
 
