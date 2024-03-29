@@ -14,6 +14,7 @@ CascadedPid::CascadedPid(const tap::algorithms::SmoothPidConfig& positionConfig,
 {
 }
 
+// Run the cascaded PID controller. Updates motor output based on the position error and current RPM
 void CascadedPid::update(float positionError, float currentRPM, float dt) {
     // Obtain Desired RPM from position error
     positionController.runController(positionError, currentRPM, dt);
@@ -39,6 +40,59 @@ void CascadedPid::testInnerLoop(float positionError, float currentRPM, float dt,
     velocityController.runController(rateError, 0, dt);
     output = velocityController.getOutput();
 }
+
+// Not sure whether to keep this
+// This is to avoid having 12 different setters for controller parameters
+void CascadedPid::setParameter(Controller controller, Parameter param, float value) {
+    if (controller == VELOCITY) {
+        switch (param)
+        {
+        case P:
+            velocityController.setP(value);
+            break;
+        case I:
+            velocityController.setI(value);
+            break;
+        case D:
+            velocityController.setD(value);
+            break;
+        case MAX_OUTPUT:
+            velocityController.setMaxOutput(value);
+            break;
+        case MAX_I_CUMULATIVE:
+            velocityController.setMaxICumulative(value);
+            break;
+        case ERR_DEADZONE:
+            velocityController.setErrDeadzone(value);
+            break;
+        default:
+        break;
+        }
+    } else if (controller == POSITION) {
+        switch (param)
+        {
+        case P:
+            positionController.setP(value);
+            break;
+        case I:
+            positionController.setI(value);
+            break;
+        case D:
+            positionController.setD(value);
+            break;
+        case MAX_OUTPUT:
+            positionController.setMaxOutput(value);
+            break;
+        case MAX_I_CUMULATIVE:  
+            positionController.setMaxICumulative(value);
+            break;
+        case ERR_DEADZONE:
+            positionController.setErrDeadzone(value);
+            break;
+        default:
+        break;
+        }
+    }
 
 }  // namespace algorithms
 

@@ -31,22 +31,20 @@ public:
     // Get current output of controller
     float getOutput() { return output; }
 
-    // PID configuration setters
-    inline void setVelocityP(float p) { velocityController.setP(p); }
-    inline void setVelocityI(float i) { velocityController.setI(i); }
-    inline void setVelocityD(float d) { velocityController.setD(d); }
+    enum Parameter {
+        P, I, D,
+        MAX_OUTPUT,
+        MAX_I_CUMULATIVE,
+        ERR_DEADZONE
+    };
 
-    inline void setPositionP(float p) { positionController.setP(p); }
-    inline void setPositionI(float i) { positionController.setI(i); }
-    inline void setPositionD(float d) { positionController.setD(d); }
+    enum Controller {
+        VELOCITY,
+        POSITION
+    };
 
-    inline void setVelocityMaxICumulative(float maxICumulative) { velocityController.setMaxICumulative(maxICumulative); }
-    inline void setVelocityMaxOutput(float maxOutput)           { velocityController.setMaxOutput(maxOutput); }
-    inline void setVelocityErrDeadzone(float errDeadzone)       { velocityController.setErrDeadzone(errDeadzone); }
-
-    inline void setPositionMaxICumulative(float maxICumulative) { positionController.setMaxICumulative(maxICumulative); }
-    inline void setPositionMaxOutput(float maxOutput)           { positionController.setMaxOutput(maxOutput); }
-    inline void setPositionErrDeadzone(float errDeadzone)       { positionController.setErrDeadzone(errDeadzone); }
+    // Update controller parameters during runtime
+    void setParameter(Controller controller, Parameter param, float value);
 
 protected:
    
