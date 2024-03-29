@@ -16,22 +16,27 @@ void TurretSubsystem::initialize()
 {
     yawMotor.initialize();
     pitchMotor.initialize();
+
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevCVUpdate = 0;
+    prevDebugTime = 0;
 }
 
 void TurretSubsystem::refresh() {
 
+    // Run controllers as fast as possible
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevControllerUpdate;
-    updatePitchController(dt);
-    updateYawController(dt);
+    runPitchController(dt);
+    runYawController(dt);
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
     
+    // Send turret position data to CV at a fixed rate
     if (tap::arch::clock::getTimeMilliseconds() - prevCVUpdate > TURRET_CV_UPDATE_PERIOD ) {
         prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
         sendCVUpdate();
     }
 
-    // Skip sending debug messages if flag is disabled 
+    // UART debug messages
     if (TURRET_DEBUG_MESSAGE == false) return;
 
     if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > TURRET_DEBUG_MESSAGE_DELAY_MS) {
@@ -51,46 +56,49 @@ void TurretSubsystem::refresh() {
     }
 }
 
-void TurretSubsystem::updateYawController(uint32_t dt) {
+/*
+    Run yaw controller and update motor output.
+*/
+void TurretSubsystem::runYawController(uint32_t dt) {
     int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
-    int16_t de = yawMotor.getShaftRPM();
-    // float velocity = usingRelativeControl ? lastYawDelta : 0.001*tap::algorithms::getSign(error);
+    if (abs(error) >= tap::motor::DjiMotor::ENC_RESOLUTION/2) {
+        // If error is greater than half a rotation then the shortest path to setpoint crosses zero
+        // So we adjust the error to take the shortest path
+        // Avoids turret whipping around when crossing zero
+        error =  error - tap::motor::DjiMotor::ENC_RESOLUTION * (error > 0 ? 1 : -1);
+    }
+    int16_t currentRPM = yawMotor.getShaftRPM();
 
-    // yawController.runController(error, de, velocity, dt);
-    // cascadedYawController.updateYaw(error, de, dt);
-    cascadedYawController.updateYaw(error, de, dt);
+    cascadedYawController.update(error, currentRPM, dt);
+    // cascadedYawController.testInnerLoop(error, currentRPM, dt, 10, 100); // Uncomment this line when tuning the inner loop
 
-    yawMotor.setDesiredOutput(cascadedYawController.getYawOutput());
-    // yawMotor.setDesiredOutput(yawController.getOutput());
-}
-
-void TurretSubsystem::updatePitchController(uint32_t dt) {
-    int64_t error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
-    int16_t de = pitchMotor.degreesToEncoder<int64_t>(RPM_TO_DEGPERMS*pitchMotor.getShaftRPM());
-    // float angle = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderUnwrapped()-PITCH_NEUTRAL_POS);
-    // float velocity = usingRelativeControl ? lastPitchDelta : 0.001*tap::algorithms::getSign(error);
-
-    // pitchController.runController(error, de, velocity, angle, dt);
-
-    // float angleError = pitchMotor.encoderToDegrees<int64_t>(error) - angle;
-    cascadedPitchController.updatePitch(error, de, dt);
-    // pitchMotor.setDesiredOutput(pitchController.getOutput());
-    pitchMotor.setDesiredOutput(cascadedPitchController.getPitchOutput());
+    yawMotor.setDesiredOutput(cascadedYawController.getOutput());
 }
 
 /*
-    Give position desired position setpoints for turret movement. Values are in encoder ticks.
+    Run pitch controller and update motor output.
+*/
+void TurretSubsystem::runPitchController(uint32_t dt) {
+    float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+    int16_t currentRPM = pitchMotor.getShaftRPM();
+
+    cascadedPitchController.update(error, currentRPM, dt);
+    // cascadedPitchController.testInnerLoop(error, currentRPM, dt, 10, 100); // Uncomment this line when tuning the inner loop
+
+    pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
+}
+
+/*
+    Set desired position setpoints for turret. Values are in encoder ticks.
 */
 void TurretSubsystem::setAbsoluteOutput(uint64_t yaw, uint64_t pitch) 
 {
     yawDesiredPos = tap::algorithms::limitVal<uint64_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
     pitchDesiredPos = tap::algorithms::limitVal<uint64_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
-
-    if (fabs<int64_t>(YAW_NEUTRAL_POS-yaw) > YAW_RANGE) {lastYawDelta = 0;}
 }
 
 /*
-    Give position desired position setpoints for turret movement. Values are in degrees.
+    Set desired position setpoints for turret. Values are in degrees.
 */
 void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch) 
 {
@@ -99,21 +107,18 @@ void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch)
 }
 
 /*
-    Give desired relative setpoints for turret movement based on the current position.
+    Set position setpoints relative to turret's current position. Values are in encoder ticks.
 */
 void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta) 
 {
     int64_t currentYaw = yawMotor.getEncoderWrapped();
     int64_t currentPitch = pitchMotor.getEncoderWrapped();
 
-    if (pitchDelta < 0) pitchDelta *= 0.5;
-
-    lastPitchDelta = pitchDelta * PITCH_SCALE_FACTOR;
-    lastYawDelta = yawDelta * YAW_SCALE_FACTOR;
-
     int64_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
     int64_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
 
+    // Don't update the setpoint if joystick is in neutral position
+    // This prevents the turret from drifting when the joystick is released
     setAbsoluteOutput(
         yawDelta == 0 ? yawDesiredPos : newYaw,
         pitchDelta == 0 ? pitchDesiredPos : newPitch);

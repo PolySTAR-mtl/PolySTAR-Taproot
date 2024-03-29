@@ -18,21 +18,10 @@
 static constexpr float TURRET_DEAD_ZONE = 0.05;
 
 /*
- *   Enable UART debug messages for turret
+ * Enable UART debug messages for turret
  */
 static constexpr bool TURRET_DEBUG_MESSAGE = true;
 static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
-
-/**
- * Turret RPM PID: A PID controller for turret RPM (pitch and yaw). The PID parameters for the
- * controller are listed below.
- */
-
-static constexpr float TURRET_PID_KP = 100.0f;
-static constexpr float TURRET_PID_KI = 0.2f;
-static constexpr float TURRET_PID_KD = 0.0f;
-static constexpr float TURRET_PID_MAX_ERROR_SUM = 5000.0f;
-static constexpr float TURRET_PID_MAX_OUTPUT = 16000.0f;
 
  /**
  * Interval for sending messages over UART to the Computer Vision computer

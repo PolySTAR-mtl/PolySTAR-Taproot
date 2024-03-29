@@ -2,10 +2,8 @@
 #define CASCADED_PID_HPP_
 
 #include <cstdint>
-#include "modm/math/filter/pid.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
-#include "algorithms_constants.hpp"
 #include "../turret_constants.hpp"
 
 
@@ -15,12 +13,12 @@ namespace algorithms
 {
 
 /* Cascaded PID controller for turret control
-   First PID takes position error as input and outputs RPM setpoint
-   Second PID takes RPM error as input and outputs motor voltage
+   Outer PID takes position error as input and controls RPM setpoint
+   Inner PID takes RPM error as input and controls motor voltage
    Normally velocity controller is a PI controller and position controller is a PD controller
-   Notes on maximum values : 
-    positionConfig.maxOutput is the maximum RPM output of the outer PID controller
-    velocityConfig.maxOutput is the maximum voltage output of the inner PID controller */
+   Note on maximum values : 
+    positionConfig.maxOutput is the maximum RPM of the turret
+    velocityConfig.maxOutput is the maximum voltage sent to the motor */
 class CascadedPid
 {
 public:
@@ -28,6 +26,8 @@ public:
 
     // Calculate output from position error and current RPM
     void update(float positionError, float currentRpm, float dt);
+    // Test velocity loop, used for tuning
+    void testInnerLoop(float positionError, float currentRpm, float dt, float desiredRpm, float threshold);
     // Get current output of controller
     float getOutput() { return output; }
 

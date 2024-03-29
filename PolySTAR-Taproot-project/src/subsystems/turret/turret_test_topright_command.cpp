@@ -1,4 +1,4 @@
-#include "turret_left_aim_command.hpp"
+#include "turret_test_topright_command.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
@@ -9,7 +9,7 @@ namespace control
 {
 namespace turret
 {
-TurretLeftAimCommand::TurretLeftAimCommand(
+TurretTestTopRightCommand::TurretTestTopRightCommand(
     TurretSubsystem *const turret,
     src::Drivers *drivers)
     : turret(turret),
@@ -22,25 +22,21 @@ TurretLeftAimCommand::TurretLeftAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretLeftAimCommand::initialize() {}
+void  TurretTestTopRightCommand::initialize() {}
 
-void  TurretLeftAimCommand::execute()
+void  TurretTestTopRightCommand::execute()
 {
-    /*
-        encoder wrapped range : {0..8191}
-        (encoder wrapped range * 45 deg) / 360 deg = 1024
-        45 deg = {0..1023}
-    */
     turret->setAbsoluteOutput(
-        turret->getYawNeutralPos() - 1023,
-        turret->getPitchNeutralPos() + 300);
+        turret->getYawNeutralPos() + 0.75*YAW_RANGE,
+        turret->getPitchNeutralPos() + 0.75*PITCH_RANGE);
 }
 
-void  TurretLeftAimCommand::end(bool) 
+void  TurretTestTopRightCommand::end(bool) 
 {
     turret->setAbsoluteOutput(turret->getYawNeutralPos(), turret->getPitchNeutralPos());
 }
 
-bool  TurretLeftAimCommand::isFinished() const { return false; }
+bool  TurretTestTopRightCommand::isFinished() const { return false; }
 }  // namespace turret
 }  // namespace control
+
