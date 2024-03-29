@@ -9,7 +9,8 @@ namespace algorithms
 TurretYawController::TurretYawController(const tap::algorithms::SmoothPidConfig &pidConfig, const src::algorithms::FeedForwardConfig &ffConfig)
     : yawPid(pidConfig),
       yawFeedForward(ffConfig),
-      maxOutput(pidConfig.maxOutput)
+      maxOutput(pidConfig.maxOutput),
+      errorDeadzone(pidConfig.errDeadzone)
 {
 }
 
@@ -17,7 +18,13 @@ void TurretYawController::runController(float error, float errorDerivative, floa
     if (error > tap::motor::DjiMotor::ENC_RESOLUTION / 2) {
         error -= tap::motor::DjiMotor::ENC_RESOLUTION;
     }
-    float feedForwardOutput = yawFeedForward.calculate(velocity);
+    float feedForwardOutput;
+    if (abs(error) > errorDeadzone) {
+        feedForwardOutput = yawFeedForward.calculate(velocity);
+    }
+    else {
+        feedForwardOutput = 0.0f;
+    }
     yawPid.runController(error, errorDerivative, dt);
     output = tap::algorithms::limitVal<float>(yawPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);
 }
@@ -26,7 +33,13 @@ void TurretYawController::runControllerDerivateError(float error, float velocity
     if (error > tap::motor::DjiMotor::ENC_RESOLUTION / 2) {
         error -= tap::motor::DjiMotor::ENC_RESOLUTION;
     }
-    float feedForwardOutput = yawFeedForward.calculate(velocity);
+    float feedForwardOutput;
+    if (abs(error) > errorDeadzone) {
+        feedForwardOutput = yawFeedForward.calculate(velocity);
+    }
+    else {
+        feedForwardOutput = 0.0f;
+    }
     yawPid.runControllerDerivateError(error, dt);
     output = tap::algorithms::limitVal<float>(yawPid.getOutput() + feedForwardOutput, -maxOutput, maxOutput);
 }

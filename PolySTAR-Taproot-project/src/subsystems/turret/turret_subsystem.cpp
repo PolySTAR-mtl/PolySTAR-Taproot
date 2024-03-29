@@ -40,12 +40,12 @@ void TurretSubsystem::refresh() {
         
         // Yaw debug message
         int nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
-                              (int)(yawMotor.getEncoderWrapped()-YAW_NEUTRAL_POS),
+                              (int)(yawMotor.getEncoderWrapped() - YAW_NEUTRAL_POS),
                               (int)(yawDesiredPos - YAW_NEUTRAL_POS));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
         // Pitch debug message
         nBytes = sprintf (buffer, "Pitch: %i, Setpoint: %i\n",
-                              (int)(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS),
+                              (int)(pitchMotor.getEncoderWrapped() - PITCH_NEUTRAL_POS),
                               (int)(pitchDesiredPos - PITCH_NEUTRAL_POS));
         drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
     }
@@ -98,7 +98,7 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
     int64_t currentYaw = yawMotor.getEncoderWrapped();
     int64_t currentPitch = pitchMotor.getEncoderWrapped();
 
-    if (pitchDelta < 0) pitchDelta *= 0.5;
+    // if (pitchDelta < 0) pitchDelta *= 0.5;
 
     lastPitchDelta = pitchDelta * PITCH_SCALE_FACTOR;
     lastYawDelta = yawDelta * YAW_SCALE_FACTOR;

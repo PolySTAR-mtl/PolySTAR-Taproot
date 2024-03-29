@@ -13,6 +13,7 @@ struct FeedForwardConfig
     float kv = 0.0f; // Velocity feedforward gain
     float kg = 0.0f; // Gravity compensation gain
     float maxVelocity = 0.0f;
+    float errorDeadzone = 0.0f;
 };
 
 class FeedForward

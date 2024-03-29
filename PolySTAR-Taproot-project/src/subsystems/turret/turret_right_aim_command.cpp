@@ -22,7 +22,13 @@ TurretRightAimCommand::TurretRightAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretRightAimCommand::initialize() {}
+void  TurretRightAimCommand::initialize() {
+
+    char buffer[500];
+
+    int nBytes = sprintf (buffer, "Aiming left\n");
+    drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+}
 
 void  TurretRightAimCommand::execute()
 {

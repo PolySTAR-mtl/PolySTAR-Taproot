@@ -22,14 +22,20 @@ TurretLeftAimCommand::TurretLeftAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretLeftAimCommand::initialize() {}
+void  TurretLeftAimCommand::initialize() {
+    
+    char buffer[500];
+
+    int nBytes = sprintf (buffer, "Aiming left\n");
+    drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+}
 
 void  TurretLeftAimCommand::execute()
 {
     /*
         encoder wrapped range : {0..8191}
         (encoder wrapped range * 45 deg) / 360 deg = 1024
-        45 deg = {0..1023}
+        45 deg = 1024
     */
     turret->setAbsoluteOutput(
         turret->getYawNeutralPos() - 1023,

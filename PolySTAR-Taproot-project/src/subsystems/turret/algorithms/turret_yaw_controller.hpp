@@ -42,6 +42,7 @@ private:
 
     float output;
     float maxOutput;
+    float errorDeadzone;
 };
 
 }  // namespace algorithms

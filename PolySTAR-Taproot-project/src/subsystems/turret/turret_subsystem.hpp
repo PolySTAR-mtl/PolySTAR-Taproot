@@ -104,8 +104,8 @@ private:
     uint32_t prevControllerUpdate;
 
     // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
-    static constexpr float YAW_SCALE_FACTOR = 55.0f;
-    static constexpr float PITCH_SCALE_FACTOR = 40.0f;
+    static constexpr float YAW_SCALE_FACTOR = 900.0f;
+    static constexpr float PITCH_SCALE_FACTOR = 400.0f;
 
     // Variables for managing UART messages sent to CV
     uint32_t prevCVUpdate;

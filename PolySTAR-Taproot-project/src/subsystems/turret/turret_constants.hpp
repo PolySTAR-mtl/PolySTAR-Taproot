@@ -20,7 +20,7 @@ static constexpr float TURRET_DEAD_ZONE = 0.05;
  *   Enable UART debug messages for turret
  */
 static constexpr bool TURRET_DEBUG_MESSAGE = true;
-static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
+static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 100;
 
 /**
  * Turret RPM PID: A PID controller for turret RPM (pitch and yaw). The PID parameters for the
