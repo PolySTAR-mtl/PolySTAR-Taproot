@@ -128,7 +128,7 @@ void initializeSubsystems()
 void setDefaultStandardCommands(src::Drivers *)
 {
     // theChassis.setDefaultCommand(&chassisDrive);
-    // theTurret.setDefaultCommand(&turretManualAim);
+    theTurret.setDefaultCommand(&turretManualAim);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
