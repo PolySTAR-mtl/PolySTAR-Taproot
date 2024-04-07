@@ -25,8 +25,6 @@
 #include "subsystems/feeder/feeder_position_subsystem.hpp"
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_move_command.hpp"
-#include "subsystems/feeder/auto_double_fire.hpp"
-#include "subsystems/feeder/double_feeder_subsystem.hpp"
 
 //Flywheel includes
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
@@ -55,7 +53,6 @@ namespace control
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers());
 feeder::FeederPositionSubsystem theFeeder(drivers());
-feeder::DoubleFeederSubsystem theDoubleFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
@@ -70,7 +67,6 @@ turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 feeder::FeederMoveCommand feederMove(&theFeeder);
-feeder::DoubleAutoFeedCommand doubleAutoFeed(&theDoubleFeeder, drivers());
 
 flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
 

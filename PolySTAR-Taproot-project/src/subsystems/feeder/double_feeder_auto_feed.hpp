@@ -1,5 +1,5 @@
-#ifndef GENERIC_AUTO_FEED_COMMAND_HPP_
-#define GENERIC_AUTO_FEED_COMMAND_HPP_
+#ifndef DOUBLE_FEEDER_AUTO_FEED_HPP_
+#define DOUBLE_FEEDER_AUTO_FEED_HPP_
 
 #include "tap/control/comprised_command.hpp"
 #include "double_feeder_subsystem.hpp"
@@ -28,7 +28,7 @@ public:
 
     void initialize() override;
 
-    const char *getName() const { return "feeder double fire command"; }
+    const char *getName() const { return "feeder double feed command"; }
 
     void execute() override;
 
@@ -46,4 +46,4 @@ protected:
 
 }  // namespace control
 
-#endif  // GENERIC_AUTO_FEED_COMMAND_HPP_
+#endif  // DOUBLE_FEEDER_AUTO_FEED_HPP_

@@ -1,4 +1,4 @@
-#include "auto_double_fire.hpp"
+#include "double_feeder_auto_feed.hpp"
 #include "feeder_constants.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
@@ -25,13 +25,17 @@ namespace control
     void DoubleAutoFeedCommand::initialize() { feeder->setDesiredOutput(0); }
 
     void DoubleAutoFeedCommand::execute() {
-        // bool shouldShoot = drivers->cvHandler.shouldShoot();
-        // if (shouldShoot) {
-        //     feeder->setDesiredOutput(FEEDER_RPM);
-        // } else {
-        //     feeder->setDesiredOutput(0);
-        // }
-        feeder->setDesiredOutput(FEEDER_RPM);
+        if(drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME) {
+            feeder->setDesiredOutput(0);
+            return;
+        }
+        bool shouldShoot = drivers->cvHandler.shouldShoot();
+        if (shouldShoot) {
+            feeder->setDesiredOutput(FEEDER_RPM);
+        } else {
+            feeder->setDesiredOutput(0);
+        }
+        // feeder->setDesiredOutput(FEEDER_RPM);
     }
 
     void DoubleAutoFeedCommand::end(bool) { feeder->setDesiredOutput(0); }

@@ -35,7 +35,8 @@
 
 
 #include "subsystems/feeder/double_feeder_subsystem.hpp"
-#include "subsystems/feeder/auto_double_fire.hpp"
+#include "subsystems/feeder/double_feeder_auto_feed.hpp"
+#include "subsystems/feeder/double_feeder_auto_feed_test_command.hpp"
 
 // Flywheel includes
 #include "subsystems/flywheel/flywheel_fire_command.hpp"
@@ -97,7 +98,8 @@ turret::TurretTestAutoAimCommand turretTestAutoAim(&theTurret, drivers());
 // feeder::FeederMoveUnjamCommand rightFeederMoveUnjam(&theRightFeeder, drivers());
 // feeder::FeederAutoFeedCommand rightFeederAutoFeed(&theRightFeederLegacy, drivers());
 // feeder::FeederAutoFeedTestCommand rightFeederAutoFeedTest(&theRightFeederLegacy, drivers());
-feeder::DoubleAutoFeedCommand doubleAutoFeed(&theDoubleFeeder, drivers());
+feeder::DoubleAutoFeedCommand doubleFeederAutoFeed(&theDoubleFeeder, drivers());
+feeder::DoubleAutoFeedTestCommand doubleFeederAutoFeedTest(&theDoubleFeeder, drivers());
 
 
 /* flywheel -----------------------------------------------------------------*/
@@ -109,7 +111,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /*-Ammo Booster-*/
-HoldRepeatCommandMapping feedFeeder(drivers(), {&doubleAutoFeed}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
+// HoldRepeatCommandMapping feedFeeder(drivers(), {&doubleFeederAutoFeed}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 // HoldRepeatCommandMapping feedFeeder(drivers(), {&leftFeederMoveUnjam, &rightFeederMoveUnjam},
 // RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 /*-Flywheel-*/
@@ -134,14 +136,14 @@ ToggleCommandMapping toggleChassisDrive(
     RemoteMapState({Remote::Key::G}));
 // ToggleCommandMapping toggleChassisAuto(drivers(), {&chassisAutoDrive},
 // RemoteMapState({Remote::Key::R}));
-// ToggleCommandMapping toggleAutoCommands(
-//     drivers(),
-//     {&chassisAutoDrive, &turretAutoAim, &leftFeederAutoFeed, &rightFeederAutoFeed},
-//     RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-// ToggleCommandMapping toggleAutoTestCommands(
-//     drivers(),
-//     {&chassisTestAutoDrive, &turretTestAutoAim, &leftFeederAutoFeedTest, &rightFeederAutoFeedTest},
-//     RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+ToggleCommandMapping toggleAutoCommands(
+    drivers(),
+    {&chassisAutoDrive, &turretAutoAim, &doubleFeederAutoFeed},
+    RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+ToggleCommandMapping toggleAutoTestCommands(
+    drivers(),
+    {&chassisTestAutoDrive, &turretTestAutoAim, &doubleFeederAutoFeedTest},
+    RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 /*-Only used for calibration-*/
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim},
@@ -178,6 +180,7 @@ void setDefaultStandardCommands(src::Drivers *)
 {
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
+    theFlywheel.setDefaultCommand(&flywheelStart);
     // theLeftFlywheel.setDefaultCommand(&leftFlywheelStart);
     // theRightFlywheel.setDefaultCommand(&rightFlywheelStart);
 }
@@ -192,7 +195,7 @@ void startStandardCommands(src::Drivers *drivers)
 void registerStandardIoMappings(src::Drivers *drivers)
 {
     /*-Ammo Booster-*/
-    drivers->commandMapper.addMap(&feedFeeder);
+    // drivers->commandMapper.addMap(&feedFeeder);
     // drivers->commandMapper.addMap(&feedLeftFeeder);
     // drivers->commandMapper.addMap(&feedRightFeeder);
     /*-Flywheel-*/
@@ -203,9 +206,9 @@ void registerStandardIoMappings(src::Drivers *drivers)
     drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
-    // drivers->commandMapper.addMap(&toggleChassisDrive);
-    // drivers->commandMapper.addMap(&toggleAutoTestCommands);
-    // drivers->commandMapper.addMap(&toggleAutoCommands);
+    drivers->commandMapper.addMap(&toggleChassisDrive);
+    drivers->commandMapper.addMap(&toggleAutoTestCommands);
+    drivers->commandMapper.addMap(&toggleAutoCommands);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
