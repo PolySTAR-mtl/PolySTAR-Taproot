@@ -11,7 +11,7 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4;
 #endif
 
 #ifdef TARGET_SENTRY
-constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.95;
+constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.5;
 #endif
 
 // Delay after start of flywheels before feeder start.

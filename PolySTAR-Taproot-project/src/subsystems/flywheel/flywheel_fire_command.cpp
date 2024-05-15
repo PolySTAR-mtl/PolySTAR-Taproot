@@ -22,7 +22,7 @@ FlywheelFireCommand::FlywheelFireCommand(
 void FlywheelFireCommand::initialize() {
     char buffer[50];
     int nBytes = sprintf (buffer, "starting firing\n");
-    drivers->uart.write(tap::communication::serial::Uart::Uart6,(uint8_t*) buffer, nBytes+1);
+    drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*) buffer, nBytes+1);
     flywheel->startFiring();
 }
 

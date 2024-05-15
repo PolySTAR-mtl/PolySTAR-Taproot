@@ -127,7 +127,7 @@ void initializeSubsystems()
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *)
 {
-    // theChassis.setDefaultCommand(&chassisDrive);
+    theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
 }
 
@@ -160,7 +160,7 @@ void initSubsystemCommands(src::Drivers *drivers)
     char buffer[50];
     int nBytes = sprintf(buffer, "Initializing Standard\n");
     drivers->uart.write(
-        tap::communication::serial::Uart::UartPort::Uart6,
+        tap::communication::serial::Uart::UartPort::Uart8,
         (uint8_t *)buffer,
         nBytes + 1);
 }
