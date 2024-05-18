@@ -33,9 +33,9 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
-    0.25f, // kP
+    0.08f, // kP
     0.0f, // kI
-    0.0f, // kD
+    0.5f, // kD
     20.0f, // Max error sum
     60.0f, // Max output
     1.0f, // TQ Derivative Kalman
@@ -47,8 +47,8 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
-    200.0f, // kP
-    1.0f,  // kI
+    300.0f, // kP
+    0.0f,  // kI
     0.0f,  // kD
     5000.0f,  // Max error sum
     16000.0f, // Max output
