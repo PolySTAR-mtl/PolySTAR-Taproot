@@ -2,73 +2,103 @@
 #include "algorithms/feed_forward.hpp"
 
 /**
- * Turret Pos PID: PID controllers for turret position (pitch and yaw). The PID parameters for the
- * controller are listed below.
+ * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
  */
 
-float constexpr TURRET_CGX = 1; // TO DETERMINE
-float constexpr TURRET_CGY = 0; // TO DETERMINE
-
-static constexpr tap::algorithms::SmoothPidConfig YAW_PID_CONFIG(
-    4.5f, // kP
+static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
+    0.25f, // kP
     0.0f, // kI
-    120.0f, // kD
-    5000.0f, // Max error sum
+    0.0f, // kD
+    20.0f, // Max error sum
+    60.0f, // Max output
+    1.0f, // TQ Derivative Kalman
+    0.0f, // TR Derivative Kalman
+    1.0f, // TQ Proportional Kalman
+    0.0f, // TR Proportional Kalman
+    2.0f, // Error Deadzone
+    0.0f  // Error derivative floor
+);
+
+static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
+    150.0f, // kP
+    0.5f,  // kI
+    0.0f,  // kD
+    5000.0f,  // Max error sum
     16000.0f, // Max output
     1.0f, // TQ Derivative Kalman
     0.0f, // TR Derivative Kalman
     1.0f, // TQ Proportional Kalman
     0.0f, // TR Proportional Kalman
     0.0f, // Error Deadzone
-    0.0f // Error derivative floor
+    0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig PITCH_PID_CONFIG(
-    10.0f, // kP
-    0.035f, // kI
-    80.0f, // kD
-    5000.0f, // Max error sum
+static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
+    0.25f, // kP
+    0.0f, // kI
+    0.0f, // kD
+    20.0f, // Max error sum
+    60.0f, // Max output
+    1.0f, // TQ Derivative Kalman
+    0.0f, // TR Derivative Kalman
+    1.0f, // TQ Proportional Kalman
+    0.0f, // TR Proportional Kalman
+    2.0f, // Error Deadzone
+    0.0f  // Error derivative floor
+);
+
+static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
+    200.0f, // kP
+    1.0f,  // kI
+    0.0f,  // kD
+    5000.0f,  // Max error sum
     16000.0f, // Max output
     1.0f, // TQ Derivative Kalman
     0.0f, // TR Derivative Kalman
     1.0f, // TQ Proportional Kalman
     0.0f, // TR Proportional Kalman
     0.0f, // Error Deadzone
-    0.0f // Error derivative floor
-);
-
-/**
- * Turret Pos FeedForward: Feed Forward controllers for turret position (pitch and yaw). The FF parameters for the
- * controller are listed below.
- */
-
-static constexpr src::algorithms::FeedForwardConfig YAW_FF_CONFIG(
-    0.0f, // kS
-    0.0f, // kV
-    0.0f, // kG
-    60.0 // maxVelocity
-);
-
-static constexpr src::algorithms::FeedForwardConfig PITCH_FF_CONFIG(
-    0.0f, // kS
-    0.0f, // kV
-    7250.0f, // kG
-    60.0 // maxVelocity
+    0.0f  // Error derivative floor
 );
 
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr int64_t YAW_NEUTRAL_POS = 5300;
-static constexpr int64_t PITCH_NEUTRAL_POS = 6834;
+static constexpr int64_t YAW_NEUTRAL_POS = 3470;
+static constexpr int64_t PITCH_NEUTRAL_POS = 620;
+
+/**
+ * Turret Pos PID: PID controllers for turret position (pitch and yaw). The PID parameters for the
+ * controller are listed below.
+ */
+
+
+
+/**
+ * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
+ */
+// static constexpr int64_t YAW_NEUTRAL_POS = 5300;
+// static constexpr int64_t PITCH_NEUTRAL_POS = 6834;
+
+/**
+ * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
+ */
+static constexpr float YAW_RANGE_DEGREES = 90;
+static constexpr float PITCH_RANGE_DEGREES = 20;
+
+/**
+ * Range values in encoder ticks, where 0..8191 is a full revolution
+ */
+static constexpr uint16_t YAW_RANGE = (uint16_t)(YAW_RANGE_DEGREES * 8192.0f / 360.0f);
+static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f / 360.0f);
 
 /**
  * Range values for YAW and PITCH. Motors are limited to range [NeutralPos - Range, NeutralPos + Range]
  * Value is in encoder ticks, where 8192 is a full revolution
  * TODO : Make this use degrees or radians to be easier to read 
  */
-static constexpr int64_t YAW_RANGE = 750;
-static constexpr int64_t PITCH_RANGE = 400;
+// static constexpr int64_t YAW_RANGE = 750;
+// static constexpr int64_t PITCH_RANGE = 400;
 
 /**
  * Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
