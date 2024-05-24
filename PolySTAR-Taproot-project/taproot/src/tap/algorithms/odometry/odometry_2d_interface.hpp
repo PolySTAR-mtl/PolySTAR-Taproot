@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -52,6 +52,16 @@ public:
      * @return The current x and y velocity (in m/s).
      */
     virtual modm::Vector2f getCurrentVelocity2D() const = 0;
+
+    /**
+     * @return The current yaw orientation of the chassis in the world frame in radians.
+     */
+    virtual float getYaw() const = 0;
+
+    /**
+     * @return The last time that odometry was computed (in microseconds).
+     */
+    virtual uint32_t getLastComputedOdometryTime() const = 0;
 };
 
 }  // namespace tap::algorithms::odometry

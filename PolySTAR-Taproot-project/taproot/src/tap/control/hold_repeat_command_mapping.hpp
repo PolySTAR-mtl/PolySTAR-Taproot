@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -84,7 +84,7 @@ public:
     /// Set the maximum times each of commands should be re-scheduled.
     inline mockable void setMaxTimesToSchedule(int maxTimes) { maxTimesToSchedule = maxTimes; }
 
-private:
+protected:
     bool held;
     bool endCommandsWhenNotHeld;
     int maxTimesToSchedule;

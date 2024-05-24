@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -270,5 +270,7 @@ TCPServer TCPServer::mainServer(2001);
 }  // namespace communication
 
 }  // namespace tap
+
+#endif  // PLATFORM_HOSTED
 
 #endif  // PLATFORM_HOSTED
