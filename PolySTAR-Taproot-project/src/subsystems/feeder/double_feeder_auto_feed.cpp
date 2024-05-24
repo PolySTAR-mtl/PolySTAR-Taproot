@@ -35,7 +35,6 @@ namespace control
         } else {
             feeder->setDesiredOutput(0);
         }
-        // feeder->setDesiredOutput(FEEDER_RPM);
     }
 
     void DoubleAutoFeedCommand::end(bool) { feeder->setDesiredOutput(0); }
