@@ -272,5 +272,3 @@ TCPServer TCPServer::mainServer(2001);
 }  // namespace tap
 
 #endif  // PLATFORM_HOSTED
-
-#endif  // PLATFORM_HOSTED
