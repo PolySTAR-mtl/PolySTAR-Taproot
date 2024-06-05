@@ -115,16 +115,16 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 // HoldRepeatCommandMapping feedFeeder(drivers(), {&leftFeederMoveUnjam, &rightFeederMoveUnjam},
 // RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 /*-Flywheel-*/
-HoldCommandMapping startFlywheel(drivers(), {&flywheelStart,}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-/*-Turret-*/
-// HoldCommandMapping rightAimTurret(
-//     drivers(),
-//     {&turretRightAim},
-//     RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
-// HoldCommandMapping leftAimTurret(
-//     drivers(),
-//     {&turretLeftAim},
-//     RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping startFlywheel(drivers(), {&flywheelStart,}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+/*-Turret- TESTING commands (pid,..)*/
+HoldCommandMapping rightAimTurret(
+    drivers(),
+    {&turretRightAim},
+    RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping leftAimTurret(
+    drivers(),
+    {&turretLeftAim},
+    RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 ToggleCommandMapping turretMouseAimToggle(
     drivers(),
     {&turretMouseAim},
@@ -199,11 +199,11 @@ void registerStandardIoMappings(src::Drivers *drivers)
     // drivers->commandMapper.addMap(&feedLeftFeeder);
     // drivers->commandMapper.addMap(&feedRightFeeder);
     /*-Flywheel-*/
-    drivers->commandMapper.addMap(&startFlywheel);
+    // drivers->commandMapper.addMap(&startFlywheel);
     // drivers->commandMapper.addMap(&startRightFlywheel);
     /*-Turret-*/
-    // drivers->commandMapper.addMap(&leftAimTurret);
-    // drivers->commandMapper.addMap(&rightAimTurret);
+    drivers->commandMapper.addMap(&leftAimTurret);
+    drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
     drivers->commandMapper.addMap(&toggleChassisAuto);

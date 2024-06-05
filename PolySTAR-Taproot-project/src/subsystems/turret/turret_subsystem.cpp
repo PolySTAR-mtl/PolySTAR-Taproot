@@ -28,8 +28,8 @@ void TurretSubsystem::refresh() {
 
     uint32_t currentTime = tap::arch::clock::getTimeMilliseconds();
 
-    // Run controllers as fast as possible
-    runPitchController(currentTime - prevControllerUpdate);
+    // // Run controllers as fast as possible
+    // runPitchController(currentTime - prevControllerUpdate);
     runYawController(currentTime - prevControllerUpdate);
     prevControllerUpdate = currentTime;
 
@@ -50,8 +50,8 @@ void TurretSubsystem::refresh() {
     // UART debug messages
     if (TURRET_DEBUG_MESSAGE && (currentTime - prevDebugUpdate > TURRET_DEBUG_MESSAGE_DELAY_MS)) {
         prevDebugUpdate = currentTime;
-        sendDebugInfo(false,true); // Position information
-        // sendTuningDebugInfo(false, true, velSetpoint, threshold); // Velocity information, used during tuning of the inner loop
+        sendDebugInfo(true,false); // Position information
+        // sendTuningDebugInfo(true, false, velSetpoint, threshold); // Velocity information, used during tuning of the inner loop
     }
 }
 
@@ -147,22 +147,21 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
 
     if (sendYaw) {
         nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
-                                (int)(yawMotor.getEncoderWrapped()-YAW_NEUTRAL_POS),
+                                (int)(yawMotor.getEncoderWrapped() - YAW_NEUTRAL_POS),
                                 (int)(yawDesiredPos - YAW_NEUTRAL_POS));
         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
     }
 
     if (sendPitch) {
         nBytes = sprintf (buffer, "Pitch: %i, Setpoint: %i\n",
-                                (int)(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS),
+                                (int)(pitchMotor.getEncoderWrapped() - PITCH_NEUTRAL_POS),
                                 (int)(pitchDesiredPos - PITCH_NEUTRAL_POS));
         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
     }
 }
 
 /*
-    V
-    elocity Control debug information, used during tuning of the inner loops.
+    Velocity Control debug information, used during tuning of the inner loops.
 */
 void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold) {
     char buffer[500];
