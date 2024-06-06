@@ -16,11 +16,11 @@
 #include "subsystems/chassis/chassis_subsystem.hpp"
 
 // Turret includes
-#include "subsystems/turret/turret_left_aim_command.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
 #include "subsystems/turret/turret_mouse_aim_command.hpp"
-#include "subsystems/turret/turret_right_aim_command.hpp"
 #include "subsystems/turret/turret_subsystem.hpp"
+#include "subsystems/turret/turret_test_bottomleft_command.hpp"
+#include "subsystems/turret/turret_test_topright_command.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/feeder_move_command.hpp"
@@ -62,8 +62,8 @@ chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers()
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
-turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
+turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers()); // Used for tuning
+turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers()); // Used for tuning
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
@@ -142,7 +142,7 @@ void initSubsystemCommands(src::Drivers *drivers)
     char buffer[50];
     int nBytes = sprintf(buffer, "Initializing Standard\n");
     drivers->uart.write(
-        tap::communication::serial::Uart::UartPort::Uart6,
+        tap::communication::serial::Uart::UartPort::Uart8,
         (uint8_t *)buffer,
         nBytes + 1);
 }
