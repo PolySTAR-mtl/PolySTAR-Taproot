@@ -129,7 +129,7 @@ private:
     static constexpr float RAMP_TIME_MS = 500.0f;
 
     // Delta for the power consumption
-    static constexpr uint16_t POWER_DELTA = 0; 
+    static constexpr uint16_t POWER_DELTA = 5; // change if we still overheat
 
     // power consumption reached
     bool powerReached = false;

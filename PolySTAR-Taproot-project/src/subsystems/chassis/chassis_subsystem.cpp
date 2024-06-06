@@ -38,7 +38,7 @@ void ChassisSubsystem::checkPowerConsumption()
 
         int nBytes = sprintf(
             buffer,
-            "POWER CONSUMPTION THRESH: %i, CURRENT POWER: %f\n POWER REACHED: %i",
+            "POWER CONSUMPTION THRESH: %i, CURRENT POWER: %f\n POWER REACHED: %i\n",
             powerConsumptionThreshold,
             chassisData.power,
             powerReached);
