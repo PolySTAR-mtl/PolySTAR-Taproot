@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -58,8 +58,11 @@ public:
         int64_t encRevolutions = 0);
 
     void initialize() override;
+    float getPositionUnwrapped() const override;
+    float getPositionWrapped() const override;
     int64_t getEncoderUnwrapped() const override;
     uint16_t getEncoderWrapped() const override;
+    void resetEncoderValue() override;
     void setDesiredOutput(int32_t desiredOutput) override;
     bool isMotorOnline() const override;
     int16_t getOutputDesired() const override;
@@ -67,13 +70,13 @@ public:
     int16_t getTorque() const override;
     int16_t getShaftRPM() const override;
 
-private:
+protected:
 #if defined(PLATFORM_HOSTED) && defined(ENV_UNIT_TESTS)
 public:
     testing::NiceMock<mock::DjiMotorMock> motorOne;
     testing::NiceMock<mock::DjiMotorMock> motorTwo;
 
-private:
+protected:
 #else
     DjiMotor motorOne;
     DjiMotor motorTwo;

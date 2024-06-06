@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -41,6 +41,9 @@ public:
     MOCK_METHOD(void, initialize, (), (override));
     MOCK_METHOD(int64_t, getEncoderUnwrapped, (), (const override));
     MOCK_METHOD(uint16_t, getEncoderWrapped, (), (const override));
+    MOCK_METHOD(void, resetEncoderValue, (), (override));
+    MOCK_METHOD(float, getPositionUnwrapped, (), (const override));
+    MOCK_METHOD(float, getPositionWrapped, (), (const override));
     MOCK_METHOD(void, setDesiredOutput, (int32_t), (override));
     MOCK_METHOD(bool, isMotorOnline, (), (const override));
     MOCK_METHOD(int16_t, getOutputDesired, (), (const override));
