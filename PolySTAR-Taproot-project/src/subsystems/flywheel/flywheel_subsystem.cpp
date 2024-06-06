@@ -29,10 +29,10 @@ void FlywheelSubsystem::adjustBulletVelocity()
     const auto &turretData = robotData.turret;
 
     // Check if the last bullet speed exceeds the limit
-    if (turretData.bulletSpeed > turretData.barrelSpeedLimit17ID1)
+    if (turretData.heat17ID1 > turretData.heatLimit)
     {
         // Calculate reduction factor for bullet speed
-        float reductionFactor = turretData.barrelSpeedLimit17ID1 / turretData.bulletSpeed;
+        float reductionFactor = turretData.heatLimit / turretData.heat17ID1;
 
         // Adjust the throttle value to bring the bullet speed below the limit
         currentThrottle *= reductionFactor;
