@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "feeder_subsystem_legacy.hpp"
+#include "feeder_velocity_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 
 namespace control
@@ -14,13 +14,13 @@ class FeederFeedCommand : public tap::control::Command
 {
 public:
     /**
-     * Initializes the command with the passed in FeederSubsystem.  Must not
+     * Initializes the command with the passed in FeederVelocitySubsystem.  Must not
      * be nullptr.
      *
      * @param[in] feeder a pointer to the feeder to be passed in that this
      *      Command will interact with.
      */
-    FeederFeedCommand(FeederSubsystemLegacy *const turret, src::Drivers *drivers);
+    FeederFeedCommand(FeederVelocitySubsystem *const turret, src::Drivers *drivers);
 
     FeederFeedCommand(const FeederFeedCommand &other) = delete;
 
@@ -37,7 +37,7 @@ public:
     bool isFinished() const override;
 
 private:
-    FeederSubsystemLegacy *const feeder;
+    FeederVelocitySubsystem *const feeder;
 
     src::Drivers *drivers;
 };  // FeederFeedCommand

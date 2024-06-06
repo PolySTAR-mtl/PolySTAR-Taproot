@@ -28,8 +28,8 @@ void ChassisSubsystem::checkPowerConsumption()
     const auto &robotData = drivers->refSerial.getRobotData();
     const auto &chassisData = robotData.chassis;
     // calculate reduction factor for power consumption
-    // uint16_t powerConsumptionThreshold = chassisData.powerConsumptionLimit - POWER_DELTA;
-    uint16_t powerConsumptionThreshold = 60 - POWER_DELTA;
+    uint16_t powerConsumptionThreshold = chassisData.powerConsumptionLimit - POWER_DELTA;
+    // uint16_t powerConsumptionThreshold = 60 - POWER_DELTA;
     powerReached = chassisData.power > powerConsumptionThreshold;
 
     if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
@@ -38,11 +38,11 @@ void ChassisSubsystem::checkPowerConsumption()
 
         int nBytes = sprintf(
             buffer,
-            "POWER CONSUMPTION THRESH: %d, CURRENT POWER: %d\n POWER REACHED: %d",
+            "POWER CONSUMPTION THRESH: %i, CURRENT POWER: %f\n POWER REACHED: %i",
             powerConsumptionThreshold,
             chassisData.power,
             powerReached);
-        drivers->uart.write(Uart::UartPort::Uart6, (uint8_t *)buffer, nBytes + 1);
+        drivers->uart.write(Uart::UartPort::Uart8, (uint8_t *)buffer, nBytes + 1);
     }
     
     powerReductionFactor = powerConsumptionThreshold / chassisData.power;
@@ -75,33 +75,25 @@ void ChassisSubsystem::refresh()
         char buffer[500];
 
         // Front right debug message
-        int nBytes = sprintf(
-            buffer,
-            "FR-RPM: %i, SETPOINT: %i\n",
-            frontRightMotor.getShaftRPM(),
-            (int)frontRightDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6, (uint8_t *)buffer, nBytes + 1);
+        int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
+                              frontRightMotor.getShaftRPM(),
+                              (int)frontRightDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Front left debug message
-        nBytes = sprintf(
-            buffer,
-            "FL-RPM: %i, SETPOINT: %i\n",
-            frontLeftMotor.getShaftRPM(),
-            (int)frontLeftDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6, (uint8_t *)buffer, nBytes + 1);
+        nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
+                              frontLeftMotor.getShaftRPM(),
+                              (int)frontLeftDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back right debug message
-        nBytes = sprintf(
-            buffer,
-            "BR-RPM: %i, SETPOINT: %i\n",
-            backRightMotor.getShaftRPM(),
-            (int)backRightDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6, (uint8_t *)buffer, nBytes + 1);
+        nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
+                              backRightMotor.getShaftRPM(),
+                              (int)backRightDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back left debug message
-        nBytes = sprintf(
-            buffer,
-            "BL-RPM: %i, SETPOINT: %i\n",
-            backLeftMotor.getShaftRPM(),
-            (int)backLeftDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6, (uint8_t *)buffer, nBytes + 1);
+        nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
+                              backLeftMotor.getShaftRPM(),
+                              (int)backLeftDesiredRpm);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
     }
 }
 

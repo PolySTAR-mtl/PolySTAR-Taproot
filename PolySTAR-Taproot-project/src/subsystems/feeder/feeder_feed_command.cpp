@@ -9,7 +9,7 @@ namespace control
 namespace feeder
 {
 FeederFeedCommand::FeederFeedCommand(
-    FeederSubsystemLegacy *const feeder,
+    FeederVelocitySubsystem *const feeder,
     src::Drivers *drivers)
     : feeder(feeder),
       drivers(drivers)

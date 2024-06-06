@@ -43,12 +43,12 @@
             }
         },
         {
-            "label": ".Build Hero",
+            "label": ".Build Sentry",
             "type": "shell",
             "presentation": {
                 "panel": "new"
             },
-            "command": "pipenv run scons build robot=TARGET_HERO",
+            "command": "pipenv run scons build robot=TARGET_SENTRY",
             "group": "build",
             "problemMatcher": [],
             "options": {
@@ -82,12 +82,12 @@
             }
         },
         {
-            "label": ".Program Hero",
+            "label": ".Program Sentry",
             "type": "shell",
             "presentation": {
                 "panel": "new"
             },
-            "command": "pipenv run scons run robot=TARGET_HERO",
+            "command": "pipenv run scons run robot=TARGET_SENTRY",
             "group": "build",
             "problemMatcher": [],
             "options": {

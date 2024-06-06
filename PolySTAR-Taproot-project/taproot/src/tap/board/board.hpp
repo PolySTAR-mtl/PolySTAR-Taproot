@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -203,6 +203,10 @@ using DisplayMosi = GpioA7;
 using DisplayReset = GpioB10;
 using DisplayCommand = GpioB9;
 using DisplaySpiMaster = SpiMaster1;
+
+using I2CSda = GpioF0;
+using I2cScl = GpioF1;
+using I2CMaster = I2cMaster2;
 
 #endif
 

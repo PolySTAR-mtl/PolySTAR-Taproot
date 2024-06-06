@@ -17,7 +17,7 @@ SnailMotor::SnailMotor(
 }
 
 void SnailMotor::init() {
-    drivers->pwm.setTimerFrequency(tap::gpio::Pwm::Timer::TIMER8, 400);
+    drivers->pwm.setTimerFrequency(tap::gpio::Pwm::Timer::TIMER8, PWM_FREQUENCY); // Timer 8 controls pins W-Z on Board A
     drivers->pwm.write(THROTTLE_IDLE, pwmPin);
 }
 

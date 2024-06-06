@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -214,7 +214,15 @@ void CommandScheduler::run()
         // Refresh subsystems in the registeredSubsystemBitmap
         for (auto it = subMapBegin(); it != subMapEnd(); it++)
         {
-            (*it)->refresh();
+            // Call appropriate refresh function for each of the subsystems
+            if (safeDisconnected())
+            {
+                (*it)->refreshSafeDisconnect();
+            }
+            else
+            {
+                (*it)->refresh();
+            }
 
             Command *defaultCmd;
             // If the remote is connected given the scheduler is in safe disconnect mode and

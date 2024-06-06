@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -55,6 +55,7 @@ public:
     MOCK_METHOD(bool, isCalibrated, (), (override));
     MOCK_METHOD(bool, isOnline, (), (override));
     MOCK_METHOD(float, getVelocity, (), (override));
+    MOCK_METHOD(void, refreshSafeDisconnect, (), ());
 };
 
 }  // namespace mock

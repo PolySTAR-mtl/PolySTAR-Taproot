@@ -7,7 +7,7 @@
 #include "flywheel_fire_command.hpp"
 #include "fire_end_command_group.hpp"
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
-#include "subsystems/feeder/feeder_subsystem.hpp"
+#include "subsystems/feeder/feeder_position_subsystem.hpp"
 
 namespace control
 {
@@ -21,7 +21,7 @@ public:
      * @param[in] feeder a pointer to the feeder to be passed in that this
      * Command will interact with.
      */
-    FireCommandGroup(flywheel::FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
+    FireCommandGroup(flywheel::FlywheelSubsystem *const flywheel, feeder::FeederPositionSubsystem *const feeder, src::Drivers *drivers);
 
     FireCommandGroup(const FireCommandGroup &other) = delete;
 

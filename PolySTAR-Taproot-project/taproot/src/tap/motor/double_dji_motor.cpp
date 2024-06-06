@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -65,6 +65,16 @@ void DoubleDjiMotor::initialize()
 int64_t DoubleDjiMotor::getEncoderUnwrapped() const { return motorOne.getEncoderUnwrapped(); }
 
 uint16_t DoubleDjiMotor::getEncoderWrapped() const { return motorOne.getEncoderWrapped(); }
+
+void DoubleDjiMotor::resetEncoderValue()
+{
+    motorOne.resetEncoderValue();
+    motorTwo.resetEncoderValue();
+}
+
+float DoubleDjiMotor::getPositionUnwrapped() const { return motorOne.getPositionUnwrapped(); }
+
+float DoubleDjiMotor::getPositionWrapped() const { return motorOne.getPositionWrapped(); }
 
 void DoubleDjiMotor::setDesiredOutput(int32_t desiredOutput)
 {
