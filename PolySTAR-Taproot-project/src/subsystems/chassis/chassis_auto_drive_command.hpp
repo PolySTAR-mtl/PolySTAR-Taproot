@@ -1,16 +1,13 @@
 #ifndef CHASSIS_AUTO_DRIVE_COMMAND_HPP_
 #define CHASSIS_AUTO_DRIVE_COMMAND_HPP_
 
-#include "tap/control/command.hpp"
-
-#include "chassis_subsystem.hpp"
-#include "control/drivers/drivers.hpp"
+#include "generic_auto_drive_command.hpp"
 
 namespace control
 {
 namespace chassis
 {
-class ChassisAutoDriveCommand : public tap::control::Command
+class ChassisAutoDriveCommand : public GenericAutoDriveCommand
 {
 public:
     /**
@@ -26,20 +23,10 @@ public:
 
     ChassisAutoDriveCommand &operator=(const ChassisAutoDriveCommand &other) = delete;
 
-    void initialize() override;
-
     const char *getName() const { return "chassis auto drive command"; }
 
     void execute() override;
 
-    void end(bool) override;
-
-    bool isFinished() const override;
-
-private:
-    ChassisSubsystem *const chassis;
-
-    src::Drivers *drivers;
 };  // ChassisAutoDriveCommand
 
 }  // namespace chassis

@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "feeder_subsystem.hpp"
+#include "feeder_position_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "tap/control/setpoint/commands/move_unjam_comprised_command.hpp"
 
@@ -14,7 +14,7 @@ namespace feeder
 class FeederMoveUnjamCommand : public tap::control::setpoint::MoveUnjamComprisedCommand
 {
 public:
-FeederMoveUnjamCommand(FeederSubsystem *const feeder, src::Drivers *drivers);
+FeederMoveUnjamCommand(FeederPositionSubsystem *const feeder, src::Drivers *drivers);
 
 private:
 

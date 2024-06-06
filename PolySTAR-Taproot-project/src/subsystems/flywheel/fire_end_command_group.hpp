@@ -6,7 +6,7 @@
 #include "subsystems/feeder/feeder_feed_command.hpp"
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
-#include "subsystems/feeder/feeder_subsystem.hpp"
+#include "subsystems/feeder/feeder_position_subsystem.hpp"
 
 namespace control
 {
@@ -20,7 +20,7 @@ public:
      * @param[in] feeder a pointer to the feeder to be passed in that this
      * Command will interact with.
      */
-    FireEndCommandGroup(flywheel::FlywheelSubsystem *const flywheel, feeder::FeederSubsystem *const feeder, src::Drivers *drivers);
+    FireEndCommandGroup(flywheel::FlywheelSubsystem *const flywheel, feeder::FeederPositionSubsystem *const feeder, src::Drivers *drivers);
 
     FireEndCommandGroup(const FireEndCommandGroup &other) = delete;
 

@@ -8,7 +8,7 @@ namespace control
 {
 FireCommandGroup::FireCommandGroup(
     flywheel::FlywheelSubsystem *const flywheel,
-    feeder::FeederSubsystem *const feeder,
+    feeder::FeederPositionSubsystem *const feeder,
     src::Drivers* drivers)
     : tap::control::ComprisedCommand(drivers),
       fireCommand(flywheel, drivers),

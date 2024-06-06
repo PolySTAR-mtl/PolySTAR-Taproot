@@ -48,22 +48,22 @@ void ChassisSubsystem::refresh() {
         int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
                               frontRightMotor.getShaftRPM(),
                               (int)frontRightDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Front left debug message
         nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
                               frontLeftMotor.getShaftRPM(),
                               (int)frontLeftDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back right debug message
         nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
                               backRightMotor.getShaftRPM(),
                               (int)backRightDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back left debug message
         nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
                               backLeftMotor.getShaftRPM(),
                               (int)backLeftDesiredRpm);
-        drivers->uart.write(Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
     }
 }
 

@@ -33,7 +33,6 @@
 #include "tap/architecture/periodic_timer.hpp"
 #include "tap/architecture/profiler.hpp"
 
-/* communication includes ---------------------------------------------------*/
 #include "control/drivers/drivers.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 
@@ -42,6 +41,7 @@
 
 /* control includes ---------------------------------------------------------*/
 #include "tap/architecture/clock.hpp"
+
 #include "control/robot_control.hpp"
 
 /* define timers here -------------------------------------------------------*/
@@ -98,6 +98,8 @@ int main()
     return 0;
 }
 
+
+
 static void initializeIo(src::Drivers *drivers)
 {
     drivers->analog.init();
@@ -107,13 +109,15 @@ static void initializeIo(src::Drivers *drivers)
     drivers->can.initialize();
     drivers->errorController.init();
     drivers->remote.initialize();
-    drivers->mpu6500.init();
+    drivers->mpu6500.init(0.5, 1, 0.3);
     drivers->refSerial.initialize();
     drivers->terminalSerial.initialize();
     drivers->schedulerTerminalHandler.init();
     drivers->djiMotorTerminalSerialHandler.init();
 
     drivers->uart.init<Uart::UartPort::Uart6, 230400>();
+    drivers->uart.init<Uart::UartPort::Uart8, 230400>();
+    
     drivers->cvHandler.initialize();
 }
 
@@ -129,4 +133,5 @@ static void updateIo(src::Drivers *drivers)
     drivers->mpu6500.read();
 
     drivers->cvHandler.updateSerial();
+    drivers->cvHandler.processGameStage();
 }

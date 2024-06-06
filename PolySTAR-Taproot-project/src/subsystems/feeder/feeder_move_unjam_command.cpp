@@ -9,7 +9,7 @@ namespace control
 namespace feeder
 {
 FeederMoveUnjamCommand::FeederMoveUnjamCommand(
-    FeederSubsystem *const feeder,
+    FeederPositionSubsystem *const feeder,
     src::Drivers *drivers)
     : tap::control::setpoint::MoveUnjamComprisedCommand(drivers, feeder, MOVE_DISPLACEMENT_TICK, MOVE_TIME_MS, 
                                                         PAUSE_AFTER_MOVE_TIME_MS, true, SETPOINT_POS_TOLERANCE_TICK, 
