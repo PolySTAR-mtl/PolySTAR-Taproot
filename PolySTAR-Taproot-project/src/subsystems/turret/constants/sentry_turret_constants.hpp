@@ -6,9 +6,9 @@
  */
 
 static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
-    0.25f, // kP
+    0.3f, // kP
     0.0f, // kI
-    0.0f, // kD
+    0.5f, // kD
     20.0f, // Max error sum
     60.0f, // Max output
     1.0f, // TQ Derivative Kalman
@@ -20,8 +20,8 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
-    150.0f, // kP
-    0.5f,  // kI
+    350.0f, // kP
+    0.8f,  // kI
     0.0f,  // kD
     5000.0f,  // Max error sum
     16000.0f, // Max output
@@ -36,7 +36,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
 static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
     0.1f, // kP
     0.0f, // kI
-    0.45f, // kD
+    0.6, // kD
     20.0f, // Max error sum
     60.0f, // Max output
     1.0f, // TQ Derivative Kalman
@@ -65,7 +65,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
 static constexpr int64_t YAW_NEUTRAL_POS = 2700;
-static constexpr int64_t PITCH_NEUTRAL_POS = 4370;
+static constexpr int64_t PITCH_NEUTRAL_POS = 4380;
 
 /**
  * Turret Pos PID: PID controllers for turret position (pitch and yaw). The PID parameters for the
@@ -104,7 +104,7 @@ static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f
  * Scale factor for converting joystick movement into position setpoint. In other words, right joystick sensitivity.
  */
 static constexpr float YAW_SCALE_FACTOR = 500.0f;
-static constexpr float PITCH_SCALE_FACTOR = 50.0f;
+static constexpr float PITCH_SCALE_FACTOR = 300.0f;
 
 /**
  * Inverted directions

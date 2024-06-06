@@ -28,8 +28,8 @@ void TurretSubsystem::refresh() {
 
     uint32_t currentTime = tap::arch::clock::getTimeMilliseconds();
 
-    // // Run controllers as fast as possible
-    // runPitchController(currentTime - prevControllerUpdate);
+    // Run controllers as fast as possible
+    runPitchController(currentTime - prevControllerUpdate);
     runYawController(currentTime - prevControllerUpdate);
     prevControllerUpdate = currentTime;
 
@@ -50,8 +50,8 @@ void TurretSubsystem::refresh() {
     // UART debug messages
     if (TURRET_DEBUG_MESSAGE && (currentTime - prevDebugUpdate > TURRET_DEBUG_MESSAGE_DELAY_MS)) {
         prevDebugUpdate = currentTime;
-        sendDebugInfo(true,false); // Position information
-        // sendTuningDebugInfo(true, false, velSetpoint, threshold); // Velocity information, used during tuning of the inner loop
+        sendDebugInfo(true,true); // Position information
+        // sendTuningDebugInfo(false, true, velSetpoint, threshold); // Velocity information, used during tuning of the inner loop
     }
 }
 
