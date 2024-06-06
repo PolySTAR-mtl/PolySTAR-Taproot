@@ -111,7 +111,7 @@ static constexpr float PITCH_SCALE_FACTOR = 300.0f;
  */
 
 static constexpr float YAW_IS_INVERTED = false;
-static constexpr float PITCH_IS_INVERTED = false;
+static constexpr float PITCH_IS_INVERTED = true;
 
 /**
  * Turret mouse aim scale factors: The mouse aim scales factor for the turret. This is used to scale the

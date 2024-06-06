@@ -91,9 +91,9 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /*-Ammo Booster-*/
-// HoldRepeatCommandMapping feedFeeder(drivers(), {&doubleFeederAutoFeedTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
+HoldRepeatCommandMapping feedFeeder(drivers(), {&doubleFeederAutoFeedTest}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP),true);
 /*-Flywheel-*/
-HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 /*-Turret-*/
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 /*-Chassis-*/
@@ -142,7 +142,7 @@ void startStandardCommands(src::Drivers *drivers)
 void registerStandardIoMappings(src::Drivers *drivers)
 {
     /*-Ammo Booster-*/
-    // drivers->commandMapper.addMap(&feedFeeder);
+    drivers->commandMapper.addMap(&feedFeeder);
     /*-Flywheel-*/
     // drivers->commandMapper.addMap(&startFlywheel);
     /*-Turret-*/
@@ -150,8 +150,8 @@ void registerStandardIoMappings(src::Drivers *drivers)
     // drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
-    drivers->commandMapper.addMap(&toggleChassisAuto);
-    // drivers->commandMapper.addMap(&toggleAutoTestCommands);
+    drivers->commandMapper.addMap(&toggleChassisDrive);
+    drivers->commandMapper.addMap(&toggleAutoTestCommands);
     // drivers->commandMapper.addMap(&toggleAutoCommands);
 }
 
