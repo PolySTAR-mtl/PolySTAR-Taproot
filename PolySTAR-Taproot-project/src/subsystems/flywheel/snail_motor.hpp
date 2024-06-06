@@ -9,26 +9,28 @@ namespace src
 namespace motor
 {
 /**
- * This class wraps around the Servo class to provide utilities for controlling a Robomaster Snail motor.
+ * This class provides functionality for snail motors using the C615 ESC
  */
 class SnailMotor
 {
 public:
     /**
-     * Initializes the Snail PWM and associates the motor with some PWM pin.
-     * THIS WILL ONLY WORK IF PWM IS SET TO 500Hz OR LESS (see snail esc datasheet)
+     * Constructs the snail motor object and associates the motor with some PWM pin.
      *
-     * @param[in] drivers Instance to the drivers class you would like to use.
-     * @param[in] pwmPin The pin to attach the Snail Motor class with.
+     * @param[in] drivers Instance to the drivers class.
+     * @param[in] pwmPin PWM pin connected to the C615 ESC. Valid pins are W, X, Y, and Z.
      */
     SnailMotor(
         tap::Drivers *drivers,
         tap::gpio::Pwm::Pin pwmPin);
 
+    /**
+     * Initializes timer frequency and sets the throttle to idle.
+     */
     void init();
 
     /**
-     * Sets the throttle value sent to the Snail ESC.
+     * Sets the throttle value sent to ESC.
      * 0-1, where 0 is idle and 1 is full throttle
      */
     void setThrottle(float throttle);
@@ -36,16 +38,20 @@ public:
 private:
     tap::Drivers *drivers;
 
-    /// The PWM pin that the servo is attached to.
+    /// The PWM pin that the motor is attached to. Valid pins are W, X, Y, and Z.
     tap::gpio::Pwm::Pin pwmPin;
 
-    // Duty cycle values for pulse widths
-    // Idle throttle 1ms -> 50% duty cycle at 500Hz
-    // Full throttle 2ms -> 100% duty cycle at 500Hz
-    const float THROTTLE_IDLE = 0.16;
-    const float THROTTLE_MAX = 0.88;
-    const float THROTTLE_RANGE = THROTTLE_MAX - THROTTLE_IDLE;
+    // Pulse widths in milliseconds
+    const float MIN_PULSE_MS = 1;
+    const float MAX_PULSE_MS = 2;
+    
+    // PWM frequency in Hz (Max 500Hz, see C615 datasheet)
+    // Must be set below 500Hz (2ms pulse at 500 Hz is 100% duty cycle, which the esc reads as a constant signal and causes error)
+    const uint32_t PWM_FREQUENCY = 400;
 
+    // Pulse widths converted to duty cycle
+    const float THROTTLE_IDLE = MIN_PULSE_MS*PWM_FREQUENCY*0.001f;
+    const float THROTTLE_RANGE = (MAX_PULSE_MS - MIN_PULSE_MS)*PWM_FREQUENCY*0.001f;
 
 };  // class SnailMotor
 
