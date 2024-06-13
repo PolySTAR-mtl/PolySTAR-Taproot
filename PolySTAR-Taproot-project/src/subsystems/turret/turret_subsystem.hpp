@@ -4,20 +4,20 @@
 #include "tap/control/subsystem.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "turret_constants.hpp"
-#include "algorithms/turret_pitch_controller.hpp"
-#include "algorithms/turret_yaw_controller.hpp"
 #include "control/drivers/drivers.hpp"
+#include "turret_constants.hpp"
+#include "algorithms/cascaded_pid.hpp"
 
-using turret::algorithms::TurretPitchController;
-using turret::algorithms::TurretYawController;
+using turret::algorithms::CascadedPid;
 
 namespace control
 {
 namespace turret
 {
+
 /**
- * A bare bones Subsystem for interacting with a 4 wheeled chassis.
+ * Subsytem class for the turret. Controls both turret motors and sends data to
+ * the computer vision system.
  */
 class TurretSubsystem : public tap::control::Subsystem
 {
@@ -31,11 +31,10 @@ public:
         : tap::control::Subsystem(drivers),
           yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, YAW_IS_INVERTED, "yaw motor"),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
-          yawController(YAW_PID_CONFIG, YAW_FF_CONFIG),
-          pitchController(PITCH_PID_CONFIG, PITCH_FF_CONFIG),
+          cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
+          cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
           yawDesiredPos(YAW_NEUTRAL_POS),
-          pitchDesiredPos(PITCH_NEUTRAL_POS),
-          prevCVUpdate(0)
+          pitchDesiredPos(PITCH_NEUTRAL_POS)
     {
     }
 
@@ -49,65 +48,57 @@ public:
 
     void refresh() override;
 
-    void setAbsoluteOutput(uint64_t yaw, uint64_t pitch);
+    // Position Setters
+    void setAbsoluteOutput(uint16_t yaw, uint16_t pitch);
     void setAbsoluteOutputDegrees(float yaw, float pitch);
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
-    void updateYawController(uint32_t dt);
-    void updatePitchController(uint32_t dt);
-
+    // Getters
     const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
-
     int64_t getYawNeutralPos() { return YAW_NEUTRAL_POS; }
     int64_t getPitchNeutralPos() { return PITCH_NEUTRAL_POS; }
-
     int64_t getYawUnwrapped() { return yawMotor.getEncoderUnwrapped(); }
     int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
     int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
-    inline void setRelativeControlFlag( bool relativeControlStatus ) { usingRelativeControl = relativeControlStatus; };
-    void sendCVUpdate();
-
-    float approximateCos(float angle);
 
 private:
-    src::Drivers *drivers;
+    // Controller Functions
+    void runYawController(uint32_t dt);
+    void runPitchController(uint32_t dt);
 
-    ///< Hardware constants, not specific to any particular turret.
+    // Debugging and Communication
+    void sendCVUpdate();
+    void sendDebugInfo(bool sendYaw, bool sendPitch);
+
+    // Methods used when tuning the inner loop of the cascaded PID controller
+    void yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
+    void pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
+    void sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold);
+
+    // Hardware constants
     static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
     static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
     static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
-
-    ///< Unit conversion constant from RPM to deg/ms
-    static constexpr float RPM_TO_DEGPERMS = 0.006;
-
-    ///< Motors.  Use these to interact with any dji style motors.
+    
+    // Hardware interfaces
+    src::Drivers *drivers;
     tap::motor::DjiMotor yawMotor;
     tap::motor::DjiMotor pitchMotor;
 
-    // Motor Controllers for position control (SmoothPID feedback and custom feedforward)
-    TurretYawController yawController;
-    TurretPitchController pitchController;
+    // Motor Controllers for position control
+    CascadedPid cascadedPitchController;
+    CascadedPid cascadedYawController;
 
-    ///< Any user input is translated into desired position for each motor.
+    // Position setpoints for turret, in encoder ticks
     float yawDesiredPos;
     float pitchDesiredPos;
 
-    // Previous relative input delta, used in feedforward controller
-    float lastYawDelta = 0;
-    float lastPitchDelta = 0;
-    bool usingRelativeControl = false;
-
-    uint32_t prevDebugTime;
+    // Time variables for fixed rate tasks
+    uint32_t prevDebugUpdate;
     uint32_t prevControllerUpdate;
-
-    // Scale factor for converting joystick movement into RPM setpoint. In other words, right joystick sensitivity.
-    static constexpr float YAW_SCALE_FACTOR = 55.0f;
-    static constexpr float PITCH_SCALE_FACTOR = 40.0f;
-
-    // Variables for managing UART messages sent to CV
     uint32_t prevCVUpdate;
 
 };  // class TurretSubsystem

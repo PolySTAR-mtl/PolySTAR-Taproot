@@ -17,9 +17,9 @@
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
-#include "subsystems/turret/turret_left_aim_command.hpp"
-#include "subsystems/turret/turret_right_aim_command.hpp"
 #include "subsystems/turret/turret_mouse_aim_command.hpp"
+#include "subsystems/turret/turret_test_bottomleft_command.hpp"
+#include "subsystems/turret/turret_test_topright_command.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/feeder_position_subsystem.hpp"
@@ -61,9 +61,9 @@ chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers()
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretLeftAimCommand turretLeftAim(&theTurret, drivers());
-turret::TurretRightAimCommand turretRightAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
+turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers()); // Used for tuning
+turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers()); // Used for tuning
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
@@ -84,8 +84,8 @@ ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive,&turre
 // ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 
 /*-Only used for calibration-*/
-// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -135,7 +135,7 @@ void initSubsystemCommands(src::Drivers *drivers)
     registerStandardIoMappings(drivers);
     char buffer[50];
     int nBytes = sprintf(buffer,"Initializing Standard\n");
-    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
+    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
 }
 
 }  // namespace control

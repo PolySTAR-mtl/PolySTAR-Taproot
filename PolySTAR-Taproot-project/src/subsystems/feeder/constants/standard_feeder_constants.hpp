@@ -45,7 +45,7 @@ static constexpr float UNJAM_CYCLES = 4; // TO BE DETERMINED
 static constexpr float UNJAM_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
 static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 100; // TO BE DETERMINED
 static constexpr float MOVE_TIME_MS = 125; // TO BE DETERMINED
-static constexpr float SETPOINT_POS_TOLERANCE_TICK = 1*DEGREE_TO_TICK; // TO BE DETERMINED
+static constexpr float SETPOINT_POS_TOLERANCE_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
 
 static constexpr float JAM_CHECKER_TOLERANCE_TICK = 5*DEGREE_TO_TICK;
 static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;

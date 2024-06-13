@@ -22,9 +22,7 @@ TurretMouseAimCommand::TurretMouseAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretMouseAimCommand::initialize() {
-    turret->setRelativeControlFlag(true);
-}
+void  TurretMouseAimCommand::initialize() {}
 
 void  TurretMouseAimCommand::execute() {
     float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
@@ -34,7 +32,6 @@ void  TurretMouseAimCommand::execute() {
 }
 
 void  TurretMouseAimCommand::end(bool) { 
-    turret->setRelativeControlFlag(false);
     turret->setAbsoluteOutput(YAW_NEUTRAL_POS,PITCH_NEUTRAL_POS);
 }
 
