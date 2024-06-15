@@ -19,8 +19,8 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
-    260.0f, // kP
-    0.8f,  // kI
+    120.0f, // kP
+    0.1f,  // kI
     0.0f,  // kD
     5000.0f,  // Max error sum
     16000.0f, // Max output
@@ -48,7 +48,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
 
 static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
     300.0f, // kP
-    0.0f,  // kI
+    0.8f,  // kI
     0.0f,  // kD
     5000.0f,  // Max error sum
     16000.0f, // Max output
@@ -63,7 +63,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr uint16_t YAW_NEUTRAL_POS = 4072;
+static constexpr uint16_t YAW_NEUTRAL_POS = 4075;
 static constexpr uint16_t PITCH_NEUTRAL_POS = 6515;
 
 /**

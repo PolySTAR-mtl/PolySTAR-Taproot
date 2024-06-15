@@ -147,8 +147,8 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
 
     if (sendYaw) {
         nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
-                                (int)(yawMotor.getEncoderWrapped() - YAW_NEUTRAL_POS),
-                                (int)(yawDesiredPos - YAW_NEUTRAL_POS));
+                                (int)(yawMotor.getEncoderWrapped()),
+                                (int)(yawDesiredPos ));+
         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
     }
 

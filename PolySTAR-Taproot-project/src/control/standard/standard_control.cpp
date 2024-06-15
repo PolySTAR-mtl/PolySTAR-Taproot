@@ -122,6 +122,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&toggleClientAiming);
     drivers->commandMapper.addMap(&startFlywheel);
     drivers->commandMapper.addMap(&mouseStartFlywheel);
+    
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);
 }
