@@ -84,14 +84,14 @@ static constexpr int64_t PITCH_NEUTRAL_POS = 4000;
  * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
  */
 static constexpr float YAW_RANGE_DEGREES = 90;
+// static constexpr float YAW_RANGE_DEGREES = 90;
 static constexpr float PITCH_RANGE_DEGREES = 20;
 
 /**
- * Range values in encoder ticks, where 0..8191 is a full revolution
+ * Range values in encoder ticks, where 0..8191 is a full revolution 
  */
-static constexpr uint16_t YAW_RANGE = (uint16_t)(YAW_RANGE_DEGREES * 8192.0f / 360.0f);
+static constexpr uint16_t YAW_RANGE = (uint16_t)(YAW_RANGE_DEGREES * 5600.0f / 360.0f);
 static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f / 360.0f);
-
 /**
  * Range values for YAW and PITCH. Motors are limited to range [NeutralPos - Range, NeutralPos + Range]
  * Value is in encoder ticks, where 8192 is a full revolution
