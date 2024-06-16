@@ -18,7 +18,7 @@ void  TurretAutoAimCommand::execute()
 {
     if (drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
     {
-        turret->setAbsoluteOutputDegrees(turret->getYawNeutralPos(), turret->getPitchNeutralPos());
+        turret->setAbsoluteOutput(turret->getYawNeutralPos(), turret->getPitchNeutralPos());
         return;
     }
     // Acquire setpoints received from CV over serial through CVHandler
