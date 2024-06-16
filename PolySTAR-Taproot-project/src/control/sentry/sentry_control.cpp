@@ -104,8 +104,8 @@ ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, Remo
 HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &doubleFeederAutoFeed}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 
 /*-Uncomment either one of these two-*/
-HoldCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim, &doubleFeederAutoFeedTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-// HoldCommandMappi ng toggleFeederInspection(drivers(), {&doubleFeederInspection}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim, &doubleFeederAutoFeedTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping toggleFeederInspection(drivers(), {&doubleFeederInspection}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 /*-Only used for calibration-*/
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP)); 
@@ -158,8 +158,8 @@ void registerStandardIoMappings(src::Drivers *drivers)
     drivers->commandMapper.addMap(&toggleChassisDrive);
 
     /*-Uncomment either one of these two-*/
-    drivers->commandMapper.addMap(&toggleAutoTestCommands);
-    // drivers->commandMapper.addMap(&toggleFeederInspection);
+    // drivers->commandMapper.addMap(&toggleAutoTestCommands);
+    drivers->commandMapper.addMap(&toggleFeederInspection);
 
     drivers->commandMapper.addMap(&toggleAutoCommands);
 }
