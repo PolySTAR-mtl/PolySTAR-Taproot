@@ -14,6 +14,10 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4;
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.25; // Desired Pulse width 1250 us
 #endif
 
+#ifdef TARGET_TEST_BENCH
+constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.5;
+#endif
+
 // Delay after start of flywheels before feeder start.
 constexpr static uint32_t FEEDER_DELAY_MS = 300;
 

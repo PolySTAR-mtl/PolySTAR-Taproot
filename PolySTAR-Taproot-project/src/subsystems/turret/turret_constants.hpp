@@ -14,6 +14,10 @@ using tap::communication::serial::Uart;
 #ifdef TARGET_SENTRY
 #include "constants/sentry_turret_constants.hpp"
 #endif
+
+#ifdef TARGET_TEST_BENCH
+#include "constants/test_bench_turret_constants.hpp"
+#endif
 /**
  * Right joystick dead zone size. If the absolute value returned by the stick is below
  * this value, it is considered zero.
