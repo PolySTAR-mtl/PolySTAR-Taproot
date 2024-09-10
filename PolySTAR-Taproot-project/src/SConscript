@@ -1,0 +1,45 @@
+# Copyright (c) 2022-2023 PolySTAR-Mtl
+#
+# This file is part of PolySTAR-Taproot-project.
+#
+# PolySTAR-Taproot-project is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# PolySTAR-Taproot-project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PolySTAR-Taproot-project.  If not, see <https://www.gnu.org/licenses/>.
+
+from os.path import abspath
+
+Import("env")
+Import("args")
+Import("sources")
+
+
+# Don't compile this stuff when testing
+IGNORED_FILES_WHILE_TESTING = ["main.cpp"]
+
+ignored_files = []
+ignored_dirs = []
+
+if args["TARGET_ENV"] == "tests":
+    ignored_files.extend(IGNORED_FILES_WHILE_TESTING)
+
+env_cpy = env.Clone()
+
+# Append on the global robot target build flag
+env_cpy.AppendUnique(CCFLAGS=["-D " + args["ROBOT_TYPE"]])
+
+ignored_files.append("main_src_not_compiled.cpp")
+rawSrcs = env_cpy.FindSourceFiles(".", ignorePaths=ignored_dirs, ignoreFiles=ignored_files)
+
+for source in rawSrcs:
+    sources.append(env_cpy.Object(source))
+
+Return('sources')
