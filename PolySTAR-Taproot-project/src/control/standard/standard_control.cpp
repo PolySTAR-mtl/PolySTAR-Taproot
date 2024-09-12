@@ -1,22 +1,29 @@
-#ifdef TARGET_STANDARD
-
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
-#include "tap/control/hold_repeat_command_mapping.hpp"
-#include "tap/control/toggle_command_mapping.hpp"
-#include "control/drivers/drivers_singleton.hpp"
+
 #include "control/drivers/drivers.hpp"
+#include "control/drivers/drivers_singleton.hpp"
 #include "control/safe_disconnect.hpp"
 
-// TODO: Subsystems includes
+// Chassis includes
+#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+#include "subsystems/chassis/chassis_drive_command.hpp"
+#include "subsystems/chassis/chassis_subsystem.hpp"
+
+// Turret includes
+#include "subsystems/turret/turret_manual_aim_command.hpp"
+#include "subsystems/turret/turret_subsystem.hpp"
+
+// Feeder includes
+#include "subsystems/feeder/feeder_feed_command.hpp"
+#include "subsystems/feeder/feeder_reverse_command.hpp"
+#include "subsystems/feeder/feeder_subsystem.hpp"
 
 using src::DoNotUse_getDrivers;
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
 using tap::control::CommandMapper;
 using tap::control::HoldCommandMapping;
-using tap::control::HoldRepeatCommandMapping;
-using tap::control::ToggleCommandMapping;
 using tap::control::RemoteMapState;
 
 /*
@@ -30,28 +37,72 @@ static src::driversFunc drivers = src::DoNotUse_getDrivers;
 namespace control
 {
 /* define subsystems --------------------------------------------------------*/
+chassis::ChassisSubsystem theChassis(drivers());
+turret::TurretSubsystem theTurret(drivers());
+// TODO: instantiate a FeederSubsystem
 
 /* define commands ----------------------------------------------------------*/
+chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
+chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
+feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
+// TODO: instantiate a FeederFeedCommand
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
+HoldCommandMapping feedFeeder(
+    drivers(),
+    {&feederForward},
+    RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping reverseFeeder(
+    drivers(),
+    {&feederReverse},
+    RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping debugTurret(
+    drivers(),
+    {&turretDebug},
+    RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 
 /* register subsystems here -------------------------------------------------*/
-void registerStandardSubsystems(src::Drivers *drivers) {}
+void registerStandardSubsystems(src::Drivers *drivers)
+{
+    drivers->commandScheduler.registerSubsystem(&theChassis);
+    drivers->commandScheduler.registerSubsystem(&theTurret);
+    // TODO: Register the FeederSubsystem in the command scheduler. The command scheduler's job, as
+    // the name infers is to schedule and manage commands incoming commands
+}
 
 /* initialize subsystems ----------------------------------------------------*/
-void initializeSubsystems() {}
+void initializeSubsystems()
+{
+    theChassis.initialize();
+    theTurret.initialize();
+    // TODO: Initialize the FeederSubsystem
+}
 
 /* set any default commands to subsystems here ------------------------------*/
-void setDefaultStandardCommands(src::Drivers *) {}
+void setDefaultStandardCommands(src::Drivers *)
+{
+    theChassis.setDefaultCommand(&chassisDrive);
+    theTurret.setDefaultCommand(&turretManualAim);
+    // TODO: Set the FeederFeedCommand as a default command here
+}
 
 /* add any starting commands to the scheduler here --------------------------*/
-void startStandardCommands(src::Drivers *drivers) {}
+void startStandardCommands(src::Drivers *drivers)
+{
+    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+}
 
 /* register io mappings here ------------------------------------------------*/
-void registerStandardIoMappings(src::Drivers *drivers) {} // should be empty
+void registerStandardIoMappings(src::Drivers *drivers)
+{
+    drivers->commandMapper.addMap(&feedFeeder);
+    drivers->commandMapper.addMap(&reverseFeeder);
+    drivers->commandMapper.addMap(&debugTurret);
+}
 
 void initSubsystemCommands(src::Drivers *drivers)
 {
@@ -61,11 +112,6 @@ void initSubsystemCommands(src::Drivers *drivers)
     setDefaultStandardCommands(drivers);
     startStandardCommands(drivers);
     registerStandardIoMappings(drivers);
-    char buffer[50];
-    int nBytes = sprintf(buffer,"Initializing Standard\n");
-    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart6,(uint8_t*) buffer, nBytes+1);
 }
 
 }  // namespace control
-
-#endif  // TARGET_STANDARD
