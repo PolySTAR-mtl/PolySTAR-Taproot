@@ -56,7 +56,11 @@ static void initializeIo(src::Drivers *drivers);
 // called as frequently.
 static void updateIo(src::Drivers *drivers);
 
+static void updateLedsMpu(src::Drivers *drivers);
+static void initializeLeds(src::Drivers *drivers);
+
 using tap::communication::serial::Uart;
+using namespace tap::gpio;
 
 int main()
 {
@@ -75,6 +79,8 @@ int main()
     initializeIo(drivers);
     control::initSubsystemCommands(drivers);
 
+    initializeLeds(drivers);
+
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
     // Blocking call, waits until Windows Simulator connects.
@@ -92,7 +98,52 @@ int main()
             PROFILE(drivers->profiler, drivers->commandScheduler.run, ());
             PROFILE(drivers->profiler, drivers->djiMotorTxHandler.encodeAndSendCanData, ());
             PROFILE(drivers->profiler, drivers->terminalSerial.update, ());
+
+            // Test with profiler
+            PROFILE(drivers->profiler, updateLedsMpu, (drivers));
         }
+
+        // yaw = drivers->mpu6500.getYaw();
+        // pitch = drivers->mpu6500.getPitch();
+        // roll = drivers->mpu6500.getRoll();
+
+        // if (yaw < 0) drivers->leds.set(Leds::LedPin::A, true);
+        // else if (yaw > 0) drivers->leds.set(Leds::LedPin::B, true);
+        // else if (pitch < 0) drivers->leds.set(Leds::LedPin::C, true);
+        // else if (pitch > 0) drivers->leds.set(Leds::LedPin::D, true);
+        // else if (roll < 0) drivers->leds.set(Leds::LedPin::E, true);
+        // else if (roll > 0) drivers->leds.set(Leds::LedPin::F, true);
+
+        // Alternate leds
+        // drivers->leds.set(Leds::LedPin::A, false);
+        // drivers->leds.set(Leds::LedPin::B, true);
+        // drivers->leds.set(Leds::LedPin::C, false);
+        // drivers->leds.set(Leds::LedPin::D, true);
+        // drivers->leds.set(Leds::LedPin::E, false);
+        // drivers->leds.set(Leds::LedPin::F, true);
+        // drivers->leds.set(Leds::LedPin::G, false);
+        // drivers->leds.set(Leds::LedPin::H, true);
+
+        // All off
+        // drivers->leds.set(Leds::LedPin::A, true);
+        // drivers->leds.set(Leds::LedPin::B, true);
+        // drivers->leds.set(Leds::LedPin::C, true);
+        // drivers->leds.set(Leds::LedPin::D, true);
+        // drivers->leds.set(Leds::LedPin::E, true);
+        // drivers->leds.set(Leds::LedPin::F, true);
+        // drivers->leds.set(Leds::LedPin::G, true);
+        // drivers->leds.set(Leds::LedPin::H, true);
+
+        // // All on
+        // drivers->leds.set(Leds::LedPin::A, false);
+        // drivers->leds.set(Leds::LedPin::B, false);
+        // drivers->leds.set(Leds::LedPin::C, false);
+        // drivers->leds.set(Leds::LedPin::D, false);
+        // drivers->leds.set(Leds::LedPin::E, false);
+        // drivers->leds.set(Leds::LedPin::F, false);
+        // drivers->leds.set(Leds::LedPin::G, false);
+        // drivers->leds.set(Leds::LedPin::H, false);
+
         modm::delay_us(10);
     }
     return 0;
@@ -119,6 +170,7 @@ static void initializeIo(src::Drivers *drivers)
     drivers->uart.init<Uart::UartPort::Uart8, 230400>();
     
     drivers->cvHandler.initialize();
+    // drivers->mpu6500.requestCalibration();
 }
 
 static void updateIo(src::Drivers *drivers)
@@ -134,4 +186,32 @@ static void updateIo(src::Drivers *drivers)
 
     drivers->cvHandler.updateSerial();
     drivers->cvHandler.processGameStage();
+}
+
+void updateLedsMpu(src::Drivers *drivers) 
+{
+    float yaw = drivers->mpu6500.getYaw();
+    float pitch = drivers->mpu6500.getPitch();
+    float roll = drivers->mpu6500.getRoll();
+
+    // Setting LedPin to false turns them on 
+    if (yaw < 0) drivers->leds.set(Leds::LedPin::A, false);
+    if (yaw > 80) drivers->leds.set(Leds::LedPin::B, false);
+    if (pitch < 0) drivers->leds.set(Leds::LedPin::C, false);
+    if (pitch > 0) drivers->leds.set(Leds::LedPin::D, false);
+    if (roll < 0) drivers->leds.set(Leds::LedPin::E, false);
+    if (roll > 0) drivers->leds.set(Leds::LedPin::F, false);
+}
+
+void initializeLeds(src::Drivers *drivers) 
+{
+    // Setting LedPin to true turns them off
+    drivers->leds.set(Leds::LedPin::A, true);
+    drivers->leds.set(Leds::LedPin::B, true);
+    drivers->leds.set(Leds::LedPin::C, true);
+    drivers->leds.set(Leds::LedPin::D, true);
+    drivers->leds.set(Leds::LedPin::E, true);
+    drivers->leds.set(Leds::LedPin::F, true);
+    drivers->leds.set(Leds::LedPin::G, true);
+    drivers->leds.set(Leds::LedPin::H, true);
 }
