@@ -6,7 +6,7 @@
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
 #include "fire_end_command_group.hpp"
-#include "subsystems/feeder/feeder_move_unjam_command.hpp"
+#include "subsystems/feeder/feeder_feed_command.hpp"
 #include "subsystems/feeder/feeder_subsystem.hpp"
 
 namespace control
@@ -41,7 +41,7 @@ private:
     // attributes needed to operate the group command 
     flywheel::FlywheelFireCommand fireCommand;
 
-    feeder::FeederMoveUnjamCommand feedCommand;
+    feeder::FeederFeedCommand feedCommand;
 
     src::Drivers *drivers;
 

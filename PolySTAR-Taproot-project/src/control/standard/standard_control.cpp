@@ -16,7 +16,6 @@
 
 // Feeder includes
 #include "subsystems/feeder/feeder_feed_command.hpp"
-#include "subsystems/feeder/feeder_reverse_command.hpp"
 #include "subsystems/feeder/feeder_subsystem.hpp"
 
 using src::DoNotUse_getDrivers;
@@ -45,8 +44,7 @@ turret::TurretSubsystem theTurret(drivers());
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-feeder::FeederReverseCommand feederReverse(&theFeeder, drivers());
-// TODO: instantiate a FeederFeedCommand
+// TODO: instantiate a FeederFeedCommand as feederForward
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -56,14 +54,6 @@ HoldCommandMapping feedFeeder(
     drivers(),
     {&feederForward},
     RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-HoldCommandMapping reverseFeeder(
-    drivers(),
-    {&feederReverse},
-    RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping debugTurret(
-    drivers(),
-    {&turretDebug},
-    RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers)
@@ -100,8 +90,6 @@ void startStandardCommands(src::Drivers *drivers)
 void registerStandardIoMappings(src::Drivers *drivers)
 {
     drivers->commandMapper.addMap(&feedFeeder);
-    drivers->commandMapper.addMap(&reverseFeeder);
-    drivers->commandMapper.addMap(&debugTurret);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
