@@ -4,19 +4,19 @@ Motors are essential to enable robot motion control. The motors we use are suppl
 
 GM6020: These large motors are used for turret movement. There are typically two in a single turret: one is for yaw and the other is for pitch.
 
-<img src="image-1.png" alt="GM6020" height="200"/>
+<img src="assets/image-1.png" alt="GM6020" height="200"/>
 
 M3508: These thinner motors are used for chassis movement. They control the robot’s wheels.
 
-<img src="image-2.png" alt="M3508" height="200"/>
+<img src="assets/image-2.png" alt="M3508" height="200"/>
 
 M2006: There is typically one of these motors located at the bottom of each feeder. It is concealed by a star-shaped-rotating part which dispenses bullets out of the feeder towards the flywheels.
 
-<img src="image-3.png" alt="M2006" height="200"/>
+<img src="assets/image-3.png" alt="M2006" height="200"/>
 
 Snails: These wheel-like motors are used for shooting. Their velocity sets the bullets’ speed. They’re part of the flywheel subsystem and are last to touch the bullets.
 
-<img src="image-4.png" alt="Snails" height="200"/>
+<img src="assets/image-4.png" alt="Snails" height="200"/>
 
 Note: *We use [yaw, pitch and roll](#yaw-pitch-and-roll) axes to portray a body’s rotation into a three-dimensional space. These terms are typically used in fields such as aircraft, watercraft and spacecraft.*
 
@@ -83,10 +83,37 @@ void FeederSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* 
 Note: drivers is a singleton that provides us with lots of useful objects without having the need to instantiate them ourselves.
 
 ## Yaw, Pitch and Roll
-![alt text](image.png)
+![alt text](assets/image.png)
 
 As depicted in the picture, these rotation axes resemble the x, y and z axes that make up a three-dimensional plane except they’re not fixed; instead, they are relative to the body. Here are some easy tips to remember, use hand gestures to assimilate:
 
 Yaw: Think of a silent handclap. 
 Roll: Easy. Imagine a dog rolling on its side or a door handle twisting.
 Pitch: Baseball: throw a ball.
+
+## How to program the Robomaster Board A
+You'll need a Robomaster Board A and an ST-Link (with cable)
+<img src="assets/image-5.png" width="40%" style="padding: 10"/> 
+<img src="assets/image-6.png" width="40%" style="padding: 10"/>
+
+### Connect the ST-Link to the Board A like this:
+<img src="assets/image-7.png" alt="GM6020" height="200"/>
+
+ Make sure the pins are correctly connected in the ST-Link
+
+| Board A | ST-Link |
+|:-------:|:-------:|
+| +       | 3.3V    |
+| G       | GND     |
+| SWCLK   | SWCLK   |
+| SIDIO   | SWDIO   |
+
+You can now program the Board A ヾ(≧▽≦*)o
+
+### Programming Board A
+If you're using vs code, make sure you're in the folder parent to `PolySTAR-Taproot-project`.
+Then open the Command Palette (Ctrl + Shift + P) and select "Tasks: Run Task".
+Select the right task depending on what robot you want to program.
+*Note: Program - Release and .Program Standard are the same*
+
+That's it! You have programmed the Board A! ᕦ(ò_óˇ)ᕤ
