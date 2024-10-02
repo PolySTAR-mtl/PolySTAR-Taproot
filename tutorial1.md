@@ -82,6 +82,56 @@ void FeederSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* 
 
 Note: drivers is a singleton that provides us with lots of useful objects without having the need to instantiate them ourselves.
 
+## Part 2: Testing the Motor Spin Command in Hardware
+Now that the programming is done, hop on the test bench and let's plug some cables. Here is a list of the required materials.
+
+[insert big image of all required materials]
+
+| Component | Image |
+|:-------:|:-------:|
+| Board A       | <img src="assets/image-5.png" width="300"/>     |
+| Center Board 2 (Board V2)       |<img src="assets/image-8.png" width="300"/>    |
+| Center Board       | <img src="assets/image-9.png" width="300"/> |
+| Battery Rack   | <img src="assets/image-10.png" width="300"/>   |
+| Power Cables   | <img src="assets/image-14.png" width="200"/>   |
+| CAN Cables   |  <img src="assets/image-13.png" width="200"/>  |
+| ST-Link   | <img src="assets/image-6.png" width="300"/>   |
+| Feeder ESC (C610)   | <img src="assets/image-11.png" width="300"/>   |
+
+There are 2 key types of cables: CAN and power cables. CAN cables are used to transmit data and spread commands across all subsystems. 
+
+The board A contains an embedded processor, which serves as the processing brain of the robot. 
+
+1. Ensure the battery rack is secured onto the battery and connect its power cable to a Center Board.
+2. Now, connect a power cable from the Center Board to the Board A. Refer to the image below.
+
+<img src="assets/image-15.png" width="300"/>
+
+3. Connect a power cable from the Center Board to the Feeder ESC (which has to be connected to the feeder motor).
+4. Connect a CAN cable from the Center Board to the Board A.
+
+*Note: Cable management is crucial in a robot due to the numerous cables involved. Thus, poor cable management can make it difficult to locate defective cables. As a means to keep everything organized and to set some guidelines on cable management, we require that CAN and power cables coming from the same source be routed closely together and closer to the source when possible.This improves the experience when working with a robot’s circuit designed by a colleague and prevents entangled cables.*
+
+5. Connect a CAN cable from the Board V2 to the Feeder ESC.
+6. Inspect the circuit. The key to proper functioning is ensuring that power and data are distributed to all necessary subsystems and motors.
+7. Now, connect your PC to board A using the ST-Link (Refer to the [programming the board A section](#how-to-program-the-robomaster-board-a)). Ensure the battery is turned off to prevent damage to your PC port.
+8. In VSCode, use Ctrl+Shift+P. Select “Tasks:Run Tasks” => “Program - Release”. The Task should run in a terminal and successfully complete.
+*Make sure VSCode is opened in the parent folder of `PolySTAR-Taproot-project`*
+9. Disconnect the ST-Link from your PC.
+10. Double-press the round button on the battery, holding the button down on the second press to turn the battery on. Use the switch to power the circuit. Here’s a tip: Pressing the button once will display the remaining power of the battery.
+11. The motor may not spin if its ID is not correctly set. Each motor in a robot has a unique identifier ranging from 1 to 8. You can find the feeder motor ID value in the feeder_subsystem.hpp file. To set the ID on the motor, you can see the [Feeder ESC documentation](https://drive.google.com/file/d/1pCrj0jPPjUYpcDPXx7F_7sFX1r0z-Dlv/view?usp=sharing) at page 12 (Set key operation)  
+12. The motor should start spinning. Excellent! Next, let’s map this command to the remote control. Start by turning the battery off. 
+13. To use the remote, we must ensure that the `FeederFeedCommand` stops the motor when the command terminates. In the `FeederFeedCommand::end` method of the `FeederFeedCommand.cpp` file, set the motor’s output to 0 RPM to stop it from spinning.
+14. Since the command is now mapped and not default, remove the return statement in the `FeederFeedCommand::isFinished()`.
+15. In the `StandardControl.cpp` file, remove the `FeederFeedCommand` from the `setDefaultStandardCommands` function.
+16. Scroll up and define a `HoldCommandMapping` for the `FeederFeedCommand`. Map this command to the right switch so that the command is activated when the switch is in the 'up' position.
+17. Add the command mapping to the `registerStandardIoMappings` function. Reload the code on the Board A and power up the system (refer to steps 7-10). 
+18. Connect the remote control receiver to the Board A. Ensure the brown connector is linked to the “ground”. Refer to the image bellow
+
+<img src="assets/image-12.png" width="400"/>
+
+19. Turn on the remote control and set the right switch to the 'up' position. The motor should now spin. Congratulations! Now, you can officially control motors!
+
 ## Yaw, Pitch and Roll
 ![alt text](assets/image.png)
 
@@ -93,8 +143,6 @@ Pitch: Baseball: throw a ball.
 
 ## How to program the Robomaster Board A
 You'll need a Robomaster Board A and an ST-Link (with cable)
-<img src="assets/image-5.png" width="40%" style="padding: 10"/> 
-<img src="assets/image-6.png" width="40%" style="padding: 10"/>
 
 ### Connect the ST-Link to the Board A like this:
 <img src="assets/image-7.png" alt="GM6020" height="200"/>

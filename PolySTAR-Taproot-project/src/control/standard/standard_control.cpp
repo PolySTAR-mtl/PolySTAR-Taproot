@@ -50,10 +50,9 @@ turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
-HoldCommandMapping feedFeeder(
-    drivers(),
-    {&feederForward},
-    RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+// TODO (PART 2 ONLY): define a HoldCommandMapping for the FeederFeedCommand
+// (Tip: look at the HoldCommandMapping constructor arguments and at the 
+//       RemoteMapState constructor too in the documentation)
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers)
@@ -89,7 +88,8 @@ void startStandardCommands(src::Drivers *drivers)
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers)
 {
-    drivers->commandMapper.addMap(&feedFeeder);
+    // TODO (PART 2 ONLY): Add the command mapping to the commandMapper 
+    // (Tip: look at the commandMapper methods)
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
