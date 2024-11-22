@@ -39,7 +39,7 @@ protected:
 
     src::Drivers *drivers;
 
-    const float MRAD_TO_DEGREES = 0.0572958;
+    static constexpr float MRAD_TO_DEGREES = 0.0572958;
 
 };  // GenericAutoAimCommand
 
@@ -48,4 +48,3 @@ protected:
 }  // namespace control
 
 #endif  // GENERIC_AUTO_AIM_COMMAND_HPP_
-

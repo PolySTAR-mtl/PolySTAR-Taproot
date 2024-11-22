@@ -3,7 +3,7 @@
 #include "tap/communication/serial/uart.hpp"
 using tap::communication::serial::Uart;
 
-#ifdef TARGET_ICRA
+#if defined(TARGET_ICRA) || defined(TARGET_CV_TESTBENCH)
 #include "constants/icra_turret_constants.hpp"
 #endif
 
@@ -11,7 +11,7 @@ using tap::communication::serial::Uart;
 #include "constants/standard_turret_constants.hpp"
 #endif
 
-#if defined(TARGET_SENTRY) || defined(TARGET_CV_TESTBENCH)
+#ifdef TARGET_SENTRY
 #include "constants/sentry_turret_constants.hpp"
 #endif
 /**

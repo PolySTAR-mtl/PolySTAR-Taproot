@@ -75,9 +75,9 @@ public:
     bool shouldShoot() const { return shootOrderData.shootOrder != 0; }
 
 private:
-    Rx::TurretData turretData;
-    Rx::MovementData movementData;
-    Rx::ShootOrderData shootOrderData;
+    Rx::TurretData turretData = {0, 0};
+    Rx::MovementData movementData = {0, 0, 0};
+    Rx::ShootOrderData shootOrderData = {0};
     RefSerialData::Rx::GameStage lastGameStage = RefSerialData::Rx::GameStage::END_GAME;
     /**
      * Decodes CV serial message containing turret yaw and pitch setpoints
