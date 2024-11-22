@@ -55,6 +55,19 @@
                 "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
             }
         },
+        {
+            "label": ".Build CV Testbench",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons build robot=TARGET_CV_TESTBENCH",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
                 {
             "label": ".Program ICRA",
             "type": "shell",

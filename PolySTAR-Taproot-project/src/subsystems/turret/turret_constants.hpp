@@ -11,7 +11,7 @@ using tap::communication::serial::Uart;
 #include "constants/standard_turret_constants.hpp"
 #endif
 
-#ifdef TARGET_SENTRY
+#if defined(TARGET_SENTRY) || defined(TARGET_CV_TESTBENCH)
 #include "constants/sentry_turret_constants.hpp"
 #endif
 /**

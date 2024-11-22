@@ -1,7 +1,7 @@
 #ifndef FEEDER_CONSTANTS_HPP_
 #define FEEDER_CONSTANTS_HPP_
 
-#ifdef TARGET_SENTRY
+#if defined(TARGET_SENTRY) || defined(TARGET_CV_TESTBENCH)
 #include "constants/sentry_feeder_constants.hpp"
 #endif
 

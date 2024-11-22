@@ -10,7 +10,7 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.8;
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4;
 #endif
 
-#ifdef TARGET_SENTRY
+#if defined(TARGET_SENTRY) || defined(TARGET_CV_TESTBENCH)
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.25; // Desired Pulse width 1250 us
 #endif
 
