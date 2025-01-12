@@ -42,11 +42,11 @@ void ChassisKeyboardDriveCommand::execute()
 
     // should call the setTargetOutput method in the chassis subsystem
 
-    chassis->setTargetOutput(x * multiplier, y * multiplier, r * multiplier);
+    chassis->setTargetOutput(x * multiplier, y * multiplier);
     
 }
 
-void ChassisKeyboardDriveCommand::end(bool) { chassis->setTargetOutput(0, 0, 0); }
+void ChassisKeyboardDriveCommand::end(bool) { chassis->setTargetOutput(0, 0); }
 
 bool ChassisKeyboardDriveCommand::isFinished() const { return false; }
 }  // namespace chassis

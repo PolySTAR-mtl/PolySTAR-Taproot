@@ -32,11 +32,11 @@ void  GenericAutoDriveCommand::execute()
     float x = movementData.xSetpoint*VX_TO_X;
     float y = movementData.ySetpoint*VY_TO_Y;
     float r = movementData.rSetpoint*W_TO_R;
-    chassis->setTargetOutput(x,y,r);
+    chassis->setTargetOutput(x,y);
 }
 
 void  GenericAutoDriveCommand::end(bool) {
-    chassis->setTargetOutput(0,0,0);
+    chassis->setTargetOutput(0,0);
 }
 
 bool  GenericAutoDriveCommand::isFinished() const { return false; }
