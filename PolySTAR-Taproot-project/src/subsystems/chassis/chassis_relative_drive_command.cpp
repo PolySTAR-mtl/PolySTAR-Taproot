@@ -15,9 +15,11 @@ namespace chassis
 {
 ChassisRelativeDriveCommand::ChassisRelativeDriveCommand(
     ChassisSubsystem *const chassis,
-    src::Drivers *drivers)
+    src::Drivers *drivers,
+    tap::motor::DjiMotor *yawMotor)
     : chassis(chassis),
-      drivers(drivers)
+      drivers(drivers),
+      yawMotor(yawMotor)
 {
     if (chassis == nullptr)
     {
@@ -48,8 +50,7 @@ void  ChassisRelativeDriveCommand::execute()
     float alpha = atan2(yInput, xInput);
 
     // calculer l'angle theta (est angle entre deux référentiels tourelle et chassis)
-    const RefSerialData::Rx::RobotData robotData = this->drivers->refSerial.getRobotData();
-    uint16_t delta = robotData.turret.yaw - YAW_NEUTRAL_POS;
+    uint16_t delta = yawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS;
     float theta = tap::motor::DjiMotor::encoderToDegrees<uint16_t>(delta);
 
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
@@ -64,7 +65,7 @@ if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > 1000) {
     prevDebugTime = tap::arch::clock::getTimeMilliseconds();
     char buffer[500];
 
-    int nBytes = sprintf(buffer, "yaw: %i\n", (int)robotData.turret.yaw);
+    int nBytes = sprintf(buffer, "yaw: %i\n", (int)yawMotor->getEncoderWrapped());
 
     drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
 

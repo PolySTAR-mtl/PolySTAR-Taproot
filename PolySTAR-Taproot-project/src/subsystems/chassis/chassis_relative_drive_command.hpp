@@ -8,9 +8,6 @@
 
 namespace control
 {
-namespace turret {
-    class TurretSubsystem;
-}
 namespace chassis
 {
 class ChassisRelativeDriveCommand : public tap::control::Command
@@ -23,7 +20,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisRelativeDriveCommand(ChassisSubsystem *const chassis, src::Drivers *drivers);
+    ChassisRelativeDriveCommand(ChassisSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *yawMotor);
 
     ChassisRelativeDriveCommand(const ChassisRelativeDriveCommand &other) = delete;
 
@@ -40,6 +37,8 @@ public:
     bool isFinished() const override;
 
 private:
+    tap::motor::DjiMotor *yawMotor;
+
     uint32_t prevDebugTime;
 
     ChassisSubsystem *const chassis;

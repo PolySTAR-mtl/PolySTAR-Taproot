@@ -16,7 +16,7 @@ namespace turret
 {
 void TurretSubsystem::initialize()
 {
-    yawMotor.initialize();
+    yawMotor->initialize();
     pitchMotor.initialize();
 
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
@@ -59,18 +59,18 @@ void TurretSubsystem::refresh() {
     Run yaw controller and update motor output.
 */
 void TurretSubsystem::runYawController(uint32_t dt) {
-    float error = yawDesiredPos - yawMotor.getEncoderWrapped();
+    float error = yawDesiredPos - yawMotor->getEncoderWrapped();
     if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
         // If error is greater than 180deg then the shortest path to setpoint crosses zero
         // So we add +/- 360deg to error to get the correct direction
         // Avoids turret whipping around when position crosses zero
         error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
     }
-    int16_t currentRPM = yawMotor.getShaftRPM();
+    int16_t currentRPM = yawMotor->getShaftRPM();
 
     cascadedYawController.update(error, currentRPM, dt);
 
-    yawMotor.setDesiredOutput(cascadedYawController.getOutput());
+    yawMotor->setDesiredOutput(cascadedYawController.getOutput());
 }
 
 /*
@@ -99,7 +99,7 @@ void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch)
 */
 void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch) 
 {
-    setAbsoluteOutput(YAW_NEUTRAL_POS + yawMotor.degreesToEncoder<int64_t>(yaw),
+    setAbsoluteOutput(YAW_NEUTRAL_POS + yawMotor->degreesToEncoder<int64_t>(yaw),
                       PITCH_NEUTRAL_POS + pitchMotor.degreesToEncoder<int64_t>(pitch));
 }
 
@@ -108,7 +108,7 @@ void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch)
 */
 void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta) 
 {
-    uint16_t currentYaw = yawMotor.getEncoderWrapped();
+    uint16_t currentYaw = yawMotor->getEncoderWrapped();
     uint16_t currentPitch = pitchMotor.getEncoderWrapped();
 
     uint16_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
@@ -127,7 +127,7 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
 void TurretSubsystem::sendCVUpdate() {
 
     // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
-    float currentBodyYawDeg = yawMotor.encoderToDegrees<uint16_t>(yawMotor.getEncoderUnwrapped()-YAW_NEUTRAL_POS);
+    float currentBodyYawDeg = yawMotor->encoderToDegrees<uint16_t>(yawMotor->getEncoderUnwrapped()-YAW_NEUTRAL_POS);
     float currentBodyPitchDeg = pitchMotor.encoderToDegrees<uint16_t>(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
 
     src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage;
@@ -147,7 +147,7 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
 
     if (sendYaw) {
         nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
-                                (int)(yawMotor.getEncoderWrapped() - YAW_NEUTRAL_POS),
+                                (int)(yawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS),
                                 (int)(yawDesiredPos - YAW_NEUTRAL_POS));
         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
     }
@@ -169,13 +169,13 @@ void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float ve
     int nBytes;
 
     if (sendYaw) {
-        float error = yawDesiredPos - yawMotor.getEncoderWrapped();
+        float error = yawDesiredPos - yawMotor->getEncoderWrapped();
         if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
             error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
         }
         float yawDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
         nBytes = sprintf (buffer, "Yaw RPM: %i, Setpoint: %i\n",
-                                (int)(yawMotor.getShaftRPM()),
+                                (int)(yawMotor->getShaftRPM()),
                                 (int)(yawDesiredVel));
         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
     }
@@ -194,15 +194,15 @@ void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float ve
     Run yaw inner loop. Used when tuning.
 */
 void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
-    int64_t error = yawDesiredPos - yawMotor.getEncoderWrapped();
+    int64_t error = yawDesiredPos - yawMotor->getEncoderWrapped();
     if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
         error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
     }
-    int16_t currentRPM = yawMotor.getShaftRPM();
+    int16_t currentRPM = yawMotor->getShaftRPM();
 
     cascadedYawController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
-    yawMotor.setDesiredOutput(cascadedYawController.getOutput());
+    yawMotor->setDesiredOutput(cascadedYawController.getOutput());
 }
 
 /*
