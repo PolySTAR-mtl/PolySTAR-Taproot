@@ -64,6 +64,12 @@ void ChassisSubsystem::refresh() {
                               backLeftMotor.getShaftRPM(),
                               (int)backLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+        //rotation angle debug message
+        nBytes = sprintf (buffer, "RO-AGL: %f, SETPOINT: %i\n",
+                              rotationAngle,
+                              (int)0);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+
     }
 }
 

@@ -79,6 +79,9 @@ public:
     const tap::motor::DjiMotor &getBackLeftMotor() const { return backLeftMotor; }
     const tap::motor::DjiMotor &getBackRightMotor() const { return backRightMotor; }
 
+    float getRotationAngle(){ return rotationAngle;}
+    void setRotationAnfle(float newRotationAngle){ rotationAngle = newRotationAngle;}
+
 private:
     src::Drivers *drivers;
 
@@ -139,6 +142,9 @@ private:
     // Conversions for CV Messages
     const int16_t M_TO_MM = 1000;
     const float DEG_TO_MILLIRAD = 17.453293;
+
+    //variable used for spin2win debugging
+    float rotationAngle = 0.0f;
 
 };  // class ChassisSubsystem
 

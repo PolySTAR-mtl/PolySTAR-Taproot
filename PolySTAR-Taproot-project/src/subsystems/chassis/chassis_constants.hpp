@@ -35,11 +35,9 @@ static constexpr float CHASSIS_DEAD_ZONE = 0.05;
 static constexpr bool IS_Y_INVERTED = true;
 
 /*
- *   Enable UART debug messages for chassis
+ *   chassis rotation speed for spin to win feature
  */
-static constexpr bool CHASSIS_DEBUG_MESSAGE = false;
-static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
-
+static constexpr bool ROTATION_SPEED_SPIN2WIN = 0.5;
 
 /**
  * Interval for sending messages over UART to the Computer Vision computer
@@ -57,3 +55,9 @@ static constexpr uint32_t CHASSIS_CV_UPDATE_PERIOD = 10;
 static constexpr float VX_TO_X = 0.5e-3; // 1m/s = 0.5 on chassis x
 static constexpr float VY_TO_Y = 0.5e-3; // 1m/s = 0.5 on chassis y
 static constexpr float W_TO_R = 0.07955; // 1rps = 0.5 on chassis r
+
+/*
+ *   Enable UART debug messages for chassis
+ */
+static constexpr bool CHASSIS_DEBUG_MESSAGE = false;
+static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
