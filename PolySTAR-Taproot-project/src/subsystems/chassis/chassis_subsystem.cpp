@@ -66,7 +66,7 @@ void ChassisSubsystem::refresh() {
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         //rotation angle debug message
         nBytes = sprintf (buffer, "RO-AGL: %f, SETPOINT: %i\n",
-                              rotationAngle,
+                              (double)rotationAngle,
                               (int)0);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
 
