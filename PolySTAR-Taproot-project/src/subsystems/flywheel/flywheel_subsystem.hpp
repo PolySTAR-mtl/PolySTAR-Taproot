@@ -6,6 +6,8 @@
 #include "tap/util_macros.hpp"
 #include "flywheel_constants.hpp"
 
+#include <deque>
+
 namespace control
 {
 namespace flywheel
@@ -58,6 +60,12 @@ private:
     float currentThrottle;
 
     float firing;
+
+    std::deque<float> bulletSpeedBuf;
+    std::deque<uint8_t> firingFreqBuf;
+
+    uint32_t prevDebugTime;
+    uint32_t prevMeasureTime;
 };  // class FlywheelSubsystem
 
 }  // namespace flywheel

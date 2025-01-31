@@ -17,4 +17,9 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.25; // Desired Pulse width 
 // Delay after start of flywheels before feeder start.
 constexpr static uint32_t FEEDER_DELAY_MS = 300;
 
+// Ballistic constants
+constexpr static int N_MEASURES = 15; // Buffers size
+constexpr static uint32_t BALLISTIC_DEBUG_DELAY_MS = 100;
+constexpr static uint32_t BALLISTIC_MEASURE_DELAY_MS = 30;
+
 #endif
