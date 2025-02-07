@@ -6,6 +6,7 @@
 #include "tap/errors/create_errors.hpp"
 
 #include "control/control_interface.hpp"
+#include <numbers>
 
 using tap::communication::serial::RefSerialData;
 
@@ -32,52 +33,19 @@ void  ChassisRelativeDriveCommand::initialize() {}
 
 void  ChassisRelativeDriveCommand::execute()
 {
-    // float rInput = drivers->controlInterface.getChassisRInput();
-
-    // questions : 
-    // enlever le r ? oui, car on bouge la tourelle, pas besoin de faire tourner les roues qui tournent déjà
-    // comment obtenir la position initiale de la tourelle
-    // calculer le d ? car le vecteur créé par xInput et yInput est pas nécessairement normalisé (pas égale à 1)
-    // ou bien normaliser le vecteur ?
-
-    // enlever le r
-
-    // trouver alpha (angle du vecteur composé de x et y -> le vecteur de la manette)
-
     float xInput = drivers->controlInterface.getChassisXInput();
     float yInput = drivers->controlInterface.getChassisYInput();
 
-    float alpha = atan2(yInput, xInput);
+    // Chassis joystick orientation in radians
+    float chassisRad = atan2(yInput, xInput);
 
-    // calculer l'angle theta (est angle entre deux référentiels tourelle et chassis)
-    uint16_t delta = yawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS;
-    float theta = tap::motor::DjiMotor::encoderToDegrees<uint16_t>(delta);
+    // Turret yaw orientation 
+    int64_t yawDelta = yawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS;
+    float yawDeltaRad = tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi / 180;
 
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
-    // x = d * cos(alpha + theta)
-    float x = d * cos(alpha + theta);
-    // y = d * sin(alpha + theta)
-    float y = d * sin(alpha + theta);
-
-    // Debug
-
-if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > 1000) {
-    prevDebugTime = tap::arch::clock::getTimeMilliseconds();
-    char buffer[500];
-
-    int nBytes = sprintf(buffer, "yaw: %i\n", (int)yawMotor->getEncoderWrapped());
-
-    drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-
-    // int nBytes = sprintf(buffer, "y input: %s, y traite: %s\n", std::to_string(yInput).c_str(), std::to_string(y).c_str());
-
-    // drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-
-    // nBytes = sprintf(buffer, "x input: %s, x traite: %s\n", std::to_string(xInput).c_str(), std::to_string(x).c_str());
-
-    // drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-}
-    
+    float x = d * cos(chassisRad + yawDeltaRad);
+    float y = d * sin(chassisRad + yawDeltaRad);
     
     chassis->setTargetOutput(
         fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
