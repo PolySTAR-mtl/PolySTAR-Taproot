@@ -24,6 +24,7 @@ public:
     FlywheelSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           snailMotor(drivers, FLYWHEEL_PWM_PIN),
+          newMotor(drivers, NEW_MOTOR_ID, CAN_BUS_MOTORS, NEW_MOTOR_IS_INVERTED, "flywheel new motor"),
           currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
           firing(false)
     {
@@ -52,8 +53,12 @@ public:
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
     static constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
+    static constexpr tap::motor::MotorId NEW_MOTOR_ID = tap::motor::MOTOR5;
+    static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
     src::motor::SnailMotor snailMotor;
+
+    tap::motor::DjiMotor newMotor;
 
     float currentThrottle;
 

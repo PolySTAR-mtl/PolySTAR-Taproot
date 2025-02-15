@@ -17,4 +17,6 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.25; // Desired Pulse width 
 // Delay after start of flywheels before feeder start.
 constexpr static uint32_t FEEDER_DELAY_MS = 300;
 
+static constexpr float NEW_MOTOR_IS_INVERTED = false;
+
 #endif
