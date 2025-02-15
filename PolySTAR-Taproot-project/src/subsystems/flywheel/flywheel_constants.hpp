@@ -19,4 +19,9 @@ constexpr static uint32_t FEEDER_DELAY_MS = 300;
 
 static constexpr float NEW_MOTOR_IS_INVERTED = false;
 
+static constexpr float NEW_MOTOR_PID_KP = 0.0f;
+static constexpr float NEW_MOTOR_PID_KI = 0.0f;
+static constexpr float NEW_MOTOR_PID_KD = 0.0f;
+static constexpr float NEW_MOTOR_PID_MAX_ERROR_SUM = 0.0f;
+static constexpr float NEW_MOTOR_PID_MAX_OUTPUT = 0.0f;
 #endif

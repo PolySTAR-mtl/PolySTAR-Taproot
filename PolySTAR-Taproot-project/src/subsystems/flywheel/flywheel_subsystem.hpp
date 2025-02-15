@@ -25,6 +25,7 @@ public:
         : tap::control::Subsystem(drivers),
           snailMotor(drivers, FLYWHEEL_PWM_PIN),
           newMotor(drivers, NEW_MOTOR_ID, CAN_BUS_MOTORS, NEW_MOTOR_IS_INVERTED, "flywheel new motor"),
+          newMotorPid(NEW_MOTOR_PID_KP, NEW_MOTOR_PID_KI, NEW_MOTOR_PID_KD, NEW_MOTOR_PID_MAX_ERROR_SUM, NEW_MOTOR_PID_MAX_OUTPUT),
           currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
           firing(false)
     {
@@ -50,6 +51,9 @@ public:
 
     const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
 
+    void  updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM);
+    void  setDesiredOutput(float rpm){ newMotorDesiredRpm = rpm; };
+
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
     static constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
@@ -59,6 +63,10 @@ private:
     src::motor::SnailMotor snailMotor;
 
     tap::motor::DjiMotor newMotor;
+
+    modm::Pid<float> newMotorPid;
+
+    float newMotorDesiredRpm;
 
     float currentThrottle;
 

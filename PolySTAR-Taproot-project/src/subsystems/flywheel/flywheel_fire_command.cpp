@@ -31,6 +31,7 @@ void FlywheelFireCommand::execute() {}
 void FlywheelFireCommand::end(bool)
 {
     flywheel->stopFiring();
+    flywheel->setDesiredOutput(0);
 }
 
 bool FlywheelFireCommand::isFinished() const
