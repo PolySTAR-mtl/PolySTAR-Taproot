@@ -26,7 +26,10 @@ public:
     FlywheelSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           snailMotor(drivers, FLYWHEEL_PWM_PIN),
+          leftMotor(drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"),
+          rightMotor(drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"),
           currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
+          currentDjiSpeed(MOTOR_LOW_SPEED), // TODO: change speed here
           firing(false)
     {
     }
@@ -57,7 +60,12 @@ private:
 
     src::motor::SnailMotor snailMotor;
 
+    ///< Motors.  Use these to interact with any dji style motors.
+    tap::motor::DjiMotor leftMotor;
+    tap::motor::DjiMotor rightMotor;
+
     float currentThrottle;
+    float currentDjiSpeed;
 
     float firing;
 

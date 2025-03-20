@@ -16,10 +16,12 @@ namespace flywheel
 void FlywheelSubsystem::initialize()
 {
     snailMotor.init();
+    leftMotor.initialize();
+    rightMotor.initialize();
 }
 
 void FlywheelSubsystem::refresh() {
-    if (tap::arch::clock::getTimeMilliseconds() - prevMeasureTime < BALLISTIC_MEASURE_DELAY_MS) {
+    /*if (tap::arch::clock::getTimeMilliseconds() - prevMeasureTime < BALLISTIC_MEASURE_DELAY_MS) {
         return;
     }
     prevMeasureTime = tap::arch::clock::getTimeMilliseconds();
@@ -52,15 +54,22 @@ void FlywheelSubsystem::refresh() {
                                 (int)bulletSpeedMean,
                                 (int)firingFreqMean);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-    }
+    }*/
 }
 
 void FlywheelSubsystem::startFiring() {
     snailMotor.setThrottle(currentThrottle);
+    leftMotor.setDesiredOutput(currentDjiSpeed);
+    rightMotor.setDesiredOutput(currentDjiSpeed);
+    // char buffer[50];
+    // int nBytes = sprintf(buffer,"Start firing\n");
+    // drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
 }
 
 void FlywheelSubsystem::stopFiring() {
     snailMotor.setThrottle(0);
+    rightMotor.setDesiredOutput(0);
+    rightMotor.setDesiredOutput(0);
 }
 
 void FlywheelSubsystem::setThrottle(float throttle) {

@@ -43,7 +43,7 @@ void CVHandler::messageReceiveCallback(const ReceivedSerialMessage& completeMess
             nBytes = sprintf(buffer,"Message Not Recognized\n");
             break;
     }
-    drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*)buffer,nBytes+1);
+    // drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*)buffer,nBytes+1);
 }
 
 /*

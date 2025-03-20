@@ -46,7 +46,7 @@ void CVSerial::initialize()
             drivers->uart.init<Uart::UartPort::Uart7, 230400>();
             break;
         case Uart::UartPort::Uart8:
-            drivers->uart.init<Uart::UartPort::Uart8, 230400>();
+            // drivers->uart.init<Uart::UartPort::Uart8, 230400>();
             break;
         default:
             break;

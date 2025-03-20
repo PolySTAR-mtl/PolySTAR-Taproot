@@ -23,7 +23,7 @@ static constexpr float TURRET_DEAD_ZONE = 0.05;
 /*
  * UART debug message settings
  */
-static constexpr bool TURRET_DEBUG_MESSAGE = true;
+static constexpr bool TURRET_DEBUG_MESSAGE = false;
 static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
 static constexpr Uart::UartPort TURRET_DEBUG_PORT = Uart::UartPort::Uart8;
 
