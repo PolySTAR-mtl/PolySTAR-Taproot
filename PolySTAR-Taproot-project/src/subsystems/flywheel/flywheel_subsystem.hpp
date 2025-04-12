@@ -29,7 +29,7 @@ public:
           leftMotor(drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"),
           rightMotor(drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"),
           currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
-          currentDjiSpeed(MOTOR_LOW_SPEED), // TODO: change speed here
+          currentDjiSpeed(MOTOR_MEDIUM_SPEED), // TODO: change speed here
           firing(false)
     {
     }
