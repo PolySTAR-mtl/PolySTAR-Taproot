@@ -13,7 +13,6 @@
 #include "subsystems/chassis/chassis_drive_command.hpp"
 #include "subsystems/chassis/chassis_keyboard_drive_command.hpp"
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
-#include "subsystems/chassis/chassis_relative_drive_command.hpp"
 
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
@@ -50,17 +49,14 @@ static src::driversFunc drivers = src::DoNotUse_getDrivers;
 
 namespace control
 {
-tap::motor::DjiMotor yawMotor = tap::motor::DjiMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
-
 /* define subsystems --------------------------------------------------------*/
 chassis::ChassisSubsystem theChassis(drivers());
-turret::TurretSubsystem theTurret(drivers(), &yawMotor);
+turret::TurretSubsystem theTurret(drivers());
 feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
-// chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
-chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
+chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
@@ -109,8 +105,7 @@ void initializeSubsystems() {
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    // theChassis.setDefaultCommand(&chassisDrive);
-    theChassis.setDefaultCommand(&chassisRelativeDrive);
+    theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
     theFlywheel.setDefaultCommand(&flywheelStart);
 }
