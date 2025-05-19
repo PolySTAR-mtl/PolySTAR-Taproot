@@ -15,7 +15,7 @@ namespace control
 namespace chassis
 {
 ChassisRelativeDriveCommand::ChassisRelativeDriveCommand(
-    ChassisSubsystem *const chassis,
+    ChassisSpin2WinSubsystem *const chassis,
     src::Drivers *drivers,
     tap::motor::DjiMotor *yawMotor)
     : chassis(chassis),

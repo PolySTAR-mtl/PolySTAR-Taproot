@@ -88,11 +88,10 @@ void ChassisSubsystem::updateRpmSetpoints() {
     prevRampUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
-void ChassisSubsystem::setTargetOutput(float x, float y) {
-// void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
+void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
     xInputRamp.setTarget(x);
     yInputRamp.setTarget(y);
-    // rInputRamp.setTarget(r);
+    rInputRamp.setTarget(r);
 }
 
 /*

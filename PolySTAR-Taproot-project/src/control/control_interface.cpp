@@ -6,11 +6,11 @@
 
 namespace src::control
 {
-// float ControlInterface::getChassisRInput()
-// {
-//     // Value between -1 and 1
-//     return drivers->remote.getWheel() / WHEEL_MAX_VALUE;
-// }
+float ControlInterface::getChassisRInput()
+{
+    // Value between -1 and 1
+    return drivers->remote.getWheel() / WHEEL_MAX_VALUE;
+}
 
 float ControlInterface::getChassisYInput()
 {

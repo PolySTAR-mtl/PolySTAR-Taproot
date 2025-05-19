@@ -15,7 +15,7 @@ void  ChassisAutoDriveCommand::execute()
 {
     if (drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
     {
-        chassis->setTargetOutput(0, 0);
+        chassis->setTargetOutput(0, 0, 0);
         return;
     }
     GenericAutoDriveCommand::execute();
