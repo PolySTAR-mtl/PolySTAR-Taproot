@@ -27,9 +27,9 @@ public:
      * Constructs a new TurretSubsystem with default parameters specified in
      * the private section of this class.
      */
-    TurretSubsystem(src::Drivers *drivers)
+    TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor)
         : tap::control::Subsystem(drivers),
-          yawMotor(drivers, YAW_MOTOR_ID, CAN_BUS_MOTORS, YAW_IS_INVERTED, "yaw motor"),
+          yawMotor(yawMotor),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
           cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
           cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
@@ -54,13 +54,13 @@ public:
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
     // Getters
-    const tap::motor::DjiMotor &getYawMotor() const { return yawMotor; }
+    const tap::motor::DjiMotor &getYawMotor() const { return *yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
     int64_t getYawNeutralPos() { return YAW_NEUTRAL_POS; }
     int64_t getPitchNeutralPos() { return PITCH_NEUTRAL_POS; }
-    int64_t getYawUnwrapped() { return yawMotor.getEncoderUnwrapped(); }
+    int64_t getYawUnwrapped() { return yawMotor->getEncoderUnwrapped(); }
     int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
-    int getYawWrapped() { return yawMotor.getEncoderWrapped(); }
+    int getYawWrapped() { return yawMotor->getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
 
 
@@ -85,7 +85,7 @@ private:
     
     // Hardware interfaces
     src::Drivers *drivers;
-    tap::motor::DjiMotor yawMotor;
+    tap::motor::DjiMotor *yawMotor;
     tap::motor::DjiMotor pitchMotor;
 
     // Motor Controllers for position control
