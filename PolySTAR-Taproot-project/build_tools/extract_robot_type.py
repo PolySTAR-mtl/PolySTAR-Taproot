@@ -22,6 +22,7 @@ VALID_ROBOT_TYPES   = [ "TARGET_STANDARD",
                         "TARGET_DRONE",
                         "TARGET_ENGINEER",
                         "TARGET_SENTRY",
+                        "TARGET_SPIN_TO_WIN",
                         "TARGET_HERO",
                         "TARGET_ICRA"]
 

@@ -11,6 +11,10 @@ using tap::communication::serial::Uart;
 #include "constants/standard_turret_constants.hpp"
 #endif
 
+#ifdef TARGET_SPIN_TO_WIN
+#include "constants/spin_to_win_turret_constants.hpp"
+#endif
+
 #ifdef TARGET_SENTRY
 #include "constants/sentry_turret_constants.hpp"
 #endif
