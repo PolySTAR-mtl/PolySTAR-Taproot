@@ -28,7 +28,7 @@ void  ChassisDriveCommand::execute()
 {
     float xInput = drivers->controlInterface.getChassisXInput();
     float yInput = drivers->controlInterface.getChassisYInput();
-    float rInput = drivers->controlInterface.getChassisRInput();
+    // float rInput = drivers->controlInterface.getChassisRInput();
 
     chassis->setTargetOutput(
         fabs(xInput) >= CHASSIS_DEAD_ZONE ? xInput : 0.0f,

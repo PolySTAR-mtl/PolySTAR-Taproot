@@ -31,7 +31,7 @@ void  GenericAutoDriveCommand::execute()
     CVSerialData::Rx::MovementData movementData = drivers->cvHandler.getMovementData();
     float x = movementData.xSetpoint*VX_TO_X;
     float y = movementData.ySetpoint*VY_TO_Y;
-    float r = movementData.rSetpoint*W_TO_R;
+    // float r = movementData.rSetpoint*W_TO_R;
     chassis->setTargetOutput(x,y);
 }
 
