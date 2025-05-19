@@ -55,6 +55,19 @@
                 "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
             }
         },
+        {
+            "label": ".Build Spin To Win",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons build robot=TARGET_SPIN_TO_WIN",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
                 {
             "label": ".Program ICRA",
             "type": "shell",
@@ -88,6 +101,19 @@
                 "panel": "new"
             },
             "command": "pipenv run scons run robot=TARGET_SENTRY",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
+        {
+            "label": ".Program Spin To Win",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons run robot=TARGET_SPIN_TO_WIN",
             "group": "build",
             "problemMatcher": [],
             "options": {

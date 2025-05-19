@@ -9,6 +9,10 @@
 #include "constants/standard_feeder_constants.hpp"
 #endif
 
+#ifdef TARGET_SPIN_TO_WIN
+#include "constants/spin_to_win_feeder_constants.hpp"
+#endif
+
 #ifdef TARGET_ICRA
 #include "constants/icra_feeder_constants.hpp"
 #endif
