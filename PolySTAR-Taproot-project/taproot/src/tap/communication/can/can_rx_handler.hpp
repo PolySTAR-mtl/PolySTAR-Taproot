@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -139,7 +139,7 @@ public:
      */
     mockable void removeReceiveHandler(const CanRxListener& rxListener);
 
-private:
+protected:
     Drivers* drivers;
 
     /**
