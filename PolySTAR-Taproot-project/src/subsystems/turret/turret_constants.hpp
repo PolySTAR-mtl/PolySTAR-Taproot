@@ -42,3 +42,5 @@ static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
  */
 static constexpr float RPM_TO_DEGPERMS = 0.006;
 static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
+
+static constexpr u_int16_t MAX_YAW_TICKS_PER_SECOND = 180;   // TODO: To tweak
