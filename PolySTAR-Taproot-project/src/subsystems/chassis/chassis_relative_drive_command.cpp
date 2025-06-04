@@ -35,6 +35,7 @@ void  ChassisRelativeDriveCommand::execute()
 {
     float xInput = drivers->controlInterface.getChassisXInput();
     float yInput = drivers->controlInterface.getChassisYInput();
+    float rInput = drivers->controlInterface.getChassisRInput();
 
     // Chassis joystick orientation in radians
     float chassisRad = atan2(yInput, xInput);
@@ -46,15 +47,15 @@ void  ChassisRelativeDriveCommand::execute()
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
     float x = d * cos(chassisRad + yawDeltaRad);
     float y = d * sin(chassisRad + yawDeltaRad);
-    
+
     chassis->setTargetOutput(
         fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
-        fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f
-        // fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f
+        fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f,
+        fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f
         );
 }
 
-void  ChassisRelativeDriveCommand::end(bool) { chassis->setTargetOutput(0, 0); }
+void  ChassisRelativeDriveCommand::end(bool) { chassis->setTargetOutput(0, 0, 0); }
 
 bool  ChassisRelativeDriveCommand::isFinished() const { return false; }
 }  // namespace chassis

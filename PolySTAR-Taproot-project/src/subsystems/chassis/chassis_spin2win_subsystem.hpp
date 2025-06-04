@@ -9,6 +9,7 @@
 #include "tap/util_macros.hpp"
 #include "chassis_constants.hpp"
 #include "control/drivers/drivers.hpp"
+#include <modm/math/matrix.hpp>
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -67,11 +68,11 @@ public:
     void refresh() override;
 
     void setDesiredOutput(float x, float y, float r);
+    modm::Matrix<float, 4, 1> WheelValue(const float x, const float y, const float r);
 
     void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
     void updateRpmSetpoints();
-    // void setTargetOutput(float x, float y, float r);
-    void setTargetOutput(float x, float y);
+    void setTargetOutput(float x, float y, float r);
 
     void sendCVUpdate();
 
