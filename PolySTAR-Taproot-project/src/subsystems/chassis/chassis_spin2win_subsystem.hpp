@@ -91,6 +91,8 @@ private:
     static constexpr tap::motor::MotorId BACK_LEFT_MOTOR_ID = tap::motor::MOTOR4;
     static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
+    static constexpr float ROTATION_FACTOR = 0.5;
+
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor frontLeftMotor;
     tap::motor::DjiMotor frontRightMotor;

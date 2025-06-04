@@ -135,12 +135,17 @@ void ChassisSpin2WinSubsystem::setDesiredOutput(float x, float y, float r)
 
     y = IS_Y_INVERTED ? -y : y;
 
-    modm::Matrix<float, 4, 1> matrixWheelValues = WheelValue(x, y, r);
+    // modm::Matrix<float, 4, 1> matrixWheelValues = WheelValue(x, y, r);
 
-    float frontLeftValue = *matrixWheelValues[0];
-    float frontRightValue = *matrixWheelValues[1];
-    float backLeftValue = *matrixWheelValues[2];
-    float backRightValue = *matrixWheelValues[3];
+    // float frontLeftValue = *matrixWheelValues[0];
+    // float frontRightValue = *matrixWheelValues[1];
+    // float backLeftValue = *matrixWheelValues[2];
+    // float backRightValue = *matrixWheelValues[3];
+
+    float frontLeftValue = y + ROTATION_FACTOR * r;
+    float frontRightValue = -x - ROTATION_FACTOR * r;
+    float backLeftValue = -x + ROTATION_FACTOR * r;
+    float backRightValue = y - ROTATION_FACTOR * r;
 
     frontLeftDesiredRpm = frontLeftValue * rpmScaleFactor;
     frontRightDesiredRpm = frontRightValue * rpmScaleFactor;
