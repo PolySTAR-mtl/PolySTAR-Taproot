@@ -7,9 +7,8 @@ name = "pypi"
 scons = "==3.1.2"
 lbuild = "==1.20.0"
 pyelftools = "*"
-pywin32 = { version = "*", markers = "sys_platform == 'win32'" }
 
 [dev-packages]
 
 [requires]
-python_version = "3"
+python_version = "3.8"
