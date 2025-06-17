@@ -94,25 +94,6 @@ void ChassisSpin2WinSubsystem::setTargetOutput(float x, float y, float r) {
     rInputRamp.setTarget(r);
 }
 
-modm::Matrix<float, 4, 1> ChassisSpin2WinSubsystem::WheelValue(const float x, const float y, const float r) {
-    // These radius and distance values are arbritrary and is subject to change
-    constexpr float radius = 1;
-    const double dis = 10;
-    // The equation can be found here: https://www.mdpi.com/2076-3417/12/12/5798
-    float intermediate_table[12] = {
-        std::cos(180), std::sin(180), dis * std::sin(180 - 45),
-        std::cos(270), std::sin(270), dis * std::sin(270 + 45),
-        std::cos(0), std::sin(0), dis * std::sin(0 - 45),
-        std::cos(90), std::sin(90), dis * std::sin(90 + 45)
-    };
-    float desiredValues_table[3] = {
-        x, y, r
-    };
-    modm::Matrix<float, 4, 3> intermediate(intermediate_table);
-    modm::Matrix<float, 3, 1> desiredValues(desiredValues_table);
-    return (-1/radius) * intermediate * desiredValues;
-};
-
 /*
     Give desired setpoints for chassis movement. 
     +x is forward, +y is right, +r is clockwise (turning right). 
@@ -135,13 +116,6 @@ void ChassisSpin2WinSubsystem::setDesiredOutput(float x, float y, float r)
 
     y = IS_Y_INVERTED ? -y : y;
 
-    // modm::Matrix<float, 4, 1> matrixWheelValues = WheelValue(x, y, r);
-
-    // float frontLeftValue = *matrixWheelValues[0];
-    // float frontRightValue = *matrixWheelValues[1];
-    // float backLeftValue = *matrixWheelValues[2];
-    // float backRightValue = *matrixWheelValues[3];
-
     float frontLeftValue = y + ROTATION_FACTOR * r;
     float frontRightValue = -x - ROTATION_FACTOR * r;
     float backLeftValue = -x + ROTATION_FACTOR * r;
@@ -152,34 +126,6 @@ void ChassisSpin2WinSubsystem::setDesiredOutput(float x, float y, float r)
     backLeftDesiredRpm = backLeftValue * rpmScaleFactor;
     backRightDesiredRpm = backRightValue * rpmScaleFactor;
 }
-
-// /*
-//     Give desired setpoints for chassis movement. 
-//     +x is forward, +y is right, +r is clockwise (turning right). 
-//     Expressed in body frame.
-// */
-// void ChassisSpin2WinSubsystem::setDesiredOutput(float x, float y, float r) 
-// {
-    
-//     x = tap::algorithms::limitVal<float>(x,-1,1);
-//     y = tap::algorithms::limitVal<float>(y,-1,1);
-//     r = tap::algorithms::limitVal<float>(r,-1,1);
-    
-//     // x, y, and r contained between -1 and 1
-//     // Normalize movement vector
-//     float norm = sqrt(x*x+y*y);
-//     if (norm > 1) {
-//         x = x / norm;
-//         y = y / norm;
-//     }
-
-//     y = IS_Y_INVERTED ? -y : y;
-
-//     frontLeftDesiredRpm = (x-y-r)*rpmScaleFactor;
-//     frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
-//     backLeftDesiredRpm = (x+y-r)*rpmScaleFactor;
-//     backRightDesiredRpm = (x-y+r)*rpmScaleFactor;
-// }
 
 /*
     Attempts to send IMU and wheel encoder data to CV over UART.
