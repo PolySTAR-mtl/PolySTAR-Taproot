@@ -5,8 +5,6 @@
 #include "tap/control/hold_repeat_command_mapping.hpp"
 #include "tap/control/toggle_command_mapping.hpp"
 
-#include "control/drivers/drivers.hpp"
-#include "control/drivers/drivers_singleton.hpp"
 #include "control/safe_disconnect.hpp"
 
 // Chassis includes
@@ -35,7 +33,9 @@
 #include "subsystems/flywheel/flywheel_fire_command.hpp"
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
 
-using src::DoNotUse_getDrivers;
+// Motor includes
+#include "control/motor_control.cpp"
+
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
 using tap::control::CommandMapper;
@@ -50,13 +50,12 @@ using tap::control::ToggleCommandMapping;
  *      and thus we must pass in the single statically allocated
  *      Drivers class to all of these objects.
  */
-static src::driversFunc drivers = src::DoNotUse_getDrivers;
 
 namespace control
 {
 /* define subsystems --------------------------------------------------------*/
 chassis::ChassisSubsystem theChassis(drivers());
-turret::TurretSubsystem theTurret(drivers());
+turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 feeder::DoubleFeederSubsystem theDoubleFeeder(drivers());
 
