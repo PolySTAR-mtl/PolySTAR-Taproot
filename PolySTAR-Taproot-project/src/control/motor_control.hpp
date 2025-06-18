@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tap/motor/dji_motor.hpp"
 #include "control/drivers/drivers_singleton.hpp"
 

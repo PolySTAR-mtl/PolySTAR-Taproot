@@ -29,7 +29,7 @@
 #include "subsystems/flywheel/flywheel_fire_command.hpp"
 
 // Motor includes
-#include "control/motor_control.cpp"
+#include "control/motor_control.hpp"
 
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
