@@ -1,6 +1,8 @@
 #include "algorithms/feed_forward.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
 
+#include "tap/communication/can/can_bus.hpp"
+
 /**
  * Feeder position PID: A PID controller for feeder position. The PID parameters for the
  * controller are listed below.
@@ -51,3 +53,5 @@ static constexpr float JAM_CHECKER_TOLERANCE_TICK = 5*DEGREE_TO_TICK;
 static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;
 
 static constexpr bool IS_FEEDER_INVERTED = true;
+
+static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
