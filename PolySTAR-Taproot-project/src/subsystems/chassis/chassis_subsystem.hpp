@@ -80,7 +80,7 @@ public:
     const tap::motor::DjiMotor &getBackRightMotor() const { return backRightMotor; }
 
     float getRotationAngle(){ return rotationAngle;}
-    void setRotationAnfle(float newRotationAngle){ rotationAngle = newRotationAngle;}
+    void setRotationAngle(float newRotationAngle){ rotationAngle = newRotationAngle;}
 
 private:
     src::Drivers *drivers;

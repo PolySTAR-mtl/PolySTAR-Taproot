@@ -116,10 +116,10 @@ void ChassisSpin2WinSubsystem::setDesiredOutput(float x, float y, float r)
 
     y = IS_Y_INVERTED ? -y : y;
 
-    float frontLeftValue = y + ROTATION_FACTOR * r;
-    float frontRightValue = -x - ROTATION_FACTOR * r;
-    float backLeftValue = -x + ROTATION_FACTOR * r;
-    float backRightValue = y - ROTATION_FACTOR * r;
+    float frontLeftValue = y + r;
+    float frontRightValue = -x - r;
+    float backLeftValue = -x + r;
+    float backRightValue = y - r;
 
     frontLeftDesiredRpm = frontLeftValue * rpmScaleFactor;
     frontRightDesiredRpm = frontRightValue * rpmScaleFactor;

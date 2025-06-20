@@ -11,6 +11,7 @@
 // Chassis includes
 #include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
 #include "subsystems/chassis/chassis_relative_drive_command.hpp"
+#include "subsystems/chassis/chassis_spin2win_command.hpp"
 #include "subsystems/chassis/chassis_keyboard_drive_command.hpp"
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 
@@ -58,7 +59,8 @@ feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
-chassis::ChassisRelativeDriveCommand chassisDrive(&theChassis, drivers(), &yawMotor);
+chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
+chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
 // chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 // chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
@@ -80,6 +82,7 @@ HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMa
 // ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive,&turretMouseAim}, RemoteMapState({Remote::Key::G}));
 
 /*-Testing commands-*/
+HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
 // HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
@@ -107,7 +110,7 @@ void initializeSubsystems() {
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    theChassis.setDefaultCommand(&chassisDrive);
+    theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualAim);
     theFlywheel.setDefaultCommand(&flywheelStart);
 }

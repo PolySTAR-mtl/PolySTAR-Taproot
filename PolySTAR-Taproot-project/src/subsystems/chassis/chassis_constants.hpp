@@ -38,7 +38,8 @@ static constexpr bool IS_Y_INVERTED = true;
 /*
  *   chassis rotation speed for spin to win feature
  */
-static constexpr bool ROTATION_SPEED_SPIN2WIN = 0.5;
+static constexpr float ROTATION_SPEED_HIGH = 0.5;
+static constexpr float ROTATION_SPEED_LOW = 0.25;
 
 /**
  * Interval for sending messages over UART to the Computer Vision computer
