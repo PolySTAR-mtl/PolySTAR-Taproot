@@ -1,4 +1,4 @@
-#include "chassis_spin2win_command.hpp"
+#include "chassis_spin2win_keyboard_command.hpp"
 
 #include "subsystems/turret/turret_constants.hpp"
 
@@ -12,7 +12,7 @@ namespace control
 {
 namespace chassis
 {
-ChassisSpin2winCommand::ChassisSpin2winCommand(
+ChassisSpin2winKeyboardCommand::ChassisSpin2winKeyboardCommand(
     ChassisSpin2WinSubsystem *const chassis,
     src::Drivers *drivers,
     const tap::motor::DjiMotor* turretYawMotor)
@@ -27,12 +27,21 @@ ChassisSpin2winCommand::ChassisSpin2winCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(chassis));
 }
 
-void  ChassisSpin2winCommand::initialize() {}
+void  ChassisSpin2winKeyboardCommand::initialize() {}
 
-void  ChassisSpin2winCommand::execute()
+void  ChassisSpin2winKeyboardCommand::execute()
 {
-    float xInput = drivers->controlInterface.getChassisXInput();
-    float yInput = drivers->controlInterface.getChassisYInput();
+    keyboard_input = drivers->controlInterface.getChassisKeyboardInput();
+    float xInput = 0, yInput = 0;
+    float multiplier = CHASSIS_DEFAULT_SPEED;
+
+    if (keyboard_input["w"]) { xInput += 1; }
+    if (keyboard_input["s"]) { xInput -= 1; }
+    if (keyboard_input["d"]) { yInput += 1; }
+    if (keyboard_input["a"]) { yInput -= 1; }
+    if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
+    if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
+    if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
 
     bool isMoving = sqrt(xInput*xInput+yInput*yInput) > CHASSIS_DEAD_ZONE;
 
@@ -53,16 +62,16 @@ void  ChassisSpin2winCommand::execute()
     float r = isMoving ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
 
     chassis->setTargetOutput(
-        fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
-        fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f,
+        fabs(x) >= CHASSIS_DEAD_ZONE ? x * multiplier : 0.0f,
+        fabs(y) >= CHASSIS_DEAD_ZONE ? y * multiplier : 0.0f,
         fabs(r) >= CHASSIS_DEAD_ZONE ? r : 0.0f);
 }
 
-void  ChassisSpin2winCommand::end(bool) 
+void  ChassisSpin2winKeyboardCommand::end(bool) 
 { 
     chassis->setTargetOutput(0, 0, 0);
 }
 
-bool  ChassisSpin2winCommand::isFinished() const { return false; }
+bool  ChassisSpin2winKeyboardCommand::isFinished() const { return false; }
 }  // namespace chassis
 }  // namespace control
