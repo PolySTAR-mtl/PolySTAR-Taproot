@@ -68,7 +68,20 @@
                 "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
             }
         },
-                {
+        {
+            "label": ".Build Hero",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons build robot=TARGET_HERO",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
+        {
             "label": ".Program ICRA",
             "type": "shell",
             "presentation": {
@@ -114,6 +127,19 @@
                 "panel": "new"
             },
             "command": "pipenv run scons run robot=TARGET_SENTRY",
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
+            }
+        },
+        {
+            "label": ".Program Hero",
+            "type": "shell",
+            "presentation": {
+                "panel": "new"
+            },
+            "command": "pipenv run scons run robot=TARGET_HERO",
             "group": "build",
             "problemMatcher": [],
             "options": {

@@ -17,6 +17,10 @@
 #include "constants/icra_feeder_constants.hpp"
 #endif
 
+#ifdef TARGET_HERO
+#include "constants/hero_feeder_constants.hpp"
+#endif
+
 static constexpr float FEEDER_PID_KP = 20.0f;
 static constexpr float FEEDER_PID_KI = 5.0f;
 static constexpr float FEEDER_PID_KD = 0.0f;
