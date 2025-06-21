@@ -25,4 +25,14 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4;
 // Delay after start of flywheels before feeder start.
 constexpr static uint32_t FEEDER_DELAY_MS = 300;
 
+// DjiMotor constants
+static constexpr tap::motor::MotorId LEFT_MOTOR_ID = tap::motor::MOTOR1;
+static constexpr tap::motor::MotorId RIGHT_MOTOR_ID = tap::motor::MOTOR2;
+static constexpr tap::can::CanBus CAN_BUS_MOTORS_FLYWHEEL = tap::can::CanBus::CAN_BUS1;
+
+// Speeds based on rpmScaleFactor of ChassisSubsystem
+static constexpr float MOTOR_LOW_SPEED = 500.0f;
+static constexpr float MOTOR_MEDIUM_SPEED = 2000.0f;
+static constexpr float MOTOR_HIGH_SPEED = 3000.0f;
+
 #endif

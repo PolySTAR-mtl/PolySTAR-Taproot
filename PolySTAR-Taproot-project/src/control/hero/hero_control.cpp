@@ -25,8 +25,8 @@
 #include "subsystems/feeder/feeder_move_command.hpp"
 
 //Flywheel includes
-#include "subsystems/flywheel/flywheel_subsystem.hpp"
-#include "subsystems/flywheel/flywheel_fire_command.hpp"
+#include "subsystems/flywheel/flywheel_dji_subsystem.hpp"
+#include "subsystems/flywheel/flywheel_fire_dji_command.hpp"
 
 // Motor includes
 #include "control/motor_control.hpp"
@@ -52,7 +52,7 @@ namespace control
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 feeder::FeederPositionSubsystem theFeeder(drivers());
-flywheel::FlywheelSubsystem theFlywheel(drivers());
+flywheel::FlywheelDjiSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
@@ -66,7 +66,7 @@ turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers()); // Used
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
-flywheel::FlywheelFireCommand flywheelStart(&theFlywheel, drivers());
+flywheel::FlywheelFireDjiCommand flywheelStart(&theFlywheel, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
