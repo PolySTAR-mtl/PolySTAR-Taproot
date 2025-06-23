@@ -90,7 +90,11 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
 */
 void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) 
 {
+#ifdef TARGET_SPIN_TO_WIN
+    yawDesiredPos = yaw;
+#else
     yawDesiredPos = limitVal<uint16_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
+#endif
     pitchDesiredPos = limitVal<uint16_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
 }
 

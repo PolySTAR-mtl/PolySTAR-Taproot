@@ -1,5 +1,5 @@
-#ifndef CHASSIS_SPIN2WIN_COMMAND_HPP_
-#define CHASSIS_SPIN2WIN_COMMAND_HPP_
+#ifndef CHASSIS_SPIN2WIN_KEYBOARD_COMMAND_HPP_
+#define CHASSIS_SPIN2WIN_KEYBOARD_COMMAND_HPP_
 
 #include "tap/control/command.hpp"
 
@@ -36,6 +36,8 @@ public:
 
     bool isFinished() const override;
 
+    bool isMoving() const;
+
 private:
     ChassisSpin2WinSubsystem *const chassis;
 
@@ -46,6 +48,7 @@ private:
 
     std::map<std::string, bool> keyboard_input;
 
+    bool m_isMoving;
 
 };  // ChassisSpin2winCommand
 
@@ -53,5 +56,5 @@ private:
 
 }  // namespace control
 
-#endif  // CHASSIS_DRIVE_COMMAND_HPP_
+#endif  // CHASSIS_SPIN2WIN_KEYBOARD_COMMAND_HPP_
 

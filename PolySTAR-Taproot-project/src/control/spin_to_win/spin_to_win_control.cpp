@@ -21,6 +21,7 @@
 #include "subsystems/turret/turret_mouse_aim_command.hpp"
 #include "subsystems/turret/turret_test_bottomleft_command.hpp"
 #include "subsystems/turret/turret_test_topright_command.hpp"
+#include "subsystems/turret/turret_stable_manual_aim_command.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/feeder_position_subsystem.hpp"
@@ -64,7 +65,8 @@ chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMot
 // chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 // chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
-turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
+// turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
+turret::TurretStableManualAimCommand turretManualAim(&theTurret, &chassisSpinDrive, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers()); // Used for tuning
 turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers()); // Used for tuning
@@ -82,7 +84,7 @@ HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMa
 // ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive,&turretMouseAim}, RemoteMapState({Remote::Key::G}));
 
 /*-Testing commands-*/
-HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+// HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
 // HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
@@ -110,7 +112,7 @@ void initializeSubsystems() {
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    theChassis.setDefaultCommand(&chassisRelativeDrive);
+    theChassis.setDefaultCommand(&chassisSpinDrive);
     theTurret.setDefaultCommand(&turretManualAim);
     theFlywheel.setDefaultCommand(&flywheelStart);
 }

@@ -34,7 +34,7 @@ void  ChassisSpin2winCommand::execute()
     float xInput = drivers->controlInterface.getChassisXInput();
     float yInput = drivers->controlInterface.getChassisYInput();
 
-    bool isMoving = sqrt(xInput*xInput+yInput*yInput) > CHASSIS_DEAD_ZONE;
+    m_isMoving = sqrt(xInput*xInput+yInput*yInput) > CHASSIS_DEAD_ZONE;
 
     // float rotationAngle = turretYawMotor->getEncoderUnwrapped();
     // chassis->setRotationAngle(rotationAngle);
@@ -50,7 +50,7 @@ void  ChassisSpin2winCommand::execute()
     float x = d * cos(chassisRad + yawDeltaRad);
     float y = d * sin(chassisRad + yawDeltaRad);
 
-    float r = isMoving ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
+    float r = m_isMoving ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
 
     chassis->setTargetOutput(
         fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
@@ -64,5 +64,7 @@ void  ChassisSpin2winCommand::end(bool)
 }
 
 bool  ChassisSpin2winCommand::isFinished() const { return false; }
+
+bool ChassisSpin2winCommand::isMoving() const { return m_isMoving; }
 }  // namespace chassis
 }  // namespace control

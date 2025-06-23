@@ -43,7 +43,7 @@ void  ChassisSpin2winKeyboardCommand::execute()
     if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
     if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
 
-    bool isMoving = sqrt(xInput*xInput+yInput*yInput) > CHASSIS_DEAD_ZONE;
+    m_isMoving = sqrt(xInput*xInput+yInput*yInput) > CHASSIS_DEAD_ZONE;
 
     // float rotationAngle = turretYawMotor->getEncoderUnwrapped();
     // chassis->setRotationAngle(rotationAngle);
@@ -59,7 +59,7 @@ void  ChassisSpin2winKeyboardCommand::execute()
     float x = d * cos(chassisRad + yawDeltaRad);
     float y = d * sin(chassisRad + yawDeltaRad);
 
-    float r = isMoving ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
+    float r = m_isMoving ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
 
     chassis->setTargetOutput(
         fabs(x) >= CHASSIS_DEAD_ZONE ? x * multiplier : 0.0f,
@@ -73,5 +73,7 @@ void  ChassisSpin2winKeyboardCommand::end(bool)
 }
 
 bool  ChassisSpin2winKeyboardCommand::isFinished() const { return false; }
+
+bool ChassisSpin2winKeyboardCommand::isMoving() const { return m_isMoving; }
 }  // namespace chassis
 }  // namespace control

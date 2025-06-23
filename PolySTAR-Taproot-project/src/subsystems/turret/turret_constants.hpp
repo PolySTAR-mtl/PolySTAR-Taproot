@@ -42,3 +42,10 @@ static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
  */
 static constexpr float RPM_TO_DEGPERMS = 0.006;
 static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
+
+/**
+ * Spin2win stabilization constants
+ * Represents how much the joystick should have move per ms to stabilize the turret
+ */
+static constexpr float LOW_ROTATION = 0.7;
+static constexpr float HIGH_ROTATION = 1.5;

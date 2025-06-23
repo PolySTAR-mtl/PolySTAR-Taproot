@@ -36,6 +36,8 @@ public:
 
     bool isFinished() const override;
 
+    bool isMoving() const;
+
 private:
     ChassisSpin2WinSubsystem *const chassis;
 
@@ -43,6 +45,8 @@ private:
 
     // variable used to find rotation angle 
     const tap::motor::DjiMotor* turretYawMotor;
+
+    bool m_isMoving = false;
 
 
 };  // ChassisSpin2winCommand
