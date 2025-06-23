@@ -82,7 +82,7 @@ HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMa
 // ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive,&turretMouseAim}, RemoteMapState({Remote::Key::G}));
 
 /*-Testing commands-*/
-HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
 // HoldCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
@@ -123,6 +123,7 @@ void startStandardCommands(src::Drivers *drivers) {
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&feedFeeder);
+    drivers->commandMapper.addMap(&toggleChassisSpin);
     drivers->commandMapper.addMap(&mouseFeedFeeder);
     // drivers->commandMapper.addMap(&toggleClientAiming);
     // drivers->commandMapper.addMap(&startFlywheel);
