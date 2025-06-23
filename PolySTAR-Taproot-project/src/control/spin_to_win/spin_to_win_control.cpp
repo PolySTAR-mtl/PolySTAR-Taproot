@@ -112,9 +112,9 @@ void initializeSubsystems() {
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    theChassis.setDefaultCommand(&chassisSpinDrive);
+    // theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    theFlywheel.setDefaultCommand(&flywheelStart);
+    // theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/

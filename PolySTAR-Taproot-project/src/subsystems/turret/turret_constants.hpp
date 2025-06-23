@@ -47,5 +47,5 @@ static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
  * Spin2win stabilization constants
  * Represents how much the joystick should have move per ms to stabilize the turret
  */
-static constexpr float LOW_ROTATION = 0.7;
-static constexpr float HIGH_ROTATION = 1.5;
+static constexpr float LOW_ROTATION = 0.56;
+static constexpr float HIGH_ROTATION = 0.85;
