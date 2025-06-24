@@ -14,6 +14,7 @@ TurretStableMouseAimCommand::TurretStableMouseAimCommand(
     chassis::ChassisSpin2winKeyboardCommand *const chassisCommand,
     src::Drivers *drivers)
     : turret(turret),
+      chassisCommand(chassisCommand),
       drivers(drivers)
 {
     if (turret == nullptr)
@@ -23,11 +24,19 @@ TurretStableMouseAimCommand::TurretStableMouseAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretStableMouseAimCommand::initialize() {}
+void  TurretStableMouseAimCommand::initialize() {
+    prevUpdate = tap::arch::clock::getTimeMilliseconds();
+}
 
 void  TurretStableMouseAimCommand::execute() {
     float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
     float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR ;
+
+    uint32_t currentUpdate = tap::arch::clock::getTimeMilliseconds();
+    uint32_t timeDelta = currentUpdate - prevUpdate;
+    prevUpdate = currentUpdate;
+
+    xMouseInput += (chassisCommand->isMoving() ? LOW_ROTATION : HIGH_ROTATION) * timeDelta;
 
     turret->setRelativeOutput(xMouseInput, yMouseInput);
 }
