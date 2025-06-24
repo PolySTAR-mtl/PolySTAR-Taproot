@@ -70,8 +70,7 @@ public:
 
     void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
     void updateRpmSetpoints();
-    // void setTargetOutput(float x, float y, float r);
-    void setTargetOutput(float x, float y);
+    void setTargetOutput(float x, float y, float r);
 
     void sendCVUpdate();
 

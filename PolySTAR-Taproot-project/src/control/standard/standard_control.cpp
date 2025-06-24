@@ -11,6 +11,7 @@
 #include "subsystems/chassis/chassis_drive_command.hpp"
 #include "subsystems/chassis/chassis_keyboard_drive_command.hpp"
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+#include "subsystems/chassis/chassis_spin2win_command.hpp"
 
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
@@ -88,6 +89,7 @@ HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Rem
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
+    
     drivers->commandScheduler.registerSubsystem(&theChassis);
     drivers->commandScheduler.registerSubsystem(&theTurret);
     drivers->commandScheduler.registerSubsystem(&theFeeder);

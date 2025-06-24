@@ -88,11 +88,10 @@ void ChassisSpin2WinSubsystem::updateRpmSetpoints() {
     prevRampUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
-void ChassisSpin2WinSubsystem::setTargetOutput(float x, float y) {
-// void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
+void ChassisSpin2WinSubsystem::setTargetOutput(float x, float y, float r) {
     xInputRamp.setTarget(x);
     yInputRamp.setTarget(y);
-    // rInputRamp.setTarget(r);
+    rInputRamp.setTarget(r);
 }
 
 /*
@@ -106,7 +105,7 @@ void ChassisSpin2WinSubsystem::setDesiredOutput(float x, float y, float r)
     x = tap::algorithms::limitVal<float>(x,-1,1);
     y = tap::algorithms::limitVal<float>(y,-1,1);
     r = tap::algorithms::limitVal<float>(r,-1,1);
-    
+
     // x, y, and r contained between -1 and 1
     // Normalize movement vector
     float norm = sqrt(x*x+y*y);
@@ -117,10 +116,15 @@ void ChassisSpin2WinSubsystem::setDesiredOutput(float x, float y, float r)
 
     y = IS_Y_INVERTED ? -y : y;
 
-    frontLeftDesiredRpm = (x-y-r)*rpmScaleFactor;
-    frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
-    backLeftDesiredRpm = (x+y-r)*rpmScaleFactor;
-    backRightDesiredRpm = (x-y+r)*rpmScaleFactor;
+    float frontLeftValue = y + r;
+    float frontRightValue = -x - r;
+    float backLeftValue = -x + r;
+    float backRightValue = y - r;
+
+    frontLeftDesiredRpm = frontLeftValue * rpmScaleFactor;
+    frontRightDesiredRpm = frontRightValue * rpmScaleFactor;
+    backLeftDesiredRpm = backLeftValue * rpmScaleFactor;
+    backRightDesiredRpm = backRightValue * rpmScaleFactor;
 }
 
 /*
