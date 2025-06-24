@@ -41,6 +41,9 @@ private:
 
     src::Drivers *drivers;
 
+    bool isKickstartDone = false;
+    uint32_t startingTs;
+
 };  // class FlywheelFireDjiCommand
 
 }  // namespace flywheel

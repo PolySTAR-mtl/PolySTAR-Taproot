@@ -23,10 +23,18 @@ void FlywheelFireDjiCommand::initialize() {
     char buffer[50];
     int nBytes = sprintf (buffer, "starting firing\n");
     drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*) buffer, nBytes+1);
-    flywheel->startFiring();
+    flywheel->sendStartingBoost(); // will not modify speed attributes of DjiMotors
+
+    isKickstartDone = false;
+    startingTs = tap::arch::clock::getTimeMilliseconds();
 }
 
-void FlywheelFireDjiCommand::execute() {}
+void FlywheelFireDjiCommand::execute() {
+    if (!isKickstartDone && tap::arch::clock::getTimeMilliseconds() - startingTs > KICKSTART_DELAY_MS) {
+        flywheel->startFiring(); // will send default speeds to DjiMotors
+        isKickstartDone = true;
+    }
+}
 
 void FlywheelFireDjiCommand::end(bool)
 {

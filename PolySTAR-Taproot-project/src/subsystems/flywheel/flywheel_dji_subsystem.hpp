@@ -48,6 +48,8 @@ public:
 
     void stopFiring();
 
+    void sendStartingBoost();
+
     void setThrottle(float throttle);
 
     float getCurrentThrottle() const;

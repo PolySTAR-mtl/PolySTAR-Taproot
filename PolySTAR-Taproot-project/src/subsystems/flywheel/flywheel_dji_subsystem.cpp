@@ -72,6 +72,11 @@ void FlywheelDjiSubsystem::stopFiring() {
     leftMotor.setDesiredOutput(0);
 }
 
+void FlywheelDjiSubsystem::sendStartingBoost() {
+    rightMotor.setDesiredOutput(MOTOR_MEDIUM_SPEED);
+    leftMotor.setDesiredOutput(MOTOR_MEDIUM_SPEED);
+}
+
 void FlywheelDjiSubsystem::setThrottle(float throttle) {
     currentThrottle = throttle;
 

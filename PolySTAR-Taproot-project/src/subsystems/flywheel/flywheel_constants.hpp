@@ -32,7 +32,9 @@ static constexpr tap::can::CanBus CAN_BUS_MOTORS_FLYWHEEL = tap::can::CanBus::CA
 
 // Speeds based on rpmScaleFactor of ChassisSubsystem
 static constexpr float MOTOR_LOW_SPEED = 500.0f;
-static constexpr float MOTOR_MEDIUM_SPEED = 2000.0f;
+static constexpr float MOTOR_MEDIUM_SPEED = 1500.0f;
 static constexpr float MOTOR_HIGH_SPEED = 3000.0f;
+
+static constexpr uint32_t KICKSTART_DELAY_MS = 300;
 
 #endif
