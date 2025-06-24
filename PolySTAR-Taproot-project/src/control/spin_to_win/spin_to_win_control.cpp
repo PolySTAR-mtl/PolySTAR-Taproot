@@ -63,9 +63,8 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
 // chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
-// chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
-// turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretStableManualAimCommand turretManualAim(&theTurret, &chassisSpinDrive, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
 turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers()); // Used for tuning
@@ -112,14 +111,14 @@ void initializeSubsystems() {
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *) {
-    // theChassis.setDefaultCommand(&chassisRelativeDrive);
+    theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualAim);
     // theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
 void startStandardCommands(src::Drivers *drivers) {
-    // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
 }
 
 /* register io mappings here ------------------------------------------------*/
@@ -128,7 +127,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&toggleChassisSpin);
     drivers->commandMapper.addMap(&mouseFeedFeeder);
     // drivers->commandMapper.addMap(&toggleClientAiming);
-    // drivers->commandMapper.addMap(&startFlywheel);
+    drivers->commandMapper.addMap(&startFlywheel);
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);
 }

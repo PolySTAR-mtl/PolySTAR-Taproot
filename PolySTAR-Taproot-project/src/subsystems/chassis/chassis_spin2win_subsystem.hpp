@@ -9,7 +9,6 @@
 #include "tap/util_macros.hpp"
 #include "chassis_constants.hpp"
 #include "control/drivers/drivers.hpp"
-#include <modm/math/matrix.hpp>
 
 //#include "control/control_operator_interface_edu.hpp"
 
