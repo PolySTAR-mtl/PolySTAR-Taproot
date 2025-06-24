@@ -19,8 +19,8 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
-    260.0f, // kP
-    0.8f,  // kI
+    70.0f, // kP
+    0.1f,  // kI
     0.0f,  // kD
     5000.0f,  // Max error sum
     16000.0f, // Max output

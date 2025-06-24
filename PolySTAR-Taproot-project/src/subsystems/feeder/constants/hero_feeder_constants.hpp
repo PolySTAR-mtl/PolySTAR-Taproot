@@ -28,7 +28,7 @@ static constexpr tap::algorithms::SmoothPidConfig FEEDER_PID_CONFIG(
  */
 
 static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
-    500.0f, // kS
+    400.0f, // kS
     0.0f, // kV
     0.0f, // kG
     1000.0f // maxVelocity
@@ -42,16 +42,17 @@ static constexpr float FEEDER_REVERSE_RPM = -1500;
 
 static constexpr float DEGREE_TO_TICK = 8192*36/360; // 8192 Ticks per turn, 36:1 gear ratio 
 static constexpr float UNJAM_MAX_WAIT_TIME_MS = 500; // TO BE DETERMINED
-static constexpr float MOVE_DISPLACEMENT_TICK = -90*DEGREE_TO_TICK; // TO BE DETERMINED 
+static constexpr float MOVE_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
 static constexpr float UNJAM_CYCLES = 4; // TO BE DETERMINED
-static constexpr float UNJAM_DISPLACEMENT_TICK = -45*DEGREE_TO_TICK; // TO BE DETERMINED
-static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 500; // TO BE DETERMINED ////////
-static constexpr float MOVE_TIME_MS = 200; // TO BE DETERMINED //////
-static constexpr float SETPOINT_POS_TOLERANCE_TICK = 1*DEGREE_TO_TICK; // TO BE DETERMINED
+static constexpr float UNJAM_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
+static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 100; // TO BE DETERMINED
+static constexpr float MOVE_TIME_MS = 125; // TO BE DETERMINED
+static constexpr float SETPOINT_POS_TOLERANCE_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
 
-static constexpr float JAM_CHECKER_TOLERANCE_TICK = 5*DEGREE_TO_TICK;
+static constexpr float JAM_CHECKER_TOLERANCE_TICK = 20*DEGREE_TO_TICK;
 static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;
 
 static constexpr bool IS_FEEDER_INVERTED = true;
 
-static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+// CanBus different from other robots since feeder is in chassis
+static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
