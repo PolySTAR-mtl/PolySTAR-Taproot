@@ -37,6 +37,28 @@ void  ChassisRelativeDriveCommand::execute()
     float yInput = drivers->controlInterface.getChassisYInput();
     float rInput = drivers->controlInterface.getChassisRInput();
 
+    keyboard_input = drivers->controlInterface.getChassisKeyboardInput();
+    
+    float xKeyInput = 0;
+    float yKeyInput = 0;
+    float rKeyInput = 0;
+
+    float multiplier = CHASSIS_DEFAULT_SPEED;
+
+    // if (keyboard_input["w"]) { xKeyInput += 1; }
+    // if (keyboard_input["s"]) { xKeyInput -= 1; }
+    // if (keyboard_input["d"]) { yKeyInput += 1; }
+    // if (keyboard_input["a"]) { yKeyInput -= 1; }
+    // if (keyboard_input["q"]) { rKeyInput += 1; }
+    // if (keyboard_input["e"]) { rKeyInput -= 1; }
+    // if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
+    // if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
+    // if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
+
+    xInput += xKeyInput * multiplier;
+    yInput += yKeyInput * multiplier;
+    rInput += rKeyInput * multiplier;
+
     // Chassis joystick orientation in radians
     float chassisRad = atan2(yInput, xInput);
 
