@@ -35,9 +35,9 @@ static constexpr float MOTOR_LOW_SPEED = 500.0f;
 
 #ifdef TARGET_SENTRY
 static constexpr float MOTOR_MEDIUM_SPEED = 2000.0f;
-#endif
-
-#ifdef TARGET_HERO
+#elif defined(TARGET_HERO)
+static constexpr float MOTOR_MEDIUM_SPEED = 1500.0f;
+#else
 static constexpr float MOTOR_MEDIUM_SPEED = 1500.0f;
 #endif
 
