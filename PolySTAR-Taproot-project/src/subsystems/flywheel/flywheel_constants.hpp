@@ -11,7 +11,7 @@ constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4;
 #endif
 
 #ifdef TARGET_SPIN_TO_WIN
-constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4;
+constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.5;
 #endif
 
 #ifdef TARGET_SENTRY

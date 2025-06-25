@@ -43,6 +43,8 @@ private:
 
     ChassisSpin2WinSubsystem *const chassis;
 
+    std::map<std::string, bool> keyboard_input;
+
     src::Drivers *drivers;
 };  // ChassisRelativeDriveCommand
 
