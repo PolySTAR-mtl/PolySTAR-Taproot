@@ -90,7 +90,7 @@ feeder::FeederAutoFeedTestCommand feederAutoFeedTest(&theFeeder, drivers());
 
 
 /* flywheel -----------------------------------------------------------------*/
-flywheel::FlywheelAutoFireDjiCommand flywheelStartTest(&theFlywheel, drivers());
+// flywheel::FlywheelAutoFireDjiCommand flywheelStartTest(&theFlywheel, drivers());
 flywheel::FlywheelAutoFireDjiCommand flywheelStart(&theFlywheel, drivers());
 flywheel::FlywheelFireDjiCommand flywheelStartManual(&theFlywheel, drivers());
 
@@ -101,15 +101,15 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /*-Ammo Booster-*/
 HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 /*-Flywheel-*/
-HoldCommandMapping startFlywheel(drivers(), {&flywheelStartTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping startFlywheel(drivers(), {&flywheelStartTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 HoldCommandMapping startFlywheelManual(drivers(), {&flywheelStartManual}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 /*-Turret-*/
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 /*-Chassis-*/
 ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 /*-Auto commands*/
-HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-HoldCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim, &feederAutoFeedTest}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim, &feederAutoFeedTest}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /*-Only used for calibration-*/
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP)); 
@@ -131,6 +131,7 @@ void initializeSubsystems()
     theChassis.initialize();
     theTurret.initialize();
     theFeeder.initialize();
+    theTestFeeder.initialize();
     theFlywheel.initialize();
 }
 
@@ -155,7 +156,7 @@ void registerStandardIoMappings(src::Drivers *drivers)
     drivers->commandMapper.addMap(&feedFeeder);
     
     /*-Flywheel-*/
-    drivers->commandMapper.addMap(&startFlywheel);
+    // drivers->commandMapper.addMap(&startFlywheel);
     drivers->commandMapper.addMap(&startFlywheelManual);
     /*-Turret-*/
     // drivers->commandMapper.addMap(&leftAimTurret);
@@ -163,7 +164,7 @@ void registerStandardIoMappings(src::Drivers *drivers)
     drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
     drivers->commandMapper.addMap(&toggleChassisDrive);
-    drivers->commandMapper.addMap(&toggleAutoTestCommands);
+    // drivers->commandMapper.addMap(&toggleAutoTestCommands);
     drivers->commandMapper.addMap(&toggleAutoCommands);
 }
 
