@@ -31,7 +31,7 @@ static constexpr tap::motor::MotorId RIGHT_MOTOR_ID = tap::motor::MOTOR2;
 static constexpr tap::can::CanBus CAN_BUS_MOTORS_FLYWHEEL = tap::can::CanBus::CAN_BUS1;
 
 // Speeds based on rpmScaleFactor of ChassisSubsystem
-static constexpr float MOTOR_LOW_SPEED = 500.0f;
+static constexpr float MOTOR_LOW_SPEED = 850.0f;
 
 #ifdef TARGET_SENTRY
 static constexpr float MOTOR_MEDIUM_SPEED = 2000.0f;
