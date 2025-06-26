@@ -45,15 +45,15 @@ void  ChassisRelativeDriveCommand::execute()
 
     float multiplier = CHASSIS_DEFAULT_SPEED;
 
-    // if (keyboard_input["w"]) { xKeyInput += 1; }
-    // if (keyboard_input["s"]) { xKeyInput -= 1; }
-    // if (keyboard_input["d"]) { yKeyInput += 1; }
-    // if (keyboard_input["a"]) { yKeyInput -= 1; }
-    // if (keyboard_input["q"]) { rKeyInput += 1; }
-    // if (keyboard_input["e"]) { rKeyInput -= 1; }
-    // if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
-    // if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
-    // if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
+    if (keyboard_input["w"]) { xKeyInput += 1; }
+    if (keyboard_input["s"]) { xKeyInput -= 1; }
+    if (keyboard_input["d"]) { yKeyInput += 1; }
+    if (keyboard_input["a"]) { yKeyInput -= 1; }
+    if (keyboard_input["q"]) { rKeyInput += 1; }
+    if (keyboard_input["e"]) { rKeyInput -= 1; }
+    if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
+    if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
+    if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
 
     xInput += xKeyInput * multiplier;
     yInput += yKeyInput * multiplier;
