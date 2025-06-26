@@ -26,7 +26,7 @@ void  TurretMouseAimCommand::initialize() {}
 
 void  TurretMouseAimCommand::execute() {
     float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
-    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR ;
+    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
 
     turret->setRelativeOutput(xMouseInput, yMouseInput);
 }
