@@ -1,4 +1,5 @@
 #include "chassis_keyboard_drive_command.hpp"
+#include "chassis_constants.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"

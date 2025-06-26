@@ -19,9 +19,15 @@ static constexpr float CHASSIS_TR_PROPORTIONAL_KALMAN = 0.0f;
  * of the chassis when using the keyboard.
 */
 
+#ifdef TARGET_HERO
+static constexpr float CHASSIS_DEFAULT_SPEED = 0.25f;
+#else
 static constexpr float CHASSIS_DEFAULT_SPEED = 0.5f;
+#endif
+
 static constexpr float CHASSIS_SHIFT_MULTIPLIER = 1.0f;
 static constexpr float CHASSIS_CTRL_MULTIPLIER = 0.25f;
+
 
 /**
  * Left joystick dead zone size. If the absolute value return by the stick is below
