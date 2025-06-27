@@ -44,13 +44,13 @@ static constexpr float DEGREE_TO_TICK = 8192*36/360; // 8192 Ticks per turn, 36:
 static constexpr float UNJAM_MAX_WAIT_TIME_MS = 500; // TO BE DETERMINED
 static constexpr float MOVE_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
 static constexpr float UNJAM_CYCLES = 1; // TO BE DETERMINED
-static constexpr float UNJAM_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
+static constexpr float UNJAM_DISPLACEMENT_TICK = 20*DEGREE_TO_TICK; // TO BE DETERMINED
 static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 100; // TO BE DETERMINED
 static constexpr float MOVE_TIME_MS = 300;
 static constexpr float SETPOINT_POS_TOLERANCE_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
 
 static constexpr float JAM_CHECKER_TOLERANCE_TICK = 20*DEGREE_TO_TICK;
-static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;
+static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 2000;
 
 static constexpr bool IS_FEEDER_INVERTED = true;
 
