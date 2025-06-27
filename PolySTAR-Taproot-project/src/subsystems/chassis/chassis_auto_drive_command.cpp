@@ -7,13 +7,20 @@ namespace chassis
 ChassisAutoDriveCommand::ChassisAutoDriveCommand(
     ChassisSubsystem *const chassis,
     src::Drivers *drivers)
-    : GenericAutoDriveCommand(chassis, drivers)
+    : GenericAutoDriveCommand(chassis, drivers),
+      startMatchTimeout(0)
 {
+    startMatchTimeout.stop();
 }
 
-void  ChassisAutoDriveCommand::execute()
+void ChassisAutoDriveCommand::initialize() 
 {
-    if (drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
+    startMatchTimeout.restart(startMatchWaitTime);
+}
+
+void ChassisAutoDriveCommand::execute()
+{
+    if (!startMatchTimeout.isExpired())
     {
         chassis->setTargetOutput(0, 0, 0);
         return;

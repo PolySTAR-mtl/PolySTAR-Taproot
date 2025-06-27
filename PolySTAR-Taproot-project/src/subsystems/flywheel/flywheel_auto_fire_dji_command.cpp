@@ -29,11 +29,11 @@ void FlywheelAutoFireDjiCommand::initialize() {
 }
 
 void FlywheelAutoFireDjiCommand::execute() {
-    if(drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME) {
-        flywheel->stopFiring();
-        isKickstartDone = false;
-        return;
-    }
+    // if(drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME) {
+    //     flywheel->stopFiring();
+    //     isKickstartDone = false;
+    //     return;
+    // }
 
     if (!drivers->cvHandler.shouldShoot()) {
         flywheel->stopFiring();

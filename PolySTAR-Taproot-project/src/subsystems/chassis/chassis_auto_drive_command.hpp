@@ -2,6 +2,7 @@
 #define CHASSIS_AUTO_DRIVE_COMMAND_HPP_
 
 #include "generic_auto_drive_command.hpp"
+#include "tap/architecture/timeout.hpp"
 
 namespace control
 {
@@ -25,7 +26,14 @@ public:
 
     const char *getName() const { return "chassis auto drive command"; }
 
+    void initialize() override;
+
     void execute() override;
+
+private:
+    tap::arch::MilliTimeout startMatchTimeout;
+
+    const uint32_t startMatchWaitTime = 10 * 1000;
 
 };  // ChassisAutoDriveCommand
 
