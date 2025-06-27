@@ -29,6 +29,12 @@ void  TurretManualAimCommand::execute()
     float xInput = drivers->controlInterface.getTurretXInput();
     float yInput = drivers->controlInterface.getTurretYInput();
 
+    float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
+    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
+
+    xInput += xMouseInput;
+    yInput += yMouseInput;
+
     turret->setRelativeOutput(
         fabs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
         fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
