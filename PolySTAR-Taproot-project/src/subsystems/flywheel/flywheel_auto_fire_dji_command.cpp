@@ -1,6 +1,8 @@
 #include "flywheel_subsystem.hpp"
 #include "flywheel_auto_fire_dji_command.hpp"
 
+#include "subsystems/sentry_general_constants.hpp"
+
 namespace control
 {
 namespace flywheel
@@ -26,14 +28,24 @@ void FlywheelAutoFireDjiCommand::initialize() {
 
     isKickstartDone = false;
     startingTs = tap::arch::clock::getTimeMilliseconds();
+
+    startMatchTimeout.restart(START_MATCH_WAIT_TIME);
 }
 
 void FlywheelAutoFireDjiCommand::execute() {
-    if(drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME) {
+    // if(drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME) {
+    //     flywheel->stopFiring();
+    //     isKickstartDone = false;
+    //     return;
+    // }
+
+    if (!startMatchTimeout.isExpired()) {
         flywheel->stopFiring();
         isKickstartDone = false;
         return;
     }
+    
+    drivers->leds.set(tap::gpio::Leds::C, true);
 
     if (!drivers->cvHandler.shouldShoot()) {
         flywheel->stopFiring();

@@ -5,6 +5,8 @@
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
 
+#include "subsystems/sentry_general_constants.hpp"
+
 namespace control
 {
 namespace feeder
@@ -16,16 +18,20 @@ FeederAutoFeedCommand::FeederAutoFeedCommand(
 {
 }
 
+void FeederAutoFeedCommand::initialize() 
+{
+    startMatchTimeout.restart(START_MATCH_WAIT_TIME);
+}
 
-void FeederAutoFeedCommand::execute() {
-
-    if(drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME) {
+void FeederAutoFeedCommand::execute()
+{
+    if(!startMatchTimeout.isExpired()) {
         feeder->setDesiredOutput(0);
         return;
     }
+    drivers->leds.set(tap::gpio::Leds::B, true);
     GenericAutoFeedCommand::execute();
 }
-
 
 } // namespace feeder
 
