@@ -43,6 +43,7 @@ private:
     bool isKickstartDone = false;
     uint32_t startingTs;
 
+    tap::arch::MilliTimeout startMatchTimeout;
 };  // class FlywheelAutoFireDjiCommand
 
 }  // namespace flywheel

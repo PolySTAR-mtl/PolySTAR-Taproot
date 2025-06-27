@@ -32,9 +32,6 @@ public:
 
 private:
     tap::arch::MilliTimeout startMatchTimeout;
-
-    const uint32_t startMatchWaitTime = 10 * 1000;
-
 };  // ChassisAutoDriveCommand
 
 }  // namespace chassis

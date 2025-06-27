@@ -1,4 +1,5 @@
 #include "chassis_auto_drive_command.hpp"
+#include "subsystems/sentry_general_constants.hpp"
 
 namespace control
 {
@@ -15,7 +16,7 @@ ChassisAutoDriveCommand::ChassisAutoDriveCommand(
 
 void ChassisAutoDriveCommand::initialize() 
 {
-    startMatchTimeout.restart(startMatchWaitTime);
+    startMatchTimeout.restart(START_MATCH_WAIT_TIME);
 }
 
 void ChassisAutoDriveCommand::execute()
@@ -25,6 +26,7 @@ void ChassisAutoDriveCommand::execute()
         chassis->setTargetOutput(0, 0, 0);
         return;
     }
+    drivers->leds.set(tap::gpio::Leds::A, true);
     GenericAutoDriveCommand::execute();
 }
 
