@@ -22,7 +22,7 @@ static constexpr float CHASSIS_TR_PROPORTIONAL_KALMAN = 0.0f;
 #ifdef TARGET_HERO
 static constexpr float CHASSIS_DEFAULT_SPEED = 0.25f;
 
-#elif TARGET_SPIN_TO_WIN
+#elif defined(TARGET_SPIN_TO_WIN)
 static constexpr float CHASSIS_DEFAULT_SPEED = 0.4f;
 
 #else
