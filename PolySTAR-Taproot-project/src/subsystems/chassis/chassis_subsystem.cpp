@@ -64,12 +64,6 @@ void ChassisSubsystem::refresh() {
                               backLeftMotor.getShaftRPM(),
                               (int)backLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-        //rotation angle debug message
-        nBytes = sprintf (buffer, "RO-AGL: %f, SETPOINT: %i\n",
-                              (double)rotationAngle,
-                              (int)0);
-        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-
     }
 }
 
@@ -122,10 +116,15 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
 
     y = IS_Y_INVERTED ? -y : y;
 
-    frontLeftDesiredRpm = (x-y-r)*rpmScaleFactor;
-    frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
-    backLeftDesiredRpm = (x+y-r)*rpmScaleFactor;
-    backRightDesiredRpm = (x-y+r)*rpmScaleFactor;
+    switch (wheelType) {
+        case WheelType::omniwheel:
+            setOmniwheelDesiredRPM(x, y, r);
+            break;
+        case WheelType::mecanum:
+        default:
+            setMecanumDesiredRPM(x, y, r);
+            break;
+    }
 }
 
 /*
@@ -194,6 +193,20 @@ void ChassisSubsystem::sendCVUpdate() {
     positionMessage.backRightRPM = backRightRPM;
 
     drivers->uart.write(Uart::UartPort::Uart7, (uint8_t*)(&positionMessage), sizeof(positionMessage));
+}
+
+void ChassisSubsystem::setMecanumDesiredRPM(const float& x, const float& y, const float& r) {
+    frontLeftDesiredRpm  = (x-y-r)*rpmScaleFactor;
+    frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
+    backLeftDesiredRpm   = (x+y-r)*rpmScaleFactor;
+    backRightDesiredRpm  = (x-y+r)*rpmScaleFactor;
+}
+
+void ChassisSubsystem::setOmniwheelDesiredRPM(const float& x, const float& y, const float& r) {
+    frontLeftDesiredRpm  = (y+r)  * rpmScaleFactor;
+    frontRightDesiredRpm = (-x-r) * rpmScaleFactor;
+    backLeftDesiredRpm   = (-x+r) * rpmScaleFactor;
+    backRightDesiredRpm  = (y-r)  * rpmScaleFactor;
 }
 
 }  // namespace chassis
