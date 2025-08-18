@@ -9,6 +9,7 @@
 #include "tap/util_macros.hpp"
 #include "chassis_constants.hpp"
 #include "control/drivers/drivers.hpp"
+#include "control/robot_config.hpp"
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -37,9 +38,10 @@ public:
      * Constructs a new ChassisSubsystem with default parameters specified in
      * the private section of this class.
      */
-    ChassisSubsystem(src::Drivers *drivers)
+    ChassisSubsystem(src::Drivers *drivers, const SRobotConfig& robotConfig)
         : tap::control::Subsystem(drivers),
           drivers(drivers),
+          wheelType(robotConfig.wheelType),
           frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "front left motor"),
           frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "front right motor"),
           backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "back left motor"),
@@ -79,11 +81,13 @@ public:
     const tap::motor::DjiMotor &getBackLeftMotor() const { return backLeftMotor; }
     const tap::motor::DjiMotor &getBackRightMotor() const { return backRightMotor; }
 
-    float getRotationAngle(){ return rotationAngle;}
-    void setRotationAngle(float newRotationAngle){ rotationAngle = newRotationAngle;}
-
 private:
+    void setMecanumDesiredRPM(const float& x, const float& y, const float& r);
+    void setOmniwheelDesiredRPM(const float& x, const float& y, const float& r);
+
     src::Drivers *drivers;
+
+    WheelType wheelType;
 
     ///< Hardware constants, not specific to any particular chassis.
     static constexpr tap::motor::MotorId FRONT_LEFT_MOTOR_ID = tap::motor::MOTOR1;
@@ -141,9 +145,6 @@ private:
     // Conversions for CV Messages
     const int16_t M_TO_MM = 1000;
     const float DEG_TO_MILLIRAD = 17.453293;
-
-    //variable used for spin2win debugging
-    float rotationAngle = 0.0f;
 
 };  // class ChassisSubsystem
 
