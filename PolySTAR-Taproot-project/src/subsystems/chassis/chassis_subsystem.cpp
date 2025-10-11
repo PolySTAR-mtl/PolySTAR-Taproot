@@ -20,17 +20,42 @@ void ChassisSubsystem::initialize()
     backLeftMotor.initialize();
     backRightMotor.initialize();
     prevRampUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevControlUpdate = prevRampUpdate;
 }
 
 void ChassisSubsystem::refresh() {
     updateRpmSetpoints();
+    // Ancien code PID (a conserver au cas ou)
+    // uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
+    // updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
+    // updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm, dt);
+    // updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm, dt);
+    // updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm, dt);
+    // prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
 
-    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
-    updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
-    updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm, dt);
-    updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm, dt);
-    updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm, dt);
-    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+    uint32_t now = tap::arch::clock::getTimeMilliseconds();
+    float dt = (now - prevControlUpdate) / 1000.0f;
+    prevControlUpdate = now;
+
+    float fl = static_cast<float>(frontLeftMotor.getShaftRPM());
+    float fr = static_cast<float>(frontRightMotor.getShaftRPM());
+    float bl = static_cast<float>(backLeftMotor.getShaftRPM());
+    float br = static_cast<float>(backRightMotor.getShaftRPM());
+
+    float vx=0.f, vy=0.f, w=0.f;
+    rpmToBody(fl, fr, bl, br, vx, vy, w);
+
+    // If we don't have estimated derivatives, we pass 0.f for dvx/dvy/dw
+    auto cmd = lqrController->update(
+        vx, 0.f, vxRef,
+        vy, 0.f, vyRef,
+        w,  0.f, wRef
+    );
+
+    frontLeftMotor.setDesiredOutput(cmd[0]);
+    frontRightMotor.setDesiredOutput(cmd[1]);
+    backLeftMotor.setDesiredOutput(cmd[2]);
+    backRightMotor.setDesiredOutput(cmd[3]);
 
     // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
     if (tap::arch::clock::getTimeMilliseconds() - prevCVUpdate > CHASSIS_CV_UPDATE_PERIOD ) {
@@ -47,35 +72,35 @@ void ChassisSubsystem::refresh() {
         // Front right debug message
         int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
                               frontRightMotor.getShaftRPM(),
-                              (int)frontRightDesiredRpm);
+                              (int)cmd[0]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Front left debug message
         nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
                               frontLeftMotor.getShaftRPM(),
-                              (int)frontLeftDesiredRpm);
+                              (int)cmd[1]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back right debug message
         nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
                               backRightMotor.getShaftRPM(),
-                              (int)backRightDesiredRpm);
+                              (int)cmd[2]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back left debug message
         nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
                               backLeftMotor.getShaftRPM(),
-                              (int)backLeftDesiredRpm);
+                              (int)cmd[3]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
     }
 }
 
-void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
-    int64_t error = desiredRpm - motor->getShaftRPM();
-    pid->runControllerDerivateError(error, dt);
-    if (desiredRpm == 0) {
-        motor->setDesiredOutput(0);
-    } else {
-        motor->setDesiredOutput(pid->getOutput());
-    }
-}
+// void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
+//     int64_t error = desiredRpm - motor->getShaftRPM();
+//     pid->runControllerDerivateError(error, dt);
+//     if (desiredRpm == 0) {
+//         motor->setDesiredOutput(0);
+//     } else {
+//         motor->setDesiredOutput(pid->getOutput());
+//     }
+// }
 
 void ChassisSubsystem::updateRpmSetpoints() {
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevRampUpdate;
@@ -84,7 +109,11 @@ void ChassisSubsystem::updateRpmSetpoints() {
     if(yInputRamp.isTargetReached() == false) { yInputRamp.update(RAMP_SLOPE * dt); }
     if(rInputRamp.isTargetReached() == false) { rInputRamp.update(RAMP_SLOPE * dt); }
     
-    setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
+    // setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
+    vxRef = xInputRamp.getValue();
+    vyRef = yInputRamp.getValue();
+    wRef  = rInputRamp.getValue();
+
     prevRampUpdate = tap::arch::clock::getTimeMilliseconds();
 }
 
@@ -99,33 +128,33 @@ void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
     +x is forward, +y is right, +r is clockwise (turning right). 
     Expressed in body frame.
 */
-void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
-{
+// void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
+// {
     
-    x = tap::algorithms::limitVal<float>(x,-1,1);
-    y = tap::algorithms::limitVal<float>(y,-1,1);
-    r = tap::algorithms::limitVal<float>(r,-1,1);
+//     x = tap::algorithms::limitVal<float>(x,-1,1);
+//     y = tap::algorithms::limitVal<float>(y,-1,1);
+//     r = tap::algorithms::limitVal<float>(r,-1,1);
     
-    // x, y, and r contained between -1 and 1
-    // Normalize movement vector
-    float norm = sqrt(x*x+y*y);
-    if (norm > 1) {
-        x = x / norm;
-        y = y / norm;
-    }
+//     // x, y, and r contained between -1 and 1
+//     // Normalize movement vector
+//     float norm = sqrt(x*x+y*y);
+//     if (norm > 1) {
+//         x = x / norm;
+//         y = y / norm;
+//     }
 
-    y = IS_Y_INVERTED ? -y : y;
+//     y = IS_Y_INVERTED ? -y : y;
 
-    switch (wheelType) {
-        case WheelType::omniwheel:
-            setOmniwheelDesiredRPM(x, y, r);
-            break;
-        case WheelType::mecanum:
-        default:
-            setMecanumDesiredRPM(x, y, r);
-            break;
-    }
-}
+//     switch (wheelType) {
+//         case WheelType::omniwheel:
+//             setOmniwheelDesiredRPM(x, y, r);
+//             break;
+//         case WheelType::mecanum:
+//         default:
+//             setMecanumDesiredRPM(x, y, r);
+//             break;
+//     }
+// }
 
 /*
     Attempts to send IMU and wheel encoder data to CV over UART.
@@ -195,19 +224,21 @@ void ChassisSubsystem::sendCVUpdate() {
     drivers->uart.write(Uart::UartPort::Uart7, (uint8_t*)(&positionMessage), sizeof(positionMessage));
 }
 
-void ChassisSubsystem::setMecanumDesiredRPM(const float& x, const float& y, const float& r) {
-    frontLeftDesiredRpm  = (x-y-r)*rpmScaleFactor;
-    frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
-    backLeftDesiredRpm   = (x+y-r)*rpmScaleFactor;
-    backRightDesiredRpm  = (x-y+r)*rpmScaleFactor;
-}
+// Old methods to set wheel RPMs based on desired x, y, r inputs with PID control
 
-void ChassisSubsystem::setOmniwheelDesiredRPM(const float& x, const float& y, const float& r) {
-    frontLeftDesiredRpm  = (y+r)  * rpmScaleFactor;
-    frontRightDesiredRpm = (-x-r) * rpmScaleFactor;
-    backLeftDesiredRpm   = (-x+r) * rpmScaleFactor;
-    backRightDesiredRpm  = (y-r)  * rpmScaleFactor;
-}
+// void ChassisSubsystem::setMecanumDesiredRPM(const float& x, const float& y, const float& r) {
+//     frontLeftDesiredRpm  = (x-y-r)*rpmScaleFactor;
+//     frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
+//     backLeftDesiredRpm   = (x+y-r)*rpmScaleFactor;
+//     backRightDesiredRpm  = (x-y+r)*rpmScaleFactor;
+// }
+
+// void ChassisSubsystem::setOmniwheelDesiredRPM(const float& x, const float& y, const float& r) {
+//     frontLeftDesiredRpm  = (y+r)  * rpmScaleFactor;
+//     frontRightDesiredRpm = (-x-r) * rpmScaleFactor;
+//     backLeftDesiredRpm   = (-x+r) * rpmScaleFactor;
+//     backRightDesiredRpm  = (y-r)  * rpmScaleFactor;
+// }
 
 }  // namespace chassis
 
