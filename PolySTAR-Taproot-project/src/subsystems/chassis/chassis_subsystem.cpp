@@ -128,33 +128,23 @@ void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
     +x is forward, +y is right, +r is clockwise (turning right). 
     Expressed in body frame.
 */
-// void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
-// {
+void ChassisSubsystem::setDesiredOutput(float x, float y, float r) 
+{
     
-//     x = tap::algorithms::limitVal<float>(x,-1,1);
-//     y = tap::algorithms::limitVal<float>(y,-1,1);
-//     r = tap::algorithms::limitVal<float>(r,-1,1);
+    x = tap::algorithms::limitVal<float>(x,-1,1);
+    y = tap::algorithms::limitVal<float>(y,-1,1);
+    r = tap::algorithms::limitVal<float>(r,-1,1);
     
-//     // x, y, and r contained between -1 and 1
-//     // Normalize movement vector
-//     float norm = sqrt(x*x+y*y);
-//     if (norm > 1) {
-//         x = x / norm;
-//         y = y / norm;
-//     }
+    // x, y, and r contained between -1 and 1
+    // Normalize movement vector
+    float norm = sqrt(x*x+y*y);
+    if (norm > 1) {
+        x = x / norm;
+        y = y / norm;
+    }
 
-//     y = IS_Y_INVERTED ? -y : y;
-
-//     switch (wheelType) {
-//         case WheelType::omniwheel:
-//             setOmniwheelDesiredRPM(x, y, r);
-//             break;
-//         case WheelType::mecanum:
-//         default:
-//             setMecanumDesiredRPM(x, y, r);
-//             break;
-//     }
-// }
+    y = IS_Y_INVERTED ? -y : y;
+}
 
 /*
     Attempts to send IMU and wheel encoder data to CV over UART.
