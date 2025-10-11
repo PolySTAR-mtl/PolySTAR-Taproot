@@ -19,6 +19,9 @@ static constexpr float CHASSIS_TR_PROPORTIONAL_KALMAN = 0.0f;
  * of the chassis when using the keyboard.
 */
 
+static constexpr float CHASSIS_MASS_KG          = 17.2597f;
+static constexpr float CHASSIS_YAW_INERTIA_KGM2 = 1.139542f;
+
 #ifdef TARGET_HERO
 static constexpr float CHASSIS_DEFAULT_SPEED = 0.25f;
 

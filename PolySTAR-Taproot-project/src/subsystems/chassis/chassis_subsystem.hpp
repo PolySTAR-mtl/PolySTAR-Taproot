@@ -41,10 +41,9 @@ public:
      * Constructs a new ChassisSubsystem with default parameters specified in
      * the private section of this class.
      */
-    ChassisSubsystem(src::Drivers *drivers, const SRobotConfig& robotConfig)
+    ChassisSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           drivers(drivers),
-          wheelType(robotConfig.wheelType),
           frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "front left motor"),
           frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "front right motor"),
           backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "back left motor"),
@@ -59,7 +58,12 @@ public:
         //   backRightDesiredRpm(0),
           prevCVUpdate(0)
     {
-        lqrController = std::make_unique<chassis::algorithms::ChassisLqrController>();
+        lqrController = std::make_unique<chassis::algorithms::ChassisLqrController>(
+    CHASSIS_MASS_KG,
+    CHASSIS_YAW_INERTIA_KGM2,
+    MAX_CURRENT_OUTPUT,   
+    rpmScaleFactor        
+);
     }
 
     ChassisSubsystem(const ChassisSubsystem &other) = delete;
