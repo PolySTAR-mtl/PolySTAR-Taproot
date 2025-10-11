@@ -68,9 +68,17 @@ void TurretSubsystem::runYawController(uint32_t dt) {
     }
     int16_t currentRPM = yawMotor->getShaftRPM();
 
-    cascadedYawController.update(error, currentRPM, dt);
+    float errDeg = DjiMotor::encoderToDegrees<int64_t>((int64_t)error);
+    float errRad = errDeg * DEG_TO_RAD;
+    float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
-    yawMotor->setDesiredOutput(cascadedYawController.getOutput());
+    lqrTurret.update(/*panAngle*/  errRad, /*panRate*/  omega, /*panTarget*/ 0.0f,
+                     /*tiltAngle*/ 0.0f,   /*tiltRate*/ 0.0f,   /*tiltTarget*/ 0.0f);
+    yawMotor->setDesiredOutput(lqrTurret.getPanVoltage());
+
+    // cascadedYawController.update(error, currentRPM, dt);
+
+    // yawMotor->setDesiredOutput(cascadedYawController.getOutput());
 }
 
 /*
@@ -80,9 +88,16 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
     float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
     int16_t currentRPM = pitchMotor.getShaftRPM();
 
-    cascadedPitchController.update(error, currentRPM, dt);
+    float errDeg = pitchMotor.encoderToDegrees<int64_t>((int64_t)error);
+    float errRad = errDeg * DEG_TO_RAD;
+    float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
-    pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
+    lqrTurret.update(/*panAngle*/  0.0f,   /*panRate*/  0.0f,   /*panTarget*/ 0.0f,
+                     /*tiltAngle*/ errRad, /*tiltRate*/ omega,  /*tiltTarget*/ 0.0f);
+    pitchMotor.setDesiredOutput(lqrTurret.getTiltVoltage());
+    // cascadedPitchController.update(error, currentRPM, dt);
+
+    // pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
 }
 
 /*
@@ -167,59 +182,59 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
 /*
     Velocity Control debug information, used during tuning of the inner loops.
 */
-void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold) {
-    char buffer[500];
+// void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold) {
+//     char buffer[500];
     
-    int nBytes;
+//     int nBytes;
 
-    if (sendYaw) {
-        float error = yawDesiredPos - yawMotor->getEncoderWrapped();
-        if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
-            error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
-        }
-        float yawDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
-        nBytes = sprintf (buffer, "Yaw RPM: %i, Setpoint: %i\n",
-                                (int)(yawMotor->getShaftRPM()),
-                                (int)(yawDesiredVel));
-        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
-    }
+//     if (sendYaw) {
+//         float error = yawDesiredPos - yawMotor->getEncoderWrapped();
+//         if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
+//             error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
+//         }
+//         float yawDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
+//         nBytes = sprintf (buffer, "Yaw RPM: %i, Setpoint: %i\n",
+//                                 (int)(yawMotor->getShaftRPM()),
+//                                 (int)(yawDesiredVel));
+//         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+//     }
 
-    if (sendPitch) {
-        float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
-        float pitchDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
-        nBytes = sprintf (buffer, "Pitch RPM: %i, Setpoint: %i\n",
-                                (int)(pitchMotor.getShaftRPM()),
-                                (int)(pitchDesiredVel));
-        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
-    }
-}
+//     if (sendPitch) {
+//         float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+//         float pitchDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
+//         nBytes = sprintf (buffer, "Pitch RPM: %i, Setpoint: %i\n",
+//                                 (int)(pitchMotor.getShaftRPM()),
+//                                 (int)(pitchDesiredVel));
+//         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+//     }
+// }
 
 /*
     Run yaw inner loop. Used when tuning.
 */
-void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
-    int64_t error = yawDesiredPos - yawMotor->getEncoderWrapped();
-    if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
-        error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
-    }
-    int16_t currentRPM = yawMotor->getShaftRPM();
+// void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
+//     int64_t error = yawDesiredPos - yawMotor->getEncoderWrapped();
+//     if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
+//         error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
+//     }
+//     int16_t currentRPM = yawMotor->getShaftRPM();
 
-    cascadedYawController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
+//     cascadedYawController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
-    yawMotor->setDesiredOutput(cascadedYawController.getOutput());
-}
+//     yawMotor->setDesiredOutput(cascadedYawController.getOutput());
+// }
 
 /*
     Run pitch inner loop. Used when tuning.
 */
-void TurretSubsystem::pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
-    float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
-    int16_t currentRPM = pitchMotor.getShaftRPM();
+// void TurretSubsystem::pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
+//     float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+//     int16_t currentRPM = pitchMotor.getShaftRPM();
 
-    cascadedPitchController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
+//     cascadedPitchController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
-    pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
-}
+//     pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
+// }
 
 }  // namespace turret
 
