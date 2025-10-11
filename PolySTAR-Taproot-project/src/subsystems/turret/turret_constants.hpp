@@ -46,6 +46,9 @@ static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
  */
 static constexpr float RPM_TO_DEGPERMS = 0.006;
 static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
+static constexpr float DEG_TO_RAD     = DEGREE_TO_MILLIRAD / 1000.0f;
+static constexpr float RPM_TO_RAD_S   = RPM_TO_DEGPERMS * DEGREE_TO_MILLIRAD;
+
 
 /**
  * Spin2win stabilization constants
@@ -53,3 +56,11 @@ static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
  */
 static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
+
+/**
+ * LQR parameters (need to be computed with Simulink or similar CARE solver if you want to change them)
+ */
+static constexpr float TURRET_PAN_INERTIA  = 0.0051f;   // kg·m²
+static constexpr float TURRET_TILT_INERTIA = 0.0015f;   // kg·m²
+static constexpr float TURRET_LQR_Q        = 50.0f;
+static constexpr float TURRET_LQR_R        = 0.05f;
