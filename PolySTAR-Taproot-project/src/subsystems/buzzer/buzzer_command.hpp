@@ -4,7 +4,7 @@
 #include "buzzer_subsystem.hpp"
 #include "tap/communication/sensors/buzzer/buzzer.hpp"
 #include "tap/control/command.hpp"
-#include "buzzer_constants.hpp"
+#include "tap/util_macros.hpp"
 
 namespace control
 {
@@ -20,12 +20,12 @@ public:
     BuzzerCommand(
         BuzzerSubsystem *const buzzer, 
         src::Drivers *drivers,
-        tap::arch::MilliTimeout delayTimer, 
-        uint16_t** notes,
+        uint16_t (*notes)[2],
         uint8_t songLength,
-        uint8_t readIndex);
-    BuzzerCommand(const BuzzerSubsystem &other ) = delete;
-    BuzzerCommand &operator=(const BuzzerSubsystem &other ) = delete;
+        uint8_t readIndex = 0);
+    // BuzzerCommand(const BuzzerSubsystem &other ) = delete;
+    // BuzzerCommand &operator=(const BuzzerSubsystem &other ) = delete;
+    DISALLOW_COPY_AND_ASSIGN(BuzzerCommand);
     
     void initialize() override;
     void execute() override;
@@ -34,10 +34,12 @@ public:
     const char* getName() const override;
 
 private:
+
+    void setSongLenght(uint16_t** notes);
     BuzzerSubsystem *const buzzer;   
     src::Drivers *drivers;
     tap::arch::MilliTimeout delayTimer;
-    uint16_t** notes;
+    uint16_t (*notes)[2];
     uint8_t songLength;
     uint8_t readIndex;
     bool songFinished;

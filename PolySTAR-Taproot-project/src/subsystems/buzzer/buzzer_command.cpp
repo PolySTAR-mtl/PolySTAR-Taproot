@@ -1,5 +1,6 @@
 #include "buzzer_command.hpp"
 
+
 namespace control
 {
 namespace buzzer
@@ -7,13 +8,11 @@ namespace buzzer
     BuzzerCommand::BuzzerCommand(
         BuzzerSubsystem *const buzzer, 
         src::Drivers *drivers,
-        tap::arch::MilliTimeout delayTimer, 
-        uint16_t** notes,
+        uint16_t (*notes)[2],
         uint8_t songLength,
         uint8_t readIndex)
         : buzzer(buzzer), 
           drivers(drivers),
-          delayTimer(delayTimer),
           notes(notes),
           songLength(songLength),
           readIndex(0),

@@ -14,5 +14,8 @@ uint16_t marioTheme[][2] =
     {67,300}
 };
 
+uint8_t themeSize = sizeof(marioTheme) / sizeof(marioTheme[0]);
+
+
 
 #endif // BUZZER_CONSTANTS_HPP

@@ -63,7 +63,7 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
-buzzer::BuzzerSubsytem theBuzzer(drivers());
+buzzer::BuzzerSubsystem theBuzzer(drivers());
 chassis::ChassisSpin2WinSubsystem theChassis(drivers());
 
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
@@ -72,10 +72,9 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
 /* Buzzer */
-tap::arch::MilliTimeout delayTimer();
 
-uint8_t themeSize = sizeof(marioTheme) / sizeof(marioTheme[0]);
-buzzer::BuzzerCommand buzzerCommand(&theBuzzer, drivers(), delayTimer, marioTheme,  themeSize, 0);
+
+buzzer::BuzzerCommand buzzerCommand(&theBuzzer, drivers(), marioTheme,  themeSize);
 
 /* chassis */
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
