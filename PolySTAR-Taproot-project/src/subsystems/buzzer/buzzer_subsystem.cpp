@@ -9,14 +9,14 @@ namespace control
 namespace buzzer
 {
 
-    void BuzzerSubsystem::playNote(uint8_t midiNote, uint16_t duration)
+    void BuzzerSubsystem::playNote(uint8_t midiNote)  // duration est en milliseconde 
     {
         // Converts the note:
         uint32_t convertedFrequency = convertMidiNoteIntoFrequency(midiNote);
 
         // Plays it for said amount of time :
         tap::buzzer::playNote(&drivers->pwm, convertedFrequency);
-        modm::delay_ms(static_cast<uint32_t>(duration));
+        //modm::delay_ms(static_cast<uint32_t>(duration));
     }
 
     uint32_t BuzzerSubsystem::convertMidiNoteIntoFrequency(uint8_t midiNote)

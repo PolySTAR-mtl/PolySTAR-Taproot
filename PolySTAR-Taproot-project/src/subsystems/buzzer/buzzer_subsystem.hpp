@@ -4,6 +4,7 @@
 #include "tap/control/subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "tap/util_macros.hpp"
+#include "tap/architecture/timeout.hpp"
 
 namespace control
 {
@@ -32,7 +33,7 @@ public:
      * @param [in] duration
      * @return Nothing.
      */
-    void playNote(uint8_t midiNote, uint16_t duration);
+    void playNote(uint8_t midiNote);
 
     /**
      * Stops playing whatever it's playing.
