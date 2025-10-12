@@ -6,6 +6,11 @@
 #include "tap/control/toggle_command_mapping.hpp"
 #include "control/safe_disconnect.hpp"
 
+// Buzzer includes
+#include "subsystems/buzzer/buzzer_subsystem.hpp"
+#include "subsystems/buzzer/buzzer_command.hpp"
+#include "subsystems/buzzer/buzzer_constants.hpp"
+
 // Chassis includes
 #include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
 #include "subsystems/chassis/chassis_relative_drive_command.hpp"
@@ -58,6 +63,7 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
+buzzer::BuzzerSubsytem theBuzzer(drivers());
 chassis::ChassisSpin2WinSubsystem theChassis(drivers());
 
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
@@ -65,6 +71,12 @@ feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
+/* Buzzer */
+tap::arch::MilliTimeout delayTimer();
+
+uint8_t themeSize = sizeof(marioTheme) / sizeof(marioTheme[0]);
+buzzer::BuzzerCommand buzzerCommand(&theBuzzer, drivers(), delayTimer, marioTheme,  themeSize, 0);
+
 /* chassis */
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
@@ -109,6 +121,7 @@ ToggleCommandMapping toggleChassisSpinKey(drivers(), {&chassisKeyboardDrive, &tu
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
+    drivers->commandScheduler.registerSubsystem(&theBuzzer);
     drivers->commandScheduler.registerSubsystem(&theChassis);
     drivers->commandScheduler.registerSubsystem(&theTurret);
     drivers->commandScheduler.registerSubsystem(&theFeeder);
@@ -117,6 +130,7 @@ void registerStandardSubsystems(src::Drivers *drivers) {
 
 /* initialize subsystems ----------------------------------------------------*/
 void initializeSubsystems() {
+    theBuzzer.initialize();
     theChassis.initialize();
     theTurret.initialize();
     theFeeder.initialize();
@@ -127,12 +141,14 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualNoSpin);
+    //theBuzzer.setDefaultCommand(&buzzerCommand);
     // theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
 void startStandardCommands(src::Drivers *drivers) {
     // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+    drivers->commandScheduler.addCommand(&buzzerCommand);
 }
 
 /* register io mappings here ------------------------------------------------*/
