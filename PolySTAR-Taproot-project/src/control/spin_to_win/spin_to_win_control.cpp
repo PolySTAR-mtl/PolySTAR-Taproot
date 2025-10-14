@@ -8,7 +8,7 @@
 
 // Buzzer includes
 #include "subsystems/buzzer/buzzer_subsystem.hpp"
-#include "subsystems/buzzer/buzzer_command.hpp"
+#include "subsystems/buzzer/play_song_command.hpp"
 #include "subsystems/buzzer/buzzer_constants.hpp"
 
 // Chassis includes
@@ -74,7 +74,7 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 /* Buzzer */
 
 
-buzzer::BuzzerCommand buzzerCommand(&theBuzzer, drivers(), marioTheme,  themeSize);
+buzzer::PlaySongCommand PlaySongCommand(&theBuzzer, drivers(), marioTheme,  themeSize);
 
 /* chassis */
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
@@ -140,14 +140,14 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualNoSpin);
-    //theBuzzer.setDefaultCommand(&buzzerCommand);
+    //theBuzzer.setDefaultCommand(&PlaySongCommand);
     // theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
 void startStandardCommands(src::Drivers *drivers) {
     // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
-    drivers->commandScheduler.addCommand(&buzzerCommand);
+    drivers->commandScheduler.addCommand(&PlaySongCommand);
 }
 
 /* register io mappings here ------------------------------------------------*/
