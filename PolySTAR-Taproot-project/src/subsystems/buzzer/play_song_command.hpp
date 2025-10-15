@@ -14,7 +14,7 @@ static constexpr uint8_t MIDI_NOTE_INDEX = 0;
 
 class PlaySongCommand : public tap::control::Command {
    public:
-    PlaySongCommand(BuzzerSubsystem *const buzzer, src::Drivers *drivers, uint16_t (*notes)[2], uint8_t songLength);
+    PlaySongCommand(BuzzerSubsystem *const buzzer, src::Drivers *drivers, const uint16_t (*notes)[2], uint8_t songLength);
 
     PlaySongCommand(const PlaySongCommand &) = delete;
     PlaySongCommand &operator=(const PlaySongCommand &) = delete;
@@ -29,7 +29,7 @@ class PlaySongCommand : public tap::control::Command {
     BuzzerSubsystem *const buzzer;
     src::Drivers *drivers;
     tap::arch::MilliTimeout delayTimer;
-    uint16_t (*notes)[2];
+    const uint16_t (*notes)[2];
     uint8_t songLength;
     uint8_t readIndex;
     bool songFinished;

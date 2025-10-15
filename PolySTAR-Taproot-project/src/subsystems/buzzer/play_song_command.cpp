@@ -2,7 +2,7 @@
 
 namespace control {
 namespace buzzer {
-PlaySongCommand::PlaySongCommand(BuzzerSubsystem *const buzzer, src::Drivers *drivers, uint16_t (*notes)[2], uint8_t songLength)
+PlaySongCommand::PlaySongCommand(BuzzerSubsystem *const buzzer, src::Drivers *drivers, const uint16_t (*notes)[2], uint8_t songLength)
     : buzzer(buzzer),
       drivers(drivers),
       notes(notes),
