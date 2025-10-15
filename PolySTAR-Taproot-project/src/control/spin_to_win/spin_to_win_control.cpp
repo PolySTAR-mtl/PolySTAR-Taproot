@@ -1,50 +1,49 @@
 #ifdef TARGET_SPIN_TO_WIN
 
+#include "control/safe_disconnect.hpp"
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
 #include "tap/control/toggle_command_mapping.hpp"
-#include "control/safe_disconnect.hpp"
 
 // Buzzer includes
+#include "subsystems/buzzer/buzzer_constants.hpp"
 #include "subsystems/buzzer/buzzer_subsystem.hpp"
 #include "subsystems/buzzer/play_song_command.hpp"
-#include "subsystems/buzzer/buzzer_constants.hpp"
 
 // Chassis includes
-#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
+#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 #include "subsystems/chassis/chassis_relative_drive_command.hpp"
 #include "subsystems/chassis/chassis_spin2win_command.hpp"
 #include "subsystems/chassis/chassis_spin2win_keyboard_command.hpp"
-#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
 
 // Turret includes
-#include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_manual_aim_command.hpp"
 #include "subsystems/turret/turret_mouse_aim_command.hpp"
 #include "subsystems/turret/turret_stable_manual_aim_command.hpp"
 #include "subsystems/turret/turret_stable_mouse_aim_command.hpp"
+#include "subsystems/turret/turret_subsystem.hpp"
 #include "subsystems/turret/turret_test_bottomleft_command.hpp"
 #include "subsystems/turret/turret_test_topright_command.hpp"
 
 // Feeder includes
-#include "subsystems/feeder/feeder_position_subsystem.hpp"
-#include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_move_command.hpp"
+#include "subsystems/feeder/feeder_move_unjam_command.hpp"
+#include "subsystems/feeder/feeder_position_subsystem.hpp"
 
-//Flywheel includes
-#include "subsystems/flywheel/flywheel_subsystem.hpp"
-#include "subsystems/flywheel/flywheel_fire_command.hpp"
-
+// Flywheel includes
 #include "control/drivers/drivers_singleton.hpp"
+#include "subsystems/flywheel/flywheel_fire_command.hpp"
+#include "subsystems/flywheel/flywheel_subsystem.hpp"
 
 using src::control::RemoteSafeDisconnectFunction;
 using tap::communication::serial::Remote;
 using tap::control::CommandMapper;
 using tap::control::HoldCommandMapping;
 using tap::control::HoldRepeatCommandMapping;
-using tap::control::ToggleCommandMapping;
 using tap::control::RemoteMapState;
+using tap::control::ToggleCommandMapping;
 
 /*
  * NOTE: We are using the DoNotUse_getDrivers() function here
@@ -53,13 +52,10 @@ using tap::control::RemoteMapState;
  *      Drivers class to all of these objects.
  */
 
- 
-
 using src::DoNotUse_getDrivers;
 
 static src::driversFunc drivers = src::DoNotUse_getDrivers;
-namespace control
-{
+namespace control {
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
@@ -73,8 +69,7 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 /* define commands ----------------------------------------------------------*/
 /* Buzzer */
 
-
-buzzer::PlaySongCommand PlaySongCommand(&theBuzzer, drivers(), marioTheme,  themeSize);
+buzzer::PlaySongCommand PlaySongCommand(&theBuzzer, drivers(), SONG_MARIO_THEME, themeSize);
 
 /* chassis */
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
@@ -102,15 +97,21 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /* Controller mappings */
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP),true);
-HoldCommandMapping startFlywheel(drivers(), {&flywheelStart, &feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
-HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManualAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam},
+                                    RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP), true);
+HoldCommandMapping startFlywheel(drivers(), {&flywheelStart, &feederMoveUnjam},
+                                 RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManualAim},
+                                     RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Mouse mappings */
-ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
-HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT),true);
+ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart},
+                                        RemoteMapState(RemoteMapState::MouseButton::RIGHT));
+HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam},
+                                         RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
 // ToggleCommandMapping toggleClientAiming(drivers(), {&turretMouseNoSpin}, RemoteMapState({Remote::Key::F}));
-ToggleCommandMapping toggleChassisSpinKey(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::R}));
+ToggleCommandMapping toggleChassisSpinKey(drivers(), {&chassisKeyboardDrive, &turretMouseAim},
+                                          RemoteMapState({Remote::Key::R}));
 // ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 
@@ -140,8 +141,8 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualNoSpin);
-    //theBuzzer.setDefaultCommand(&PlaySongCommand);
-    // theFlywheel.setDefaultCommand(&flywheelStart);
+    // theBuzzer.setDefaultCommand(&PlaySongCommand);
+    //  theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -163,8 +164,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     // drivers->commandMapper.addMap(&rightAimTurret);
 }
 
-void initSubsystemCommands(src::Drivers *drivers)
-{
+void initSubsystemCommands(src::Drivers *drivers) {
     drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
     initializeSubsystems();
     registerStandardSubsystems(drivers);
@@ -172,8 +172,8 @@ void initSubsystemCommands(src::Drivers *drivers)
     startStandardCommands(drivers);
     registerStandardIoMappings(drivers);
     char buffer[50];
-    int nBytes = sprintf(buffer,"Initializing Standard\n");
-    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+    int nBytes = sprintf(buffer, "Initializing Standard\n");
+    drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart8, (uint8_t *)buffer, nBytes + 1);
 }
 
 }  // namespace control
