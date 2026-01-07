@@ -6,45 +6,38 @@
 #include "tap/control/command.hpp"
 #include "tap/util_macros.hpp"
 
-namespace control
-{
-namespace buzzer
-{
+namespace control {
+namespace buzzer {
 
 static constexpr uint8_t NOTE_DURATION_INDEX = 1;
 static constexpr uint8_t MIDI_NOTE_INDEX = 0;
 
-class PlaySongCommand : public tap::control::Command
-{
-public:
-    PlaySongCommand(
-        BuzzerSubsystem *const buzzer, 
-        src::Drivers *drivers,
-        uint16_t (*notes)[2],
-        uint8_t songLength,
-        uint8_t readIndex = 0);
-    DISALLOW_COPY_AND_ASSIGN(PlaySongCommand);
-    
+class PlaySongCommand : public tap::control::Command {
+   public:
+    PlaySongCommand(BuzzerSubsystem *const buzzer, src::Drivers *drivers, const uint16_t (*notes)[2], uint8_t songLength);
+
+    PlaySongCommand(const PlaySongCommand &) = delete;
+    PlaySongCommand &operator=(const PlaySongCommand &) = delete;
+
     void initialize() override;
     void execute() override;
     void end(bool) override;
     bool isFinished() const override;
-    const char* getName() const override;
+    const char *getName() const override;
 
-private:
-
-    BuzzerSubsystem *const buzzer;   
+   private:
+    BuzzerSubsystem *const buzzer;
     src::Drivers *drivers;
     tap::arch::MilliTimeout delayTimer;
-    uint16_t (*notes)[2];
+    const uint16_t (*notes)[2];
     uint8_t songLength;
     uint8_t readIndex;
     bool songFinished;
 
-}; // class PlaySongCommand
+};  // class PlaySongCommand
 
-} // namespace buzzer
+}  // namespace buzzer
 
-} // namespace control
+}  // namespace control
 
-#endif //PLAY_SONG_COMMAND_HPP_
+#endif  // PLAY_SONG_COMMAND_HPP_

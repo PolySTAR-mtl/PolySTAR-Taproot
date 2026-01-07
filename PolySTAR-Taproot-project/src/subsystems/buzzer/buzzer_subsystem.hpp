@@ -1,35 +1,30 @@
 #ifndef BUZZER_SUBSYSTEM_HPP
 #define BUZZER_SUBSYSTEM_HPP
 
-#include "tap/control/subsystem.hpp"
+#include "buzzer_constants.hpp"
 #include "control/drivers/drivers.hpp"
-#include "tap/util_macros.hpp"
 #include "tap/architecture/timeout.hpp"
+#include "tap/control/subsystem.hpp"
+#include "tap/util_macros.hpp"
 
-namespace control
-{
-namespace buzzer
-{
-
-static constexpr uint16_t BASE_FREQUENCY_HZ = 440;
-static constexpr uint8_t BASE_FREQUENCY_NOTE = 69; 
-static constexpr uint8_t N_HALF_TONE_PER_OCTAVE = 12;
+namespace control {
+namespace buzzer {
 
 /**
  * This subsystem can play anytype of sound for a specified amount of time.
  */
-class BuzzerSubsystem : public tap::control::Subsystem
-{
-public:
+class BuzzerSubsystem : public tap::control::Subsystem {
+   public:
+    BuzzerSubsystem(src::Drivers *drivers) : tap::control::Subsystem(drivers) {}
 
-    BuzzerSubsystem(src::Drivers* drivers) : tap::control::Subsystem(drivers){}
-    DISALLOW_COPY_AND_ASSIGN(BuzzerSubsystem);
+    BuzzerSubsystem(const BuzzerSubsystem &) = delete;
+    BuzzerSubsystem &operator=(const BuzzerSubsystem &) = delete;
 
     /**
      * Plays a MIDI note for a specified amount of time.
      * This method will take the note given in input, tranform it
      * into a frequency and then play it for said amount of time.
-     * @param [in] midiNote 
+     * @param [in] midiNote
      * @param [in] duration
      * @return Nothing.
      */
@@ -39,10 +34,8 @@ public:
      * Stops playing whatever it's playing.
      */
     void stopSound();
-    
 
-private:
-
+   private:
     /**
      * Converts a midi note into frequency in hz.
      * @param [in] midiNote
@@ -57,4 +50,4 @@ private:
 
 } // namespace control
 
-#endif //BUZZER_SUBSYSTEM_HPP
+#endif  // BUZZER_SUBSYSTEM_HPP
