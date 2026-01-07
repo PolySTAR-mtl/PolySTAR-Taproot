@@ -26,6 +26,7 @@
 #endif
 
 #include "tap/board/board.hpp"
+#include "tap/communication/sensors/buzzer/buzzer.hpp"
 
 #include "modm/architecture/interface/delay.hpp"
 
@@ -93,11 +94,11 @@ int main()
             PROFILE(drivers->profiler, drivers->djiMotorTxHandler.encodeAndSendCanData, ());
             PROFILE(drivers->profiler, drivers->terminalSerial.update, ());
         }
+        tap::buzzer::playNote(&drivers->pwm, 1000);
         modm::delay_us(10);
     }
     return 0;
 }
-
 
 
 static void initializeIo(src::Drivers *drivers)

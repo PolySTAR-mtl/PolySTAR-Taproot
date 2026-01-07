@@ -51,9 +51,10 @@ private:
     uint32_t convertMidiNoteIntoFrequency(uint8_t midiNote);
 
     src::Drivers* drivers;
-};
-}
+};  // class BuzzerSubsystem
 
-}
+} // namesapce buzzer
+
+} // namespace control
 
 #endif //BUZZER_SUBSYSTEM_HPP
