@@ -13,16 +13,13 @@
         inherit system;
       };
 
-      gcc10 = pkgsOld.gcc10;
-      gcc-arm-embedded10 = pkgsOld.gcc-arm-embedded-10;
-
       python = pkgs.python3;
       pythonPackages = python.pkgs;
     in {
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
           pkg-config
-          gcc-arm-embedded10
+          gcc-arm-embedded-10
           gcc10
           binutils
           scons
@@ -31,8 +28,8 @@
           git
           doxygen
           gtest
-          pkgsOld.bear
-          pkgsOld.glibc
+          bear
+          glibc
           clang-tools
         ];
 
@@ -42,7 +39,7 @@
           pythonPackages.setuptools
           pythonPackages.virtualenv
           pythonPackages.pyelftools
-          pythonPackages.standard-telnetlib
+          # pythonPackages.standard-telnetlib
           pythonPackages.jinja2
           pipenv
           stlink
