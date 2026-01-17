@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -66,6 +66,11 @@ public:
  * position. Obvious issues arise if one attempts to tell the Subsystem
  * to do two things at once. Using this class will disallow these two
  * Commands from being executed at the same time.
+ *
+ * For the the above reasons, you cannot map the same command instance to
+ * two different input states at the same time. You must declare a
+ * separate instance of the command (these can be the same class) for each
+ * mapping, or use a ComprisedCommand with your own scheduling logic.
  *
  * This class contains a map of Subsystems -> Commands. The Subsystems
  * will be refreshed each time the CommandScheduler is ran. If there

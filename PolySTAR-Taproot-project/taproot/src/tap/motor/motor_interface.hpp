@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -34,6 +34,9 @@ public:
     virtual void initialize() = 0;
     virtual int64_t getEncoderUnwrapped() const = 0;
     virtual uint16_t getEncoderWrapped() const = 0;
+    virtual void resetEncoderValue() = 0;
+    virtual float getPositionUnwrapped() const = 0;
+    virtual float getPositionWrapped() const = 0;
     virtual void setDesiredOutput(int32_t desiredOutput) = 0;
     virtual bool isMotorOnline() const = 0;
     virtual int16_t getOutputDesired() const = 0;

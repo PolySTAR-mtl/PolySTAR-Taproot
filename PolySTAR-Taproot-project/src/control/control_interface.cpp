@@ -9,7 +9,7 @@ namespace src::control
 float ControlInterface::getChassisRInput()
 {
     // Value between -1 and 1
-    return drivers->remote.getWheel() / WHEEL_MAX_VALUE;
+    return drivers->remote.getChannel(tap::communication::serial::Remote::Channel::WHEEL);
 }
 
 float ControlInterface::getChassisYInput()
