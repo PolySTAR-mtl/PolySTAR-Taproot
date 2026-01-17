@@ -2,46 +2,52 @@
 #define FLYWHEEL_FIRE_COMMAND_HPP_
 
 #include "tap/control/command.hpp"
+
 #include "control/drivers/drivers.hpp"
+
 #include "flywheel_subsystem.hpp"
+#include "generic_fire_command.hpp"
+#include "normal_fire_policy.hpp"
 
 namespace control
 {
 namespace flywheel
 {
+using FlywheelFireCommand =
+    GenericFireCommand<FlywheelSubsystem, NormalFirePolicy<FlywheelSubsystem>>;
 
-class FlywheelFireCommand : public tap::control::Command
-{
-public:
+// class FlywheelFireCommand : public tap::control::Command
+// {
+// public:
 
-    /**
-     * Constructs a new Flywheel fire command
-     * @param[in] flywheel a pointer to the flywheel to be passed in that this
-     * Command will interact with.
-     */
-    FlywheelFireCommand(FlywheelSubsystem *const flywheel, src::Drivers *drivers);
+//     /**
+//      * Constructs a new Flywheel fire command
+//      * @param[in] flywheel a pointer to the flywheel to be passed in that this
+//      * Command will interact with.
+//      */
+//     FlywheelFireCommand(FlywheelSubsystem *const flywheel, src::Drivers *drivers);
 
-    FlywheelFireCommand(const FlywheelFireCommand &other) = delete;
+//     FlywheelFireCommand(const FlywheelFireCommand &other) = delete;
 
-    FlywheelFireCommand &operator=(const FlywheelFireCommand &other) = delete;
+//     FlywheelFireCommand &operator=(const FlywheelFireCommand &other) = delete;
 
-    const char *getName() const { return "flywheel fire command"; }
+//     const char *getName() const { return "flywheel fire command"; }
 
-    void initialize() override;
+//     void initialize() override;
 
-    bool isFinished() const override;
+//     bool isFinished() const override;
 
-    void execute() override;
+//     void execute() override;
 
-    void end(bool) override;
+//     void end(bool) override;
 
-private:
-    // Hardware constants, not specific to any particular flywheel subsystem.
-    FlywheelSubsystem *const flywheel;
+// private:
+//     // Hardware constants, not specific to any particular flywheel subsystem.
+//     FlywheelSubsystem *const flywheel;
 
-    src::Drivers *drivers;
+//     src::Drivers *drivers;
 
-};  // class FlywheelFireCommand
+// };  // class FlywheelFireCommand
 
 }  // namespace flywheel
 
