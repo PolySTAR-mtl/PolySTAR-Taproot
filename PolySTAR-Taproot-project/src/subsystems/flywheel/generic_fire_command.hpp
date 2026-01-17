@@ -17,6 +17,11 @@ public:
           drivers_{drivers},
           firePolicy_{flywheel, drivers}
     {
+        if (flywheel == nullptr)
+        {
+            return;
+        }
+        this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem*>(flywheel));
     }
 
     GenericFireCommand(const GenericFireCommand& other) = delete;
