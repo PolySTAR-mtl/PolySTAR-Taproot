@@ -131,13 +131,13 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
 void TurretSubsystem::sendCVUpdate() {
 
     // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
-    float currentBodyYawDeg = yawMotor->encoderToDegrees<uint16_t>(yawMotor->getEncoderUnwrapped()-YAW_NEUTRAL_POS);
-    float currentBodyPitchDeg = pitchMotor.encoderToDegrees<uint16_t>(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
+    float currentBodyYawDeg = yawMotor->encoderToDegrees<int64_t>(yawMotor->getEncoderUnwrapped()-YAW_NEUTRAL_POS);
+    float currentBodyPitchDeg = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
 
     src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage;
     // CV protocol expects angles in milliradians
     turretMessage.yaw = static_cast<int16_t>(currentBodyYawDeg*DEGREE_TO_MILLIRAD);
-    turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg*DEGREE_TO_MILLIRAD);
+    turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg*DEGREE_TO_MILLIRAD * -1);
 
     drivers->uart.write(Uart::UartPort::Uart7, (uint8_t*)(&turretMessage), sizeof(turretMessage));
 }

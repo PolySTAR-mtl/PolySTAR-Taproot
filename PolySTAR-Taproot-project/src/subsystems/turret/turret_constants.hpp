@@ -18,6 +18,10 @@ using tap::communication::serial::Uart;
 #ifdef TARGET_SENTRY
 #include "constants/sentry_turret_constants.hpp"
 #endif
+
+#ifdef TARGET_HERO
+#include "constants/hero_turret_constants.hpp"
+#endif
 /**
  * Right joystick dead zone size. If the absolute value returned by the stick is below
  * this value, it is considered zero.
@@ -47,5 +51,5 @@ static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
  * Spin2win stabilization constants
  * Represents how much the joystick should have move per ms to stabilize the turret
  */
-static constexpr float LOW_ROTATION = 0.56;
-static constexpr float HIGH_ROTATION = 0.85;
+static constexpr float LOW_ROTATION = 0.67;
+static constexpr float HIGH_ROTATION = 0.95;

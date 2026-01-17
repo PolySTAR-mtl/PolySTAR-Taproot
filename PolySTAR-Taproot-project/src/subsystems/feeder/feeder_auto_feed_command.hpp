@@ -27,11 +27,14 @@ public:
 
     FeederAutoFeedCommand &operator=(const GenericAutoFeedCommand &other) = delete;
 
-
     const char *getName() const { return "feeder auto feed command"; }
+    
+    void initialize() override;
 
     void execute() override;
 
+private:
+    tap::arch::MilliTimeout startMatchTimeout;
 };  // FeederAutoFeedCommand
 
 }  // namespace feeder

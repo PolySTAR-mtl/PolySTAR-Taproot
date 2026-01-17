@@ -71,7 +71,6 @@ public:
 private:
     ///< Hardware constants, not specific to any particular feeder.
     static constexpr tap::motor::MotorId FEEDER_MOTOR_ID = tap::motor::MOTOR8;
-    static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor feederMotor;

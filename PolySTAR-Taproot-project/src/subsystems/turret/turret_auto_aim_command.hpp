@@ -3,6 +3,8 @@
 
 #include "generic_auto_aim_command.hpp"
 
+#include "subsystems/sentry_general_constants.hpp"
+
 namespace control
 {
 namespace turret
@@ -24,9 +26,13 @@ public:
     TurretAutoAimCommand &operator=(const TurretAutoAimCommand &other) = delete;
 
     const char *getName() const { return "turret auto aim command"; }
+    
+    void initialize() override;
 
     void execute() override;
 
+private:
+    tap::arch::MilliTimeout startMatchTimeout;
 };  // TurretAutoAimCommand
 
 }  // namespace turret

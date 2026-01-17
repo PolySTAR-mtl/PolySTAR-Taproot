@@ -40,10 +40,10 @@ public:
     ChassisSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           drivers(drivers),
-          frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CAN_BUS_MOTORS, false, "front left motor"),
-          frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CAN_BUS_MOTORS, true, "front right motor"),
-          backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CAN_BUS_MOTORS, false, "back left motor"),
-          backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, CAN_BUS_MOTORS, true, "back right motor"),
+          frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "front left motor"),
+          frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "front right motor"),
+          backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "back left motor"),
+          backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "back right motor"),
           frontLeftPid(pidConfig),
           frontRightPid(pidConfig),
           backLeftPid(pidConfig),
@@ -90,7 +90,6 @@ private:
     static constexpr tap::motor::MotorId FRONT_RIGHT_MOTOR_ID = tap::motor::MOTOR2;
     static constexpr tap::motor::MotorId BACK_RIGHT_MOTOR_ID = tap::motor::MOTOR3;
     static constexpr tap::motor::MotorId BACK_LEFT_MOTOR_ID = tap::motor::MOTOR4;
-    static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor frontLeftMotor;

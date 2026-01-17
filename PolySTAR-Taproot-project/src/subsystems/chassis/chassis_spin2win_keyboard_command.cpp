@@ -1,4 +1,5 @@
 #include "chassis_spin2win_keyboard_command.hpp"
+#include "chassis_constants.hpp"
 
 #include "subsystems/turret/turret_constants.hpp"
 

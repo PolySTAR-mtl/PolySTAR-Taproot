@@ -19,8 +19,8 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
-    70.0f, // kP
-    0.1f,  // kI
+    260.0f, // kP
+    0.8f,  // kI
     0.0f,  // kD
     5000.0f,  // Max error sum
     16000.0f, // Max output
@@ -37,7 +37,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
     0.0f, // kI
     0.45f, // kD
     20.0f, // Max error sum
-    250.0f, // Max output
+    60.0f, // Max output
     1.0f, // TQ Derivative Kalman
     0.0f, // TR Derivative Kalman
     1.0f, // TQ Proportional Kalman
@@ -47,7 +47,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
-    50.0f, // kP
+    300.0f, // kP
     0.0f,  // kI
     0.0f,  // kD
     5000.0f,  // Max error sum
@@ -64,13 +64,13 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
 static constexpr uint16_t YAW_NEUTRAL_POS = 4072;
-static constexpr uint16_t PITCH_NEUTRAL_POS = 6515;
+static constexpr uint16_t PITCH_NEUTRAL_POS = 5150;
 
 /**
  * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
  */
 static constexpr float YAW_RANGE_DEGREES = 90;
-static constexpr float PITCH_RANGE_DEGREES = 20;
+static constexpr float PITCH_RANGE_DEGREES = 40;
 
 /**
  * Range values in encoder ticks, where 0..8191 is a full revolution

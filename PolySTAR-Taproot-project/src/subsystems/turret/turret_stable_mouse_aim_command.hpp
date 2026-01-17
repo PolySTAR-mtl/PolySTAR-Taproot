@@ -42,6 +42,9 @@ private:
     TurretSubsystem *const turret;
 
     src::Drivers *drivers;
+
+    uint32_t prevUpdate;
+    chassis::ChassisSpin2winKeyboardCommand *const chassisCommand;
 };  // TurretStableMouseAimCommand
 
 }  // namespace turret

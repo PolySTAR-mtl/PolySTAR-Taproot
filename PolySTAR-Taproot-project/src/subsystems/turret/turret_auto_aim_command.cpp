@@ -3,6 +3,8 @@
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
 
+#include "subsystems/sentry_general_constants.hpp"
+
 namespace control
 {
 namespace turret
@@ -14,13 +16,19 @@ TurretAutoAimCommand::TurretAutoAimCommand(
 {
 }
 
-void  TurretAutoAimCommand::execute()
+void TurretAutoAimCommand::initialize() 
 {
-    if (drivers->refSerial.getGameData().gameStage != tap::communication::serial::RefSerialData::Rx::GameStage::IN_GAME)
+    startMatchTimeout.restart(START_MATCH_WAIT_TIME);
+}
+
+void TurretAutoAimCommand::execute()
+{
+    if (!startMatchTimeout.isExpired())
     {
-        turret->setAbsoluteOutputDegrees(turret->getYawNeutralPos(), turret->getPitchNeutralPos());
+        turret->setAbsoluteOutputDegrees(0, 0);
         return;
     }
+    drivers->leds.set(tap::gpio::Leds::D, true);
     // Acquire setpoints received from CV over serial through CVHandler
     GenericAutoAimCommand::execute();
 }
