@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -49,7 +49,8 @@ class CommandSchedulerMenu : public modm::AbstractMenu<DummyAllocator<modm::IAbs
 public:
     CommandSchedulerMenu(
         modm::ViewStack<DummyAllocator<modm::IAbstractView>> *stack,
-        Drivers *drivers);
+        Drivers *drivers,
+        int entriesToDisplay = MAX_ENTRIES_DISPLAYED);
 
     ~CommandSchedulerMenu() = default;
 

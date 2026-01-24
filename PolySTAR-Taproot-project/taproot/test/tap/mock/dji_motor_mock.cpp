@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -31,16 +31,20 @@ DjiMotorMock::DjiMotorMock(
     tap::can::CanBus motorCanBus,
     bool isInverted,
     const char *name,
-    uint16_t encWrapped,
-    int64_t encRevolutions)
+    bool currentControl,
+    float gearRatio,
+    uint32_t encoderHomePosition,
+    tap::encoder::EncoderInterface *externalEncoder)
     : DjiMotor(
           drivers,
           desMotorIdentifier,
           motorCanBus,
           isInverted,
           name,
-          encWrapped,
-          encRevolutions)
+          currentControl,
+          gearRatio,
+          encoderHomePosition,
+          externalEncoder)
 {
 }
 DjiMotorMock::~DjiMotorMock() {}

@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -29,8 +29,6 @@
 #include "tap/algorithms/ramp.hpp"
 #include "tap/architecture/timeout.hpp"
 #include "tap/control/command.hpp"
-#include "tap/drivers.hpp"
-#include "tap/motor/dji_motor.hpp"
 
 namespace tap
 {

@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -53,7 +53,7 @@ public:
         (uint16_t, RobotToRobotMessageHandler*),
         (override));
     MOCK_METHOD(RobotId, getRobotIdBasedOnCurrentRobotTeam, (RobotId), (override));
-    MOCK_METHOD(void, acquireTransmissionSemaphore, (), (override));
+    MOCK_METHOD(bool, acquireTransmissionSemaphore, (), (override));
     MOCK_METHOD(void, releaseTransmissionSemaphore, (), (override));
 };  // class RefSerialMock
 }  // namespace mock

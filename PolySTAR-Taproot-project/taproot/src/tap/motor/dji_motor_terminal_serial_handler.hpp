@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -27,13 +27,14 @@
 #include "tap/communication/serial/terminal_serial.hpp"
 #include "tap/util_macros.hpp"
 
-#include "dji_motor.hpp"
+#include "dji_motor_ids.hpp"
 
 namespace tap
 {
 class Drivers;
 namespace motor
 {
+class DjiMotor;
 class DjiMotorTxHandler;
 class DjiMotorTerminalSerialHandler : public communication::serial::TerminalSerialCallbackInterface
 {

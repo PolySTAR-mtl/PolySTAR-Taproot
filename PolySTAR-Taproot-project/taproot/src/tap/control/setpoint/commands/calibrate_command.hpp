@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -25,7 +25,6 @@
 #define TAPROOT_CALIBRATE_COMMAND_HPP_
 
 #include "tap/control/command.hpp"
-#include "tap/drivers.hpp"
 
 namespace tap
 {

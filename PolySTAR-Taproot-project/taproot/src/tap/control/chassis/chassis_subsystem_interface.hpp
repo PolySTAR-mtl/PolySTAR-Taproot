@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -25,7 +25,6 @@
 #define TAPROOT_CHASSIS_SUBSYSTEM_INTERFACE_HPP_
 
 #include "tap/algorithms/math_user_utils.hpp"
-#include "tap/motor/dji_motor.hpp"
 
 #include "../subsystem.hpp"
 #include "modm/math/matrix.hpp"
@@ -44,11 +43,6 @@ public:
      * @return the number of chassis motors
      */
     virtual inline int getNumChassisMotors() const = 0;
-
-    virtual inline int16_t getLeftFrontRpmActual() const = 0;
-    virtual inline int16_t getLeftBackRpmActual() const = 0;
-    virtual inline int16_t getRightFrontRpmActual() const = 0;
-    virtual inline int16_t getRightBackRpmActual() const = 0;
 
     /**
      * @return `true` iff all motors are online

@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -36,10 +36,11 @@ namespace display
 {
 CommandSchedulerMenu::CommandSchedulerMenu(
     modm::ViewStack<DummyAllocator<modm::IAbstractView> > *stack,
-    Drivers *drivers)
+    Drivers *drivers,
+    int entriesToDisplay)
     : modm::AbstractMenu<DummyAllocator<modm::IAbstractView> >(stack, 1),
       drivers(drivers),
-      vertScrollHandler(drivers, 0, MAX_ENTRIES_DISPLAYED),
+      vertScrollHandler(drivers, 0, entriesToDisplay),
       firstDrawTime(true)
 {
 }

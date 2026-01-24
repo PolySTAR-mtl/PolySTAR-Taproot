@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -54,9 +54,11 @@ string makeMotorMessage(const tap::motor::DjiMotor& motor)
         "\"canBus\":" +
         std::to_string(static_cast<int>(motor.getCanBus()) + 1) + "," +
         "\"motorID\":" + std::to_string(motor.getMotorIdentifier()) + "," +
-        "\"shaftRPM\":" + std::to_string(motor.getShaftRPM()) + "," +
-        "\"torque\":" + std::to_string(motor.getTorque()) + "," +
-        "\"encoderValue\":" + std::to_string(motor.getEncoderUnwrapped()) + "}";
+        "\"shaftRPM\":" + std::to_string(motor.getInternalEncoder().getShaftRPM()) + "," +
+        "\"torque\":" + std::to_string(motor.getTorque()) + "," + "\"encoderValue\":" +
+        std::to_string(
+            static_cast<uint64_t>(motor.getInternalEncoder().getEncoder().getWrappedValue())) +
+        "}";
     return jsonMessage;
 }
 
