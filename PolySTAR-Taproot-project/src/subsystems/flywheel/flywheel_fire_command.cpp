@@ -1,5 +1,6 @@
 #include "flywheel_subsystem.hpp"
 #include "flywheel_fire_command.hpp"
+#include "modm/architecture/interface/delay.hpp"
 
 namespace control
 {
@@ -23,6 +24,8 @@ void FlywheelFireCommand::initialize() {
     char buffer[50];
     int nBytes = sprintf (buffer, "starting firing\n");
     drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*) buffer, nBytes+1);
+    // TODO: Add timer here
+    modm::delay_ms(STARTUP_DELAY_FLYWHEELS_MS);
     flywheel->startFiring();
 }
 
