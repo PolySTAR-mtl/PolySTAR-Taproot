@@ -1,40 +1,42 @@
 #include "turret_lqr.hpp"
-#include <cmath>
+#include <algorithm>
 
 namespace turret::algorithms
 {
-TurretLqrController::TurretLqrController(float panInertia, float tiltInertia,
-                                         float Qscale, float Rscale)
-    : I_pan(panInertia),
-      I_tilt(tiltInertia)
+TurretLqrController::TurretLqrController(float panInertia,
+                                         float tiltInertia,
+                                         float motorOutputMax,
+                                         float axisToMotorScale)
+    : I_pan_(panInertia),
+      I_tilt_(tiltInertia),
+      maxOut_(motorOutputMax),
+      scale_(axisToMotorScale)
 {
-    K_pan  = computeLqrGain(I_pan,  Qscale, Rscale);
-    K_tilt = computeLqrGain(I_tilt, Qscale, Rscale);
+    Kpan_  = defaultGains(I_pan_);
+    Ktilt_ = defaultGains(I_tilt_);
 }
 
-// Called periodically to update the controller state
-void TurretLqrController::update(float panAngle, float panRate, float panTarget,
-                                 float tiltAngle, float tiltRate, float tiltTarget)
+void TurretLqrController::setGains(const Gains2& Kpan, const Gains2& Ktilt)
 {
-    float panError  = panAngle  - panTarget;
-    float tiltError = tiltAngle - tiltTarget;
-
-    panVoltage  = -(K_pan[0]  * panError  + K_pan[1]  * panRate);   // Power adjustment to add/remove for x axis
-    tiltVoltage = -(K_tilt[0] * tiltError + K_tilt[1] * tiltRate);  // Power adjustment to add/remove for y axis
+    Kpan_ = Kpan;
+    Ktilt_ = Ktilt;
 }
 
-float TurretLqrController::getPanVoltage() const  { return panVoltage; }
-float TurretLqrController::getTiltVoltage() const { return tiltVoltage; }
-
-// Model per axis: A=[0 1; 0 0], B=[0; 1/I], Q=diag(q,q), R=r
-std::array<float, 2> TurretLqrController::computeLqrGain(float inertia, float Qscale, float Rscale)
+std::array<float,2> TurretLqrController::update(float panAngle, float panRate, float panRef,
+                                                float tiltAngle, float tiltRate, float tiltRef)
 {
-    float q = Qscale;
-    float r = Rscale;
+    const float uPan  = -(Kpan_.k_pos  * (panAngle  - panRef)  + Kpan_.k_vel  * panRate);
+    const float uTilt = -(Ktilt_.k_pos * (tiltAngle - tiltRef) + Ktilt_.k_vel * tiltRate);
 
-    float k_angle = std::sqrt(q / r) * inertia;
-    float k_rate  = std::sqrt(q * r);
+    float panCmd  = uPan  * scale_;
+    float tiltCmd = uTilt * scale_;
 
-    return { k_angle, k_rate };
+    auto clamp = [this](float v){ return std::clamp(v, -maxOut_, +maxOut_); };
+    return { clamp(panCmd), clamp(tiltCmd) };
 }
-}  // namespace turret::algorithms
+
+TurretLqrController::Gains2 TurretLqrController::defaultGains(float dyn)
+{
+    return { 1.5f * dyn, 0.1f }; // test values, on va compute les vrais si les tests marchent
+}
+} // namespace turret::algorithms

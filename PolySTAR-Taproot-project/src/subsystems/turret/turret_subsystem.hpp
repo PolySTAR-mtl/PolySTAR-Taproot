@@ -35,7 +35,10 @@ public:
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
         //   cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
         //   cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
-         lqrTurret(TURRET_PAN_INERTIA, TURRET_TILT_INERTIA, /*Q*/TURRET_LQR_Q, /*R*/TURRET_LQR_R),
+         lqrTurret(TURRET_PAN_INERTIA,
+          TURRET_TILT_INERTIA,
+          /*motorOutputMax*/ 8000.0f,
+          /*axisToMotorScale*/ 3500.0f),
           yawDesiredPos(YAW_NEUTRAL_POS),
           pitchDesiredPos(PITCH_NEUTRAL_POS)
     {
