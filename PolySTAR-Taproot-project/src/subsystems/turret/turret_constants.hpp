@@ -46,8 +46,8 @@ static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
  */
 static constexpr float RPM_TO_DEGPERMS = 0.006;
 static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
-static constexpr float DEG_TO_RAD     = DEGREE_TO_MILLIRAD / 1000.0f;
-static constexpr float RPM_TO_RAD_S   = RPM_TO_DEGPERMS * DEGREE_TO_MILLIRAD;
+static constexpr float DEG_TO_RAD   = 0.017453293f;
+static constexpr float RPM_TO_RAD_S = 0.104719755f; 
 
 
 /**
@@ -64,3 +64,4 @@ static constexpr float TURRET_PAN_INERTIA  = 0.0051f;   // kg·m²
 static constexpr float TURRET_TILT_INERTIA = 0.0015f;   // kg·m²
 static constexpr float TURRET_LQR_Q        = 50.0f;
 static constexpr float TURRET_LQR_R        = 0.05f;
+static constexpr float TURRET_MASS_KG           = 4.44628f;

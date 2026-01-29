@@ -59,22 +59,36 @@ void TurretSubsystem::refresh() {
     Run yaw controller and update motor output.
 */
 void TurretSubsystem::runYawController(uint32_t dt) {
-    float error = yawDesiredPos - yawMotor->getEncoderWrapped();
-    if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
-        // If error is greater than 180deg then the shortest path to setpoint crosses zero
-        // So we add +/- 360deg to error to get the correct direction
-        // Avoids turret whipping around when position crosses zero
-        error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
-    }
+    int64_t yawMeasUnwrapped = yawMotor->getEncoderUnwrapped();
+    int64_t yawRefWrapped    = static_cast<int64_t>(yawDesiredPos);
+    int64_t encRes           = static_cast<int64_t>(DjiMotor::ENC_RESOLUTION);
+
+    // Unwrap de la consigne: choisir la copie (k*encRes + wrapped) la plus proche de la mesure unwrapped pour pas qu'on saute randomly
+    int64_t base = (yawMeasUnwrapped / encRes) * encRes;
+    int64_t yawRefUnwrapped = base + yawRefWrapped;
+
+    int64_t a = yawRefUnwrapped - encRes;
+    int64_t b = yawRefUnwrapped;
+    int64_t c = yawRefUnwrapped + encRes;
+
+    auto dist = [&](int64_t v){ return llabs(v - yawMeasUnwrapped); };
+    yawRefUnwrapped = (dist(a) < dist(b)) ? a : b;
+    yawRefUnwrapped = (dist(c) < dist(yawRefUnwrapped)) ? c : yawRefUnwrapped;
+    int64_t errorUnwrapped = yawRefUnwrapped - yawMeasUnwrapped;
+    
     int16_t currentRPM = yawMotor->getShaftRPM();
 
-    float errDeg = DjiMotor::encoderToDegrees<int64_t>((int64_t)error);
+    float errDeg = DjiMotor::encoderToDegrees<int64_t>(errorUnwrapped);
     float errRad = errDeg * DEG_TO_RAD;
+    errRad = -errRad;
     float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
-    lqrTurret.update(/*panAngle*/  errRad, /*panRate*/  omega, /*panTarget*/ 0.0f,
-                     /*tiltAngle*/ 0.0f,   /*tiltRate*/ 0.0f,   /*tiltTarget*/ 0.0f);
-    yawMotor->setDesiredOutput(lqrTurret.getPanVoltage());
+    auto cmd = lqrTurret.update(
+        /*panAngle*/  errRad,  /*panRate*/  omega, /*panRef*/ 0.0f,
+        /*tiltAngle*/ 0.0f,    /*tiltRate*/ 0.0f,  /*tiltRef*/ 0.0f
+    );
+
+    yawMotor->setDesiredOutput(cmd[0]);
 
     // cascadedYawController.update(error, currentRPM, dt);
 
@@ -90,11 +104,17 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
 
     float errDeg = pitchMotor.encoderToDegrees<int64_t>((int64_t)error);
     float errRad = errDeg * DEG_TO_RAD;
+    errRad = -errRad;
+
     float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
-    lqrTurret.update(/*panAngle*/  0.0f,   /*panRate*/  0.0f,   /*panTarget*/ 0.0f,
-                     /*tiltAngle*/ errRad, /*tiltRate*/ omega,  /*tiltTarget*/ 0.0f);
-    pitchMotor.setDesiredOutput(lqrTurret.getTiltVoltage());
+    auto cmd = lqrTurret.update(
+        /*panAngle*/  0.0f,    /*panRate*/  0.0f,   /*panRef*/ 0.0f,
+        /*tiltAngle*/ errRad,  /*tiltRate*/ omega,  /*tiltRef*/ 0.0f
+    );
+
+    pitchMotor.setDesiredOutput(cmd[1]);
+
     // cascadedPitchController.update(error, currentRPM, dt);
 
     // pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());

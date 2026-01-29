@@ -118,6 +118,9 @@ void ChassisSubsystem::updateRpmSetpoints() {
 }
 
 void ChassisSubsystem::setTargetOutput(float x, float y, float r) {
+#ifdef IS_Y_INVERTED
+    if (IS_Y_INVERTED) y = -y;
+#endif
     xInputRamp.setTarget(x);
     yInputRamp.setTarget(y);
     rInputRamp.setTarget(r);
