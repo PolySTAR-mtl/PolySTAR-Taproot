@@ -7,6 +7,9 @@
 
 #include "flywheel_dji_subsystem.hpp"
 
+namespace control::flywheel
+{
+
 template <typename Subsystem, typename FirePolicy>
 class GenericFireCommand : public tap::control::Command
 {
@@ -46,5 +49,7 @@ private:
     src::Drivers* drivers_;
     FirePolicy firePolicy_;
 };
+
+}  // namespace control::flywheel
 
 #endif
