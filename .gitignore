@@ -2,6 +2,8 @@
 
 PolySTAR-Taproot-project/build
 PolySTAR-Taproot-project/Pipfile.lock
+PolySTAR-Taproot-project/openocd.cfg
+
 project.xml.log
 
 .vscode/.cortex-debug.peripherals.state.json
