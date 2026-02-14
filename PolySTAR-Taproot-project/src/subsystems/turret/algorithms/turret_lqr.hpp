@@ -15,7 +15,7 @@ public:
     TurretLqrController(float panInertia,
                         float tiltInertia,
                         float motorOutputMax = 8000.0f,
-                        float axisToMotorScale = 3500.0f);
+                        float axisToMotorScale = 650.0f);
 
     void setGains(const Gains2& Kpan, const Gains2& Ktilt);
 
