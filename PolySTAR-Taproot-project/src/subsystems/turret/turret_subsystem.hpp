@@ -38,7 +38,7 @@ public:
          lqrTurret(TURRET_PAN_INERTIA,
           TURRET_TILT_INERTIA,
           /*motorOutputMax*/ 8000.0f,
-          /*axisToMotorScale*/ 3500.0f),
+          /*axisToMotorScale*/ 350.0f),
           yawDesiredPos(YAW_NEUTRAL_POS),
           pitchDesiredPos(PITCH_NEUTRAL_POS)
     {
@@ -102,6 +102,9 @@ private:
     // Position setpoints for turret, in encoder ticks
     float yawDesiredPos;
     float pitchDesiredPos;
+
+    bool yawInDeadzone_ = false;
+    bool pitchInDeadzone_ = false;
 
     // Time variables for fixed rate tasks
     uint32_t prevDebugUpdate;

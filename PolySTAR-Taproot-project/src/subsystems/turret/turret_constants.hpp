@@ -60,8 +60,8 @@ static constexpr float HIGH_ROTATION = 0.95;
 /**
  * LQR parameters (need to be computed with Simulink or similar CARE solver if you want to change them)
  */
-static constexpr float TURRET_PAN_INERTIA  = 0.0051f;   // kg·m²
-static constexpr float TURRET_TILT_INERTIA = 0.0015f;   // kg·m²
+static constexpr float TURRET_PAN_INERTIA  = 0.048f;   // kg·m²
+static constexpr float TURRET_TILT_INERTIA = 0.041f;   // kg·m²
 static constexpr float TURRET_LQR_Q        = 50.0f;
 static constexpr float TURRET_LQR_R        = 0.05f;
 static constexpr float TURRET_MASS_KG           = 4.44628f;
