@@ -14,8 +14,8 @@ TurretLqrController::TurretLqrController(float panInertia,
 {
     // Gains LQR optimaux calcules avec Simulink CARE solver
     // Kpan_  = {10.00f, 1.72f};
-    Ktilt_ = {20.00f, 2.68f};
-    Kpan_  = {31.62f, 10.15f};
+    Ktilt_ = {31.62f, 1.61f};
+    Kpan_  = {31.62f, 3.62f};
     // Ktilt_ = {31.62f, 10.13f};
 }
 
