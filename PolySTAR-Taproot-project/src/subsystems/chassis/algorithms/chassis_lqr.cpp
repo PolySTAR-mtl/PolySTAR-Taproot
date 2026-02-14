@@ -16,9 +16,13 @@ ChassisLqrController::ChassisLqrController(float mass,
       scale_(axisToMotorScale)
 {
     // Default conservative gains. Replace these values via setGains() whenever LQR K values need to be recomputed if big changes have been made to robot.
-    Kx_ = defaultGains(m_);
-    Ky_ = defaultGains(m_);
-    Kt_ = defaultGains(I_);
+    // Kx_ = defaultGains(m_);
+    // Ky_ = defaultGains(m_);
+    // Kt_ = defaultGains(I_);
+
+    Kx_ = {63.24f, 11.25f}; 
+    Ky_ = {63.24f, 11.25f};
+    Kt_ = {15.81f, 2.45f};
 }
 
 void ChassisLqrController::setGains(const Gains2& Kx, const Gains2& Ky, const Gains2& Kt)

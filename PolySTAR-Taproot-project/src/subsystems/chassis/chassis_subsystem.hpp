@@ -36,7 +36,9 @@ public:
      * than enough for what you are doing.
      */
     static constexpr float MAX_CURRENT_OUTPUT = 8000.0f;
-
+    float prevVx;
+    float prevVy;
+    float prevW;
     /**
      * Constructs a new ChassisSubsystem with default parameters specified in
      * the private section of this class.

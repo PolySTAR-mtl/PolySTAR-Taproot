@@ -14,27 +14,30 @@ namespace chassis::algorithms
 class ChassisLqrController
 {
 public:
-    struct Gains2 { float k_pos; float k_vel; };
+   struct Gains2 { float k_pos; float k_vel; };
 
-    /* mass: chassis mass (kg)
-       inertia: chassis yaw inertia about CoM (kg·m²)
-       motorOutputMax: clamp for motor command (C620 DJI currently)
-       axisToMotorScale: maps axis effort to per-wheel command (rpmScaleFactor) */
-    ChassisLqrController(float mass,
-                         float inertia,
-                         float motorOutputMax = 8000.0f,
-                         float axisToMotorScale = 3500.0f);
+      /* mass: chassis mass (kg)
+         inertia: chassis yaw inertia about CoM (kg·m²)
+         motorOutputMax: clamp for motor command (C620 DJI currently)
+         axisToMotorScale: maps axis effort to per-wheel command (rpmScaleFactor) */
+   ChassisLqrController(float mass,
+                        float inertia,
+                        float motorOutputMax = 8000.0f,
+                        float axisToMotorScale = 3500.0f);
 
-    // Optional: inject gains computed offline (CARE).
-    void setGains(const Gains2& Kx, const Gains2& Ky, const Gains2& Kt);
+      // Optional: inject gains computed offline (CARE).
+   void setGains(const Gains2& Kx, const Gains2& Ky, const Gains2& Kt);
 
-    /* Update controller.
-       Inputs are CURRENT body velocities and references, normalized to [-1,1] (state-based control).
-       Derivatives dvx/dvy/dw can be 0 if not available.
-       Returns motor commands: {FL, FR, BL, BR} clamped to motorOutputMax. */
-    std::array<float,4> update(float vx, float dvx, float vx_ref,
-                               float vy, float dvy, float vy_ref,
-                               float w,  float dw,  float w_ref);
+      /* Update controller.
+         Inputs are CURRENT body velocities and references, normalized to [-1,1] (state-based control).
+         Derivatives dvx/dvy/dw can be 0 if not available.
+         Returns motor commands: {FL, FR, BL, BR} clamped to motorOutputMax. */
+   std::array<float,4> update(float vx, float dvx, float vx_ref,
+                              float vy, float dvy, float vy_ref,
+                              float w,  float dw,  float w_ref);
+   // float prevVx;
+   // float prevVy;
+   // float prevW;
 
 private:
     // Simple default gains, will replace once robot has been simulated to get CARE-computed gains.
