@@ -1,3 +1,5 @@
+
+
 #include "chassis_subsystem.hpp"
 
 #include "tap/communication/serial/remote.hpp"
@@ -45,11 +47,18 @@ void ChassisSubsystem::refresh() {
     float vx=0.f, vy=0.f, w=0.f;
     rpmToBody(fl, fr, bl, br, vx, vy, w);
 
-    // If we don't have estimated derivatives, we pass 0.f for dvx/dvy/dw
+    float dvx = (vx - prevVx) / dt;
+    float dvy = (vy - prevVy) / dt;
+    float dw  = (w  - prevW ) / dt;
+
+    prevVx = vx;
+    prevVy = vy;
+    prevW  = w;
+    
     auto cmd = lqrController->update(
-        vx, 0.f, vxRef,
-        vy, 0.f, vyRef,
-        w,  0.f, wRef
+        vx, dvx, vxRef,
+        vy, dvy, vyRef,
+        w,  dw,  wRef
     );
 
     frontLeftMotor.setDesiredOutput(cmd[0]);
