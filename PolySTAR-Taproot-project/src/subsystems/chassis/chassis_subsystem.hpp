@@ -142,7 +142,7 @@ private:
     float vyRef = 0.0f;   // desired rightward speed in [-1, 1]
     float wRef  = 0.0f;   // desired CW rotation in [-1, 1]
 
-    //] Previous time the LQR control loop was updated
+    // Previous time the LQR control loop was updated
     uint32_t prevControlUpdate = 0;
 
     // ///< Any user input is translated into desired RPM for each motor.

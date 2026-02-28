@@ -45,7 +45,6 @@ public:
     }
 
     TurretSubsystem(const TurretSubsystem &other) = delete;
-
     TurretSubsystem &operator=(const TurretSubsystem &other) = delete;
 
     ~TurretSubsystem() = default;
@@ -97,6 +96,8 @@ private:
     // // Motor Controllers for position control
     // CascadedPid cascadedPitchController;
     // CascadedPid cascadedYawController;
+
+    // Linear Quadratic Regulator for optimal turret stability.
     TurretLqrController lqrTurret;
 
     // Position setpoints for turret, in encoder ticks

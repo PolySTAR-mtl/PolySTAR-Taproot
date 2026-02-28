@@ -25,7 +25,6 @@ public:
                         float motorOutputMax = 8000.0f,
                         float axisToMotorScale = 3500.0f);
 
-      // Optional: inject gains computed offline (CARE).
    void setGains(const Gains2& Kx, const Gains2& Ky, const Gains2& Kt);
 
       /* Update controller.
@@ -35,12 +34,8 @@ public:
    std::array<float,4> update(float vx, float dvx, float vx_ref,
                               float vy, float dvy, float vy_ref,
                               float w,  float dw,  float w_ref);
-   // float prevVx;
-   // float prevVy;
-   // float prevW;
 
 private:
-    // Simple default gains, will replace once robot has been simulated to get CARE-computed gains.
     static Gains2 defaultGains(float dyn);
 
 private:
