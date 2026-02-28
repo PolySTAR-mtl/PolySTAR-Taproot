@@ -59,43 +59,55 @@ void TurretSubsystem::refresh() {
     Run yaw controller and update motor output.
 */
 void TurretSubsystem::runYawController(uint32_t dt) {
+    // Calculate the distance between our current angle and the target angle
     int32_t error = static_cast<int32_t>(yawMotor->getEncoderWrapped()) 
                     - static_cast<int32_t>(yawDesiredPos) ;
     
+    
+    // Make sure the turret takes the shortest path instead of spinning the long way around (wrapped)
     if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
         error = error - DjiMotor::ENC_RESOLUTION * getSign(error);
     }
     
+    // Check how fast the turret is currently spinning.
     int16_t currentRPM = yawMotor->getShaftRPM();
     
+    // Convert the raw motor hardware numbers into standard math units (radians)
     float errDeg = yawMotor->encoderToDegrees<int64_t>((int64_t)error);
     float errRad = errDeg * DEG_TO_RAD;
     float omega = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
     
+    // If we are super close to the target and barely moving, turn the motor off so it doesn't jitter
     if (std::fabs(errRad) < 0.5f * DEG_TO_RAD && std::fabs(omega) < 0.2f) {
         yawMotor->setDesiredOutput(0);
         return;
     }
     
+    // Calculate exactly how much power is needed, then send that power to the motor.
     auto cmd = lqrTurret.update(errRad, omega, 0.0f, 0.0f, 0.0f, 0.0f);
     yawMotor->setDesiredOutput(cmd[0]);
 }
 
 void TurretSubsystem::runPitchController(uint32_t dt) {
+    // Calculate how far off we are from where we want to point.
     int32_t error = static_cast<int32_t>(pitchDesiredPos) 
                   - static_cast<int32_t>(pitchMotor.getEncoderWrapped());
     
+    // Check how fast the turret is currently tilting.
     int16_t currentRPM = pitchMotor.getShaftRPM();
     
+    // Convert the raw motor hardware numbers into standard math units (radians).
     float errDeg = pitchMotor.encoderToDegrees<int64_t>(static_cast<int64_t>(error));
     float errRad = errDeg * DEG_TO_RAD;
     float omega = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
     
+    // If we are super close to the target and barely moving, turn the motor off so it doesn't jitter
     if (std::fabs(errRad) < 0.5f * DEG_TO_RAD && std::fabs(omega) < 0.2f) {
         pitchMotor.setDesiredOutput(0);
         return;
     }
     
+    // Calculate the needed power and apply it to the motor (reversed with a '-' to match the physical wiring).
     auto cmd = lqrTurret.update(0.0f, 0.0f, 0.0f, errRad, omega, 0.0f);
     pitchMotor.setDesiredOutput(-cmd[1]);
 }

@@ -47,14 +47,19 @@ void ChassisSubsystem::refresh() {
     float vx=0.f, vy=0.f, w=0.f;
     rpmToBody(fl, fr, bl, br, vx, vy, w);
 
+    // Calculate the robot's current acceleration (change in speed divided by time).
     float dvx = (vx - prevVx) / dt;
     float dvy = (vy - prevVy) / dt;
     float dw  = (w  - prevW ) / dt;
 
+    // Save the current speeds to use as the "previous" speeds during the next loop.
     prevVx = vx;
     prevVy = vy;
     prevW  = w;
     
+
+    // our current speed, current acceleration, and target speed (Ref)
+    // It spits out the optimal electrical commands (cmd) for all 4 motors.
     auto cmd = lqrController->update(
         vx, dvx, vxRef,
         vy, dvy, vyRef,
