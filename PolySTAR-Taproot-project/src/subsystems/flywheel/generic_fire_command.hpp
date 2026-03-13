@@ -37,7 +37,7 @@ public:
 
     void execute() override { firePolicy_.initialize(); }
 
-    const char* getName() const { return NAME; }
+    const char* getName() const override { return NAME; }
 
     bool isFinished() const override { return false; }
 

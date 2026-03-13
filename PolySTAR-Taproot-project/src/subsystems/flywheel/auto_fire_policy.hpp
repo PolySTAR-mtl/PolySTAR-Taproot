@@ -13,7 +13,7 @@ template <typename Subsystem>
 class AutoFirePolicy
 {
 public:
-    AutoFirePolicy(Subsystem *const flywheel, src::Drivers *drivers)
+    AutoFirePolicy(Subsystem* const flywheel, src::Drivers* drivers)
         : flywheel_{flywheel},
           drivers_{drivers},
           isKickstartDone_{false},
@@ -57,7 +57,7 @@ public:
             }
 
             uint32_t currentTs = tap::arch::clock::getTimeMilliseconds();
-	    /// TODO: Fix a bug on next line.
+            /// TODO: Fix a bug on next line.
             if (!currentTs - startingTs_ < KICKSTART_DELAY_MS)
             {
                 flywheel_->sendStartingBoost();
@@ -74,8 +74,8 @@ public:
     void end(bool) { flywheel_->stopFiring(); }
 
 private:
-    Subsystem *const flywheel_;
-    src::Drivers *drivers_;
+    Subsystem* const flywheel_;
+    src::Drivers* drivers_;
 
     bool isKickstartDone_;
     uint32_t startingTs_;

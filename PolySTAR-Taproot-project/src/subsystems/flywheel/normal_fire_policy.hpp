@@ -14,7 +14,7 @@ template <typename Subsystem>
 class NormalFirePolicy
 {
 public:
-    NormalFirePolicy(Subsystem *const flywheel, src::Drivers *drivers)
+    NormalFirePolicy(Subsystem* const flywheel, src::Drivers* drivers)
         : flywheel_{flywheel},
           drivers_{drivers},
           isKickstartDone_{false},
@@ -32,13 +32,10 @@ public:
 
             isKickstartDone_ = false;
             startingTs_ = tap::arch::clock::getTimeMilliseconds();
-            return;
         }
-
-        if constexpr (std::is_same_v<Subsystem, control::flywheel::FlywheelSubsystem>)
+        else if constexpr (std::is_same_v<Subsystem, control::flywheel::FlywheelSubsystem>)
         {
             flywheel_->startFiring();
-            return;
         }
     }
 
@@ -52,17 +49,15 @@ public:
                 flywheel_->startFiring();  // will send default speeds to DjiMotors
                 isKickstartDone_ = true;
             }
-
-            return;
         }
     }
 
     void end(bool) { flywheel_->stopFiring(); }
 
 private:
-    Subsystem *const flywheel_;
+    Subsystem* const flywheel_;
 
-    src::Drivers *drivers_;
+    src::Drivers* drivers_;
 
     bool isKickstartDone_;
     uint32_t startingTs_;
