@@ -29,7 +29,7 @@
 
 //Flywheel includes
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
-#include "subsystems/flywheel/flywheel_fire_command.hpp"
+#include "subsystems/flywheel/flywheel_fire_commands.hpp"
 
 #include "control/drivers/drivers_singleton.hpp"
 

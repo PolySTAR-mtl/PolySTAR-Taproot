@@ -6,6 +6,10 @@
 
 #include "flywheel_dji_subsystem.hpp"
 
+#ifndef START_MATCH_WAIT_TIME
+#define START_MATCH_WAIT_TIME 30 * 1000
+#endif
+
 namespace control::flywheel
 {
 
@@ -26,7 +30,7 @@ public:
 
     void initialize()
     {
-        if constexpr (std::is_same<Subsystem, FlywheelDjiSubsystem>)
+        if constexpr (std::is_same_v<Subsystem, FlywheelDjiSubsystem>)
         {
             isKickstartDone_ = false;
             startingTs_ = tap::arch::clock::getTimeMilliseconds();
@@ -38,7 +42,7 @@ public:
 
     void execute()
     {
-        if constexpr (std::is_same<Subsystem, FlywheelDjiSubsystem>)
+        if constexpr (std::is_same_v<Subsystem, FlywheelDjiSubsystem>)
         {
             if (!startMatchTimeout_.isExpired())
             {

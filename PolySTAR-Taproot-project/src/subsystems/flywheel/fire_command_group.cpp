@@ -1,7 +1,7 @@
 #include "fire_command_group.hpp"
 #include "control/drivers/drivers.hpp"
 #include "flywheel_subsystem.hpp"
-#include "flywheel_fire_command.hpp"
+#include "flywheel_fire_commands.hpp"
 #include "flywheel_constants.hpp"
 
 namespace control
