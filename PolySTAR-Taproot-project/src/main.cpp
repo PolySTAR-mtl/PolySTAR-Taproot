@@ -47,6 +47,9 @@
 /* define timers here -------------------------------------------------------*/
 tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
 
+/* logging includes ---------------------------------------------------------*/
+#include "polylog/log.hpp"
+
 // Place any sort of input/output initialization here. For example, place
 // serial init stuff here.
 static void initializeIo(src::Drivers *drivers);
@@ -75,6 +78,9 @@ int main()
     initializeIo(drivers);
     control::initSubsystemCommands(drivers);
 
+    // Initialize logging after IO so that sinks can use IO to output logs.
+    polylog::log_init(&drivers->uart);
+
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
     // Blocking call, waits until Windows Simulator connects.
@@ -98,8 +104,6 @@ int main()
     return 0;
 }
 
-
-
 static void initializeIo(src::Drivers *drivers)
 {
     drivers->analog.init();
@@ -117,7 +121,7 @@ static void initializeIo(src::Drivers *drivers)
 
     drivers->uart.init<Uart::UartPort::Uart6, 230400>();
     drivers->uart.init<Uart::UartPort::Uart8, 230400>();
-    
+
     drivers->cvHandler.initialize();
 }
 
