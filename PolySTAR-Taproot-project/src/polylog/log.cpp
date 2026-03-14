@@ -7,12 +7,15 @@
 namespace polylog
 {
 
-static_assert(
-    static_cast<int>(LOG_LEVEL) >= static_cast<int>(LogLevel::Trace) &&
-        static_cast<int>(LOG_LEVEL) <= static_cast<int>(LogLevel::Critical),
-    "Invalid LOG_LEVEL");
+#ifdef LOG_LEVEL
+constexpr LogLevel GLOBAL_LOG_LEVEL = LOG_LEVEL;
+#else
+constexpr LogLevel GLOBAL_LOG_LEVEL = LogLevel::Info;
+#endif
 
-static Logger<LOG_LEVEL> global{"Global"};
+
+
+static Logger<LOG_LEVEL_VALUE> global{"Global"};
 static DefaultFormatter defaultFormatter{};
 
 static SerialSink<tap::communication::serial::Uart::UartPort::Uart8> serialSink{

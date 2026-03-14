@@ -10,8 +10,6 @@
 namespace polylog
 {
 
-constexpr LogLevel LOG_LEVEL = LogLevel::Info;
-
 void log_init(tap::communication::serial::Uart* uart);
 
 void trace(std::string_view message);
