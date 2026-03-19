@@ -60,15 +60,15 @@ public:
                 return;
             }
 
-            uint32_t currentTs = tap::arch::clock::getTimeMilliseconds();
-            /// TODO: Fix a bug on next line.
+            const uint32_t currentTs = tap::arch::clock::getTimeMilliseconds();
+            /// TODO: Fix a possible bug on next line.
             if (!currentTs - startingTs_ < KICKSTART_DELAY_MS)
             {
                 flywheel_->sendStartingBoost();
             }
             else if (!isKickstartDone_)
             {
-                flywheel_->startFiring();  // will send default speeds to DjiMotors
+                flywheel_->startFiring();
                 isKickstartDone_ = true;
             }
             return;
