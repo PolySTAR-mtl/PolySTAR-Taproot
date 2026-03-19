@@ -28,7 +28,7 @@ public:
     {
         if constexpr (std::is_same_v<Subsystem, control::flywheel::FlywheelDjiSubsystem>)
         {
-            flywheel_->sendStartingBoost();  // will not modify speed attributes of DjiMotors
+            flywheel_->sendStartingBoost();
 
             isKickstartDone_ = false;
             startingTs_ = tap::arch::clock::getTimeMilliseconds();
@@ -46,7 +46,7 @@ public:
             if (!isKickstartDone_ &&
                 tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
             {
-                flywheel_->startFiring();  // will send default speeds to DjiMotors
+                flywheel_->startFiring();
                 isKickstartDone_ = true;
             }
         }
