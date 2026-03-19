@@ -1,10 +1,10 @@
 #ifndef LOGGER_IMPL_HPP
 #define LOGGER_IMPL_HPP
 
+#include "tap/architecture/clock.hpp"
+
 #include "log_level.hpp"
 #include "logger.hpp"
-
-#include "tap/architecture/clock.hpp"
 
 namespace polylog
 {
@@ -28,19 +28,36 @@ bool Logger<Level, MaxSinks>::addSink(Sink* sink)
 }
 
 template <LogLevel Level, size_t MaxSinks>
-template <LogLevel MessageLevel>
-void Logger<Level, MaxSinks>::log(std::string_view message)
+template <LogLevel MessageLevel, typename... Args>
+void Logger<Level, MaxSinks>::log(const char* format, Args&&... args)
 {
     if constexpr (MessageLevel < Level)
     {
         return;
     }
 
+    std::array<char, Sink::BUFFER_SIZE> buffer{};
+    int written = std::snprintf(buffer.data(), buffer.size(), format, std::forward<Args>(args)...);
+
+    const auto getLength = [](int written) -> size_t
+    {
+        if (written < 0) return 0;
+
+        if (static_cast<size_t>(written) >= buffer.size()) return buffer.size() - 1;
+
+        return static_cast<size_t>(written);
+    };
+
+    size_t length = getLength(written);
+    buffer[length] = '\0';
+
+    std::string_view message{buffer, length};
+
     LogMessage log{
         .level = MessageLevel,
         .loggerName = name_,
         .payload = message,
-        .timestamp_ms = tap::arch::clock::getTimeMilliseconds() };
+        .timestamp_ms = tap::arch::clock::getTimeMilliseconds()};
 
     for (const auto& sink : sinks_)
     {

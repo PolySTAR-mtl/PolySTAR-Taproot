@@ -21,8 +21,10 @@ public:
 protected:
     virtual void write(std::string_view text) = 0;
 
-private:
+public:
     static constexpr size_t BUFFER_SIZE = 256;
+    
+private:
     Formatter* formatter_;
     char buffer_[BUFFER_SIZE];
 };

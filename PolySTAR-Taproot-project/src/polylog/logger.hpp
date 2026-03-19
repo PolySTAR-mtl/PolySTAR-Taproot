@@ -19,8 +19,8 @@ public:
 
     bool addSink(Sink* sink);
 
-    template <LogLevel MessageLevel>
-    void log(std::string_view message);
+    template <LogLevel MessageLevel, typename... Args>
+    void log(const char* format, Args&&... args);
 
 private:
     size_t sinkCount_;

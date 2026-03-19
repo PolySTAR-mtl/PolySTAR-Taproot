@@ -79,7 +79,7 @@ int main()
     control::initSubsystemCommands(drivers);
 
     // Initialize logging after IO so that sinks can use IO to output logs.
-    polylog::log_init(&drivers->uart);
+    polylog::Log::init(&drivers->uart);
 
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
