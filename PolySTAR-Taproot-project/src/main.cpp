@@ -52,6 +52,7 @@ tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
 #include "polylog/logger.hpp"
 #include "polylog/provider.hpp"
 #include "polylog/serial_sink.hpp"
+#include "songs/mario.hpp"
 
 // Place any sort of input/output initialization here. For example, place
 // serial init stuff here.
@@ -89,6 +90,8 @@ int main()
     polylog::Provider<polylog::GlobalLogger>::provide(&logger);
 
     logger.info("Initialization complete\n");
+
+    songs::playMarioThemesongBlocking(&drivers->pwm);
 
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
