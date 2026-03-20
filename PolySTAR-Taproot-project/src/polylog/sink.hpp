@@ -20,6 +20,7 @@ public:
 
 protected:
     virtual void write(std::string_view text) = 0;
+    virtual void flush() = 0;
 
 public:
     static constexpr size_t BUFFER_SIZE = 256;

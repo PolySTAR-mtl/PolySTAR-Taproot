@@ -90,7 +90,6 @@ int main()
 
     logger.info("Initialization complete\n");
 
-
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
     // Blocking call, waits until Windows Simulator connects.

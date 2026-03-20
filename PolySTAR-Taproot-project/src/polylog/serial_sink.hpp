@@ -20,6 +20,7 @@ public:
 
 protected:
     void write(std::string_view text) override;
+    void flush() override;
 
 private:
     tap::communication::serial::Uart* uart_;

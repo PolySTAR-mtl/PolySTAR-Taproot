@@ -24,6 +24,9 @@ namespace polylog
 
         case Severity::Critical:
             return "Critical";
+        
+        default:
+            return "Unknown";
     }
 }
 

@@ -29,6 +29,13 @@ void SerialSink<Port>::write(std::string_view text)
     uart_->write(Port, reinterpret_cast<const uint8_t*>(text.data()), text.size());
 }
 
+template <tap::communication::serial::Uart::UartPort Port>
+void SerialSink<Port>::flush()
+{
+    if (uart_ == nullptr) return;
+    uart_->flushWriteBuffer(Port);
+}
+
 }  // namespace polylog
 
 #endif  // SERIAL_SINK_IMPL_HPP

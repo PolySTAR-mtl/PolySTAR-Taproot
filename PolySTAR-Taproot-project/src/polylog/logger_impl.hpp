@@ -109,10 +109,10 @@ void Logger<S, MaxSinks>::log(const char* format, Args&&... args)
     size_t length = getLength(written);
     buffer[length] = '\0';
 
-    std::string_view message{buffer, length};
+    std::string_view message{buffer.data(), length};
 
     LogMessage log{
-        .severity = MessageLevel,
+        .severity = MessageSeverity,
         .loggerName = name_,
         .payload = message,
         .timestamp_ms = tap::arch::clock::getTimeMilliseconds()};

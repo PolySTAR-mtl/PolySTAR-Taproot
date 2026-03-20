@@ -10,11 +10,6 @@
 
 namespace polylog
 {
-#ifdef LOG_LEVEL
-using GlobalLogger = Logger<LOG_LEVEL>;
-#else
-using GlobalLogger = Logger<Severity::Info>;
-#endif
 
 template <Severity S, size_t MaxSinks = 5>
 class Logger
@@ -51,6 +46,13 @@ private:
     std::array<Sink*, MaxSinks> sinks_;
     std::string_view name_;
 };
+
+#ifdef LOG_LEVEL
+using GlobalLogger = Logger<LOG_LEVEL>;
+#else
+using GlobalLogger = Logger<Severity::Info>;
+#endif
+
 
 }  // namespace polylog
 
