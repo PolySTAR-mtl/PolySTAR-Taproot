@@ -18,7 +18,7 @@ class Provider
 public:
     static void provide(T* instance);
 
-    static std::optional<std::reference_wrapper<T>> tryGet();
+    [[nodiscard]] static std::optional<std::reference_wrapper<T>> tryGet();
 
 private:
     static inline T* instance_ = nullptr;

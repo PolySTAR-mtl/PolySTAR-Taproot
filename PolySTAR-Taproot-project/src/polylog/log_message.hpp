@@ -2,15 +2,16 @@
 #define LOG_MESSAGE_HPP
 
 #include <string_view>
+#include <cstdint>
 
-#include "log_level.hpp"
+#include "severity.hpp"
 
 namespace polylog
 {
 
 struct LogMessage
 {
-    LogLevel level;
+    Severity severity;
     std::string_view loggerName;
     std::string_view payload;
     uint32_t timestamp_ms;

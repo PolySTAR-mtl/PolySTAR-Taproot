@@ -20,7 +20,7 @@ DefaultFormatter::~DefaultFormatter() = default;
         size,
         formatString,
         log.timestamp_ms,
-        logLevelToStringView(log.level).data(),
+        severityToStringView(log.severity).data(),
         log.loggerName.data(),
         log.payload.data());
 

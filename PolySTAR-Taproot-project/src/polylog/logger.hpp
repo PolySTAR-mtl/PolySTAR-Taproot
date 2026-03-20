@@ -4,8 +4,8 @@
 #include <array>
 #include <string_view>
 
-#include "log_level.hpp"
 #include "log_message.hpp"
+#include "severity.hpp"
 #include "sink.hpp"
 
 namespace polylog
@@ -13,10 +13,10 @@ namespace polylog
 #ifdef LOG_LEVEL
 using GlobalLogger = Logger<LOG_LEVEL>;
 #else
-using GlobalLogger = Logger<LogLevel::Info>;
+using GlobalLogger = Logger<Severity::Info>;
 #endif
 
-template <LogLevel Level, size_t MaxSinks = 5>
+template <Severity S, size_t MaxSinks = 5>
 class Logger
 {
 public:
@@ -43,7 +43,7 @@ public:
     void critical(const char* format, Args&&... args);
 
 private:
-    template <LogLevel MessageLevel, typename... Args>
+    template <Severity MessageSeverity, typename... Args>
     void log(const char* format, Args&&... args);
 
 private:

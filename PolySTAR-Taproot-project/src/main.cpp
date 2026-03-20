@@ -82,11 +82,14 @@ int main()
     control::initSubsystemCommands(drivers);
 
     // Initialize logging after IO so that sinks can use IO to output logs.
-    polylog::GlobalLogger logger{"Global"};
     polylog::DefaultFormatter formatter{};
     polylog::SerialSink<Uart::UartPort::Uart8> serialSink{&formatter, &drivers->uart};
+    polylog::GlobalLogger logger{"Global"};
     logger.addSink(&serialSink);
     polylog::Provider<polylog::GlobalLogger>::provide(&logger);
+
+    logger.info("Initialization complete\n");
+
 
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();

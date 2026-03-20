@@ -17,7 +17,7 @@ void Provider<T>::provide(T* instance)
 
 
 template<typename T>
-std::optional<std::reference_wrapper<T>> Provider<T>::tryGet() 
+[[nodiscard]] std::optional<std::reference_wrapper<T>> Provider<T>::tryGet() 
 {
     if (instance_ == nullptr)
     {

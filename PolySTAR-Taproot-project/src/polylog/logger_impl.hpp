@@ -7,22 +7,22 @@
 
 #include "tap/architecture/clock.hpp"
 
-#include "log_level.hpp"
 #include "logger.hpp"
+#include "severity.hpp"
 
 namespace polylog
 {
 
-template <LogLevel Level, size_t MaxSinks>
-constexpr Logger<Level, MaxSinks>::Logger(std::string_view name)
+template <Severity S, size_t MaxSinks>
+constexpr Logger<S, MaxSinks>::Logger(std::string_view name)
     : sinkCount_{},
       sinks_{},
       name_{name}
 {
 }
 
-template <LogLevel Level, size_t MaxSinks>
-bool Logger<Level, MaxSinks>::addSink(Sink* sink)
+template <Severity S, size_t MaxSinks>
+bool Logger<S, MaxSinks>::addSink(Sink* sink)
 {
     if (sink == nullptr || sinkCount_ >= MaxSinks)
     {
@@ -38,53 +38,53 @@ bool Logger<Level, MaxSinks>::addSink(Sink* sink)
     return true;
 }
 
-template <LogLevel Level, size_t MaxSinks>
+template <Severity S, size_t MaxSinks>
 template <typename... Args>
-void Logger<Level, MaxSinks>::trace(const char* format, Args&&... args)
+void Logger<S, MaxSinks>::trace(const char* format, Args&&... args)
 {
-    log<LogLevel::Trace>(format, std::forward<Args>(args)...);
+    log<Severity::Trace>(format, std::forward<Args>(args)...);
 }
 
-template <LogLevel Level, size_t MaxSinks>
+template <Severity S, size_t MaxSinks>
 template <typename... Args>
-void Logger<Level, MaxSinks>::debug(const char* format, Args&&... args)
+void Logger<S, MaxSinks>::debug(const char* format, Args&&... args)
 {
-    log<LogLevel::Debug>(format, std::forward<Args>(args)...);
+    log<Severity::Debug>(format, std::forward<Args>(args)...);
 }
 
-template <LogLevel Level, size_t MaxSinks>
+template <Severity S, size_t MaxSinks>
 template <typename... Args>
-void Logger<Level, MaxSinks>::info(const char* format, Args&&... args)
+void Logger<S, MaxSinks>::info(const char* format, Args&&... args)
 {
-    log<LogLevel::Info>(format, std::forward<Args>(args)...);
+    log<Severity::Info>(format, std::forward<Args>(args)...);
 }
 
-template <LogLevel Level, size_t MaxSinks>
+template <Severity S, size_t MaxSinks>
 template <typename... Args>
-void Logger<Level, MaxSinks>::warning(const char* format, Args&&... args)
+void Logger<S, MaxSinks>::warning(const char* format, Args&&... args)
 {
-    log<LogLevel::Warning>(format, std::forward<Args>(args)...);
+    log<Severity::Warning>(format, std::forward<Args>(args)...);
 }
 
-template <LogLevel Level, size_t MaxSinks>
+template <Severity S, size_t MaxSinks>
 template <typename... Args>
-void Logger<Level, MaxSinks>::error(const char* format, Args&&... args)
+void Logger<S, MaxSinks>::error(const char* format, Args&&... args)
 {
-    log<LogLevel::Error>(format, std::forward<Args>(args)...);
+    log<Severity::Error>(format, std::forward<Args>(args)...);
 }
 
-template <LogLevel Level, size_t MaxSinks>
+template <Severity S, size_t MaxSinks>
 template <typename... Args>
-void Logger<Level, MaxSinks>::critical(const char* format, Args&&... args)
+void Logger<S, MaxSinks>::critical(const char* format, Args&&... args)
 {
-    log<LogLevel::Critical>(format, std::forward<Args>(args)...);
+    log<Severity::Critical>(format, std::forward<Args>(args)...);
 }
 
-template <LogLevel Level, size_t MaxSinks>
-template <LogLevel MessageLevel, typename... Args>
-void Logger<Level, MaxSinks>::log(const char* format, Args&&... args)
+template <Severity S, size_t MaxSinks>
+template <Severity MessageSeverity, typename... Args>
+void Logger<S, MaxSinks>::log(const char* format, Args&&... args)
 {
-    if constexpr (MessageLevel < Level)
+    if constexpr (MessageSeverity < S)
     {
         return;
     }
@@ -112,7 +112,7 @@ void Logger<Level, MaxSinks>::log(const char* format, Args&&... args)
     std::string_view message{buffer, length};
 
     LogMessage log{
-        .level = MessageLevel,
+        .severity = MessageLevel,
         .loggerName = name_,
         .payload = message,
         .timestamp_ms = tap::arch::clock::getTimeMilliseconds()};
