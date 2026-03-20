@@ -26,7 +26,7 @@ public:
     
 private:
     Formatter* formatter_;
-    char buffer_[BUFFER_SIZE];
+    std::array<char, BUFFER_SIZE> buffer_;
 };
 
 }  // namespace polylog

@@ -48,16 +48,19 @@
 tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
 
 /* logging includes ---------------------------------------------------------*/
-#include "polylog/log.hpp"
+#include "polylog/default_formatter.hpp"
+#include "polylog/logger.hpp"
+#include "polylog/provider.hpp"
+#include "polylog/serial_sink.hpp"
 
 // Place any sort of input/output initialization here. For example, place
 // serial init stuff here.
-static void initializeIo(src::Drivers *drivers);
+static void initializeIo(src::Drivers* drivers);
 
 // Anything that you would like to be called place here. It will be called
 // very frequently. Use PeriodicMilliTimers if you don't want something to be
 // called as frequently.
-static void updateIo(src::Drivers *drivers);
+static void updateIo(src::Drivers* drivers);
 
 using tap::communication::serial::Uart;
 
@@ -72,14 +75,18 @@ int main()
      *      robot loop we must access the singleton drivers to update
      *      IO states and run the scheduler.
      */
-    src::Drivers *drivers = src::DoNotUse_getDrivers();
+    src::Drivers* drivers = src::DoNotUse_getDrivers();
 
     Board::initialize();
     initializeIo(drivers);
     control::initSubsystemCommands(drivers);
 
     // Initialize logging after IO so that sinks can use IO to output logs.
-    polylog::Log::init(&drivers->uart);
+    polylog::GlobalLogger logger{"Global"};
+    polylog::DefaultFormatter formatter{};
+    polylog::SerialSink<Uart::UartPort::Uart8> serialSink{&formatter, &drivers->uart};
+    logger.addSink(&serialSink);
+    polylog::Provider<polylog::GlobalLogger>::provide(&logger);
 
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
@@ -104,7 +111,7 @@ int main()
     return 0;
 }
 
-static void initializeIo(src::Drivers *drivers)
+static void initializeIo(src::Drivers* drivers)
 {
     drivers->analog.init();
     drivers->pwm.init();
@@ -125,7 +132,7 @@ static void initializeIo(src::Drivers *drivers)
     drivers->cvHandler.initialize();
 }
 
-static void updateIo(src::Drivers *drivers)
+static void updateIo(src::Drivers* drivers)
 {
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::updateSims();

@@ -1,6 +1,8 @@
 #ifndef FORMATTER_HPP
 #define FORMATTER_HPP
 
+#include <span>
+
 #include "log_message.hpp"
 
 namespace polylog
@@ -10,7 +12,7 @@ struct Formatter
 {
     virtual ~Formatter();
 
-    virtual void format(const LogMessage& log, char* buffer, size_t size) = 0;
+    [[nodiscard]] virtual size_t format(const LogMessage& log, std::span<char> buffer) = 0;
 };
 
 }  // namespace polylog

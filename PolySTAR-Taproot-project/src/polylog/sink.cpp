@@ -9,9 +9,9 @@ Sink::~Sink() = default;
 
 void Sink::log(const LogMessage& log)
 {
-    formatter_->format(log, buffer_, BUFFER_SIZE);
-    write(buffer_);
-    buffer_[0] = '\0';
+    if (formatter_ == nullptr) return;
+    size_t length = formatter_->format(log, std::span{buffer_.data(), buffer_.size()});
+    write(std::string_view{buffer_.data(), length});
 }
 
 }  // namespace polylog

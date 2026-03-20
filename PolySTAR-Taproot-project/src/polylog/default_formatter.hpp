@@ -10,7 +10,7 @@ struct DefaultFormatter : public Formatter
 {
     ~DefaultFormatter() override;
 
-    void format(const LogMessage& log, char* buffer, size_t size) override;
+    [[nodiscard]] size_t format(const LogMessage& log, std::span<char> buffer) override;
 };
 
 }  // namespace polylog
