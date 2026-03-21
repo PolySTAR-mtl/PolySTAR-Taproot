@@ -44,9 +44,9 @@ sudo apt install nix-multi-user-{version}.deb
 sudo dnf install nix-multi-user-{version}.rpm
 ```
 
-- Arch: (à confirmer)
+- Arch:
 ```
-sudo pacman -Syu nix-multi-user-{version}.pkg.tar.zst
+sudo pacman -U nix-multi-user-{version}.pkg.tar.zst
 ```
 
 
