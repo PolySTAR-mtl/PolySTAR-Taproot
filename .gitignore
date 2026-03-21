@@ -2,7 +2,8 @@
 
 PolySTAR-Taproot-project/build
 PolySTAR-Taproot-project/Pipfile.lock
-PolySTAR-Taproot-project/openocd.cfg
+
+openocd.local.cfg
 
 project.xml.log
 

@@ -33,7 +33,7 @@ public:
                               float w,  float dw,  float w_ref);
 
 private:
-    static Gains2 defaultGains(float dyn);
+    static Gains2 defaultGains();
 
 private:
     float m_;

@@ -1,5 +1,4 @@
 #include "chassis_lqr.hpp"
-#include "chassis_constants.hpp"
 #include <algorithm>  // std::clamp
 
 namespace control
@@ -52,9 +51,9 @@ std::array<float,4> ChassisLqrController::update(float vx, float dvx, float vx_r
     return { clamp(fl), clamp(fr), clamp(bl), clamp(br) };
 }
 
-Gains2 ChassisLqrController::defaultGains(float dyn)
+Gains2 ChassisLqrController::defaultGains()
 {
-    return { 1.5f * dyn, 0.1f };
+    return { 1.5f, 0.1f };
 }
 
 }  // namespace chassis::algorithms
