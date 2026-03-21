@@ -1,4 +1,6 @@
+
 #pragma once
+#include "./algorithms/chassis_gains.hpp"
 /**
  * Chassis wheel velocity PID: A PD controller for chassis wheel RPM. The PID parameters for the
  * controller are listed below.
@@ -81,20 +83,40 @@ static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
  */
 #ifdef TARGET_HERO
 static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
+// defauilt lqr gains (standard)
+static constexpr control::chassis::algorithms::Gains2 Kx = {63.24f, 11.25f}; 
+static constexpr control::chassis::algorithms::Gains2 Ky = {63.24f, 11.25f};
+static constexpr control::chassis::algorithms::Gains2 Kt = {15.81f, 2.45f};
 #endif
 
 #ifdef TARGET_SENTRY
 static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
+// defauilt lqr gains (standard)
+static constexpr control::chassis::algorithms::Gains2 Kx = {63.24f, 11.25f}; 
+static constexpr control::chassis::algorithms::Gains2 Ky = {63.24f, 11.25f};
+static constexpr control::chassis::algorithms::Gains2 Kt = {15.81f, 2.45f};
 #endif
 
 #ifdef TARGET_STANDARD
 static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+// defauilt lqr gains (standard)
+static constexpr control::chassis::algorithms::Gains2 Kx = {63.24f, 11.25f}; 
+static constexpr control::chassis::algorithms::Gains2 Ky = {63.24f, 11.25f};
+static constexpr control::chassis::algorithms::Gains2 Kt = {15.81f, 2.45f};
 #endif
 
 #ifdef TARGET_ICRA
 static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+// defauilt lqr gains (standard)
+static constexpr control::chassis::algorithms::Gains2 Kx = {63.24f, 11.25f}; 
+static constexpr control::chassis::algorithms::Gains2 Ky = {63.24f, 11.25f};
+static constexpr control::chassis::algorithms::Gains2 Kt = {15.81f, 2.45f};
 #endif
 
 #ifdef TARGET_SPIN_TO_WIN
 static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+// defauilt lqr gains (standard)
+static constexpr control::chassis::algorithms::Gains2 Kx = {63.24f, 11.25f}; 
+static constexpr control::chassis::algorithms::Gains2 Ky = {63.24f, 11.25f};
+static constexpr control::chassis::algorithms::Gains2 Kt = {15.81f, 2.45f};
 #endif
