@@ -4,13 +4,14 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "flywheel_dji_subsystem.hpp"
-#include "flywheel_subsystem.hpp"
+#include "concepts/subsystem.hpp"
+#include "subsystems/flywheel/subsystems/flywheel_dji_subsystem.hpp"
+#include "subsystems/flywheel/subsystems/flywheel_subsystem.hpp"
 
 namespace control::flywheel
 {
 
-template <typename Subsystem>
+template <polystar::subsystem_derived Subsystem>
 class NormalFirePolicy
 {
 public:

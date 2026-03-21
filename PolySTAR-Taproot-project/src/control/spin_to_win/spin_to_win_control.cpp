@@ -27,9 +27,9 @@
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_move_command.hpp"
 
-//Flywheel includes
-#include "subsystems/flywheel/flywheel_subsystem.hpp"
-#include "subsystems/flywheel/flywheel_fire_commands.hpp"
+// Flywheel includes
+#include "subsystems/flywheel/subsystems/flywheel_subsystem.hpp"
+#include "subsystems/flywheel/commands/flywheel_fire_commands.hpp"
 
 #include "control/drivers/drivers_singleton.hpp"
 

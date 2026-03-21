@@ -4,22 +4,16 @@
 // Default flywheel velocity represented as a throttle value between 0 and 1
 #ifdef TARGET_ICRA
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.8;
-#endif
-
-#ifdef TARGET_STANDARD
+#elif defined(TARGET_STANDARD)
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4;
-#endif
-
-#ifdef TARGET_SPIN_TO_WIN
+#elif defined(TARGET_SPIN_TO_WIN)
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.6;
-#endif
-
-#ifdef TARGET_SENTRY
+#elif defined(TARGET_SENTRY)
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.25; // Desired Pulse width 1250 us
-#endif
-
-#ifdef TARGET_HERO
+#elif defined(TARGET_HERO)
 constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.4; 
+#else
+constexpr static float FLYWHEEL_DEFAULT_THROTTLE = 0.25;
 #endif
 
 // Delay after start of flywheels before feeder start.

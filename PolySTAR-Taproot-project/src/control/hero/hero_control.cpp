@@ -25,8 +25,8 @@
 #include "subsystems/feeder/feeder_move_command.hpp"
 
 //Flywheel includes
-#include "subsystems/flywheel/flywheel_dji_subsystem.hpp"
-#include "subsystems/flywheel/flywheel_fire_commands.hpp"
+#include "subsystems/flywheel/subsystems/flywheel_dji_subsystem.hpp"
+#include "subsystems/flywheel/commands/flywheel_fire_commands.hpp"
 
 // Motor includes
 #include "control/motor_control.hpp"

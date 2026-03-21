@@ -2,9 +2,9 @@
 #define FLYWHEEL_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
-#include "snail_motor.hpp"
+#include "subsystems/flywheel/snail_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "flywheel_constants.hpp"
+#include "subsystems/flywheel/constants/flywheel_constants.hpp"
 
 namespace control
 {

@@ -4,7 +4,8 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "flywheel_dji_subsystem.hpp"
+#include "concepts/subsystem.hpp"
+#include "subsystems/flywheel/subsystems/flywheel_dji_subsystem.hpp"
 
 #ifndef START_MATCH_WAIT_TIME
 #define START_MATCH_WAIT_TIME 30 * 1000

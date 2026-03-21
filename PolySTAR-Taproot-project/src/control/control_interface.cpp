@@ -26,7 +26,7 @@ float ControlInterface::getChassisXInput()
 
 std::map<std::string, bool> ControlInterface::getChassisKeyboardInput ()
 {
-    std::map<std::string, bool> keyboard_input;
+    std::map<std::string, bool> keyboard_input{};
     keyboard_input["w"] = drivers->remote.keyPressed(tap::communication::serial::Remote::Key::W);
     keyboard_input["s"] = drivers->remote.keyPressed(tap::communication::serial::Remote::Key::S);
     keyboard_input["d"] = drivers->remote.keyPressed(tap::communication::serial::Remote::Key::D);

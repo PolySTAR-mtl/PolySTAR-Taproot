@@ -3,14 +3,15 @@
 
 #include "tap/control/command.hpp"
 
+#include "concepts/subsystem.hpp"
 #include "control/drivers/drivers.hpp"
-
-#include "flywheel_dji_subsystem.hpp"
+#include "subsystems/flywheel/concepts/fire_policy.hpp"
+#include "subsystems/flywheel/subsystems/flywheel_dji_subsystem.hpp"
 
 namespace control::flywheel
 {
 
-template <typename Subsystem, typename FirePolicy>
+template <polystar::subsystem_derived Subsystem, fire_policy<Subsystem> FirePolicy>
 class GenericFireCommand : public tap::control::Command
 {
 public:
@@ -44,7 +45,7 @@ public:
     void end(bool interrupt) override { firePolicy_.end(interrupt); }
 
 private:
-    static constexpr const char* NAME = "flywheel fire command";
+    static inline constexpr const char* NAME = "flywheel fire command";
     Subsystem* const flywheel_;
     src::Drivers* drivers_;
     FirePolicy firePolicy_;

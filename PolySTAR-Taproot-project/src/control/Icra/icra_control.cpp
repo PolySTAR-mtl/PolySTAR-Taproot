@@ -26,8 +26,8 @@
 #include "subsystems/feeder/feeder_position_subsystem.hpp"
 
 // Flywheel includes
-#include "subsystems/flywheel/flywheel_fire_commands.hpp"
-#include "subsystems/flywheel/flywheel_subsystem.hpp"
+#include "subsystems/flywheel/commands/flywheel_fire_commands.hpp"
+#include "subsystems/flywheel/subsystems/flywheel_subsystem.hpp"
 
 // Motor includes
 #include "control/motor_control.hpp"
