@@ -5,7 +5,7 @@
 #include "control/drivers/drivers.hpp"
 #include "subsystems/feeder/feeder_feed_command.hpp"
 #include "flywheel_subsystem.hpp"
-#include "flywheel_fire_command.hpp"
+#include "flywheel_fire_commands.hpp"
 #include "subsystems/feeder/feeder_position_subsystem.hpp"
 
 namespace control
