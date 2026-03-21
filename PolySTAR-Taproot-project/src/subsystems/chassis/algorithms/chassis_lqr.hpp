@@ -1,8 +1,7 @@
 #ifndef CHASSIS_LQR_HPP_
 #define CHASSIS_LQR_HPP_
-
 #include <array>
-
+#include "chassis_gains.hpp"
 namespace control
 {
 namespace chassis::algorithms
@@ -14,8 +13,6 @@ namespace chassis::algorithms
 class ChassisLqrController
 {
 public:
-   struct Gains2 { float k_pos; float k_vel; };
-
       /* mass: chassis mass (kg)
          inertia: chassis yaw inertia about CoM (kg·m²)
          motorOutputMax: clamp for motor command (C620 DJI currently)
