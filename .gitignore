@@ -14,3 +14,4 @@ gcov-result
 docs/_build
 docs/api
 docs/doxyoutput
+.direnv
