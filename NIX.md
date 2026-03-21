@@ -3,7 +3,8 @@
 #### Option 1
 Lien pour le script d'installation officiel de Nix: https://nixos.org/download/
 
-Je recommande d'installer la version Single-User si vous n'avez pas besoin d'installer Nix pour plusieurs utilisateurs.
+Je recommande d'installer la version Single-User si vous n'avez pas besoin d'installer Nix pour
+plusieurs utilisateurs.
 
 1) Éxecuter le script d'installation de Nix.
 2) Ajouter la configuration de Nix suivante si elle n'est pas dans ``nix.conf``.
@@ -22,7 +23,8 @@ sandbox = true
 nix develop
 ```
 Vous devriez maintenant voir les dépendances du projet s'installer.
-Vous aurez à exécuter cette commande à chaque ouverture du projet dans un terminal pour accéder aux dépendances.
+Vous aurez à exécuter cette commande à chaque ouverture du projet dans un terminal pour accéder aux
+dépendances.
 
 #### Option 2 (Nécessaire pour Fedora avec SELinux)
 Nix-Community: https://nix-community.github.io/nix-installers/
@@ -65,4 +67,25 @@ sandbox = true
 nix develop
 ```
 Vous devriez maintenant voir les dépendances du projet s'installer.
-Vous aurez à exécuter cette commande à chaque ouverture du projet dans un terminal pour accéder aux dépendances.
+Vous aurez à exécuter cette commande à chaque ouverture du projet dans un terminal pour accéder aux
+dépendances.
+
+
+## Installation de nix-direnv (Chargement automatique de l'environnement)
+
+Pour faciliter l'intégration du Nix Shell, vous pouvez installer direnv et nix-direnv.
+[https://github.com/nix-community/nix-direnv]
+
+Si vous n'êtes pas familier avec Nix, la méthode la plus simple pour installer nix-direnv est en
+utilisant la commande ``nix profile``.
+```
+nix profile install nixpkgs#nix-direnv nixpkgs#direnv
+```
+
+Ensuite, pour permettre à direnv et nix-direnv de charger automatiquement la configuration du projet,
+faite la commande suivante dans le dossier ``POLYSTAR-TAPROOT``
+```
+direnv allow
+```
+Votre environnement devrait maintenant être chargé automatiquement quand vous ouvrez le dossier dans
+votre terminal.
