@@ -21,7 +21,7 @@ PlaySongCommand::~PlaySongCommand() = default;
 
 void PlaySongCommand::initialize() { buzzer_->playSong(song_); }
 
-void PlaySongCommand::execute() { buzzer_->refresh(); }
+void PlaySongCommand::execute() { /* buzzer_->refresh(); */ }
 
 void PlaySongCommand::end(bool interrupted) { buzzer_->stop(); }
 
