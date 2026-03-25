@@ -3,8 +3,8 @@
 
 #include <string_view>
 
-#include "formatter.hpp"
-#include "log_message.hpp"
+#include "polylog/formatters/formatter.hpp"
+#include "polylog/loggers/log_message.hpp"
 
 namespace polylog
 {

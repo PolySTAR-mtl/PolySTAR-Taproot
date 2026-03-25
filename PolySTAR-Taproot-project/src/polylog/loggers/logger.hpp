@@ -6,7 +6,7 @@
 
 #include "log_message.hpp"
 #include "severity.hpp"
-#include "sink.hpp"
+#include "polylog/sinks/sink.hpp"
 
 namespace polylog
 {

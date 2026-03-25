@@ -3,7 +3,7 @@
 
 #include <span>
 
-#include "log_message.hpp"
+#include "polylog/loggers/log_message.hpp"
 
 namespace polylog
 {

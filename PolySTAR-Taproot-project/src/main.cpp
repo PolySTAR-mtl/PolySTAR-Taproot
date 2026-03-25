@@ -48,9 +48,9 @@
 tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
 
 /* logging includes ---------------------------------------------------------*/
-#include "polylog/default_formatter.hpp"
-#include "polylog/logger.hpp"
-#include "polylog/serial_sink.hpp"
+#include "polylog/formatters/default_formatter.hpp"
+#include "polylog/loggers/logger.hpp"
+#include "polylog/sinks/serial_sink.hpp"
 #include "polylog/log.hpp"
 
 // Place any sort of input/output initialization here. For example, place

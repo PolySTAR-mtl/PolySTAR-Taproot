@@ -1,7 +1,7 @@
 #ifndef LOG_HPP
 #define LOG_HPP
 
-#include "logger.hpp"
+#include "loggers/logger.hpp"
 
 namespace polylog
 {
