@@ -50,9 +50,8 @@ tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
 /* logging includes ---------------------------------------------------------*/
 #include "polylog/default_formatter.hpp"
 #include "polylog/logger.hpp"
-#include "polylog/provider.hpp"
 #include "polylog/serial_sink.hpp"
-#include "songs/mario.hpp"
+#include "polylog/log.hpp"
 
 // Place any sort of input/output initialization here. For example, place
 // serial init stuff here.
@@ -83,15 +82,11 @@ int main()
     control::initSubsystemCommands(drivers);
 
     // Initialize logging after IO so that sinks can use IO to output logs.
-    polylog::DefaultFormatter formatter{};
-    polylog::SerialSink<Uart::UartPort::Uart8> serialSink{&formatter, &drivers->uart};
-    polylog::GlobalLogger logger{"Global"};
-    logger.addSink(&serialSink);
-    polylog::Provider<polylog::GlobalLogger>::provide(&logger);
+    static polylog::DefaultFormatter formatter{};
+    static polylog::SerialSink<Uart::UartPort::Uart8> serialSink{&formatter, &drivers->uart};
+    polylog::defaultLogger().addSink(&serialSink);
 
-    logger.info("Initialization complete\n");
-
-    songs::playMarioThemesongBlocking(&drivers->pwm);
+    polylog::info("Initialization complete\n");
 
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();

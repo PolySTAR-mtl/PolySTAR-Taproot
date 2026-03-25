@@ -47,12 +47,6 @@ private:
     std::string_view name_;
 };
 
-#ifdef LOG_LEVEL
-using GlobalLogger = Logger<LOG_LEVEL>;
-#else
-using GlobalLogger = Logger<Severity::Info>;
-#endif
-
 
 }  // namespace polylog
 
