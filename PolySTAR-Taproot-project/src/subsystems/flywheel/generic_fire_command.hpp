@@ -35,7 +35,7 @@ public:
 
     void initialize() override { firePolicy_.initialize(); }
 
-    void execute() override { firePolicy_.initialize(); }
+    void execute() override { firePolicy_.execute(); }
 
     const char* getName() const override { return NAME; }
 
