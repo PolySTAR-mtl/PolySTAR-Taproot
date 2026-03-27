@@ -28,13 +28,13 @@
 from SCons.Script import *
 
 def show_size(env, source, alias='__size'):
-    if env.has_key('CONFIG_DEVICE_MEMORY'):
+    if 'CONFIG_DEVICE_MEMORY' in env:
         def size_action(target, source, env):
             from modm_tools import size
             print(size.format(source[0].abspath, env['CONFIG_DEVICE_MEMORY']))
             return 0
         action = Action(size_action, cmdstr="$SIZECOMSTR")
-    elif env.has_key('CONFIG_DEVICE_NAME'):
+    elif 'CONFIG_DEVICE_NAME' in env:
         # AVR devices use avr-objdump -Pmem-usage via ELF file
         action = Action("$OBJDUMP -Pmem-usage {}".format(source[0].path),
                         cmdstr="$SIZECOMSTR")

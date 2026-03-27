@@ -20,16 +20,16 @@ ChassisLqrController::ChassisLqrController(float mass,
     // Ky_ = defaultGains(m_);
     // Kt_ = defaultGains(I_);
 
-    Kx_ = {63.24f, 11.25f}; 
-    Ky_ = {63.24f, 11.25f};
-    Kt_ = {15.81f, 2.45f};
-}
-
-void ChassisLqrController::setGains(const Gains2& Kx, const Gains2& Ky, const Gains2& Kt)
-{
-    Kx_ = Kx;
+    Kx_ = Kx; 
     Ky_ = Ky;
     Kt_ = Kt;
+}
+
+void ChassisLqrController::setGains(const Gains2& kx, const Gains2& ky, const Gains2& kt)
+{
+    Kx_ = kx;
+    Ky_ = ky;
+    Kt_ = kt;
 }
 
 std::array<float,4> ChassisLqrController::update(float vx, float dvx, float vx_ref,
@@ -51,9 +51,9 @@ std::array<float,4> ChassisLqrController::update(float vx, float dvx, float vx_r
     return { clamp(fl), clamp(fr), clamp(bl), clamp(br) };
 }
 
-ChassisLqrController::Gains2 ChassisLqrController::defaultGains(float dyn)
+Gains2 ChassisLqrController::defaultGains()
 {
-    return { 1.5f * dyn, 0.1f };
+    return { 1.5f, 0.1f };
 }
 
 }  // namespace chassis::algorithms
