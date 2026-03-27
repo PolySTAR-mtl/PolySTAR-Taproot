@@ -20,7 +20,7 @@ ChassisLqrController::ChassisLqrController(float mass,
     // Ky_ = defaultGains(m_);
     // Kt_ = defaultGains(I_);
 
-    Kx_ = Kx; 
+    Kx_ = Kx;
     Ky_ = Ky;
     Kt_ = Kt;
 }
