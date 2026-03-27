@@ -2,9 +2,9 @@
 #define FLYWHEEL_DJI_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
-#include "snail_motor.hpp"
+#include "subsystems/flywheel/utils/snail_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "flywheel_constants.hpp"
+#include "subsystems/flywheel/config/flywheel_constants.hpp"
 
 #include <deque>
 
@@ -23,16 +23,7 @@ public:
      * Constructs a new FlywheelSubsystem with default parameters specified in
      * the private section of this class.
      */
-    FlywheelDjiSubsystem(tap::Drivers *drivers)
-        : tap::control::Subsystem(drivers),
-          snailMotor(drivers, FLYWHEEL_PWM_PIN),
-          leftMotor(drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"),
-          rightMotor(drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"),
-          currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
-          currentDjiSpeed(MOTOR_LOW_SPEED), // TODO: change speed here
-          firing(false)
-    {
-    }
+    FlywheelDjiSubsystem(tap::Drivers *drivers);
 
     FlywheelDjiSubsystem(const FlywheelDjiSubsystem &other) = delete;
 
@@ -50,11 +41,11 @@ public:
 
     void sendStartingBoost();
 
-    void setThrottle(float throttle);
+    void setThrottle(const float throttle);
 
     float getCurrentThrottle() const;
 
-    const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
+    const src::motor::SnailMotor &getFlywheelMotor() const;
 
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.

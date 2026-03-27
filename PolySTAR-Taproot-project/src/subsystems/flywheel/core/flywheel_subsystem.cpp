@@ -7,10 +7,17 @@
 using namespace tap;
 using tap::communication::serial::Uart;
 
-namespace control
+namespace control::flywheel
 {
-namespace flywheel
+
+FlywheelSubsystem::FlywheelSubsystem(tap::Drivers *drivers)
+    : tap::control::Subsystem(drivers),
+        snailMotor(drivers, FLYWHEEL_PWM_PIN),
+        currentThrottle(FLYWHEEL_CONFIG.flywheelDefaultThrottle),
+        firing(false)
 {
+}
+
 void FlywheelSubsystem::initialize()
 {
     snailMotor.init();
@@ -40,7 +47,5 @@ float FlywheelSubsystem::getCurrentThrottle() const {
     return currentThrottle;
 }
 
-}  // namespace flywheel
-
-}  // namespace control
+}  // namespace control::flywheel
 

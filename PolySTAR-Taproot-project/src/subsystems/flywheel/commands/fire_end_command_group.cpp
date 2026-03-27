@@ -17,7 +17,7 @@ FireEndCommandGroup::FireEndCommandGroup(
 
 void FireEndCommandGroup::initialize() {
     this->comprisedCommandScheduler.addCommand(&fireCommand);
-    flywheelDelayTimer.restart(FEEDER_DELAY_MS);
+    flywheelDelayTimer.restart(flywheel::FEEDER_DELAY_MS);
 }
 
 void FireEndCommandGroup::execute()

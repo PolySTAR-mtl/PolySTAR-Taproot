@@ -5,7 +5,7 @@
 
 #include "control/drivers/drivers.hpp"
 
-#include "flywheel_dji_subsystem.hpp"
+#include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
 
 namespace control::flywheel
 {

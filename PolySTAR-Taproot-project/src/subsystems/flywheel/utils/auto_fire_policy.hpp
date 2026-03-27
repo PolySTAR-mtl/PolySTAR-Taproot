@@ -4,11 +4,8 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "flywheel_dji_subsystem.hpp"
-
-#ifndef START_MATCH_WAIT_TIME
-#define START_MATCH_WAIT_TIME 30 * 1000
-#endif
+#include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
+#include "subsystems/sentry_general_constants.hpp"
 
 namespace control::flywheel
 {

@@ -2,13 +2,13 @@
 #define FLYWHEEL_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
-#include "snail_motor.hpp"
+#include "subsystems/flywheel/utils/snail_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "flywheel_constants.hpp"
+#include "subsystems/flywheel/config/flywheel_constants.hpp"
+#include "subsystems/flywheel/config/flywheel_config.hpp"
+#include "robot_target.hpp"
 
-namespace control
-{
-namespace flywheel
+namespace control::flywheel
 {
 /**
  * A bare bones Subsystem for interacting with a flywheel.
@@ -21,13 +21,7 @@ public:
      * Constructs a new FlywheelSubsystem with default parameters specified in
      * the private section of this class.
      */
-    FlywheelSubsystem(tap::Drivers *drivers)
-        : tap::control::Subsystem(drivers),
-          snailMotor(drivers, FLYWHEEL_PWM_PIN),
-          currentThrottle(FLYWHEEL_DEFAULT_THROTTLE),
-          firing(false)
-    {
-    }
+    FlywheelSubsystem(tap::Drivers *drivers);
 
     FlywheelSubsystem(const FlywheelSubsystem &other) = delete;
 
@@ -51,7 +45,7 @@ public:
 
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
-    static constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
+    static inline constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
 
     src::motor::SnailMotor snailMotor;
 
@@ -60,8 +54,6 @@ private:
     float firing;
 };  // class FlywheelSubsystem
 
-}  // namespace flywheel
-
-}  // namespace control
+}  // namespace control::flywheel
 
 #endif  // FLYWHEEL_SUBSYSTEM_HPP_

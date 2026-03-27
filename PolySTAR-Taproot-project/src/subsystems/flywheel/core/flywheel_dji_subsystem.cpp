@@ -13,6 +13,18 @@ namespace control
 {
 namespace flywheel
 {
+
+FlywheelDjiSubsystem::FlywheelDjiSubsystem(tap::Drivers *drivers)
+    : tap::control::Subsystem(drivers),
+        snailMotor(drivers, FLYWHEEL_PWM_PIN),
+        leftMotor(drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"),
+        rightMotor(drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"),
+        currentThrottle(FLYWHEEL_CONFIG.flywheelDefaultThrottle),
+        currentDjiSpeed(FLYWHEEL_CONFIG.motorLowSpeed), // TODO: change speed here
+        firing(false)
+{
+}
+
 void FlywheelDjiSubsystem::initialize()
 {
     snailMotor.init();
@@ -73,11 +85,11 @@ void FlywheelDjiSubsystem::stopFiring() {
 }
 
 void FlywheelDjiSubsystem::sendStartingBoost() {
-    rightMotor.setDesiredOutput(MOTOR_MEDIUM_SPEED);
-    leftMotor.setDesiredOutput(MOTOR_MEDIUM_SPEED);
+    rightMotor.setDesiredOutput(FLYWHEEL_CONFIG.motorMediumSpeed);
+    leftMotor.setDesiredOutput(FLYWHEEL_CONFIG.motorMediumSpeed);
 }
 
-void FlywheelDjiSubsystem::setThrottle(float throttle) {
+void FlywheelDjiSubsystem::setThrottle(const float throttle) {
     currentThrottle = throttle;
 
     if (firing == false) return;
@@ -88,6 +100,8 @@ void FlywheelDjiSubsystem::setThrottle(float throttle) {
 float FlywheelDjiSubsystem::getCurrentThrottle() const {
     return currentThrottle;
 }
+
+const src::motor::SnailMotor &FlywheelDjiSubsystem::getFlywheelMotor() const { return snailMotor; }
 
 }  // namespace flywheel
 

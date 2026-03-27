@@ -3,9 +3,9 @@
 
 #include "control/drivers/drivers.hpp"
 
-#include "auto_fire_policy.hpp"
-#include "normal_fire_policy.hpp"
-#include "generic_fire_command.hpp"
+#include "subsystems/flywheel/utils/auto_fire_policy.hpp"
+#include "subsystems/flywheel/utils/normal_fire_policy.hpp"
+#include "subsystems/flywheel/commands/generic_fire_command.hpp"
 
 namespace control::flywheel
 {

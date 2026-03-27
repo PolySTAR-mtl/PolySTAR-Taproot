@@ -21,8 +21,8 @@ void SnailMotor::init() {
     drivers->pwm.write(THROTTLE_IDLE, pwmPin);
 }
 
-void SnailMotor::setThrottle(float throttle) {
-    float pwmDutyCycle = THROTTLE_IDLE + throttle*THROTTLE_RANGE;
+void SnailMotor::setThrottle(const float throttle) {
+    const float pwmDutyCycle = THROTTLE_IDLE + throttle * THROTTLE_RANGE;
     drivers->pwm.write(pwmDutyCycle, pwmPin);
 }
 

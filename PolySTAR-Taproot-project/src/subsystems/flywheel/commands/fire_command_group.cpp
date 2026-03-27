@@ -1,8 +1,9 @@
 #include "fire_command_group.hpp"
+
 #include "control/drivers/drivers.hpp"
-#include "flywheel_subsystem.hpp"
+#include "subsystems/flywheel/core/flywheel_subsystem.hpp"
 #include "flywheel_fire_commands.hpp"
-#include "flywheel_constants.hpp"
+#include "subsystems/flywheel/config/flywheel_constants.hpp"
 
 namespace control
 {
@@ -23,7 +24,7 @@ FireCommandGroup::FireCommandGroup(
 
 void FireCommandGroup::initialize() {
     this->comprisedCommandScheduler.addCommand(&fireCommand);
-    feederDelayTimer.restart(FEEDER_DELAY_MS);
+    feederDelayTimer.restart(flywheel::FEEDER_DELAY_MS);
     feederIsFeeding = false;
 }
 

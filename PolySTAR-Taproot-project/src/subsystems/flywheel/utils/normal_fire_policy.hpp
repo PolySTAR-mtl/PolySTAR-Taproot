@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "flywheel_dji_subsystem.hpp"
-#include "flywheel_subsystem.hpp"
+#include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
+#include "subsystems/flywheel/core/flywheel_subsystem.hpp"
 
 namespace control::flywheel
 {

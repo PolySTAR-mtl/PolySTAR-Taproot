@@ -5,26 +5,29 @@ namespace target {
 
 enum class RobotTarget 
 {
-    Standard,
+    Engineer,
     Hero,
+    Icra,
     Sentry,
     SpinToWin,
-    Engineer,
+    Standard,
 };
 
 constexpr RobotTarget ROBOT_TARGET = 
-#ifdef TARGET_STANDARD
-        RobotTarget::Standard;
+#if defined(TARGET_ENGINEER)
+    RobotTarget::Engineer;
 #elif defined(TARGET_HERO)
-        RobotTarget::Hero;
+    RobotTarget::Hero;
+#elif defined(TARGET_ICRA)
+    RobotTarget::Icra;
 #elif defined(TARGET_SENTRY)
-        RobotTarget::Sentry;
+    RobotTarget::SpinToWin;
 #elif defined(TARGET_SPIN_TO_WIN)
-        RobotTarget::SpinToWin;
-#elif defined(TARGET_ENGINEER)
-        RobotTarget::Engineer;
+    RobotTarget::SpinToWin;
+#elif defined(TARGET_STANDARD)
+    RobotTarget::Standard;
 #else
-        RobotTarget::Standard;
+    RobotTarget::Standard;
 #endif
 
 }
