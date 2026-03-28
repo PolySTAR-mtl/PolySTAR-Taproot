@@ -38,9 +38,9 @@ public:
 
 private:
     // attributes needed to operate the group command 
-    flywheel::FlywheelFireCommand fireCommand;
-    
-    tap::arch::MilliTimeout flywheelDelayTimer;
+    flywheel::FlywheelFireCommand fireCommand_;
+
+    tap::arch::MilliTimeout flywheelDelayTimer_;
 };  // class FireEndCommandGroup
 
 }  // namespace control

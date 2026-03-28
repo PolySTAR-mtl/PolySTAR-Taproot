@@ -56,10 +56,10 @@ private:
     src::Drivers* drivers_;
 
     ///< Motors.  Use these to interact with any dji style motors.
-    tap::motor::DjiMotor leftMotor;
-    tap::motor::DjiMotor rightMotor;
+    tap::motor::DjiMotor leftMotor_;
+    tap::motor::DjiMotor rightMotor_;
 
-    float currentDjiSpeed;
+    float currentDjiSpeed_;
 
     bool isKickstartDone_;
     uint32_t startingTs_;

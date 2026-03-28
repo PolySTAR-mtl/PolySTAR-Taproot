@@ -11,7 +11,7 @@
 
 namespace control
 {
-    
+
 class FireCommandGroup : public tap::control::ComprisedCommand
 {
 public:
@@ -40,13 +40,13 @@ public:
 
 private:
     // attributes needed to operate the group command 
-    flywheel::FlywheelFireCommand fireCommand;
+    flywheel::FlywheelFireCommand fireCommand_;
 
-    feeder::FeederMoveUnjamCommand feedCommand;
+    feeder::FeederMoveUnjamCommand feedCommand_;
 
-    tap::arch::MilliTimeout feederDelayTimer;
+    tap::arch::MilliTimeout feederDelayTimer_;
 
-    bool feederIsFeeding;
+    bool feederIsFeeding_;
 };  // class FireCommandGroup
 
 }  // namespace control

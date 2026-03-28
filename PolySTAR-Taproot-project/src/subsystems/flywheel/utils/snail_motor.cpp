@@ -10,28 +10,28 @@ namespace src::motor
 SnailMotor::SnailMotor(
     tap::Drivers *drivers,
     tap::gpio::Pwm::Pin pwmPin) 
-    : drivers{drivers},
-      pwmPin{pwmPin}
+    : drivers_{drivers},
+      pwmPin_{pwmPin}
 {
 }
 
 void SnailMotor::init() {
-    if (drivers == nullptr) {
+    if (drivers_ == nullptr) {
         return;
     }
-    
-    drivers->pwm.setTimerFrequency(SnailMotorConstants::PWM_TIMER, SnailMotorConstants::PWM_FREQUENCY); // Timer 8 controls pins W-Z on Board A
-    drivers->pwm.write(SnailMotorConstants::THROTTLE_IDLE, pwmPin);
+
+    drivers_->pwm.setTimerFrequency(SnailMotorConstants::PWM_TIMER, SnailMotorConstants::PWM_FREQUENCY); // Timer 8 controls pins W-Z on Board A
+    drivers_->pwm.write(SnailMotorConstants::THROTTLE_IDLE, pwmPin_);
 }
 
 void SnailMotor::setThrottle(const float throttle) {
-    if (drivers == nullptr) {
+    if (drivers_ == nullptr) {
         return;
     }
 
     const float clampedThrottle = std::clamp(throttle, SnailMotorConstants::MIN_THROTTLE, SnailMotorConstants::MAX_THROTTLE);
     const float pwmDutyCycle = SnailMotorConstants::THROTTLE_IDLE + clampedThrottle * SnailMotorConstants::THROTTLE_RANGE;
-    drivers->pwm.write(pwmDutyCycle, pwmPin);
+    drivers_->pwm.write(pwmDutyCycle, pwmPin_);
 }
 
 }  // namespace src::motor

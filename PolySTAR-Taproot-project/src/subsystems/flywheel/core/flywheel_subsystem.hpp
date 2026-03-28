@@ -56,11 +56,11 @@ private:
     // Hardware constants, not specific to any particular flywheel subsystem.
     static inline constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
 
-    src::motor::SnailMotor snailMotor;
+    src::motor::SnailMotor snailMotor_;
 
-    float currentThrottle;
+    float currentThrottle_;
 
-    bool firing;
+    bool firing_;
 };  // class FlywheelSubsystem
 
 template <>

@@ -12,10 +12,10 @@ FireCommandGroup::FireCommandGroup(
     feeder::FeederPositionSubsystem *const feeder,
     src::Drivers* drivers)
     : tap::control::ComprisedCommand{drivers},
-      fireCommand{flywheel, drivers},
-      feedCommand{feeder, drivers},
-      feederDelayTimer{},
-      feederIsFeeding{}
+      fireCommand_{flywheel, drivers},
+      feedCommand_{feeder, drivers},
+      feederDelayTimer_{},
+      feederIsFeeding_{}
 {
     this->addSubsystemRequirement(flywheel);
     this->addSubsystemRequirement(feeder);
@@ -24,25 +24,25 @@ FireCommandGroup::FireCommandGroup(
 }
 
 void FireCommandGroup::initialize() {
-    this->comprisedCommandScheduler.addCommand(&fireCommand);
-    feederDelayTimer.restart(flywheel::FEEDER_DELAY_MS);
-    feederIsFeeding = false;
+    this->comprisedCommandScheduler.addCommand(&fireCommand_);
+    feederDelayTimer_.restart(flywheel::FEEDER_DELAY_MS);
+    feederIsFeeding_ = false;
 }
 
 void FireCommandGroup::execute()
 {
-    if ( feederIsFeeding == false && feederDelayTimer.execute())
+    if ( feederIsFeeding_ == false && feederDelayTimer_.execute())
         {
-            comprisedCommandScheduler.addCommand(&feedCommand);
-            feederIsFeeding = true;
+            comprisedCommandScheduler.addCommand(&feedCommand_);
+            feederIsFeeding_ = true;
         }
     this->comprisedCommandScheduler.run();
 }
 
 void FireCommandGroup::end(bool interrupted)
 {
-    this->comprisedCommandScheduler.removeCommand(&feedCommand, interrupted);
-    this->comprisedCommandScheduler.removeCommand(&fireCommand, interrupted);
+    this->comprisedCommandScheduler.removeCommand(&feedCommand_, interrupted);
+    this->comprisedCommandScheduler.removeCommand(&fireCommand_, interrupted);
 }
 
 bool FireCommandGroup::isFinished() const 

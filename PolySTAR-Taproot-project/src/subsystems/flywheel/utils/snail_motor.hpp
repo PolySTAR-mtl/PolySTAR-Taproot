@@ -57,10 +57,10 @@ public:
     void setThrottle(const float throttle);
 
 private:
-    tap::Drivers *drivers;
+    tap::Drivers *drivers_;
 
     /// The PWM pin that the motor is attached to. Valid pins are W, X, Y, and Z.
-    tap::gpio::Pwm::Pin pwmPin;
+    tap::gpio::Pwm::Pin pwmPin_;
 };  // class SnailMotor
 
 }  // namespace src::motor

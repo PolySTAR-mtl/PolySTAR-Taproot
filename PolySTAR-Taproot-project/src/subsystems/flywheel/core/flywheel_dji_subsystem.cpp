@@ -19,9 +19,9 @@ namespace flywheel
 FlywheelDjiSubsystem::FlywheelDjiSubsystem(src::Drivers *drivers)
     : FlywheelSubsystem{drivers},
         drivers_{drivers},
-        leftMotor{drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"},
-        rightMotor{drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"},
-        currentDjiSpeed{ACTIVE_FLYWHEEL_CONFIG.motorLowSpeed}, // TODO: change speed here
+        leftMotor_{drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"},
+        rightMotor_{drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"},
+        currentDjiSpeed_{ACTIVE_FLYWHEEL_CONFIG.motorLowSpeed}, // TODO: change speed here
         isKickstartDone_{},
         startingTs_{},
         startMatchTimeout_{}
@@ -31,8 +31,8 @@ FlywheelDjiSubsystem::FlywheelDjiSubsystem(src::Drivers *drivers)
 void FlywheelDjiSubsystem::initialize()
 {
     FlywheelSubsystem::initialize();
-    leftMotor.initialize();
-    rightMotor.initialize();
+    leftMotor_.initialize();
+    rightMotor_.initialize();
 }
 
 void FlywheelDjiSubsystem::refresh() {
@@ -40,20 +40,20 @@ void FlywheelDjiSubsystem::refresh() {
 
 void FlywheelDjiSubsystem::startFiring() {
     FlywheelSubsystem::startFiring();
-    leftMotor.setDesiredOutput(currentDjiSpeed);
-    rightMotor.setDesiredOutput(currentDjiSpeed);
+    leftMotor_.setDesiredOutput(currentDjiSpeed_);
+    rightMotor_.setDesiredOutput(currentDjiSpeed_);
     /// TODO: Add a "Start firing\n" log message.
 }
 
 void FlywheelDjiSubsystem::stopFiring() {
     FlywheelSubsystem::stopFiring();
-    rightMotor.setDesiredOutput(0);
-    leftMotor.setDesiredOutput(0);
+    rightMotor_.setDesiredOutput(0);
+    leftMotor_.setDesiredOutput(0);
 }
 
 void FlywheelDjiSubsystem::sendStartingBoost() {
-    rightMotor.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
-    leftMotor.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
+    rightMotor_.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
+    leftMotor_.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
 }
 
 }  // namespace flywheel

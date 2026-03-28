@@ -28,6 +28,7 @@ constexpr RobotTarget ROBOT_TARGET =
     RobotTarget::Standard;
 #else
     RobotTarget::Standard;
+    #warning "No target defined, defaulting to standard. Define a target in the build system to remove this warning."
 #endif
 
 }

@@ -7,8 +7,8 @@ FireEndCommandGroup::FireEndCommandGroup(
     feeder::FeederPositionSubsystem *const feeder,
     src::Drivers* drivers)
     : tap::control::ComprisedCommand{drivers},
-      fireCommand{flywheel, drivers},
-      flywheelDelayTimer{}
+      fireCommand_{flywheel, drivers},
+      flywheelDelayTimer_{}
 {
     this->addSubsystemRequirement(flywheel);
     this->addSubsystemRequirement(feeder);
@@ -17,21 +17,21 @@ FireEndCommandGroup::FireEndCommandGroup(
 }
 
 void FireEndCommandGroup::initialize() {
-    this->comprisedCommandScheduler.addCommand(&fireCommand);
-    flywheelDelayTimer.restart(flywheel::FEEDER_DELAY_MS);
+    this->comprisedCommandScheduler.addCommand(&fireCommand_);
+    flywheelDelayTimer_.restart(flywheel::FEEDER_DELAY_MS);
 }
 
 void FireEndCommandGroup::execute()
 {
-    if (flywheelDelayTimer.execute()) {
-        this->comprisedCommandScheduler.removeCommand(&fireCommand, false);
+    if (flywheelDelayTimer_.execute()) {
+        this->comprisedCommandScheduler.removeCommand(&fireCommand_, false);
     }
     this->comprisedCommandScheduler.run();
 }
 
 void FireEndCommandGroup::end(bool interrupted)
 {
-    this->comprisedCommandScheduler.removeCommand(&fireCommand, interrupted);
+    this->comprisedCommandScheduler.removeCommand(&fireCommand_, interrupted);
 }
 
 bool FireEndCommandGroup::isFinished() const 
