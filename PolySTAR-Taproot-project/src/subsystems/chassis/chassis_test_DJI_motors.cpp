@@ -8,11 +8,10 @@ namespace control
 namespace chassis
 {
 ChassisTestDjiMotorsCommand::ChassisTestDjiMotorsCommand(
-    ChassisSubsystem *const chassis,
+    ChassisSpin2WinSubsystem *const chassis,
     src::Drivers *drivers)
     : chassis(chassis),
-      drivers(drivers),
-      startMatchTimeout(0)
+      drivers(drivers)
 {
     if (chassis == nullptr)
     {
@@ -21,12 +20,11 @@ ChassisTestDjiMotorsCommand::ChassisTestDjiMotorsCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(chassis));
 }
 
-void  ChassisTestDjiMotorsCommand::initialize() {}
-
-void  ChassisTestDjiMotorsCommand::execute()
-{
-    chassis->setTargetOutput(1,1,1);
+void  ChassisTestDjiMotorsCommand::initialize() {
+    chassis->setTargetOutput(0.5,1,0.5);
 }
+
+void  ChassisTestDjiMotorsCommand::execute() {}
 
 void  ChassisTestDjiMotorsCommand::end(bool) {
     chassis->setTargetOutput(0,0,0);

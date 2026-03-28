@@ -1,4 +1,4 @@
-#ifdef TARGET_SPIN_TO_WIN
+ #ifdef TARGET_SPIN_TO_WIN
 
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
@@ -12,6 +12,7 @@
 #include "subsystems/chassis/chassis_spin2win_command.hpp"
 #include "subsystems/chassis/chassis_spin2win_keyboard_command.hpp"
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+#include "subsystems/chassis/chassis_test_DJI_motors.hpp"
 
 // Turret includes
 #include "subsystems/turret/turret_subsystem.hpp"
@@ -70,6 +71,7 @@ chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers()
 chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2winKeyboardCommand chassisKeyboardDrive(&theChassis, drivers(), &yawMotor);
 // chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+chassis::ChassisTestDjiMotorsCommand chassisTestDrive(&theChassis, drivers());
 
 /* turret */
 turret::TurretManualAimCommand turretManualNoSpin(&theTurret, drivers());
@@ -94,6 +96,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP),true);
 HoldCommandMapping startFlywheel(drivers(), {&flywheelStart, &feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
 HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManualAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping toggleChassisTest(drivers(), {&chassisTestDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Mouse mappings */
 ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
@@ -128,11 +131,13 @@ void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualNoSpin);
     // theFlywheel.setDefaultCommand(&flywheelStart);
+    theChassis.setDefaultCommand(&chassisTestDrive);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
 void startStandardCommands(src::Drivers *drivers) {
     // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+    // drivers->commandScheduler.addCommand(&chassisTestDrive);
 }
 
 /* register io mappings here ------------------------------------------------*/
@@ -146,6 +151,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&toggleChassisSpinKey);
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);
+    // drivers->commandMapper.addMap(&toggleChassisTest);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)

@@ -3,9 +3,8 @@
 
 #include "tap/control/command.hpp"
 
-#include "chassis_subsystem.hpp"
+#include "chassis_spin2win_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
-#include "tap/architecture/timeout.hpp"
 
 namespace control
 {
@@ -21,7 +20,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisTestDjiMotorsCommand(ChassisSubsystem *const chassis, src::Drivers *drivers);
+    ChassisTestDjiMotorsCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers);
 
     ChassisTestDjiMotorsCommand(const ChassisTestDjiMotorsCommand &other) = delete;
 
@@ -37,11 +36,8 @@ public:
 
     bool isFinished() const override;
 
-private:
-    tap::arch::MilliTimeout startMatchTimeout;
-
 protected:
-    ChassisSubsystem *const chassis;
+    ChassisSpin2WinSubsystem *const chassis;
     
     src::Drivers *drivers;
 };  // ChassisTestDjiMotorsCommand
