@@ -2,11 +2,14 @@
 #define FLYWHEEL_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
-#include "subsystems/flywheel/utils/snail_motor.hpp"
 #include "tap/util_macros.hpp"
+
+#include "robot_target.hpp"
+
+#include "subsystems/flywheel/utils/snail_motor.hpp"
 #include "subsystems/flywheel/config/flywheel_constants.hpp"
 #include "subsystems/flywheel/config/flywheel_config.hpp"
-#include "robot_target.hpp"
+#include "subsystems/flywheel/utils/fire_mode.hpp"
 
 namespace control::flywheel
 {
@@ -33,15 +36,21 @@ public:
 
     void refresh() override;
 
-    void startFiring();
-
-    void stopFiring();
-
     void setThrottle(float throttle);
 
     float getCurrentThrottle() const;
 
-    const src::motor::SnailMotor &getFlywheelMotor() const { return snailMotor; }
+    const src::motor::SnailMotor &getFlywheelMotor() const;
+
+    virtual void startFiring();
+
+    virtual void stopFiring();
+
+    template <FireMode M>
+    void initializeFiring() {}
+
+    template <FireMode M>
+    void executeFiring() {}
 
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
@@ -51,8 +60,19 @@ private:
 
     float currentThrottle;
 
-    float firing;
+    bool firing;
 };  // class FlywheelSubsystem
+
+template <>
+inline void FlywheelSubsystem::initializeFiring<FireMode::Normal>() {
+    startFiring();
+}
+
+template <>
+inline void FlywheelSubsystem::executeFiring<FireMode::Normal>() {
+    
+}
+
 
 }  // namespace control::flywheel
 

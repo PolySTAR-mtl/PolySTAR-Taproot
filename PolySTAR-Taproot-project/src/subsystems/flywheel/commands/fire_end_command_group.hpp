@@ -32,18 +32,15 @@ public:
 
     void end(bool interrupted) override;
 
-    bool isFinished() const override { return false; }
+    bool isFinished() const override;
 
-    const char *getName() const override { return "fire end command group"; }
+    const char *getName() const override;
 
 private:
     // attributes needed to operate the group command 
     flywheel::FlywheelFireCommand fireCommand;
-
-    src::Drivers *drivers;
-
+    
     tap::arch::MilliTimeout flywheelDelayTimer;
-
 };  // class FireEndCommandGroup
 
 }  // namespace control

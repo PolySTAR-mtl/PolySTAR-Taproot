@@ -14,34 +14,23 @@ template <typename Subsystem, typename FirePolicy>
 class GenericFireCommand : public tap::control::Command
 {
 public:
-    GenericFireCommand(Subsystem* const flywheel, src::Drivers* drivers)
-        : tap::control::Command{},
-          flywheel_{flywheel},
-          drivers_{drivers},
-          firePolicy_{flywheel, drivers}
-    {
-        if (flywheel == nullptr)
-        {
-            return;
-        }
-        this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem*>(flywheel));
-    }
+    GenericFireCommand(Subsystem* const flywheel, src::Drivers* drivers);
 
+    ~GenericFireCommand();
+    
     GenericFireCommand(const GenericFireCommand& other) = delete;
-
-    ~GenericFireCommand() = default;
 
     GenericFireCommand& operator=(const GenericFireCommand& other) = delete;
 
-    void initialize() override { firePolicy_.initialize(); }
+    void initialize() override;
 
-    void execute() override { firePolicy_.execute(); }
+    void execute() override;
 
-    const char* getName() const override { return NAME; }
+    const char* getName() const override;
 
-    bool isFinished() const override { return false; }
+    bool isFinished() const override;
 
-    void end(bool interrupt) override { firePolicy_.end(interrupt); }
+    void end(const bool interrupt) override;
 
 private:
     static constexpr const char* NAME = "flywheel fire command";
@@ -51,5 +40,7 @@ private:
 };
 
 }  // namespace control::flywheel
+
+#include "generic_fire_command_impl.hpp"
 
 #endif

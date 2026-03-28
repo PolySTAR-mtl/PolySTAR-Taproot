@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <type_traits>
 
+#include "control/drivers/drivers.hpp"
+
 #include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
 #include "subsystems/flywheel/core/flywheel_subsystem.hpp"
 
@@ -14,45 +16,15 @@ template <typename Subsystem>
 class NormalFirePolicy
 {
 public:
-    NormalFirePolicy(Subsystem* const flywheel, src::Drivers* drivers)
-        : flywheel_{flywheel},
-          drivers_{drivers},
-          isKickstartDone_{false},
-          startingTs_{}
-    {
-    }
+    NormalFirePolicy(Subsystem* const flywheel);
 
-    ~NormalFirePolicy() = default;
+    ~NormalFirePolicy();
 
-    void initialize()
-    {
-        if constexpr (std::is_same_v<Subsystem, control::flywheel::FlywheelDjiSubsystem>)
-        {
-            flywheel_->sendStartingBoost();
+    void initialize();
 
-            isKickstartDone_ = false;
-            startingTs_ = tap::arch::clock::getTimeMilliseconds();
-        }
-        else if constexpr (std::is_same_v<Subsystem, control::flywheel::FlywheelSubsystem>)
-        {
-            flywheel_->startFiring();
-        }
-    }
+    void execute();
 
-    void execute()
-    {
-        if constexpr (std::is_same_v<Subsystem, control::flywheel::FlywheelDjiSubsystem>)
-        {
-            if (!isKickstartDone_ &&
-                tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
-            {
-                flywheel_->startFiring();
-                isKickstartDone_ = true;
-            }
-        }
-    }
-
-    void end(bool) { flywheel_->stopFiring(); }
+    void end(bool interrupt);
 
 private:
     Subsystem* const flywheel_;
@@ -64,5 +36,7 @@ private:
 };
 
 }  // namespace control::flywheel
+
+#include "normal_fire_policy_impl.hpp"
 
 #endif

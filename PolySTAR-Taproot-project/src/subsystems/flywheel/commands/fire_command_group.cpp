@@ -11,10 +11,11 @@ FireCommandGroup::FireCommandGroup(
     flywheel::FlywheelSubsystem *const flywheel,
     feeder::FeederPositionSubsystem *const feeder,
     src::Drivers* drivers)
-    : tap::control::ComprisedCommand(drivers),
-      fireCommand(flywheel, drivers),
-      feedCommand(feeder, drivers),
-      feederIsFeeding(false)
+    : tap::control::ComprisedCommand{drivers},
+      fireCommand{flywheel, drivers},
+      feedCommand{feeder, drivers},
+      feederDelayTimer{},
+      feederIsFeeding{}
 {
     this->addSubsystemRequirement(flywheel);
     this->addSubsystemRequirement(feeder);
@@ -42,6 +43,16 @@ void FireCommandGroup::end(bool interrupted)
 {
     this->comprisedCommandScheduler.removeCommand(&feedCommand, interrupted);
     this->comprisedCommandScheduler.removeCommand(&fireCommand, interrupted);
+}
+
+bool FireCommandGroup::isFinished() const 
+{ 
+    return false;
+}
+
+const char* FireCommandGroup::getName() const
+{ 
+    return "fire command group"; 
 }
 
 }  // namespace control

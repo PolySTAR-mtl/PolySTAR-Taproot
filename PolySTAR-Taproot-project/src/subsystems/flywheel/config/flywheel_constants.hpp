@@ -6,7 +6,7 @@
 
 namespace control::flywheel {
 
-constexpr FlywheelConfig FLYWHEEL_CONFIG = getFlywheelConfig<target::ROBOT_TARGET>();;
+constexpr FlywheelConfig ACTIVE_FLYWHEEL_CONFIG = getFlywheelConfig<target::ROBOT_TARGET>();
 
 // Delay after start of flywheels before feeder start.
 constexpr static uint32_t FEEDER_DELAY_MS = 300;

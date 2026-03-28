@@ -4,10 +4,31 @@
 #include "tap/drivers.hpp"
 #include "tap/communication/gpio/pwm.hpp"
 
-namespace src
+namespace src::motor
 {
-namespace motor
-{
+
+struct SnailMotorConstants {
+    static constexpr uint32_t PWM_FREQUENCY = 400;
+    static constexpr float MS_TO_SECONDS = 0.001f;
+
+    // Pulse widths in milliseconds
+    static constexpr float MIN_PULSE_MS = 1.0f;
+    static constexpr float MAX_PULSE_MS = 2.0f;
+
+
+    // Pulse widths converted to duty cycle
+    static constexpr float THROTTLE_IDLE = MIN_PULSE_MS * SnailMotorConstants::PWM_FREQUENCY * SnailMotorConstants::MS_TO_SECONDS;
+    static constexpr float THROTTLE_RANGE = 
+        (MAX_PULSE_MS - MIN_PULSE_MS) * SnailMotorConstants::PWM_FREQUENCY * SnailMotorConstants::MS_TO_SECONDS;
+
+    static constexpr float MIN_THROTTLE = 0.0f;
+    static constexpr float MAX_THROTTLE = 1.0f;
+
+
+    static constexpr tap::gpio::Pwm::Timer PWM_TIMER =
+        tap::gpio::Pwm::Timer::TIMER8;
+};
+
 /**
  * This class provides functionality for snail motors using the C615 ESC
  */
@@ -40,23 +61,8 @@ private:
 
     /// The PWM pin that the motor is attached to. Valid pins are W, X, Y, and Z.
     tap::gpio::Pwm::Pin pwmPin;
-
-    // Pulse widths in milliseconds
-    static inline constexpr float MIN_PULSE_MS = 1;
-    static inline constexpr float MAX_PULSE_MS = 2;
-    
-    // PWM frequency in Hz (Max 500Hz, see C615 datasheet)
-    // Must be set below 500Hz (2ms pulse at 500 Hz is 100% duty cycle, which the esc reads as a constant signal and causes error)
-    static inline constexpr uint32_t PWM_FREQUENCY = 400;
-
-    // Pulse widths converted to duty cycle
-    static inline constexpr float THROTTLE_IDLE = MIN_PULSE_MS * PWM_FREQUENCY * 0.001f;
-    static inline constexpr float THROTTLE_RANGE = (MAX_PULSE_MS - MIN_PULSE_MS) * PWM_FREQUENCY * 0.001f;
-
 };  // class SnailMotor
 
-}  // namespace motor
-
-}  // namespace src
+}  // namespace src::motor
 
 #endif  // SNAIL_MOTOR_HPP_

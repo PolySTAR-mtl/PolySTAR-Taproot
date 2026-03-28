@@ -11,10 +11,10 @@ namespace control::flywheel
 {
 
 FlywheelSubsystem::FlywheelSubsystem(tap::Drivers *drivers)
-    : tap::control::Subsystem(drivers),
-        snailMotor(drivers, FLYWHEEL_PWM_PIN),
-        currentThrottle(FLYWHEEL_CONFIG.flywheelDefaultThrottle),
-        firing(false)
+    : tap::control::Subsystem{drivers},
+        snailMotor{drivers, FLYWHEEL_PWM_PIN},
+        currentThrottle{ACTIVE_FLYWHEEL_CONFIG.flywheelDefaultThrottle},
+        firing{}
 {
 }
 
@@ -27,14 +27,6 @@ void FlywheelSubsystem::refresh() {
 
 }
 
-void FlywheelSubsystem::startFiring() {
-    snailMotor.setThrottle(currentThrottle);
-}
-
-void FlywheelSubsystem::stopFiring() {
-    snailMotor.setThrottle(0);
-}
-
 void FlywheelSubsystem::setThrottle(float throttle) {
     currentThrottle = throttle;
 
@@ -45,6 +37,18 @@ void FlywheelSubsystem::setThrottle(float throttle) {
 
 float FlywheelSubsystem::getCurrentThrottle() const {
     return currentThrottle;
+}
+
+const src::motor::SnailMotor &FlywheelSubsystem::getFlywheelMotor() const {
+    return snailMotor;
+}
+
+void FlywheelSubsystem::startFiring() {
+    snailMotor.setThrottle(currentThrottle);
+}
+
+void FlywheelSubsystem::stopFiring() {
+    snailMotor.setThrottle(0);
 }
 
 }  // namespace control::flywheel

@@ -12,19 +12,16 @@ struct FlywheelConfig {
     float motorHighSpeed; // Speeds based on rpmScaleFactor of ChassisSubsystem
 };
 
-constexpr FlywheelConfig ENGINEER_FLYWHEEL_CONFIG{
+constexpr FlywheelConfig BASE_FLYWHEEL_CONFIG{
     .flywheelDefaultThrottle = 0.4f,
     .motorLowSpeed = 500.0f,
     .motorMediumSpeed = 1500.0f,
     .motorHighSpeed = 3000.0f,
 };
 
-constexpr FlywheelConfig HERO_FLYWHEEL_CONFIG{
-    .flywheelDefaultThrottle = 0.4f,
-    .motorLowSpeed = 500.0f,
-    .motorMediumSpeed = 1500.0f,
-    .motorHighSpeed = 3000.0f,
-};
+constexpr FlywheelConfig ENGINEER_FLYWHEEL_CONFIG = BASE_FLYWHEEL_CONFIG;
+
+constexpr FlywheelConfig HERO_FLYWHEEL_CONFIG = BASE_FLYWHEEL_CONFIG;
 
 constexpr FlywheelConfig ICRA_FLYWHEEL_CONFIG{
     .flywheelDefaultThrottle = 0.8f,
@@ -47,12 +44,7 @@ constexpr FlywheelConfig SPIN_TO_WIN_FLYWHEEL_CONFIG{
     .motorHighSpeed = 3000.0f,
 };
 
-constexpr FlywheelConfig STANDARD_FLYWHEEL_CONFIG{
-    .flywheelDefaultThrottle = 0.4f,
-    .motorLowSpeed = 500.0f,
-    .motorMediumSpeed = 1500.0f,
-    .motorHighSpeed = 3000.0f,
-};
+constexpr FlywheelConfig STANDARD_FLYWHEEL_CONFIG = BASE_FLYWHEEL_CONFIG;
 
 
 template <target::RobotTarget R>

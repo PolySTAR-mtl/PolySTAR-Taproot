@@ -11,6 +11,7 @@
 
 namespace control
 {
+    
 class FireCommandGroup : public tap::control::ComprisedCommand
 {
 public:
@@ -33,9 +34,9 @@ public:
 
     void end(bool interrupted) override;
 
-    bool isFinished() const override { return false; }
+    bool isFinished() const override;
 
-    const char *getName() const override { return "fire command group"; }
+    const char* getName() const override;
 
 private:
     // attributes needed to operate the group command 
@@ -43,12 +44,9 @@ private:
 
     feeder::FeederMoveUnjamCommand feedCommand;
 
-    src::Drivers *drivers;
-
     tap::arch::MilliTimeout feederDelayTimer;
 
     bool feederIsFeeding;
-
 };  // class FireCommandGroup
 
 }  // namespace control
