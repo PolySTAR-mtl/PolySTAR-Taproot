@@ -39,6 +39,7 @@ private:
     // Hardware constants, not specific to any particular flywheel subsystem.
     static constexpr uint32_t STARTUP_DELAY_FLYWHEELS_MS = 5000;
     FlywheelSubsystem *const flywheel;
+    tap::arch::MilliTimeout delayFlywheelTimer;
 
     src::Drivers *drivers;
 

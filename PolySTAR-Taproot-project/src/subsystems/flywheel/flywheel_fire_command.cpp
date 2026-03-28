@@ -11,7 +11,8 @@ FlywheelFireCommand::FlywheelFireCommand(
     FlywheelSubsystem *const flywheel,
     src::Drivers *drivers)
     : flywheel(flywheel),
-      drivers(drivers)
+      drivers(drivers),
+      delayFlywheelTimer(STARTUP_DELAY_FLYWHEELS_MS)
 {
     if (flywheel == nullptr)
     {
@@ -23,13 +24,16 @@ FlywheelFireCommand::FlywheelFireCommand(
 void FlywheelFireCommand::initialize() {
     char buffer[50];
     int nBytes = sprintf (buffer, "starting firing\n");
-    drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*) buffer, nBytes+1);
-    // TODO: Add timer here
-    modm::delay_ms(STARTUP_DELAY_FLYWHEELS_MS);
-    flywheel->startFiring();
+    drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*) buffer, nBytes+1);    
 }
 
-void FlywheelFireCommand::execute() {}
+void FlywheelFireCommand::execute() 
+{
+    if (delayFlywheelTimer.execute())
+    {
+        flywheel->startFiring();
+    }
+}
 
 void FlywheelFireCommand::end(bool)
 {
