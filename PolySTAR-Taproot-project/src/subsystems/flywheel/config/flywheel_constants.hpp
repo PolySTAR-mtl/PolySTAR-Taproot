@@ -3,6 +3,7 @@
 
 #include "tap/motor/dji_motor.hpp"
 #include "subsystems/flywheel/config/flywheel_config.hpp"
+#include "robot_target.hpp"
 
 namespace control::flywheel {
 

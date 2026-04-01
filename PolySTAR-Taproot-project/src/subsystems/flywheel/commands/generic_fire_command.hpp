@@ -6,11 +6,12 @@
 #include "control/drivers/drivers.hpp"
 
 #include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
+#include "subsystems/flywheel/concepts/fire_policy.hpp"
 
 namespace control::flywheel
 {
 
-template <typename Subsystem, typename FirePolicy>
+template <typename Subsystem, fire_policy FirePolicy>
 class GenericFireCommand : public tap::control::Command
 {
 public:
