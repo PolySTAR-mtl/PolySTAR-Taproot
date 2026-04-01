@@ -11,7 +11,8 @@ plusieurs utilisateurs.
 ** Il est possible que vous ayez à créer le fichier de configuration **
 - Chemin pour l'installation Single-User: ``$HOME/.config/nix/nix.conf``
 - Chemin pour l'installation Multi-User: ``/etc/nix/nix.conf``
-Configuration: 
+
+Configuration:
 ```
 experimental-features = nix-command flakes
 build-users-group =
@@ -74,7 +75,6 @@ dépendances.
 ## Installation de nix-direnv (Chargement automatique de l'environnement)
 
 Pour faciliter l'intégration du Nix Shell, vous pouvez installer direnv et nix-direnv.
-[https://github.com/nix-community/nix-direnv]
 
 Si vous n'êtes pas familier avec Nix, la méthode la plus simple pour installer nix-direnv est en
 utilisant la commande ``nix profile``.
@@ -82,10 +82,35 @@ utilisant la commande ``nix profile``.
 nix profile install nixpkgs#nix-direnv nixpkgs#direnv
 ```
 
+Vous devez ajouter direnv à votre shell (généralement bash).
+Pour déterminer votre type de shell, vous pouvez exécuter:
+```
+echo $SHELL
+```
+
+Ajouter la ligne suivante à la fin de votre configuration selon votre type de shell.
+
+Pour bash:
+
+Chemin: ``$HOME/.bashrc`
+```
+eval "$(direnv hook bash)"
+```
+
+Pour zsh:
+
+Chemin: ``$HOME/.zshrc``
+```
+eval "$(direnv hook zsh)"
+```
+
 Ensuite, pour permettre à direnv et nix-direnv de charger automatiquement la configuration du projet,
-faite la commande suivante dans le dossier ``POLYSTAR-TAPROOT``
+faite la commande suivante dans le dossier ``PolyStar-Taproot``
 ```
 direnv allow
 ```
 Votre environnement devrait maintenant être chargé automatiquement quand vous ouvrez le dossier dans
 votre terminal.
+
+Pour plus d'informations sur l'installation.
+[https://github.com/nix-community/nix-direnv]
