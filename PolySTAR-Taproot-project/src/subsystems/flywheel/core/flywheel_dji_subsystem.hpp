@@ -68,60 +68,7 @@ private:
 
 };  // class FlywheelSubsystem
 
-template <>
-inline void FlywheelDjiSubsystem::initializeFiring<FireMode::AutoMode>() {
-    isKickstartDone_ = false;
-    startingTs_ = tap::arch::clock::getTimeMilliseconds();
-    startMatchTimeout_.restart(START_MATCH_WAIT_TIME);
-}
-
-template <>
-inline void FlywheelDjiSubsystem::executeFiring<FireMode::AutoMode>() {
-    if (!startMatchTimeout_.isExpired())
-    {
-        stopFiring();
-        isKickstartDone_ = false;
-        return;
-    }
-
-    drivers_->leds.set(tap::gpio::Leds::C, true);
-
-    if (!drivers_->cvHandler.shouldShoot())
-    {
-        stopFiring();
-        isKickstartDone_ = false;
-        return;
-    }
-
-    const uint32_t currentTs = tap::arch::clock::getTimeMilliseconds();
-    /// TODO: Fix a possible bug on next line.
-    if (!currentTs - startingTs_ < KICKSTART_DELAY_MS)
-    {
-        sendStartingBoost();
-    }
-    else if (!isKickstartDone_)
-    {
-        startFiring();
-        isKickstartDone_ = true;
-    }
-}
-
-template <>
-inline void FlywheelDjiSubsystem::initializeFiring<FireMode::Normal>() {
-    sendStartingBoost();
-    isKickstartDone_ = false;
-    startingTs_ = tap::arch::clock::getTimeMilliseconds();
-}
-
-template <>
-inline void FlywheelDjiSubsystem::executeFiring<FireMode::Normal>() {
-    if (!isKickstartDone_ &&
-        tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
-    {
-        startFiring();
-        isKickstartDone_ = true;
-    }
-}
+#include "flywheel_dji_subsystem_impl.hpp"
 
 }  // namespace control::flywheel
 

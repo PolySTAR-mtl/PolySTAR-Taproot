@@ -47,10 +47,10 @@ public:
     virtual void stopFiring();
 
     template <FireMode M>
-    void initializeFiring() {}
+    void initializeFiring();
 
     template <FireMode M>
-    void executeFiring() {}
+    void executeFiring();
 
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
@@ -63,17 +63,8 @@ private:
     bool firing_;
 };  // class FlywheelSubsystem
 
-template <>
-inline void FlywheelSubsystem::initializeFiring<FireMode::Normal>() {
-    startFiring();
-}
-
-template <>
-inline void FlywheelSubsystem::executeFiring<FireMode::Normal>() {
-    
-}
-
-
 }  // namespace control::flywheel
+
+#include "flywheel_subsystem_impl.hpp"
 
 #endif  // FLYWHEEL_SUBSYSTEM_HPP_
