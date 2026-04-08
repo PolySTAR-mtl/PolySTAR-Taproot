@@ -17,6 +17,7 @@ namespace turret
 void TurretSubsystem::initialize()
 {
     yawMotor->initialize();
+    lqrTurret.setGravityFeedforward(812.0f);
     pitchMotor.initialize();
 
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
@@ -58,6 +59,9 @@ void TurretSubsystem::refresh() {
 /*
     Run yaw controller and update motor output.
 */
+/*
+    Run yaw controller and update motor output.
+*/
 void TurretSubsystem::runYawController(uint32_t dt) {
     // Calculate the distance between our current angle and the target angle
     int32_t error = static_cast<int32_t>(yawMotor->getEncoderWrapped()) 
@@ -84,32 +88,43 @@ void TurretSubsystem::runYawController(uint32_t dt) {
     }
     
     // Calculate exactly how much power is needed, then send that power to the motor.
-    auto cmd = lqrTurret.update(errRad, omega, 0.0f, 0.0f, 0.0f, 0.0f);
-    yawMotor->setDesiredOutput(cmd[0]);
+    // Pass the error as the angle with ref=0; the controller just computes (angle - ref).
+    float cmd = lqrTurret.updateYaw(errRad, omega, 0.0f);
+    yawMotor->setDesiredOutput(static_cast<int32_t>(cmd));
 }
 
 void TurretSubsystem::runPitchController(uint32_t dt) {
     // Calculate how far off we are from where we want to point.
-    int32_t error = static_cast<int32_t>(pitchDesiredPos) 
+    int32_t error = static_cast<int32_t>(pitchDesiredPos)
                   - static_cast<int32_t>(pitchMotor.getEncoderWrapped());
-    
+
     // Check how fast the turret is currently tilting.
     int16_t currentRPM = pitchMotor.getShaftRPM();
-    
+
     // Convert the raw motor hardware numbers into standard math units (radians).
     float errDeg = pitchMotor.encoderToDegrees<int64_t>(static_cast<int64_t>(error));
     float errRad = errDeg * DEG_TO_RAD;
-    float omega = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
-    
-    // If we are super close to the target and barely moving, turn the motor off so it doesn't jitter
+    float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
+
+    // Absolute pitch angle from neutral (assumed horizontal), in radians.
+    // Used only for the gravity feed-forward; the LQR itself sees the error.
+    float pitchAngleRad = pitchMotor.encoderToDegrees<int64_t>(
+        static_cast<int64_t>(pitchMotor.getEncoderWrapped()) -
+        static_cast<int64_t>(PITCH_NEUTRAL_POS)) * DEG_TO_RAD;
+
+    // If we are super close to the target and barely moving, suppress the LQR
+    // output but keep the gravity feed-forward so the gun still holds position
+    // instead of drooping out of the deadband.
     if (std::fabs(errRad) < 0.5f * DEG_TO_RAD && std::fabs(omega) < 0.2f) {
-        pitchMotor.setDesiredOutput(0);
+        float u_hold = lqrTurret.gravityFeedforward(pitchAngleRad);
+        pitchMotor.setDesiredOutput(static_cast<int32_t>(u_hold));
         return;
     }
-    
+
     // Calculate the needed power and apply it to the motor (reversed with a '-' to match the physical wiring).
-    auto cmd = lqrTurret.update(0.0f, 0.0f, 0.0f, errRad, omega, 0.0f);
-    pitchMotor.setDesiredOutput(-cmd[1]);
+    auto cmd = lqrTurret.updatePitch(errRad, omega, 0.0f);
+    float u_grav = lqrTurret.gravityFeedforward(pitchAngleRad);
+    pitchMotor.setDesiredOutput(static_cast<int32_t>(-cmd + u_grav));
 }
 
 /*
