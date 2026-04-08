@@ -1,43 +1,50 @@
 #include "turret_lqr.hpp"
 #include <algorithm>
+#include <cmath>
 
 namespace turret::algorithms
 {
-TurretLqrController::TurretLqrController(float panInertia,
-                                         float tiltInertia,
+TurretLqrController::TurretLqrController(float yawInertia,
+                                         float pitchInertia,
                                          float motorOutputMax,
                                          float axisToMotorScale)
-    : I_pan_(panInertia),
-      I_tilt_(tiltInertia),
+    : I_yaw_(yawInertia),
+      I_pitch_(pitchInertia),
       maxOut_(motorOutputMax),
       scale_(axisToMotorScale)
 {
-    // Gains LQR optimaux calcules avec Simulink CARE solver
-    Ktilt_ = Ktilt;
-    Kpan_  = Kpan;
+
+    Kyaw_   = Kyaw;
+    Kpitch_ = Kpitch;
 }
 
-void TurretLqrController::setGains(const Gains2& Kpan, const Gains2& Ktilt)
+void TurretLqrController::setGains(const Gains2& Kyaw, const Gains2& Kpitch)
 {
-    Kpan_ = Kpan;
-    Ktilt_ = Ktilt;
+    Kyaw_   = Kyaw;
+    Kpitch_ = Kpitch;
 }
 
-std::array<float,2> TurretLqrController::update(float panAngle, float panRate, float panRef,
-                                                float tiltAngle, float tiltRate, float tiltRef)
+float TurretLqrController::clamp(float v)
 {
-    const float errPan = panAngle - panRef;
-    const float errTilt = tiltAngle - tiltRef;
-
-    const float uPan  = -(Kpan_.k_pos * errPan + Kpan_.k_vel * panRate) * scale_;
-    const float uTilt = -(Ktilt_.k_pos * errTilt + Ktilt_.k_vel * tiltRate) * scale_;
-
-    auto clamp = [this](float v){ return std::clamp(v, -maxOut_, +maxOut_); };
-    return { clamp(uPan), clamp(uTilt) };
+    return std::clamp(v, -maxOut_, +maxOut_);
 }
 
-Gains2 TurretLqrController::defaultGains()
+float TurretLqrController::updateYaw(float yawAngle, float yawRate, float yawRef)
 {
-    return {10.00f, 1.72f};
+    // Control law: u = -(k_pos * err + k_vel * rate), then scaled to motor units
+    const float err = yawAngle - yawRef;
+    return clamp(-(Kyaw_.k_pos * err + Kyaw_.k_vel * yawRate) * scale_);
+}
+
+float TurretLqrController::gravityFeedforward(float pitchAngle)
+{
+    // Cancels the gravitational torque on the pitch axis at the current angle.
+    return Kg_ * std::cos(pitchAngle);
+}
+
+float TurretLqrController::updatePitch(float pitchAngle, float pitchRate, float pitchRef)
+{    // Control law: u = -(k_pos * err + k_vel * rate), then scaled to motor units
+    const float err = pitchAngle - pitchRef;
+    return clamp(-(Kpitch_.k_pos * err + Kpitch_.k_vel * pitchRate) * scale_);
 }
 } // namespace turret::algorithms

@@ -1,41 +1,45 @@
 #ifndef TURRET_LQR_CONTROLLER_HPP_
 #define TURRET_LQR_CONTROLLER_HPP_
 
-#include <array>
-
 #include "turret_gains.hpp"
-
 namespace turret::algorithms
 {
-    /* LQR controller for a 2-DOF turret (pan, tilt).
-   Regulates angle/rate on each axis and outputs a motor command. */
+    /* LQR controller for a 2-DOF turret (yaw, pitch).
+       Regulates angle/rate on each axis and outputs a motor command.
+       Optional gravity feed-forward on the pitch axis:
+           u_ff = Kg * cos(pitchAngle)
+       Kg is in motor-command units (not N.m); applied by the caller. */
 class TurretLqrController
 {
 public:
-    TurretLqrController(float panInertia,
-                        float tiltInertia,
+
+    TurretLqrController(float yawInertia,
+                        float pitchInertia,
                         float motorOutputMax = 8000.0f,
                         float axisToMotorScale = 650.0f);
 
-    void setGains(const Gains2& Kpan, const Gains2& Ktilt);
+    void setGains(const Gains2& Kyaw, const Gains2& Kpitch);
+    void setGravityFeedforward(float KgMotorUnits) { Kg_ = KgMotorUnits; }
 
-    // inputs are angles/rates (rad, rad/s) and refs (rad)
-    // returns motor commands in motor units
-    std::array<float,2> update(float panAngle, float panRate, float panRef,
-                               float tiltAngle, float tiltRate, float tiltRef);
+    // angles in rad, rates in rad/s, refs in rad
+    // returns motor command in motor units
+    float updateYaw(float yawAngle, float yawRate, float yawRef);
+    float updatePitch(float pitchAngle, float pitchRate, float pitchRef);
+
+    float gravityFeedforward(float pitchAngle);
 
 private:
-    static Gains2 defaultGains();
+    float clamp(float v);
 
-private:
-    float I_pan_;
-    float I_tilt_;
+    float I_yaw_;
+    float I_pitch_;
     float maxOut_;
     float scale_;
+    float Kg_;
 
-    Gains2 Kpan_{};
-    Gains2 Ktilt_{};
+    Gains2 Kyaw_{};
+    Gains2 Kpitch_{};
 };
 } // namespace turret::algorithms
 
-#endif  // TURRET_LQR__HPP_
+#endif // TURRET_LQR_CONTROLLER_HPP_
