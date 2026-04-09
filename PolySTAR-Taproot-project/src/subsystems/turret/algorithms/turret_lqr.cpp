@@ -13,8 +13,8 @@ TurretLqrController::TurretLqrController(float panInertia,
       scale_(axisToMotorScale)
 {
     // Gains LQR optimaux calcules avec Simulink CARE solver
-    Ktilt_ = {31.62f, 1.61f};
-    Kpan_  = {31.62f, 3.62f};
+    Ktilt_ = Ktilt;
+    Kpan_  = Kpan;
 }
 
 void TurretLqrController::setGains(const Gains2& Kpan, const Gains2& Ktilt)
@@ -36,7 +36,7 @@ std::array<float,2> TurretLqrController::update(float panAngle, float panRate, f
     return { clamp(uPan), clamp(uTilt) };
 }
 
-TurretLqrController::Gains2 TurretLqrController::defaultGains(float dyn)
+Gains2 TurretLqrController::defaultGains()
 {
     return {10.00f, 1.72f};
 }
