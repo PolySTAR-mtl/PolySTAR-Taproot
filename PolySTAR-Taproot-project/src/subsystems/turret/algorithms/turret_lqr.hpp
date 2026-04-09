@@ -3,6 +3,8 @@
 
 #include <array>
 
+#include "turret_gains.hpp"
+
 namespace turret::algorithms
 {
     /* LQR controller for a 2-DOF turret (pan, tilt).
@@ -10,8 +12,6 @@ namespace turret::algorithms
 class TurretLqrController
 {
 public:
-    struct Gains2 { float k_pos; float k_vel; };
-
     TurretLqrController(float panInertia,
                         float tiltInertia,
                         float motorOutputMax = 8000.0f,
@@ -25,7 +25,7 @@ public:
                                float tiltAngle, float tiltRate, float tiltRef);
 
 private:
-    static Gains2 defaultGains(float dyn);
+    static Gains2 defaultGains();
 
 private:
     float I_pan_;
