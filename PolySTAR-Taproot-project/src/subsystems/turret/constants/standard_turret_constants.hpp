@@ -84,6 +84,8 @@ static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f
  */
 static constexpr float YAW_SCALE_FACTOR = 900.0f;
 static constexpr float PITCH_SCALE_FACTOR = 400.0f;
+static constexpr float gravityCounteract = 812.0f;
+
 
 /*
  * Mouse sensitivity

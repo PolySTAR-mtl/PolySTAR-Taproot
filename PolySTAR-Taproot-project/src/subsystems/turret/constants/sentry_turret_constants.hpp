@@ -105,6 +105,7 @@ static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f
  */
 static constexpr float YAW_SCALE_FACTOR = 500.0f;
 static constexpr float PITCH_SCALE_FACTOR = 300.0f;
+static constexpr float gravityCounteract = 812.0f;
 
 /**
  * Inverted directions
