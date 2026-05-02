@@ -37,12 +37,12 @@ static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
 /**
  * The feeder RPM set when the feeder is on
 */
-static constexpr float FEEDER_RPM = 5500;
+static constexpr float FEEDER_RPM = 2500;
 static constexpr float FEEDER_REVERSE_RPM = -1500;
 
 static constexpr float DEGREE_TO_TICK = 8192*36/360; // 8192 Ticks per turn, 36:1 gear ratio 
 static constexpr float UNJAM_MAX_WAIT_TIME_MS = 500; // TO BE DETERMINED
-static constexpr float MOVE_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
+static constexpr float MOVE_DISPLACEMENT_TICK = 120*DEGREE_TO_TICK; // TO BE DETERMINED
 static constexpr float UNJAM_CYCLES = 1; // TO BE DETERMINED
 static constexpr float UNJAM_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK; // TO BE DETERMINED
 static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 100; // TO BE DETERMINED
