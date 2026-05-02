@@ -145,11 +145,11 @@ private:
     // Previous time the LQR control loop was updated
     uint32_t prevControlUpdate = 0;
 
-    // ///< Any user input is translated into desired RPM for each motor.
-    // float frontLeftDesiredRpm;
-    // float frontRightDesiredRpm;
-    // float backLeftDesiredRpm;
-    // float backRightDesiredRpm;
+    //< Any user input is translated into desired RPM for each motor.
+    float frontLeftDesiredRpm;
+    float frontRightDesiredRpm;
+    float backLeftDesiredRpm;
+    float backRightDesiredRpm;
 
     // Ramp  for each input
     tap::algorithms::Ramp xInputRamp;

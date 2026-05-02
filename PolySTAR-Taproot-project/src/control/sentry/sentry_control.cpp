@@ -10,10 +10,8 @@
 // Chassis includes
 // #include "subsystems/chassis/chassis_auto_drive_command.hpp"
 // #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
-#include "subsystems/chassis/chassis_relative_drive_mecanum_command.hpp"
-#include "subsystems/chassis/chassis_spin2win_command.hpp"
-#include "subsystems/chassis/chassis_spin2win_keyboard_command.hpp"
-#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
+#include "subsystems/chassis/chassis_drivecommand.hpp"
+#include "subsystems/chassis/chassis_subsystem.hpp"
 // #include "subsystems/chassis/chassis_test_auto_drive_command.hpp"
 
 // Turret includes
@@ -61,7 +59,7 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
-chassis::ChassisSpin2WinSubsystem theChassis(drivers(), false);
+chassis::ChassisSpin2WinSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 flywheel::FlywheelSubsystem theFlywheel(drivers());
 feeder::FeederVelocitySubsystem theFeeder(drivers());

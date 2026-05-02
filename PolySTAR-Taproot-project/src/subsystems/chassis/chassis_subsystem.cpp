@@ -161,6 +161,11 @@ void ChassisSubsystem::setDesiredOutput(float x, float y, float r)
     }
 
     y = IS_Y_INVERTED ? -y : y;
+
+    frontLeftDesiredRpm = (x-y-r)*rpmScaleFactor;
+    frontRightDesiredRpm = (x+y+r)*rpmScaleFactor;
+    backLeftDesiredRpm = (x+y-r)*rpmScaleFactor;
+    backRightDesiredRpm = (x-y+r)*rpmScaleFactor;
 }
 
 /*
