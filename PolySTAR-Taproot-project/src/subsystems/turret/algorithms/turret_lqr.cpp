@@ -39,9 +39,9 @@ float TurretLqrController::updateYaw(float yawAngle, float yawRate, float yawRef
 float TurretLqrController::gravityFeedforward(float pitchAngle)
 {
     // TODO: Refactor into cleaner architecture
-    const float multiplier = 1;
+    float multiplier = 1;
     #ifdef TARGET_HERO
-    multiplier = -4.25
+    multiplier = -4.25;
     #endif
     // Cancels the gravitational torque on the pitch axis at the current angle.
     return Kg_ * multiplier * std::cos(pitchAngle);

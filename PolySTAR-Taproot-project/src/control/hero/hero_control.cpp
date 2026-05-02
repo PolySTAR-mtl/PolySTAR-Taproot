@@ -51,7 +51,7 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
-chassis::ChassisSpin2WinSubsystem theChassis(drivers(), &yawMotor);
+chassis::ChassisSpin2WinSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelDjiSubsystem theFlywheel(drivers());
@@ -59,7 +59,7 @@ flywheel::FlywheelDjiSubsystem theFlywheel(drivers());
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2winKeyboardCommand chassisKeyboardDrive(&theChassis, drivers(), &yawMotor);
-chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+// chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
@@ -115,7 +115,7 @@ void setDefaultStandardCommands(src::Drivers *) {
 
 /* add any starting commands to the scheduler here --------------------------*/
 void startStandardCommands(src::Drivers *drivers) {
-    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+    // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
 }
 
 /* register io mappings here ------------------------------------------------*/

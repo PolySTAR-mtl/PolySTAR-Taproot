@@ -69,10 +69,10 @@ feeder::FeederPositionSubsystem theTestFeeder(drivers());
 
 /* define commands ----------------------------------------------------------*/
 /* chassis ------------------------------------------------------------------*/
-chassis::ChassisRelativeDriveMecanumCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
+chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 // chassis::ChassisAutoDriveCommand chassisAutoDrive(&theChassis, drivers());
-// chassis::ChassisTestAutoDriveCommand chassisTestAutoDrive(&theChassis, drivers());
-chassis::ChassisSpin2winKeyboardCommand chassisSpin2WinKeyboardDrive(&theChassis, drivers(), &yawMotor);
+//chassis::ChassisTestAutoDriveCommand chassisTestAutoDrive(&theChassis, drivers());
+//chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 // chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 /* turret -------------------------------------------------------------------*/

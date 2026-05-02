@@ -37,7 +37,7 @@ static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
 /**
  * The feeder RPM set when the feeder is on
 */
-static constexpr float FEEDER_RPM = 2500;
+static constexpr float FEEDER_RPM = 5500;
 static constexpr float FEEDER_REVERSE_RPM = -1500;
 
 static constexpr float DEGREE_TO_TICK = 8192*36/360; // 8192 Ticks per turn, 36:1 gear ratio 
@@ -52,7 +52,7 @@ static constexpr float SETPOINT_POS_TOLERANCE_TICK = 45*DEGREE_TO_TICK; // TO BE
 static constexpr float JAM_CHECKER_TOLERANCE_TICK = 20*DEGREE_TO_TICK;
 static constexpr uint32_t JAM_CHECKER_TOLERANCE_MS = 500;
 
-static constexpr bool IS_FEEDER_INVERTED = true;
+static constexpr bool IS_FEEDER_INVERTED = false;
 
 // CanBus different from other robots since feeder is in chassis
-static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
+static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
