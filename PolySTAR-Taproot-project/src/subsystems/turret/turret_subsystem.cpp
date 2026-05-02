@@ -62,7 +62,7 @@ void TurretSubsystem::refresh() {
 void TurretSubsystem::runYawController(uint32_t dt) {
     // Calculate the distance between our current angle and the target angle
     int32_t error = static_cast<int32_t>(yawMotor->getEncoderWrapped()) 
-                    - static_cast<int32_t>(yawDesiredPos) ;
+                    - static_cast<int32_t>(yawDesiredPos);
     
     
     // Make sure the turret takes the shortest path instead of spinning the long way around (wrapped)

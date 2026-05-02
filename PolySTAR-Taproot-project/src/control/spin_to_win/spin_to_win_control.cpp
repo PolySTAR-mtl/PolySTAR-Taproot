@@ -59,7 +59,6 @@ namespace control
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
 chassis::ChassisSpin2WinSubsystem theChassis(drivers());
-
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
@@ -76,7 +75,6 @@ turret::TurretManualAimCommand turretManualNoSpin(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseNoSpin(&theTurret, drivers());
 turret::TurretStableManualAimCommand turretManualAim(&theTurret, &chassisSpinDrive, drivers());
 turret::TurretStableMouseAimCommand turretMouseAim(&theTurret, &chassisKeyboardDrive, drivers());
-
 // turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers()); // Used for tuning
 // turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers()); // Used for tuning
 

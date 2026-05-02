@@ -37,8 +37,8 @@ public:
         //   cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
          lqrTurret(TURRET_PAN_INERTIA,
           TURRET_TILT_INERTIA,
-          /*motorOutputMax*/ 8000.0f,
-          /*axisToMotorScale*/ 350.0f),
+          /*motorOutputMax*/ 8500.0f,
+          /*axisToMotorScale*/ 250.0f),
           yawDesiredPos(YAW_NEUTRAL_POS),
           pitchDesiredPos(PITCH_NEUTRAL_POS)
     {

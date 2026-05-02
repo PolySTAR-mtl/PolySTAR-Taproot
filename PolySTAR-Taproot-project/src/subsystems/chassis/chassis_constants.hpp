@@ -84,7 +84,7 @@ static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN
 #endif
 
 #ifdef TARGET_SENTRY
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
+static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 #endif
 
 #ifdef TARGET_STANDARD
