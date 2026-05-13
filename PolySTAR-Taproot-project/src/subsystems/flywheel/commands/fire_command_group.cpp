@@ -1,8 +1,8 @@
-#include "fire_command_group.hpp"
+#include "subsystems/flywheel/commands/fire_command_group.hpp"
 
 #include "control/drivers/drivers.hpp"
 #include "subsystems/flywheel/core/flywheel_subsystem.hpp"
-#include "flywheel_fire_commands.hpp"
+#include "subsystems/flywheel/commands/flywheel_fire_commands.hpp"
 #include "subsystems/flywheel/config/flywheel_constants.hpp"
 
 namespace control
@@ -31,7 +31,7 @@ void FireCommandGroup::initialize() {
 
 void FireCommandGroup::execute()
 {
-    if ( feederIsFeeding_ == false && feederDelayTimer_.execute())
+    if ( !feederIsFeeding_ && feederDelayTimer_.execute())
         {
             comprisedCommandScheduler.addCommand(&feedCommand_);
             feederIsFeeding_ = true;
@@ -45,14 +45,14 @@ void FireCommandGroup::end(bool interrupted)
     this->comprisedCommandScheduler.removeCommand(&fireCommand_, interrupted);
 }
 
-bool FireCommandGroup::isFinished() const 
-{ 
+bool FireCommandGroup::isFinished() const
+{
     return false;
 }
 
 const char* FireCommandGroup::getName() const
-{ 
-    return "fire command group"; 
+{
+    return "fire command group";
 }
 
 }  // namespace control

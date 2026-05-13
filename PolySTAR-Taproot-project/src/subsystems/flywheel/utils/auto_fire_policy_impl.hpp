@@ -30,6 +30,6 @@ void AutoFirePolicy<Subsystem>::execute()
 template <typename Subsystem>
 void AutoFirePolicy<Subsystem>::end(bool) { flywheel_->stopFiring(); }
 
-}
+} // namespace control::flywheel
 
 #endif // AUTO_FIRE_POLICY_IMPL_HPP

@@ -18,7 +18,7 @@ struct SnailMotorConstants {
 
     // Pulse widths converted to duty cycle
     static constexpr float THROTTLE_IDLE = MIN_PULSE_MS * SnailMotorConstants::PWM_FREQUENCY * SnailMotorConstants::MS_TO_SECONDS;
-    static constexpr float THROTTLE_RANGE = 
+    static constexpr float THROTTLE_RANGE =
         (MAX_PULSE_MS - MIN_PULSE_MS) * SnailMotorConstants::PWM_FREQUENCY * SnailMotorConstants::MS_TO_SECONDS;
 
     static constexpr float MIN_THROTTLE = 0.0f;

@@ -1,16 +1,16 @@
-#include "double_feeder_auto_feed_test_command.hpp"
-#include "feeder_constants.hpp"
+#include "generic_auto_feed_command.hpp"
+#include "subsystems/feeder/config/feeder_constants.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
-#include "../../communication/cv_handler.hpp"
+#include "communication/cv_handler.hpp"
 
 namespace control
 {
-    namespace feeder
-    {
-    DoubleAutoFeedTestCommand::DoubleAutoFeedTestCommand(
-        feeder::DoubleFeederSubsystem *const feeder,
+namespace feeder
+{
+    GenericAutoFeedCommand::GenericAutoFeedCommand(
+        feeder::FeederVelocitySubsystem *const feeder,
         src::Drivers *drivers)
         : feeder(feeder),
           drivers(drivers)
@@ -22,9 +22,9 @@ namespace control
         this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(feeder));
     }
 
-    void DoubleAutoFeedTestCommand::initialize() { feeder->setDesiredOutput(0); }
+    void GenericAutoFeedCommand::initialize() { feeder->setDesiredOutput(0); }
 
-    void DoubleAutoFeedTestCommand::execute() {
+    void GenericAutoFeedCommand::execute() {
         bool shouldShoot = drivers->cvHandler.shouldShoot();
         if (shouldShoot) {
             feeder->setDesiredOutput(FEEDER_RPM);
@@ -33,8 +33,9 @@ namespace control
         }
     }
 
-    void DoubleAutoFeedTestCommand::end(bool) { feeder->setDesiredOutput(0); }
+    void GenericAutoFeedCommand::end(bool) { feeder->setDesiredOutput(0); }
 
-    bool DoubleAutoFeedTestCommand::isFinished() const { return false; }
-    }  // namespace feeder
+    bool GenericAutoFeedCommand::isFinished() const { return false; }
+
+}  // namespace feeder
 } // namespace control

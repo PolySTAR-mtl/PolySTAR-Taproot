@@ -28,10 +28,10 @@ void NormalFirePolicy<Subsystem>::execute()
 
 template <typename Subsystem>
 void NormalFirePolicy<Subsystem>::end(bool)
-{ 
+{
     flywheel_->stopFiring();
 }
 
-}
+} // namespace control::flywheel
 
 #endif // NORMAL_FIRE_POLICY_IMPL_HPP

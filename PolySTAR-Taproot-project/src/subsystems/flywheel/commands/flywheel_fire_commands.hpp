@@ -19,4 +19,4 @@ using FlywheelFireCommand =
     GenericFireCommand<FlywheelSubsystem, NormalFirePolicy<FlywheelSubsystem>>;
 }
 
-#endif  
+#endif

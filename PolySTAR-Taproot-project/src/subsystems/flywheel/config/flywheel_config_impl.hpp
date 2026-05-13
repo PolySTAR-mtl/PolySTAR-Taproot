@@ -40,6 +40,6 @@ consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Standard>() {
     return STANDARD_FLYWHEEL_CONFIG;
 }
 
-};
+}; // namespace control::flywheel
 
 #endif

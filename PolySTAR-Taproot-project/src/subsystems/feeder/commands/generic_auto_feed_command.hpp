@@ -1,16 +1,16 @@
-#ifndef DOUBLE_FEEDER_AUTO_FEED_HPP_
-#define DOUBLE_FEEDER_AUTO_FEED_HPP_
+#ifndef GENERIC_AUTO_FEED_COMMAND_HPP_
+#define GENERIC_AUTO_FEED_COMMAND_HPP_
 
 #include "tap/control/comprised_command.hpp"
-#include "double_feeder_subsystem.hpp"
 
+#include "subsystems/feeder/core/feeder_velocity_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 
 namespace control
 {
 namespace feeder
 {
-class DoubleAutoFeedCommand : public tap::control::Command
+class GenericAutoFeedCommand : public tap::control::Command
 {
 public:
     /**
@@ -20,15 +20,13 @@ public:
      * @param[in] feeder a pointer to the feeder to be passed in that this
      *      Command will interact with.
      */
-    DoubleAutoFeedCommand(DoubleFeederSubsystem *const feeder, src::Drivers *drivers);
+    GenericAutoFeedCommand(FeederVelocitySubsystem *const feeder, src::Drivers *drivers);
 
-    DoubleAutoFeedCommand(const DoubleAutoFeedCommand &other) = delete;
+    GenericAutoFeedCommand(const GenericAutoFeedCommand &other) = delete;
 
-    DoubleAutoFeedCommand &operator=(const DoubleAutoFeedCommand &other) = delete;
+    GenericAutoFeedCommand &operator=(const GenericAutoFeedCommand &other) = delete;
 
     void initialize() override;
-
-    const char *getName() const { return "feeder double feed command"; }
 
     void execute() override;
 
@@ -37,13 +35,11 @@ public:
     bool isFinished() const override;
 
 protected:
-    DoubleFeederSubsystem *const feeder;
+    FeederVelocitySubsystem *const feeder;
 
     src::Drivers *drivers;
 };  // FeederFeedCommand
-
 }  // namespace feeder
-
 }  // namespace control
 
-#endif  // DOUBLE_FEEDER_AUTO_FEED_HPP_
+#endif  // GENERIC_AUTO_FEED_COMMAND_HPP_

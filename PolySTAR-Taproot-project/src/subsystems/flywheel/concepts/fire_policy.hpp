@@ -15,6 +15,6 @@ concept fire_policy =
     { p.end(interrupt) }   -> std::same_as<void>;
 };
 
-}
+} // namespace control::flywheel
 
 #endif // FIRE_POLICY_HPP

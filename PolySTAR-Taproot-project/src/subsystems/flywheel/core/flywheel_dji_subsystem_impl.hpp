@@ -5,7 +5,7 @@
 
 namespace control::flywheel
 {
- 
+
 template <FireMode M>
 inline void FlywheelDjiSubsystem::initializeFiring() {
     if constexpr (M == FireMode::AutoMode) {
@@ -61,6 +61,6 @@ inline void FlywheelDjiSubsystem::executeFiring() {
     }
 }
 
-}
+} // namespace control::flywheel
 
 #endif // FLYWHEEL_SUBSYSTEM_IMPL_HPP

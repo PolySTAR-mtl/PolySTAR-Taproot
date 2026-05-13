@@ -1,14 +1,14 @@
-#include "double_feeder_auto_feed.hpp"
-#include "feeder_constants.hpp"
+#include "subsystems/feeder/commands/double_feeder_auto_feed.hpp"
+#include "subsystems/feeder/config/feeder_constants.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
-#include "../../communication/cv_handler.hpp"
+#include "communication/cv_handler.hpp"
 
 namespace control
 {
-    namespace feeder
-    {
+namespace feeder
+{
     DoubleAutoFeedCommand::DoubleAutoFeedCommand(
         feeder::DoubleFeederSubsystem *const feeder,
         src::Drivers *drivers)
@@ -40,5 +40,5 @@ namespace control
     void DoubleAutoFeedCommand::end(bool) { feeder->setDesiredOutput(0); }
 
     bool DoubleAutoFeedCommand::isFinished() const { return false; }
-    }  // namespace feeder
-    }  
+} // namespace feeder
+} // namespace control

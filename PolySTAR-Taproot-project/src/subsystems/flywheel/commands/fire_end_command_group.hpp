@@ -3,10 +3,10 @@
 
 #include "tap/control/comprised_command.hpp"
 #include "control/drivers/drivers.hpp"
-#include "subsystems/feeder/feeder_feed_command.hpp"
+#include "subsystems/feeder/commands/feeder_feed_command.hpp"
 #include "subsystems/flywheel/core/flywheel_subsystem.hpp"
 #include "flywheel_fire_commands.hpp"
-#include "subsystems/feeder/feeder_position_subsystem.hpp"
+#include "subsystems/feeder/core/feeder_position_subsystem.hpp"
 
 namespace control
 {
@@ -37,7 +37,7 @@ public:
     const char *getName() const override;
 
 private:
-    // attributes needed to operate the group command 
+    // attributes needed to operate the group command
     flywheel::FlywheelFireCommand fireCommand_;
 
     tap::arch::MilliTimeout flywheelDelayTimer_;

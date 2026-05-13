@@ -18,7 +18,7 @@ public:
     GenericFireCommand(Subsystem* const flywheel, src::Drivers* drivers);
 
     ~GenericFireCommand();
-    
+
     GenericFireCommand(const GenericFireCommand& other) = delete;
 
     GenericFireCommand& operator=(const GenericFireCommand& other) = delete;

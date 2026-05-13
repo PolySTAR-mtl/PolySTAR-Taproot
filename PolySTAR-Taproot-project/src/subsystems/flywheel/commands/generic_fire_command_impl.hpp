@@ -44,7 +44,7 @@ const char* GenericFireCommand<Subsystem, FirePolicy>::getName() const
 template <typename Subsystem, fire_policy FirePolicy>
 bool GenericFireCommand<Subsystem, FirePolicy>::isFinished() const
 {
-    return false;   
+    return false;
 }
 
 template <typename Subsystem, fire_policy FirePolicy>

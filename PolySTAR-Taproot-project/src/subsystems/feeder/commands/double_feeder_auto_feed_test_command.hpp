@@ -2,7 +2,7 @@
 #define DOUBLE_FEEDER_AUTO_FEED_TEST_COMMAND_HPP_
 
 #include "tap/control/comprised_command.hpp"
-#include "double_feeder_subsystem.hpp"
+#include "subsystems/feeder/core/double_feeder_subsystem.hpp"
 
 #include "control/drivers/drivers.hpp"
 
@@ -43,7 +43,6 @@ protected:
 };  // FeederFeedCommand
 
 }  // namespace feeder
-
 }  // namespace control
 
 #endif  // DOUBLE_FEEDER_AUTO_FEED_TEST_COMMAND_HPP_

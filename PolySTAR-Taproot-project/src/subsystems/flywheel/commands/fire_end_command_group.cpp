@@ -34,14 +34,14 @@ void FireEndCommandGroup::end(bool interrupted)
     this->comprisedCommandScheduler.removeCommand(&fireCommand_, interrupted);
 }
 
-bool FireEndCommandGroup::isFinished() const 
+bool FireEndCommandGroup::isFinished() const
 {
     return false;
 }
 
 const char* FireEndCommandGroup::getName() const
 {
-    return "fire end command group"; 
+    return "fire end command group";
 }
 
 }  // namespace control

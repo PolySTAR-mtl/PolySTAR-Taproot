@@ -9,7 +9,7 @@ namespace src::motor
 
 SnailMotor::SnailMotor(
     tap::Drivers *drivers,
-    tap::gpio::Pwm::Pin pwmPin) 
+    tap::gpio::Pwm::Pin pwmPin)
     : drivers_{drivers},
       pwmPin_{pwmPin}
 {

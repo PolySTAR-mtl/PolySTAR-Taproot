@@ -50,7 +50,7 @@ constexpr FlywheelConfig STANDARD_FLYWHEEL_CONFIG = BASE_FLYWHEEL_CONFIG;
 template <target::RobotTarget R>
 consteval FlywheelConfig getFlywheelConfig();
 
-}
+} // namespace control::flywheel
 
 #include "flywheel_config_impl.hpp"
 

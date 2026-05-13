@@ -1,8 +1,4 @@
-#ifndef FEEDER_MOVE_UNJAM_COMMAND_CPP_
-#define FEEDER_MOVE_UNJAM_COMMAND_CPP_
-
-#include "feeder_move_unjam_command.hpp"
-
+#include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
 
 namespace control
 {
@@ -18,6 +14,3 @@ FeederMoveUnjamCommand::FeederMoveUnjamCommand(
 {}
 }  // namespace feeder
 }  // namespace control
-
-
-#endif  // FEEDER_MOVE_UNJAM_COMMAND_CPP_

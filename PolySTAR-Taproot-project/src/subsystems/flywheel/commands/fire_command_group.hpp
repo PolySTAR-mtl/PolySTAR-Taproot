@@ -6,8 +6,8 @@
 #include "subsystems/flywheel/core/flywheel_subsystem.hpp"
 #include "subsystems/flywheel/commands/flywheel_fire_commands.hpp"
 #include "subsystems/flywheel/commands/fire_end_command_group.hpp"
-#include "subsystems/feeder/feeder_move_unjam_command.hpp"
-#include "subsystems/feeder/feeder_position_subsystem.hpp"
+#include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
+#include "subsystems/feeder/core/feeder_position_subsystem.hpp"
 
 namespace control
 {
@@ -39,7 +39,7 @@ public:
     const char* getName() const override;
 
 private:
-    // attributes needed to operate the group command 
+    // attributes needed to operate the group command
     flywheel::FlywheelFireCommand fireCommand_;
 
     feeder::FeederMoveUnjamCommand feedCommand_;

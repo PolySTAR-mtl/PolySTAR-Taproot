@@ -1,11 +1,11 @@
 #ifndef FEEDER_AUTO_FEED_COMMAND_HPP_
 #define FEEDER_AUTO_FEED_COMMAND_HPP_
 
+#include "control/drivers/drivers.hpp"
 #include "tap/control/comprised_command.hpp"
 
-#include "feeder_velocity_subsystem.hpp"
-#include "control/drivers/drivers.hpp"
-#include "generic_auto_feed_command.hpp"
+#include "subsystems/feeder/core/feeder_velocity_subsystem.hpp"
+#include "subsystems/feeder/commands/generic_auto_feed_command.hpp"
 
 namespace control
 {
@@ -28,7 +28,7 @@ public:
     FeederAutoFeedCommand &operator=(const GenericAutoFeedCommand &other) = delete;
 
     const char *getName() const { return "feeder auto feed command"; }
-    
+
     void initialize() override;
 
     void execute() override;
@@ -38,7 +38,6 @@ private:
 };  // FeederAutoFeedCommand
 
 }  // namespace feeder
-
 }  // namespace control
 
 #endif  // FEEDER_AUTO_FEED_COMMAND_HPP_

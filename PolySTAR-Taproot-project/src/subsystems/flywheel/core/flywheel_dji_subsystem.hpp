@@ -45,7 +45,7 @@ public:
 
     template <FireMode M>
     void initializeFiring() {}
-    
+
     template <FireMode M>
     void executeFiring() {}
 
@@ -64,7 +64,6 @@ private:
     bool isKickstartDone_;
     uint32_t startingTs_;
     tap::arch::MilliTimeout startMatchTimeout_;
-    
 
 };  // class FlywheelSubsystem
 

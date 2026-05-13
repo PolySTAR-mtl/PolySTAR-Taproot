@@ -1,6 +1,5 @@
-
-#include "feeder_auto_feed_command.hpp"
-#include "feeder_constants.hpp"
+#include "subsystems/feeder/commands/feeder_auto_feed_command.hpp"
+#include "subsystems/feeder/config/feeder_constants.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
@@ -18,7 +17,7 @@ FeederAutoFeedCommand::FeederAutoFeedCommand(
 {
 }
 
-void FeederAutoFeedCommand::initialize() 
+void FeederAutoFeedCommand::initialize()
 {
     startMatchTimeout.restart(START_MATCH_WAIT_TIME);
 }
@@ -34,5 +33,4 @@ void FeederAutoFeedCommand::execute()
 }
 
 } // namespace feeder
-
 }  // namespace control

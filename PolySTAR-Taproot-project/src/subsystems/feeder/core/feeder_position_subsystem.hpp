@@ -8,7 +8,7 @@
 #include "modm/math/filter/pid.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "feeder_constants.hpp"
+#include "subsystems/feeder/config/feeder_constants.hpp"
 
 namespace control
 {

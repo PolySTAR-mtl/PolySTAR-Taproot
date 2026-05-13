@@ -19,6 +19,6 @@ static constexpr tap::can::CanBus CAN_BUS_MOTORS_FLYWHEEL = tap::can::CanBus::CA
 
 static constexpr uint32_t KICKSTART_DELAY_MS = 300;
 
-}
+} // namespace control::flywheel
 
 #endif
