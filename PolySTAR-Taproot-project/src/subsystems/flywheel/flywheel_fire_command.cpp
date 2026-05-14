@@ -12,7 +12,7 @@ FlywheelFireCommand::FlywheelFireCommand(
     src::Drivers *drivers)
     : flywheel(flywheel),
       drivers(drivers),
-      delayFlywheelTimer(STARTUP_DELAY_FLYWHEELS_MS)
+      delayFlywheelTimer()
 {
     if (flywheel == nullptr)
     {
@@ -22,9 +22,10 @@ FlywheelFireCommand::FlywheelFireCommand(
 }
 
 void FlywheelFireCommand::initialize() {
+    delayFlywheelTimer.restart(STARTUP_DELAY_FLYWHEELS_MS);  
     char buffer[50];
     int nBytes = sprintf (buffer, "starting firing\n");
-    drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*) buffer, nBytes+1);    
+    drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*) buffer, nBytes+1);
 }
 
 void FlywheelFireCommand::execute() 
