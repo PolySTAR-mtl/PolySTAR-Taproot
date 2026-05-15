@@ -42,6 +42,7 @@ void ChassisSubsystem::refresh() {
 
     if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
         prevDebugTime = tap::arch::clock::getTimeMilliseconds();
+        auto gz = drivers->mpu6500.getGz();
         char buffer[500];
 
         // Front right debug message
@@ -55,9 +56,9 @@ void ChassisSubsystem::refresh() {
                               (int)frontLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back right debug message
-        nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
-                              backRightMotor.getShaftRPM(),
-                              (int)backRightDesiredRpm);
+        // nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
+        //                       backRightMotor.getShaftRPM(),
+        //                       (int)backRightDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back left debug message
         nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
@@ -69,6 +70,11 @@ void ChassisSubsystem::refresh() {
                               (double)rotationAngle,
                               (int)0);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+        
+        nBytes = sprintf (buffer, "GZ: %i\n",
+                            (int)gz);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+        
 
     }
 }

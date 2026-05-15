@@ -48,8 +48,8 @@ static constexpr bool IS_Y_INVERTED = true;
 /*
  *   chassis rotation speed for spin to win feature
  */
-static constexpr float ROTATION_SPEED_HIGH = 0.75 * -1.0;
-static constexpr float ROTATION_SPEED_LOW = 0.5 * -1.0;
+static constexpr float ROTATION_SPEED_HIGH = 0.75 * 1.0;
+static constexpr float ROTATION_SPEED_LOW = 0.5 * 1.0;
 
 /**
  * Interval for sending messages over UART to the Computer Vision computer
@@ -71,13 +71,13 @@ static constexpr float W_TO_R = 0.07955; // 1rps = 0.5 on chassis r
 /*
  *   Enable UART debug messages for chassis
  */
-static constexpr bool CHASSIS_DEBUG_MESSAGE = false;
+static constexpr bool CHASSIS_DEBUG_MESSAGE = true;
 static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
 /**
  * Chassis motors can bus.
  */
 #ifdef TARGET_HERO
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
+static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 #endif
 
 #ifdef TARGET_SENTRY

@@ -34,7 +34,8 @@ public:
           cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
           cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
           yawDesiredPos(YAW_NEUTRAL_POS),
-          pitchDesiredPos(PITCH_NEUTRAL_POS)
+          pitchDesiredPos(PITCH_NEUTRAL_POS),
+          yawRpmPid(YAW_INNER_PID_CONFIG)
     {
     }
 
@@ -62,6 +63,10 @@ public:
     int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
     int getYawWrapped() { return yawMotor->getEncoderWrapped(); }
     int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
+
+    //setters
+    void setIsSpin2WinMode(bool isSpin2WinMode) { m_isSpin2WinMode = isSpin2WinMode; }
+    void setDesiredYawRpm(float desiredRpm) { desiredYawRpm = desiredRpm; }
 
 
 private:
@@ -100,6 +105,12 @@ private:
     uint32_t prevDebugUpdate;
     uint32_t prevControllerUpdate;
     uint32_t prevCVUpdate;
+
+    // added functions and variables for yaw rpm during spin2win
+    tap::algorithms::SmoothPid yawRpmPid;
+    void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt);
+    bool m_isSpin2WinMode = false;
+    float desiredYawRpm = 0;
 
 };  // class TurretSubsystem
 
