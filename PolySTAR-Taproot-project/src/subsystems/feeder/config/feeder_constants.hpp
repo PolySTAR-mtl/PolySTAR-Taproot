@@ -2,23 +2,23 @@
 #define FEEDER_CONSTANTS_HPP_
 
 #ifdef TARGET_SENTRY
-#include "constants/sentry_feeder_constants.hpp"
+#include "subsystems/feeder/constants/sentry_feeder_constants.hpp"
 #endif
 
 #ifdef TARGET_STANDARD
-#include "constants/standard_feeder_constants.hpp"
+#include "subsystems/feeder/constants/standard_feeder_constants.hpp"
 #endif
 
 #ifdef TARGET_SPIN_TO_WIN
-#include "constants/spin_to_win_feeder_constants.hpp"
+#include "subsystems/feeder/constants/spin_to_win_feeder_constants.hpp"
 #endif
 
 #ifdef TARGET_ICRA
-#include "constants/icra_feeder_constants.hpp"
+#include "subsystems/feeder/constants/icra_feeder_constants.hpp"
 #endif
 
 #ifdef TARGET_HERO
-#include "constants/hero_feeder_constants.hpp"
+#include "subsystems/feeder/constants/hero_feeder_constants.hpp"
 #endif
 
 static constexpr float FEEDER_PID_KP = 20.0f;

@@ -23,9 +23,9 @@
 #include "subsystems/turret/turret_test_topright_command.hpp"
 
 // Feeder includes
-#include "subsystems/feeder/feeder_position_subsystem.hpp"
-#include "subsystems/feeder/feeder_move_unjam_command.hpp"
-#include "subsystems/feeder/feeder_move_command.hpp"
+#include "subsystems/feeder/core/feeder_position_subsystem.hpp"
+#include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
+#include "subsystems/feeder/commands/feeder_move_command.hpp"
 
 //Flywheel includes
 #include "subsystems/flywheel/core/flywheel_subsystem.hpp"
@@ -59,7 +59,6 @@ namespace control
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
 chassis::ChassisSpin2WinSubsystem theChassis(drivers());
-
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());

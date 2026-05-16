@@ -20,9 +20,9 @@
 #include "subsystems/turret/turret_test_topright_command.hpp"
 
 // Feeder includes
-#include "subsystems/feeder/feeder_position_subsystem.hpp"
-#include "subsystems/feeder/feeder_move_unjam_command.hpp"
-#include "subsystems/feeder/feeder_move_command.hpp"
+#include "subsystems/feeder/core/feeder_position_subsystem.hpp"
+#include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
+#include "subsystems/feeder/commands/feeder_move_command.hpp"
 
 //Flywheel includes
 #include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
