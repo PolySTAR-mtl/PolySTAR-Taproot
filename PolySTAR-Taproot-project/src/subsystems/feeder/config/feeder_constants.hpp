@@ -1,25 +1,39 @@
 #ifndef FEEDER_CONSTANTS_HPP_
 #define FEEDER_CONSTANTS_HPP_
 
-#ifdef TARGET_SENTRY
-#include "subsystems/feeder/constants/sentry_feeder_constants.hpp"
-#endif
+#include "algorithms/feed_forward.hpp"
+#include "tap/algorithms/smooth_pid.hpp"
 
-#ifdef TARGET_STANDARD
-#include "subsystems/feeder/constants/standard_feeder_constants.hpp"
-#endif
+/**
+ * Feeder position PID: A PID controller for feeder position. The PID parameters for the
+ * controller are listed below.
+ */
 
-#ifdef TARGET_SPIN_TO_WIN
-#include "subsystems/feeder/constants/spin_to_win_feeder_constants.hpp"
-#endif
+static constexpr tap::algorithms::SmoothPidConfig FEEDER_PID_CONFIG(
+    0.075f, // kP
+    0.0f, // kI
+    -7.5f, // kD
+    5000.0f, // Max error sum
+    16000.0f, // Max output
+    1.0f, // TQ Derivative Kalman
+    0.0f, // TR Derivative Kalman
+    1.0f, // TQ Proportional Kalman
+    0.0f, // TR Proportional Kalman
+    0.0f, // Error Deadzone
+    0.0f // Error derivative floor
+);
 
-#ifdef TARGET_ICRA
-#include "subsystems/feeder/constants/icra_feeder_constants.hpp"
-#endif
+/**
+ * Turret Position FeedForward: Feed Forward controllers for feeder position. The FF parameters for the
+ * controller are listed below.
+ */
 
-#ifdef TARGET_HERO
-#include "subsystems/feeder/constants/hero_feeder_constants.hpp"
-#endif
+static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
+    400.0f, // kS
+    0.0f, // kV
+    0.0f, // kG
+    1000.0f // maxVelocity
+);
 
 static constexpr float FEEDER_PID_KP = 20.0f;
 static constexpr float FEEDER_PID_KI = 5.0f;
