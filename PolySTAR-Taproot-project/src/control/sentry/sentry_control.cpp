@@ -25,16 +25,16 @@
 #include "subsystems/turret/turret_test_auto_aim_command.hpp"
 
 // Feeder includes
-#include "subsystems/feeder/feeder_velocity_subsystem.hpp"
-#include "subsystems/feeder/feeder_auto_feed_command.hpp"
-#include "subsystems/feeder/feeder_auto_feed_test_command.hpp"
+#include "subsystems/feeder/core/feeder_velocity_subsystem.hpp"
+#include "subsystems/feeder/commands/feeder_auto_feed_command.hpp"
+#include "subsystems/feeder/commands/feeder_auto_feed_test_command.hpp"
 
 #include "subsystems/feeder/core/feeder_position_subsystem.hpp" // Test with controller
 #include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/commands/feeder_move_command.hpp"
 
 // Flywheel includes
-#include "subsystems/flywheel/core/flywheel_fire_commands.hpp"
+#include "subsystems/flywheel/commands/flywheel_fire_commands.hpp"
 #include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
 
 // Motor includes
