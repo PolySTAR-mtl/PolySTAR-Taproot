@@ -8,7 +8,7 @@ namespace control::flywheel
 
 template <FireMode M>
 inline void FlywheelDjiSubsystem::initializeFiring() {
-    if constexpr (M == FireMode::AutoMode) {
+    if constexpr (M == FireMode::Auto) {
         isKickstartDone_ = false;
         startingTs_ = tap::arch::clock::getTimeMilliseconds();
         startMatchTimeout_.restart(START_MATCH_WAIT_TIME);
@@ -22,7 +22,7 @@ inline void FlywheelDjiSubsystem::initializeFiring() {
 
 template <FireMode M>
 inline void FlywheelDjiSubsystem::executeFiring() {
-    if constexpr (M == FireMode::AutoMode) {
+    if constexpr (M == FireMode::Auto) {
         if (!startMatchTimeout_.isExpired())
         {
             stopFiring();
