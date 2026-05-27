@@ -21,11 +21,6 @@ consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Hero>() {
 }
 
 template <>
-consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Icra>() {
-    return ICRA_FLYWHEEL_CONFIG;
-}
-
-template <>
 consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Sentry>() {
     return SENTRY_FLYWHEEL_CONFIG;
 }

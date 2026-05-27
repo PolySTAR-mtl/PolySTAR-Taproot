@@ -48,8 +48,6 @@ using tap::control::RemoteMapState;
  *      Drivers class to all of these objects.
  */
 
- 
-
 using src::DoNotUse_getDrivers;
 
 static src::driversFunc drivers = src::DoNotUse_getDrivers;
