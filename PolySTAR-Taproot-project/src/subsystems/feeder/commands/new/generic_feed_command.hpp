@@ -6,12 +6,12 @@
 #include "control/drivers/drivers.hpp"
 
 #include "subsystems/feeder/core/feeder_velocity_subsystem.hpp"
-#include "subsystems/feeder/concepts/feed_policy.hpp"
+#include "subsystems/concepts/command_policy.hpp"
 
 namespace control::feeder
 {
 
-template <typename Subsytem, feed_policy FeedPolicy>
+template <typename Subsytem, command_policy CommandPolicy>
 class GenericFeedCommand : public tap::control::Command
 {
 public:
@@ -36,7 +36,7 @@ private:
     static constexpr const char* NAME = "feeder feed command";
     Subsytem* const feeder_;
     src::Drivers* drivers_;
-    FeedPolicy feedPolicy_;
+    CommandPolicy commandPolicy_;
 };
 
 } // namespace control::feeder
