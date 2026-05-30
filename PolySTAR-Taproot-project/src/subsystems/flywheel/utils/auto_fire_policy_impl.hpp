@@ -18,13 +18,13 @@ AutoFirePolicy<Subsystem>::~AutoFirePolicy() = default;
 template <typename Subsystem>
 void AutoFirePolicy<Subsystem>::initialize()
 {
-    flywheel_->template initializeFiring<FireMode::AutoMode>();
+    flywheel_->template initializeFiring<FireMode::Auto>();
 }
 
 template <typename Subsystem>
 void AutoFirePolicy<Subsystem>::execute()
 {
-    flywheel_->template executeFiring<FireMode::AutoMode>();
+    flywheel_->template executeFiring<FireMode::Auto>();
 }
 
 template <typename Subsystem>

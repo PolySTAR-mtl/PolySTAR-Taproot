@@ -7,7 +7,7 @@ namespace control::flywheel
 enum class FireMode
 {
     Normal,
-    AutoMode,
+    Auto,
 };
 
 }

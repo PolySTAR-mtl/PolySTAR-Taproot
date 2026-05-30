@@ -6,6 +6,8 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "subsystems/feeder/config/feeder_constants.hpp"
+#include "subsystems/feeder/utils/feed_mode.hpp"
+
 namespace control
 {
 namespace feeder
@@ -44,6 +46,12 @@ public:
     void updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM);
 
     const tap::motor::DjiMotor &getFeederMotor() const { return feederMotor; }
+
+    template <FeedMode M>
+    void initializeFeed();
+
+    template <FeedMode M>
+    void executeFeed();
 
 private:
     ///< Hardware constants, not specific to any particular feeder.

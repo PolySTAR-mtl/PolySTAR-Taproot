@@ -35,7 +35,7 @@ void FeederVelocitySubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::Dj
 /*
     Give desired setpoints for feeder movement.
 */
-void FeederVelocitySubsystem::setDesiredOutput(float rpm) 
+void FeederVelocitySubsystem::setDesiredOutput(float rpm)
 {
     feederDesiredRpm = rpm;
 }
