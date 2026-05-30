@@ -11,9 +11,11 @@ namespace control::feeder {
 static constexpr float DEGREE_TO_TICK = 8192 * 36 / 360; // 8192 Ticks per turn, 36:1 gear ratio
 
 struct FeederConfig {
+    // Used for the velocity subsystem
     float feederRpm; // The feeder RPM when the feeder is on
     float feederReverseRpm; // The feeder RPM when the feeder is unjamming
 
+    // Used for position subsystem
     float unjamMaxWaitTimeMs; // Maximum time to wait for unjamming
     float moveDisplacementTick; // Displacement in ticks for each move during unjamming
     float unjamCycles; // Number of cycles to perform during unjamming
