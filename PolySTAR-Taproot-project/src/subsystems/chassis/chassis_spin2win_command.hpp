@@ -20,7 +20,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisSpin2winCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, const tap::motor::DjiMotor *turretYawMotor);
+    ChassisSpin2winCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
 
     ChassisSpin2winCommand(const ChassisSpin2winCommand &other) = delete;
 
@@ -44,7 +44,7 @@ private:
     src::Drivers *drivers;
 
     // variable used to find rotation angle 
-    const tap::motor::DjiMotor* turretYawMotor;
+    tap::motor::DjiMotor* turretYawMotor;
 
     bool m_isMoving = false;
 

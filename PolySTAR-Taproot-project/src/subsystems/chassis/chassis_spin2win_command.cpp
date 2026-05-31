@@ -15,7 +15,7 @@ namespace chassis
 ChassisSpin2winCommand::ChassisSpin2winCommand(
     ChassisSpin2WinSubsystem *const chassis,
     src::Drivers *drivers,
-    const tap::motor::DjiMotor* turretYawMotor)
+    tap::motor::DjiMotor* turretYawMotor)
     : chassis(chassis),
       drivers(drivers),
       turretYawMotor(turretYawMotor)
@@ -60,7 +60,8 @@ void  ChassisSpin2winCommand::execute()
 
 void  ChassisSpin2winCommand::end(bool) 
 { 
-    chassis->setTargetOutput(0, 0, 0);
+    chassis->setDesiredOutput(0, 0, 0);
+    //turretYawMotor->setDesiredOutput(turretYawMotor->getEncoderWrapped());
 }
 
 bool  ChassisSpin2winCommand::isFinished() const { return false; }

@@ -8,7 +8,7 @@ namespace control
 {
 template <typename Policy>
 concept command_policy =
-    requires(Policy p, const bool interrupt)
+    requires(Policy p, bool interrupt)
 {
     { p.initialize() } -> std::same_as<void>;
     { p.execute() }        -> std::same_as<void>;

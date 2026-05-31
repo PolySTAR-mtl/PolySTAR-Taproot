@@ -6,7 +6,7 @@
 namespace control::flywheel
 {
 
-template <typename Subsystem, fire_policy FirePolicy>
+template <typename Subsystem, command_policy FirePolicy>
 GenericFireCommand<Subsystem, FirePolicy>::GenericFireCommand(Subsystem* const flywheel, src::Drivers* drivers)
     : tap::control::Command{},
         flywheel_{flywheel},
@@ -20,34 +20,34 @@ GenericFireCommand<Subsystem, FirePolicy>::GenericFireCommand(Subsystem* const f
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem*>(flywheel));
 }
 
-template <typename Subsystem, fire_policy FirePolicy>
+template <typename Subsystem, command_policy FirePolicy>
 GenericFireCommand<Subsystem, FirePolicy>::~GenericFireCommand() = default;
 
-template <typename Subsystem, fire_policy FirePolicy>
+template <typename Subsystem, command_policy FirePolicy>
 void GenericFireCommand<Subsystem, FirePolicy>::initialize()
 {
     firePolicy_.initialize();
 }
 
-template <typename Subsystem, fire_policy FirePolicy>
+template <typename Subsystem, command_policy FirePolicy>
 void GenericFireCommand<Subsystem, FirePolicy>::execute()
 {
     firePolicy_.execute();
 }
 
-template <typename Subsystem, fire_policy FirePolicy>
+template <typename Subsystem, command_policy FirePolicy>
 const char* GenericFireCommand<Subsystem, FirePolicy>::getName() const
 {
     return NAME;
 }
 
-template <typename Subsystem, fire_policy FirePolicy>
+template <typename Subsystem, command_policy FirePolicy>
 bool GenericFireCommand<Subsystem, FirePolicy>::isFinished() const
 {
     return false;
 }
 
-template <typename Subsystem, fire_policy FirePolicy>
+template <typename Subsystem, command_policy FirePolicy>
 void GenericFireCommand<Subsystem, FirePolicy>::end(const bool interrupt)
 {
     firePolicy_.end(interrupt);
