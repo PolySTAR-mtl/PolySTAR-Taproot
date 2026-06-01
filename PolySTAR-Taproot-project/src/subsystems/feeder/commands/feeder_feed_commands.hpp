@@ -6,7 +6,7 @@
 
 #include "subsystems/feeder/utils/auto_feed_policy.hpp"
 #include "subsystems/feeder/utils/normal_feed_policy.hpp"
-#include "subsystems/feeder/commands/new/generic_feed_command.hpp"
+#include "subsystems/feeder/commands/generic_feed_command.hpp"
 
 namespace control::feeder 
 {
