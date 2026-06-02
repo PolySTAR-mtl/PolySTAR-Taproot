@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -427,6 +427,11 @@ bool RefSerial::operatorBlinded() const
         robotData.refereeWarningData.lastReceivedWarningRobotTime;
 
     return getRefSerialReceivingData() && (lastReceivedWarningRobotTime != 0) &&
+           (arch::clock::getTimeMilliseconds() - lastReceivedWarningRobotTime <= blindTime);
+}
+
+}  // namespace tap::communication::serial
+) && (lastReceivedWarningRobotTime != 0) &&
            (arch::clock::getTimeMilliseconds() - lastReceivedWarningRobotTime <= blindTime);
 }
 

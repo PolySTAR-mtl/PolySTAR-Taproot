@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -516,6 +516,14 @@ inline RefSerialData::RobotId operator+(RefSerialData::RobotId id1, RefSerialDat
 }
 
 inline RefSerialData::RobotId operator-(RefSerialData::RobotId id1, RefSerialData::RobotId id2)
+{
+    return static_cast<RefSerialData::RobotId>(
+        static_cast<uint16_t>(id1) - static_cast<uint16_t>(id2));
+}
+}  // namespace tap::communication::serial
+
+#endif  // TAPROOT_REF_SERIAL_DATA_HPP_
+tId operator-(RefSerialData::RobotId id1, RefSerialData::RobotId id2)
 {
     return static_cast<RefSerialData::RobotId>(
         static_cast<uint16_t>(id1) - static_cast<uint16_t>(id2));

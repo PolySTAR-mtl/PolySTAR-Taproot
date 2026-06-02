@@ -271,3 +271,4 @@ private:
 }  // namespace tap::communication::serial
 
 #endif  // TAPROOT_REF_SERIAL_TRANSMITTER_HPP_
+EF_SERIAL_TRANSMITTER_HPP_

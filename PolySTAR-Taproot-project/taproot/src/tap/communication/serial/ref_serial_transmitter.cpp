@@ -455,3 +455,11 @@ void RefSerialTransmitter::configInteractiveHeader(
     header->receiverId = receiverId;
 }
 }  // namespace tap::communication::serial
+nderId,
+    uint16_t receiverId)
+{
+    header->dataCmdId = cmdId;
+    header->senderId = static_cast<uint16_t>(senderId);
+    header->receiverId = receiverId;
+}
+}  // namespace tap::communication::serial

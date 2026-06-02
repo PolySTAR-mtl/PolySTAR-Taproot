@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -560,6 +560,20 @@ CommandScheduler::SubsystemIterator CommandScheduler::SubsystemIterator::operato
 
 bool operator==(
     const CommandScheduler::SubsystemIterator &a,
+    const CommandScheduler::SubsystemIterator &b)
+{
+    return a.currIndex == b.currIndex && a.scheduler == b.scheduler;
+}
+
+bool operator!=(
+    const CommandScheduler::SubsystemIterator &a,
+    const CommandScheduler::SubsystemIterator &b)
+{
+    return !(a == b);
+}
+}  // namespace control
+}  // namespace tap
+ &a,
     const CommandScheduler::SubsystemIterator &b)
 {
     return a.currIndex == b.currIndex && a.scheduler == b.scheduler;

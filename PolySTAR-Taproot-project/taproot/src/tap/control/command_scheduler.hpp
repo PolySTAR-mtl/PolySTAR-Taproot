@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -378,6 +378,14 @@ private:
     bool isMasterScheduler = false;
 
     bool runningHardwareTests = false;
+};  // class CommandScheduler
+
+}  // namespace control
+
+}  // namespace tap
+
+#endif  // TAPROOT_COMMAND_SCHEDULER_HPP_
+Tests = false;
 };  // class CommandScheduler
 
 }  // namespace control
