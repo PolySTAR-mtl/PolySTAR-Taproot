@@ -34,7 +34,7 @@ namespace control
 CommandMapping::CommandMapping(
     Drivers *drivers,
     const std::vector<Command *> cmds,
-    const RemoteMapState &rms)
+    const GenericRemoteMapState *rms)
     : mapState(rms),
       mappedCommands(cmds),
       drivers(drivers)
@@ -51,15 +51,12 @@ bool operator==(const CommandMapping &cm1, const CommandMapping &cm2)
 
 bool mapStateEqual(const CommandMapping &cm1, const CommandMapping &cm2)
 {
-    // When inserting mappings into the CommandMapper, we want to check for equality based
-    // on the mapState since we don't want two identical map_states with unique map_commands.
-    // Even if mappedCommand vectors are different we want insertion to fail.
     return cm1.mapState == cm2.mapState;
 }
 
-bool CommandMapping::mappingSubset(const RemoteMapState &mapState)
+bool CommandMapping::mappingSubset(const GenericRemoteMapState &mapState)
 {
-    return this->mapState.stateSubsetOf(mapState);
+    return this->mapState->stateSubsetOf(mapState);
 }
 
 void CommandMapping::addCommands()

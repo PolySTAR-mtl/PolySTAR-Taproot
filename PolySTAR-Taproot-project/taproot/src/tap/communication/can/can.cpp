@@ -26,10 +26,6 @@
 #include "modm/architecture/interface/can_message.hpp"
 #include "modm/platform.hpp"
 
-#ifdef PLATFORM_HOSTED
-#include "tap/motor/motorsim/sim_handler.hpp"
-#endif
-
 #include "tap/board/board.hpp"
 #include "tap/util_macros.hpp"
 
@@ -65,7 +61,8 @@ void tap::can::Can::initialize()
 bool tap::can::Can::isMessageAvailable(tap::can::CanBus bus) const
 {
 #ifdef PLATFORM_HOSTED
-    return tap::motorsim::SimHandler::readyToSend(bus);
+    UNUSED(bus);
+    return true;
 #else
     switch (bus)
     {
@@ -82,7 +79,9 @@ bool tap::can::Can::isMessageAvailable(tap::can::CanBus bus) const
 bool tap::can::Can::getMessage(tap::can::CanBus bus, modm::can::Message* message)
 {
 #ifdef PLATFORM_HOSTED
-    return tap::motorsim::SimHandler::sendMessage(bus, message);
+    UNUSED(bus);
+    UNUSED(message);
+    return false;
 #else
     switch (bus)
     {
@@ -117,7 +116,9 @@ bool tap::can::Can::isReadyToSend(CanBus bus) const
 bool tap::can::Can::sendMessage(CanBus bus, const modm::can::Message& message)
 {
 #ifdef PLATFORM_HOSTED
-    return tap::motorsim::SimHandler::getMessage(bus, message);
+    UNUSED(bus);
+    UNUSED(message);
+    return true;
 #else
     switch (bus)
     {

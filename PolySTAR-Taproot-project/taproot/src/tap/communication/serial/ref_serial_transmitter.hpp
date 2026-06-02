@@ -52,7 +52,7 @@ namespace tap::communication::serial
  * An instance of the ref serial transmitter should be instantiated for each protothread. If unique
  * instances are not used, behavior is undefined.
  */
-class RefSerialTransmitter : public RefSerialData, public modm::Resumable<7>
+class RefSerialTransmitter : public RefSerialData, public modm::Resumable<8>
 {
 public:
     RefSerialTransmitter(Drivers* drivers);
@@ -223,7 +223,8 @@ public:
      */
     mockable modm::ResumableResult<void> deleteGraphicLayer(
         Tx::DeleteGraphicOperation graphicOperation,
-        uint8_t graphicLayer);
+        uint8_t graphicLayer,
+        bool doubleSend = false);
 
     /**
      * This function and the ones below all configure the message header and sends the specified
@@ -233,28 +234,35 @@ public:
      *      with header information in this function.
      * @param[in] configMsgHeader Whether or not to update the `graphicMsg`'s header information.
      * @param[in] sendMsg Whether or not to send the message.
+     *
+     * @todo template instantiation?
      */
     ///@{
     mockable modm::ResumableResult<void> sendGraphic(
         Tx::Graphic1Message* graphicMsg,
         bool configMsgHeader = true,
-        bool sendMsg = true);
+        bool sendMsg = true,
+        bool doubleSend = true);
     mockable modm::ResumableResult<void> sendGraphic(
         Tx::Graphic2Message* graphicMsg,
         bool configMsgHeader = true,
-        bool sendMsg = true);
+        bool sendMsg = true,
+        bool doubleSend = true);
     mockable modm::ResumableResult<void> sendGraphic(
         Tx::Graphic5Message* graphicMsg,
         bool configMsgHeader = true,
-        bool sendMsg = true);
+        bool sendMsg = true,
+        bool doubleSend = true);
     mockable modm::ResumableResult<void> sendGraphic(
         Tx::Graphic7Message* graphicMsg,
         bool configMsgHeader = true,
-        bool sendMsg = true);
+        bool sendMsg = true,
+        bool doubleSend = true);
     mockable modm::ResumableResult<void> sendGraphic(
         Tx::GraphicCharacterMessage* graphicMsg,
         bool configMsgHeader = true,
-        bool sendMsg = true);
+        bool sendMsg = true,
+        bool doubleSend = true);
     ///@}
 
     mockable modm::ResumableResult<void> sendRobotToRobotMsg(
@@ -265,8 +273,21 @@ public:
 
 private:
     tap::Drivers* drivers;
-    tap::arch::MilliTimeout delayTimer;
     Tx::DeleteGraphicLayerMessage deleteGraphicLayerMessage;
+
+    /**
+     * Helper generic method for sending graphics
+     */
+    template <typename GRAPHIC>
+    modm::ResumableResult<void> sendGraphic_(
+        GRAPHIC* graphicMsg,
+        uint16_t messageId,
+        bool configMsgHeader,
+        bool sendMsg,
+        RobotId robotId,
+        tap::Drivers* drivers,
+        uint8_t extraDataLength,
+        bool doubleSend);
 };
 }  // namespace tap::communication::serial
 

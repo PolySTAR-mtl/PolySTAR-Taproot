@@ -26,6 +26,7 @@
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/architecture/clock.hpp"
 #include "tap/communication/serial/uart.hpp"
+#include "tap/control/remote_map_state.hpp"
 #include "tap/drivers.hpp"
 #include "tap/errors/create_errors.hpp"
 
@@ -76,13 +77,15 @@ float Remote::getChannel(Channel ch) const
     switch (ch)
     {
         case Channel::RIGHT_HORIZONTAL:
-            return remote.rightHorizontal / STICK_MAX_VALUE;
+            return remote.rightHorizontal / ANALOG_MAX_VALUE;
         case Channel::RIGHT_VERTICAL:
-            return remote.rightVertical / STICK_MAX_VALUE;
+            return remote.rightVertical / ANALOG_MAX_VALUE;
         case Channel::LEFT_HORIZONTAL:
-            return remote.leftHorizontal / STICK_MAX_VALUE;
+            return remote.leftHorizontal / ANALOG_MAX_VALUE;
         case Channel::LEFT_VERTICAL:
-            return remote.leftVertical / STICK_MAX_VALUE;
+            return remote.leftVertical / ANALOG_MAX_VALUE;
+        case Channel::WHEEL:
+            return remote.wheel / ANALOG_MAX_VALUE;
     }
     return 0;
 }
@@ -131,20 +134,19 @@ void Remote::parseBuffer()
     remote.wheel = (rxBuffer[16] | rxBuffer[17] << 8) - 1024;
 
     // the remote joystick and wheel values must be <= abs(660)
-    if ((abs(remote.rightHorizontal) > STICK_MAX_VALUE) ||
-        (abs(remote.rightVertical) > STICK_MAX_VALUE) ||
-        (abs(remote.leftHorizontal) > STICK_MAX_VALUE) ||
-        (abs(remote.leftVertical) > STICK_MAX_VALUE) || (abs(remote.wheel) > STICK_MAX_VALUE))
+    if ((abs(remote.rightHorizontal) > ANALOG_MAX_VALUE) ||
+        (abs(remote.rightVertical) > ANALOG_MAX_VALUE) ||
+        (abs(remote.leftHorizontal) > ANALOG_MAX_VALUE) ||
+        (abs(remote.leftVertical) > ANALOG_MAX_VALUE) || (abs(remote.wheel) > ANALOG_MAX_VALUE))
     {
         RAISE_ERROR(drivers, "invalid remote joystick values");
     }
 
-    drivers->commandMapper.handleKeyStateChange(
-        remote.key,
-        remote.leftSwitch,
-        remote.rightSwitch,
-        remote.mouse.l,
-        remote.mouse.r);
+    tap::control::RemoteMapState mapState;
+    mapState.initKeys(remote.key);
+    mapState.updateState(*this);
+    drivers->commandMapper.handleKeyStateChange(mapState);
+    drivers->commandMapper.pollTriggerBindings();
 
     remote.updateCounter++;
 }
@@ -178,12 +180,6 @@ void Remote::reset()
     remote.key = 0;
     remote.wheel = 0;
     clearRxBuffer();
-
-    // Refresh command mapper with all keys deactivated. This prevents bug where
-    // command states enter defaults when remote reconnects even if key/switch
-    // state should do otherwise
-    drivers->commandMapper
-        .handleKeyStateChange(0, SwitchState::UNKNOWN, SwitchState::UNKNOWN, false, false);
 }
 
 uint32_t Remote::getUpdateCounter() const { return remote.updateCounter; }
