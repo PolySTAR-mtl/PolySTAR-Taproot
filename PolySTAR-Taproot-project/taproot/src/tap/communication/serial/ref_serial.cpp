@@ -431,8 +431,3 @@ bool RefSerial::operatorBlinded() const
 }
 
 }  // namespace tap::communication::serial
-) && (lastReceivedWarningRobotTime != 0) &&
-           (arch::clock::getTimeMilliseconds() - lastReceivedWarningRobotTime <= blindTime);
-}
-
-}  // namespace tap::communication::serial

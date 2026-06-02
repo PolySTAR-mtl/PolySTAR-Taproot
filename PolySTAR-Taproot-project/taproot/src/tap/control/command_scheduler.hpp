@@ -385,11 +385,3 @@ private:
 }  // namespace tap
 
 #endif  // TAPROOT_COMMAND_SCHEDULER_HPP_
-Tests = false;
-};  // class CommandScheduler
-
-}  // namespace control
-
-}  // namespace tap
-
-#endif  // TAPROOT_COMMAND_SCHEDULER_HPP_

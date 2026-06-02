@@ -368,9 +368,3 @@ private:
 }  // namespace tap::communication::sensors::imu::mpu6500
 
 #endif  // TAPROOT_MPU6500_HPP_
- addValidationErrors();
-};
-
-}  // namespace tap::communication::sensors::imu::mpu6500
-
-#endif  // TAPROOT_MPU6500_HPP_

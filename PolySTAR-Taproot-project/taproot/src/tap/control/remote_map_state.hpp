@@ -269,4 +269,3 @@ private:
 }  // namespace tap
 
 #endif  // TAPROOT_REMOTE_MAP_STATE_HPP_
-OT_REMOTE_MAP_STATE_HPP_

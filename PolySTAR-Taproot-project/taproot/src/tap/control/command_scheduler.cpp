@@ -573,17 +573,3 @@ bool operator!=(
 }
 }  // namespace control
 }  // namespace tap
- &a,
-    const CommandScheduler::SubsystemIterator &b)
-{
-    return a.currIndex == b.currIndex && a.scheduler == b.scheduler;
-}
-
-bool operator!=(
-    const CommandScheduler::SubsystemIterator &a,
-    const CommandScheduler::SubsystemIterator &b)
-{
-    return !(a == b);
-}
-}  // namespace control
-}  // namespace tap
