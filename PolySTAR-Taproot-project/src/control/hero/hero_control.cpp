@@ -4,6 +4,7 @@
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
 #include "tap/control/toggle_command_mapping.hpp"
+#include "tap/control/remote_map_state.hpp"
 #include "control/safe_disconnect.hpp"
 
 // Chassis includes
@@ -73,13 +74,13 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /* Controller mappings */
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP), true);
-ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+// HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP), true);
+// ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
-/* Keyboard mappings */
-HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
-ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
-ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::G}));
+// /* Keyboard mappings */
+// HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
+// ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
+// ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::G}));
 
 // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 // ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
@@ -88,6 +89,17 @@ ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive, &turr
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
+RemoteMapState feedFeederState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP);
+RemoteMapState startFlywheelState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN);
+RemoteMapState mouseFeedFeederState(RemoteMapState::MouseButton::LEFT);
+RemoteMapState mouseStartFlywheelState(RemoteMapState::MouseButton::RIGHT);
+RemoteMapState toggleClientAimingState({Remote::Key::G});
+
+HoldRepeatCommandMapping* feedFeeder = nullptr;
+ToggleCommandMapping* startFlywheel = nullptr;
+HoldRepeatCommandMapping* mouseFeedFeeder = nullptr;
+ToggleCommandMapping* mouseStartFlywheel = nullptr;
+ToggleCommandMapping* toggleClientAiming = nullptr;
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
     drivers->commandScheduler.registerSubsystem(&theChassis);
@@ -118,11 +130,16 @@ void startStandardCommands(src::Drivers *drivers) {
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {
-    drivers->commandMapper.addMap(&feedFeeder);
-    drivers->commandMapper.addMap(&startFlywheel);
-    drivers->commandMapper.addMap(&mouseFeedFeeder);
-    drivers->commandMapper.addMap(&mouseStartFlywheel);
-    drivers->commandMapper.addMap(&toggleClientAiming);
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(feedFeeder));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(startFlywheel));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(mouseFeedFeeder));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(mouseStartFlywheel));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(toggleClientAiming));
+    // drivers->commandMapper.addMap(&feedFeeder);
+    // drivers->commandMapper.addMap(&startFlywheel);
+    // drivers->commandMapper.addMap(&mouseFeedFeeder);
+    // drivers->commandMapper.addMap(&mouseStartFlywheel);
+    // drivers->commandMapper.addMap(&toggleClientAiming);
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);
 }
@@ -130,6 +147,13 @@ void registerStandardIoMappings(src::Drivers *drivers) {
 void initSubsystemCommands(src::Drivers *drivers)
 {
     drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
+
+    feedFeeder = new HoldRepeatCommandMapping(drivers, {&feederMoveUnjam}, &feedFeederState, true);
+    startFlywheel = new ToggleCommandMapping(drivers, {&flywheelStart}, &startFlywheelState);
+    mouseFeedFeeder = new HoldRepeatCommandMapping(drivers, {&feederMoveUnjam}, &mouseFeedFeederState, true);
+    mouseStartFlywheel = new ToggleCommandMapping(drivers, {&flywheelStart}, &mouseStartFlywheelState);
+    toggleClientAiming = new ToggleCommandMapping(drivers, {&chassisKeyboardDrive, &turretMouseAim}, &toggleClientAimingState);
+
     initializeSubsystems();
     registerStandardSubsystems(drivers);
     setDefaultStandardCommands(drivers);
@@ -142,4 +166,4 @@ void initSubsystemCommands(src::Drivers *drivers)
 
 }  // namespace control
 
-#endif  // TARGET_STANDARD
+#endif  // TARGET_HERO

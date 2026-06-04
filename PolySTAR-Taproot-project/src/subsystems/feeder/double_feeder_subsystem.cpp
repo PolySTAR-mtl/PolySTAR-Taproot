@@ -23,7 +23,7 @@ void DoubleFeederSubsystem::refresh() {
 }
 
 void DoubleFeederSubsystem::updateRpmPid(modm::Pid<float>* pid, tap::motor::DjiMotor* const motor, float desiredRPM) {
-    int16_t shaftRPM = motor->getShaftRPM();
+    int16_t shaftRPM = motor->getInternalEncoder().getShaftRPM();;
     if (desiredRPM == 0) {
         motor->setDesiredOutput(0);
     } else {
