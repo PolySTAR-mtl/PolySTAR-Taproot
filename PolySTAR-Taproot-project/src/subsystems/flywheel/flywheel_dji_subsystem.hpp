@@ -2,6 +2,7 @@
 #define FLYWHEEL_DJI_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
+#include "tap/motor/dji_motor.hpp" 
 #include "snail_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "flywheel_constants.hpp"

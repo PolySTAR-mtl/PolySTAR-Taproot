@@ -5,6 +5,7 @@
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
+#include "tap/motor/dji_motor_encoder.hpp"
 
 #include "control/control_interface.hpp"
 #include <numbers>
@@ -53,8 +54,8 @@ void  ChassisSpin2winKeyboardCommand::execute()
     float chassisRad = atan2(yInput, xInput);
 
     // Turret yaw orientation 
-    int64_t yawDelta = turretYawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS;
-    float yawDeltaRad = tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi / 180;
+    int64_t yawDelta = turretYawMotor->getInternalEncoder().getEncoder().getWrappedValue() - YAW_NEUTRAL_POS;
+    float yawDeltaRad = ((float)yawDelta * M_TWOPI) / tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
     float x = d * cos(chassisRad + yawDeltaRad);

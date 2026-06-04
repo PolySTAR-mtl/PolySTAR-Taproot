@@ -31,7 +31,7 @@
 
 /* arch includes ------------------------------------------------------------*/
 #include "tap/architecture/periodic_timer.hpp"
-#include "tap/architecture/profiler.hpp"
+// #include "tap/architecture/profiler.hpp"
 
 #include "control/drivers/drivers.hpp"
 #include "control/drivers/drivers_singleton.hpp"
@@ -84,14 +84,19 @@ int main()
     while (1)
     {
         // do this as fast as you can
-        PROFILE(drivers->profiler, updateIo, (drivers));
+        // PROFILE(drivers->profiler, updateIo, (drivers));
+        updateIo(drivers);
 
         if (sendMotorTimeout.execute())
         {
-            PROFILE(drivers->profiler, drivers->mpu6500.periodicIMUUpdate, ());
-            PROFILE(drivers->profiler, drivers->commandScheduler.run, ());
-            PROFILE(drivers->profiler, drivers->djiMotorTxHandler.encodeAndSendCanData, ());
-            PROFILE(drivers->profiler, drivers->terminalSerial.update, ());
+            drivers->mpu6500.periodicIMUUpdate();
+            drivers->commandScheduler.run();
+            drivers->commandMapper.pollTriggerBindings();
+            drivers->djiMotorTxHandler.encodeAndSendCanData();
+            // PROFILE(drivers->profiler, drivers->mpu6500.periodicIMUUpdate, ());
+            // PROFILE(drivers->profiler, drivers->commandScheduler.run, ());
+            // PROFILE(drivers->profiler, drivers->djiMotorTxHandler.encodeAndSendCanData, ());
+            // PROFILE(drivers->profiler, drivers->terminalSerial.update, ());
         }
         modm::delay_us(10);
     }
@@ -107,13 +112,15 @@ static void initializeIo(src::Drivers *drivers)
     drivers->digital.init();
     drivers->leds.init();
     drivers->can.initialize();
-    drivers->errorController.init();
     drivers->remote.initialize();
-    drivers->mpu6500.init();
+    drivers->mpu6500.init(1000.0f, 2.0f, 0.0f); // valeurs standard
+    // drivers->mpu6500.init();
     drivers->refSerial.initialize();
-    drivers->terminalSerial.initialize();
-    drivers->schedulerTerminalHandler.init();
-    drivers->djiMotorTerminalSerialHandler.init();
+    // update taproot 2026: removed in newer Taproot
+    // drivers->errorController.init();
+    // drivers->terminalSerial.initialize();
+    // drivers->schedulerTerminalHandler.init();
+    // drivers->djiMotorTerminalSerialHandler.init();
 
     drivers->uart.init<Uart::UartPort::Uart6, 230400>();
     drivers->uart.init<Uart::UartPort::Uart8, 230400>();

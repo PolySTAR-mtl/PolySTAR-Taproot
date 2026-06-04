@@ -4,11 +4,13 @@
 #include "tap/algorithms/math_user_utils.hpp"
 #include "control/drivers/drivers.hpp"
 #include "communication/cv_handler.hpp"
+#include "tap/motor/dji_motor_encoder.hpp"
 
 using tap::communication::serial::Uart;
 using tap::algorithms::limitVal;
 using tap::algorithms::getSign;
 using tap::motor::DjiMotor;
+using tap::motor::DjiMotorEncoder;
 
 namespace control
 {
@@ -28,7 +30,7 @@ void TurretSubsystem::initialize()
 void TurretSubsystem::refresh() {
 
     uint32_t currentTime = tap::arch::clock::getTimeMilliseconds();
-
+    
     // Run controllers as fast as possible
     runPitchController(currentTime - prevControllerUpdate);
     runYawController(currentTime - prevControllerUpdate);
@@ -60,30 +62,29 @@ void TurretSubsystem::refresh() {
     Run yaw controller and update motor output.
 */
 void TurretSubsystem::runYawController(uint32_t dt) {
+    int32_t currentYawTicks = yawMotor->getInternalEncoder().getEncoder().getWrappedValue();
     // Calculate the distance between our current angle and the target angle
-    int32_t error = static_cast<int32_t>(yawMotor->getEncoderWrapped()) 
-                    - static_cast<int32_t>(yawDesiredPos) ;
-    
-    
+    int32_t error = currentYawTicks - static_cast<int32_t>(yawDesiredPos);
+
     // Make sure the turret takes the shortest path instead of spinning the long way around (wrapped)
-    if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
-        error = error - DjiMotor::ENC_RESOLUTION * getSign(error);
+    if (abs(error) >= DjiMotorEncoder::ENC_RESOLUTION / 2) {
+        error = error - DjiMotorEncoder::ENC_RESOLUTION * getSign(error);
     }
-    
+
     // Check how fast the turret is currently spinning.
-    int16_t currentRPM = yawMotor->getShaftRPM();
-    
+    int16_t currentRPM = yawMotor->getInternalEncoder().getShaftRPM();
+
     // Convert the raw motor hardware numbers into standard math units (radians)
-    float errDeg = yawMotor->encoderToDegrees<int64_t>((int64_t)error);
+    float errDeg = static_cast<float>(error) * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
     float errRad = errDeg * DEG_TO_RAD;
     float omega = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
-    
+
     // If we are super close to the target and barely moving, turn the motor off so it doesn't jitter
     if (std::fabs(errRad) < 0.5f * DEG_TO_RAD && std::fabs(omega) < 0.2f) {
         yawMotor->setDesiredOutput(0);
         return;
     }
-    
+
     // Calculate exactly how much power is needed, then send that power to the motor.
     // Pass the error as the angle with ref=0; the controller just computes (angle - ref).
     float cmd = lqrTurret.updateYaw(errRad, omega, 0.0f);
@@ -92,22 +93,22 @@ void TurretSubsystem::runYawController(uint32_t dt) {
 
 void TurretSubsystem::runPitchController(uint32_t dt) {
     // Calculate how far off we are from where we want to point.
-    int32_t error = static_cast<int32_t>(pitchDesiredPos)
-                  - static_cast<int32_t>(pitchMotor.getEncoderWrapped());
+    int32_t currentPitchTicks = pitchMotor.getInternalEncoder().getEncoder().getWrappedValue();
+    int32_t error = static_cast<int32_t>(pitchDesiredPos) - currentPitchTicks;
 
     // Check how fast the turret is currently tilting.
-    int16_t currentRPM = pitchMotor.getShaftRPM();
+    int16_t currentRPM = pitchMotor.getInternalEncoder().getShaftRPM();
 
     // Convert the raw motor hardware numbers into standard math units (radians).
-    float errDeg = pitchMotor.encoderToDegrees<int64_t>(static_cast<int64_t>(error));
+    float errDeg = static_cast<float>(error) * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
     float errRad = errDeg * DEG_TO_RAD;
     float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
     // Absolute pitch angle from neutral position (ideally about horizontal), in radians.
     // Used only for the gravity feed-forward; the LQR itself sees the error.
-    float pitchAngleRad = pitchMotor.encoderToDegrees<int64_t>(
-        static_cast<int64_t>(pitchMotor.getEncoderWrapped()) -
-        static_cast<int64_t>(PITCH_NEUTRAL_POS)) * DEG_TO_RAD;
+    float pitchOffsetTicks = static_cast<float>(currentPitchTicks)
+                           - static_cast<float>(PITCH_NEUTRAL_POS);
+    float pitchAngleRad = pitchOffsetTicks * 360.0f / DjiMotorEncoder::ENC_RESOLUTION * DEG_TO_RAD;
 
     // If we are super close to the target and barely moving, suppress the LQR
     // output but keep the gravity feed-forward so the gun still holds position
@@ -127,7 +128,7 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
 /*
     Set desired position setpoints for turret. Values are in encoder ticks.
 */
-void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) 
+void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch)
 {
 #ifdef TARGET_SPIN_TO_WIN
     yawDesiredPos = yaw;
@@ -140,25 +141,27 @@ void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch)
 /*
     Set desired position setpoints for turret. Values are in degrees.
 */
-void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch) 
+void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch)
 {
-    setAbsoluteOutput(YAW_NEUTRAL_POS + yawMotor->degreesToEncoder<int64_t>(yaw),
-                      PITCH_NEUTRAL_POS + pitchMotor.degreesToEncoder<int64_t>(pitch));
+    // degrees -> encoder ticks
+    auto degreesToTicks = [](float deg) -> int64_t {
+        return static_cast<int64_t>(deg * DjiMotorEncoder::ENC_RESOLUTION / 360.0f);
+    };
+
+    setAbsoluteOutput(
+        static_cast<uint16_t>(YAW_NEUTRAL_POS   + degreesToTicks(yaw)),
+        static_cast<uint16_t>(PITCH_NEUTRAL_POS + degreesToTicks(pitch)));
 }
 
-/*
-    Set position setpoints relative to turret's current position. Values are in encoder ticks.
-*/
-void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta) 
+void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
 {
-    uint16_t currentYaw = yawMotor->getEncoderWrapped();
-    uint16_t currentPitch = pitchMotor.getEncoderWrapped();
+    // Wrapped position in ticks
+    uint16_t currentYaw = yawMotor->getInternalEncoder().getEncoder().getWrappedValue();
+    uint16_t currentPitch = pitchMotor.getInternalEncoder().getEncoder().getWrappedValue();
 
-    uint16_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
-    uint16_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
+    uint16_t newYaw = currentYaw   + static_cast<uint16_t>(yawDelta   * YAW_SCALE_FACTOR);
+    uint16_t newPitch = currentPitch + static_cast<uint16_t>(pitchDelta  * PITCH_SCALE_FACTOR);
 
-    // Don't update the setpoint if input is zero
-    // This prevents the turret from drifting when no input is given
     setAbsoluteOutput(
         yawDelta == 0 ? yawDesiredPos : newYaw,
         pitchDelta == 0 ? pitchDesiredPos : newPitch);
@@ -168,15 +171,20 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
     Send turret position data to CV over UART.
 */
 void TurretSubsystem::sendCVUpdate() {
+    int32_t yawTicks =  yawMotor->getInternalEncoder().getEncoder().getWrappedValue();
+    float currentBodyYawDeg =
+        static_cast<float>(yawTicks - static_cast<int32_t>(YAW_NEUTRAL_POS))
+        * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
 
-    // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
-    float currentBodyYawDeg = yawMotor->encoderToDegrees<int64_t>(yawMotor->getEncoderUnwrapped()-YAW_NEUTRAL_POS);
-    float currentBodyPitchDeg = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
+    int32_t pitchTicks = pitchMotor.getInternalEncoder().getEncoder().getWrappedValue();
+    float currentBodyPitchDeg =
+        static_cast<float>(pitchTicks - static_cast<int32_t>(PITCH_NEUTRAL_POS))
+        * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
 
     src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage;
     // CV protocol expects angles in milliradians
-    turretMessage.yaw = static_cast<int16_t>(currentBodyYawDeg*DEGREE_TO_MILLIRAD);
-    turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg*DEGREE_TO_MILLIRAD * -1);
+    turretMessage.yaw   = static_cast<int16_t>(currentBodyYawDeg   * DEGREE_TO_MILLIRAD);
+    turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg * DEGREE_TO_MILLIRAD * -1);
 
     drivers->uart.write(Uart::UartPort::Uart7, (uint8_t*)(&turretMessage), sizeof(turretMessage));
 }
@@ -189,17 +197,19 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
     int nBytes;
 
     if (sendYaw) {
-        nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
-                                (int)(yawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS),
-                                (int)(yawDesiredPos - YAW_NEUTRAL_POS));
-        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+        int32_t yawTicks = yawMotor->getInternalEncoder().getEncoder().getWrappedValue();
+        nBytes = sprintf(buffer, "Yaw: %i, Setpoint: %i\n",
+                         (int)(yawTicks - (int32_t)YAW_NEUTRAL_POS),
+                         (int)(yawDesiredPos - YAW_NEUTRAL_POS));
+        drivers->uart.write(TURRET_DEBUG_PORT, (uint8_t*)buffer, nBytes + 1);
     }
 
     if (sendPitch) {
-        nBytes = sprintf (buffer, "Pitch: %i, Setpoint: %i\n",
-                                (int)(pitchMotor.getEncoderWrapped() - PITCH_NEUTRAL_POS),
-                                (int)(pitchDesiredPos - PITCH_NEUTRAL_POS));
-        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+        int32_t pitchTicks = pitchMotor.getInternalEncoder().getEncoder().getWrappedValue();
+        nBytes = sprintf(buffer, "Pitch: %i, Setpoint: %i\n",
+                         (int)(pitchTicks - (int32_t)PITCH_NEUTRAL_POS),
+                         (int)(pitchDesiredPos - PITCH_NEUTRAL_POS));
+        drivers->uart.write(TURRET_DEBUG_PORT, (uint8_t*)buffer, nBytes + 1);
     }
 }
 

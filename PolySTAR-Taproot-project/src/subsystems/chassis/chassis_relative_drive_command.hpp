@@ -37,15 +37,14 @@ public:
     bool isFinished() const override;
 
 private:
+    ChassisSpin2WinSubsystem *const chassis;
+    src::Drivers *drivers;
     tap::motor::DjiMotor *yawMotor;
 
     uint32_t prevDebugTime;
-
-    ChassisSpin2WinSubsystem *const chassis;
-
+    
     std::map<std::string, bool> keyboard_input;
 
-    src::Drivers *drivers;
 };  // ChassisRelativeDriveCommand
 
 }  // namespace chassis

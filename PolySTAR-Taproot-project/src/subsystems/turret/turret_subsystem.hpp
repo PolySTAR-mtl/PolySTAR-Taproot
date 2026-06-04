@@ -63,10 +63,10 @@ public:
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
     int64_t getYawNeutralPos() { return YAW_NEUTRAL_POS; }
     int64_t getPitchNeutralPos() { return PITCH_NEUTRAL_POS; }
-    int64_t getYawUnwrapped() { return yawMotor->getEncoderUnwrapped(); }
-    int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
-    int getYawWrapped() { return yawMotor->getEncoderWrapped(); }
-    int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
+    int64_t getYawUnwrapped() { return yawMotor->getInternalEncoder().getEncoder().getUnwrappedValue(); }
+    int64_t getPitchUnwrapped() { return pitchMotor.getInternalEncoder().getEncoder().getUnwrappedValue(); }
+    int getYawWrapped() { return yawMotor->getInternalEncoder().getEncoder().getWrappedValue(); }
+    int getPitchWrapped() { return pitchMotor.getInternalEncoder().getEncoder().getWrappedValue(); }
 
 
 private:
