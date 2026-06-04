@@ -39,10 +39,10 @@ void ChassisSubsystem::refresh() {
     float dt = (now - prevControlUpdate) / 1000.0f;
     prevControlUpdate = now;
 
-    float fl = static_cast<float>(frontLeftMotor.getShaftRPM());
-    float fr = static_cast<float>(frontRightMotor.getShaftRPM());
-    float bl = static_cast<float>(backLeftMotor.getShaftRPM());
-    float br = static_cast<float>(backRightMotor.getShaftRPM());
+    float fl = static_cast<float>(frontLeftMotor.getInternalEncoder().getShaftRPM());
+    float fr = static_cast<float>(frontRightMotor.getInternalEncoder().getShaftRPM());
+    float bl = static_cast<float>(backLeftMotor.getInternalEncoder().getShaftRPM());
+    float br = static_cast<float>(backRightMotor.getInternalEncoder().getShaftRPM());
 
     float vx=0.f, vy=0.f, w=0.f;
     rpmToBody(fl, fr, bl, br, vx, vy, w);
@@ -85,22 +85,22 @@ void ChassisSubsystem::refresh() {
 
         // Front right debug message
         int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
-                              frontRightMotor.getShaftRPM(),
+                              frontRightMotor.getInternalEncoder().getShaftRPM(),
                               (int)cmd[0]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Front left debug message
         nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
-                              frontLeftMotor.getShaftRPM(),
+                              frontLeftMotor.getInternalEncoder().getShaftRPM(),
                               (int)cmd[1]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back right debug message
         nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
-                              backRightMotor.getShaftRPM(),
+                              backRightMotor.getInternalEncoder().getShaftRPM(),
                               (int)cmd[2]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back left debug message
         nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
-                              backLeftMotor.getShaftRPM(),
+                              backLeftMotor.getInternalEncoder().getShaftRPM(),
                               (int)cmd[3]);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
     }
@@ -192,10 +192,10 @@ void ChassisSubsystem::sendCVUpdate() {
     int16_t backRightRevolutions = (backRightMotor.getInternalEncoder().getEncoder().getUnwrappedValue()  - backRightEncoder)/tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
     // Get motor RPMs
-    int16_t frontLeftRPM = frontLeftMotor.getShaftRPM();
-    int16_t frontRightRPM = frontRightMotor.getShaftRPM();
-    int16_t backLeftRPM = backLeftMotor.getShaftRPM();
-    int16_t backRightRPM = backRightMotor.getShaftRPM();
+    int16_t frontLeftRPM = frontLeftMotor.getInternalEncoder().getShaftRPM();
+    int16_t frontRightRPM = frontRightMotor.getInternalEncoder().getShaftRPM();
+    int16_t backLeftRPM = backLeftMotor.getInternalEncoder().getShaftRPM();
+    int16_t backRightRPM = backRightMotor.getInternalEncoder().getShaftRPM();
     
     // Convert IMU and encoder data to 2 byte data types for transmission
     // Conversions need to occur to respect 2 byte limit for each value sent

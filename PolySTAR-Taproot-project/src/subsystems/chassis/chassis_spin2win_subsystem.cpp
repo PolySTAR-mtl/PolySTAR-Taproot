@@ -46,29 +46,29 @@ void ChassisSpin2WinSubsystem::refresh() {
 
         // Front right debug message
         int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
-                              frontRightMotor.getShaftRPM(),
+                              frontRightMotor.getInternalEncoder().getShaftRPM(),
                               (int)frontRightDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Front left debug message
         nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
-                              frontLeftMotor.getShaftRPM(),
+                              frontLeftMotor.getInternalEncoder().getShaftRPM(),
                               (int)frontLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back right debug message
         nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
-                              backRightMotor.getShaftRPM(),
+                              backRightMotor.getInternalEncoder().getShaftRPM(),
                               (int)backRightDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
         // Back left debug message
         nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
-                              backLeftMotor.getShaftRPM(),
+                              backLeftMotor.getInternalEncoder().getShaftRPM(),
                               (int)backLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
     }
 }
 
 void ChassisSpin2WinSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
-    int64_t error = desiredRpm - motor->getShaftRPM();
+    int64_t error = desiredRpm - motor->getInternalEncoder().getShaftRPM();
     pid->runControllerDerivateError(error, dt);
     if (desiredRpm == 0) {
         motor->setDesiredOutput(0);
@@ -156,10 +156,10 @@ void ChassisSpin2WinSubsystem::sendCVUpdate() {
     int16_t backRightRevolutions = (backRightMotor.getInternalEncoder().getEncoder().getUnwrappedValue() - backRightEncoder)/tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
     // Get motor RPMs
-    int16_t frontLeftRPM = frontLeftMotor.getShaftRPM();
-    int16_t frontRightRPM = frontRightMotor.getShaftRPM();
-    int16_t backLeftRPM = backLeftMotor.getShaftRPM();
-    int16_t backRightRPM = backRightMotor.getShaftRPM();
+    int16_t frontLeftRPM = frontLeftMotor.getInternalEncoder().getShaftRPM();
+    int16_t frontRightRPM = frontRightMotor.getInternalEncoder().getShaftRPM();
+    int16_t backLeftRPM = backLeftMotor.getInternalEncoder().getShaftRPM();
+    int16_t backRightRPM = backRightMotor.getInternalEncoder().getShaftRPM();
     
     // Convert IMU and encoder data to 2 byte data types for transmission
     // Conversions need to occur to respect 2 byte limit for each value sent

@@ -19,7 +19,9 @@ namespace turret
 void TurretSubsystem::initialize()
 {
     yawMotor->initialize();
-    lqrTurret.setGravityFeedforward(gravityCounteract);
+    // lqrTurret.setGravityFeedforward(gravityCounteract);
+    lqrTurret.setGravityFeedforward(0.0f); // not tuned yet 
+
     pitchMotor.initialize();
 
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
