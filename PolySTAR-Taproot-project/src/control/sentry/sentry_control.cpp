@@ -4,6 +4,7 @@
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
 #include "tap/control/toggle_command_mapping.hpp"
+#include "tap/control/remote_map_state.hpp"
 
 #include "control/safe_disconnect.hpp"
 
@@ -98,18 +99,28 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /*-Ammo Booster-*/
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
-/*-Flywheel-*/
-// HoldCommandMapping startFlywheel(drivers(), {&flywheelStartTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping startFlywheelManual(drivers(), {&flywheelStartManual}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-/*-Turret-*/
-ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
-/*-Chassis-*/
-ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
-/*-Auto commands*/
-HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+// HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
+// /*-Flywheel-*/
+// // HoldCommandMapping startFlywheel(drivers(), {&flywheelStartTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping startFlywheelManual(drivers(), {&flywheelStartManual}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+// /*-Turret-*/
+// ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
+// /*-Chassis-*/
+// ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
+// /*-Auto commands*/
+// HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim, &feederAutoFeedTest}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+RemoteMapState feedFeederState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP);
+RemoteMapState startFlywheelManualState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP);
+RemoteMapState turretMouseAimToggleState({Remote::Key::B});
+RemoteMapState toggleChassisDriveState({Remote::Key::G});
+RemoteMapState toggleAutoCommandsState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN);
 
+HoldRepeatCommandMapping* feedFeeder = nullptr;
+HoldCommandMapping* startFlywheelManual = nullptr;
+ToggleCommandMapping* turretMouseAimToggle = nullptr;
+ToggleCommandMapping* toggleChassisDrive = nullptr;
+HoldCommandMapping* toggleAutoCommands = nullptr;
 /*-Only used for calibration-*/
 // HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP)); 
 // HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
@@ -151,25 +162,38 @@ void startStandardCommands(src::Drivers *drivers)
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers)
 {
-    /*-Ammo Booster-*/
-    drivers->commandMapper.addMap(&feedFeeder);
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(feedFeeder));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(startFlywheelManual));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(turretMouseAimToggle));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(toggleChassisDrive));
+    drivers->commandMapper.addMap(std::unique_ptr<tap::control::CommandMapping>(toggleAutoCommands));
+
+    // /*-Ammo Booster-*/
+    // drivers->commandMapper.addMap(&feedFeeder);
     
-    /*-Flywheel-*/
-    // drivers->commandMapper.addMap(&startFlywheel);
-    drivers->commandMapper.addMap(&startFlywheelManual);
-    /*-Turret-*/
-    // drivers->commandMapper.addMap(&leftAimTurret);
-    // drivers->commandMapper.addMap(&rightAimTurret);
-    drivers->commandMapper.addMap(&turretMouseAimToggle);
-    /*-Chassis-*/
-    drivers->commandMapper.addMap(&toggleChassisDrive);
-    // drivers->commandMapper.addMap(&toggleAutoTestCommands);
-    drivers->commandMapper.addMap(&toggleAutoCommands);
+    // /*-Flywheel-*/
+    // // drivers->commandMapper.addMap(&startFlywheel);
+    // drivers->commandMapper.addMap(&startFlywheelManual);
+    // /*-Turret-*/
+    // // drivers->commandMapper.addMap(&leftAimTurret);
+    // // drivers->commandMapper.addMap(&rightAimTurret);
+    // drivers->commandMapper.addMap(&turretMouseAimToggle);
+    // /*-Chassis-*/
+    // drivers->commandMapper.addMap(&toggleChassisDrive);
+    // // drivers->commandMapper.addMap(&toggleAutoTestCommands);
+    // drivers->commandMapper.addMap(&toggleAutoCommands);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
 {
     drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
+
+    feedFeeder = new HoldRepeatCommandMapping(drivers, {&feederMoveUnjam}, &feedFeederState, true);
+    startFlywheelManual = new HoldCommandMapping(drivers, {&flywheelStartManual}, &startFlywheelManualState);
+    turretMouseAimToggle = new ToggleCommandMapping(drivers, {&turretMouseAim}, &turretMouseAimToggleState);
+    toggleChassisDrive = new ToggleCommandMapping(drivers, {&chassisKeyboardDrive}, &toggleChassisDriveState);
+    toggleAutoCommands = new HoldCommandMapping(drivers, {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, &toggleAutoCommandsState);
+
     initializeSubsystems();
     registerStandardSubsystems(drivers);
     setDefaultStandardCommands(drivers);
