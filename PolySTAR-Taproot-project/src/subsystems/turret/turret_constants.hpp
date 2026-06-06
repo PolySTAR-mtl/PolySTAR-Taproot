@@ -31,7 +31,8 @@ static constexpr float TURRET_DEAD_ZONE = 0.05;
 /*
  * UART debug message settings
  */
-static constexpr bool TURRET_DEBUG_MESSAGE = false;
+static constexpr bool TURRET_DEBUG_MESSAGE = true;
+static constexpr bool TURRET_DEBUG_STABLE_IMU = true;
 static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
 static constexpr Uart::UartPort TURRET_DEBUG_PORT = Uart::UartPort::Uart8;
 
@@ -53,3 +54,5 @@ static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
  */
 static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
+const constexpr float GZ_STABILIZATION_CONSTANT = 0.47;
+const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1;

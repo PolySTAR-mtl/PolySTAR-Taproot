@@ -6,6 +6,7 @@
 #include "control/drivers/drivers.hpp"
 
 #include "subsystems/chassis/chassis_spin2win_command.hpp"
+#include "tap/motor/dji_motor.hpp"
 
 namespace control
 {
@@ -45,6 +46,13 @@ private:
     src::Drivers *drivers;
 
     uint32_t prevUpdate;
+
+    uint32_t compoundedTime = 0;
+    float chassisRotationSpeed = 0;
+    int gzSamplingCount = 0;
+    float gzSamplingSum = 0;
+    float gzAverage = 0;
+
 };  // TurretStableManualAimCommand
 
 }  // namespace turret

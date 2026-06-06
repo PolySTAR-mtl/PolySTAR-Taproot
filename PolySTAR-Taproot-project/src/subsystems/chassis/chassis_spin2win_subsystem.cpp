@@ -25,6 +25,8 @@ void ChassisSpin2WinSubsystem::initialize()
 void ChassisSpin2WinSubsystem::refresh() {
     updateRpmSetpoints();
 
+    auto gz = drivers->mpu6500.getGz();
+
     uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
     updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
     updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm, dt);
@@ -64,6 +66,13 @@ void ChassisSpin2WinSubsystem::refresh() {
                               backLeftMotor.getShaftRPM(),
                               (int)backLeftDesiredRpm);
         drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+        nBytes = sprintf (buffer, "GZ: %i\n",
+                            (int)gz);
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+        nBytes = sprintf (buffer, "YAW: %i\n",
+                            (int)drivers->mpu6500.getYaw());
+        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
+        
     }
 }
 

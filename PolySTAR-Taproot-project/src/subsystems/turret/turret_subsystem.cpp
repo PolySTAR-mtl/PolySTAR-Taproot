@@ -30,7 +30,7 @@ void TurretSubsystem::refresh() {
 
     // Run controllers as fast as possible
     runPitchController(currentTime - prevControllerUpdate);
-    runYawController(currentTime - prevControllerUpdate);
+    m_isSpin2WinMode ? updateRpmPid(&yawRpmPid, yawMotor, desiredYawRpm, currentTime - prevControllerUpdate) : runYawController(currentTime - prevControllerUpdate);
     prevControllerUpdate = currentTime;
 
     /* When tuning inner loops, use this block instead to run controllers
@@ -52,6 +52,18 @@ void TurretSubsystem::refresh() {
         prevDebugUpdate = currentTime;
         sendDebugInfo(true,true); // Position information
         // sendTuningDebugInfo(false, true, velSetpoint, threshold); // Velocity information, used during tuning of the inner loop
+    }
+
+    if(TURRET_DEBUG_STABLE_IMU && (currentTime - prevDebugUpdate > TURRET_DEBUG_MESSAGE_DELAY_MS)) {
+        sendTuningDebugInfo(true, false, 0, 0); // Clear previous debug info 
+
+        char buffer[500];
+        int nBytes;
+
+        nBytes = sprintf (buffer, "desiredYawRPM: %i\n",
+                                 (int)desiredYawRpm);
+        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+
     }
 }
 
@@ -219,6 +231,16 @@ void TurretSubsystem::pitchInnerLoopTest(uint32_t dt, float velSetpoint, float t
     cascadedPitchController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
     pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
+}
+
+void TurretSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
+    int64_t error = desiredRpm - motor->getShaftRPM();
+    pid->runControllerDerivateError(error, dt);
+    if (desiredRpm == 0) {
+        motor->setDesiredOutput(0);
+    } else {
+        motor->setDesiredOutput(pid->getOutput());
+    }
 }
 
 }  // namespace turret

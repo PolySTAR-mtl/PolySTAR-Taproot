@@ -34,6 +34,12 @@ void  ChassisDriveCommand::execute()
         fabs(xInput) >= CHASSIS_DEAD_ZONE ? xInput : 0.0f,
         fabs(yInput) >= CHASSIS_DEAD_ZONE ? yInput : 0.0f,
         fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f);
+
+     char buffer[500];
+    int nBytes = sprintf (buffer, "xInput : %i, Yinput: %i\n",
+                              (int)xInput,
+                              (int)yInput);
+    drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
 }
 
 void  ChassisDriveCommand::end(bool) { chassis->setTargetOutput(0, 0, 0); }
