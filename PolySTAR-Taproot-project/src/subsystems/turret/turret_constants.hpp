@@ -54,5 +54,5 @@ static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
  */
 static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
-const constexpr float GZ_STABILIZATION_CONSTANT = 0.47;
-const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1;
+const constexpr float GZ_STABILIZATION_CONSTANT = 0.465;
+const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.175;
