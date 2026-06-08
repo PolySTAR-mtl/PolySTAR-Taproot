@@ -8,61 +8,122 @@ using src::communication::cv::CVSerialData;
 
 namespace control::turret
 {
-    void OperationMode::autoMode(Spin2WinAimCommand* command) const {
+    void OperationMode::autoMode(SentryAimCommand *command) {
         if (command == nullptr) {
             return;
         }
 
         // Acquire setpoints received from CV over serial through CVHandler
         CVSerialData::Rx::TurretData turretData = command->drivers->cvHandler.getTurretData();
-        float pitchSetpoint = turretData.pitchSetpoint*command->MRAD_TO_DEGREES;
-        float yawSetpoint = turretData.yawSetpoint*command->MRAD_TO_DEGREES;
+        float pitchSetpoint = turretData.pitchSetpoint*command->autoAttributes->MRAD_TO_DEGREES;
+        float yawSetpoint = turretData.yawSetpoint*command->autoAttributes->MRAD_TO_DEGREES;
 
         command->turret->setAbsoluteOutputDegrees(yawSetpoint, pitchSetpoint);
     }
 
-    void OperationMode::manualMode(Spin2WinAimCommand* command) const {
+    void OperationMode::manualMode(Spin2WinAimCommand* command) {
         if (command == nullptr) {
             return;
         }
 
-        float xInput = command->drivers->controlInterface.getTurretXInput();
-        float yInput = command->drivers->controlInterface.getTurretYInput();
+        // Makes it more readable
+        auto& drivers = command->drivers;
+        auto& manualAttributes = command->manualAttributes;
+        auto& turret = command->turret;
 
-        float xMouseInput = command->drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
-        float yMouseInput = command->drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
+        // Get inputs from the controller
+        float xInput = drivers->controlInterface.getTurretXInput();
+        float yInput = drivers->controlInterface.getTurretYInput();
 
-        float gZ = command->drivers->mpu6500.getGz();
-    command->gzSamplingSum += gZ;
-    command->gzSamplingCount++;
-    command->gzAverage = command->gzSamplingSum / command->gzSamplingCount;
+        // Get inputs from the mouse
+        float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
+        float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
 
-    uint32_t currentUpdate = tap::arch::clock::getTimeMilliseconds();
-    uint32_t timeDelta = currentUpdate - command->prevUpdate;
-    command->prevUpdate = currentUpdate;
+        // IMU stabilization
+        float gZ = drivers->mpu6500.getGz();
+        manualAttributes->gzSamplingSum += gZ;
+        manualAttributes->gzSamplingCount++;
+        manualAttributes->gzAverage = manualAttributes->gzSamplingSum / manualAttributes->gzSamplingCount;
 
-    command->compoundedTime += timeDelta;
-    if (command->compoundedTime >= 20) {
-        command->compoundedTime = 0;
-        if (abs(command->gzAverage) > 0.5f) {
-            command->chassisRotationSpeed = command->gzAverage;
-        } 
-        else {
-            command->chassisRotationSpeed = 0;
+        uint32_t currentUpdate = tap::arch::clock::getTimeMilliseconds();
+        uint32_t timeDelta = currentUpdate - manualAttributes->prevUpdate;
+        manualAttributes->prevUpdate = currentUpdate;
+
+        manualAttributes->compoundedTime += timeDelta;
+        if (manualAttributes->compoundedTime >= 20) {
+            manualAttributes->compoundedTime = 0;
+            if (abs(manualAttributes->gzAverage) > 0.5f) {
+                manualAttributes->chassisRotationSpeed = manualAttributes->gzAverage;
+            }
+            else {
+                manualAttributes->chassisRotationSpeed = 0;
+            }
+
+            manualAttributes->gzAverage = command->drivers->mpu6500.getGz();
+            manualAttributes->gzSamplingSum = 0;
+            manualAttributes->gzSamplingCount = 0;
         }
 
-        command->gzAverage = command->drivers->mpu6500.getGz();
-        command->gzSamplingSum = 0;
-        command->gzSamplingCount = 0;
+        float desiredYawRpm = ((GZ_STABILIZATION_CONSTANT - X_INPUT_STABILIZATION_CONSTANT * xInput) * command->manualAttributes->chassisRotationSpeed);
+
+        // Set the desired yaw RPM according to the stabilization algorithm
+        turret->setDesiredYawRpm(desiredYawRpm);
+
+        turret->setRelativeOutput(
+            fabs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
+            fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
     }
 
+    void OperationMode::manualMode(HeroAimCommand* command) {
+        if (command == nullptr) {
+            return;
+        }
 
-    float desiredYawRpm = ((GZ_STABILIZATION_CONSTANT - X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed);
-    
+        // Makes it more readable
+        auto& drivers = command->drivers;
+        auto& manualAttributes = command->manualAttributes;
+        auto& turret = command->turret;
 
-    turret->setDesiredYawRpm(desiredYawRpm);
-    turret->setRelativeOutput(
-        fabs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
-        fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
+        // Get inputs from the controller
+        float xInput = drivers->controlInterface.getTurretXInput();
+        float yInput = drivers->controlInterface.getTurretYInput();
+
+        // Get inputs from the mouse
+        float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
+        float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
+
+        // IMU stabilization
+        float gZ = drivers->mpu6500.getGz();
+        manualAttributes->gzSamplingSum += gZ;
+        manualAttributes->gzSamplingCount++;
+        manualAttributes->gzAverage = manualAttributes->gzSamplingSum / manualAttributes->gzSamplingCount;
+
+        uint32_t currentUpdate = tap::arch::clock::getTimeMilliseconds();
+        uint32_t timeDelta = currentUpdate - manualAttributes->prevUpdate;
+        manualAttributes->prevUpdate = currentUpdate;
+
+        manualAttributes->compoundedTime += timeDelta;
+        if (manualAttributes->compoundedTime >= 20) {
+            manualAttributes->compoundedTime = 0;
+            if (abs(manualAttributes->gzAverage) > 0.5f) {
+                manualAttributes->chassisRotationSpeed = manualAttributes->gzAverage;
+            }
+            else {
+                manualAttributes->chassisRotationSpeed = 0;
+            }
+
+            manualAttributes->gzAverage = command->drivers->mpu6500.getGz();
+            manualAttributes->gzSamplingSum = 0;
+            manualAttributes->gzSamplingCount = 0;
+        }
+
+        float desiredYawRpm = ((GZ_STABILIZATION_CONSTANT - X_INPUT_STABILIZATION_CONSTANT * xInput) * command->manualAttributes->chassisRotationSpeed);
+
+        // Set the desired yaw RPM according to the stabilization algorithm
+        turret->setDesiredYawRpm(desiredYawRpm);
+
+        turret->setRelativeOutput(
+            fabs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
+            fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
     }
 } // namespace control::turret

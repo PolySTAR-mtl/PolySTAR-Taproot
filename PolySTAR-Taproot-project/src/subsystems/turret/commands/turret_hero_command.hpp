@@ -1,5 +1,5 @@
-#ifndef SPIN2WIN_AIM_COMMAND_HPP_
-#define SPIN2WIN_AIM_COMMAND_HPP_
+#ifndef HERO_AIM_COMMAND_HPP_
+#define HERO_AIM_COMMAND_HPP_
 
 #include "tap/control/command.hpp"
 
@@ -9,7 +9,7 @@
 
 namespace control::turret
 {
-class Spin2WinAimCommand : public tap::control::Command
+class HeroAimCommand : public tap::control::Command
 {
 public:
     /**
@@ -19,11 +19,11 @@ public:
      * @param[in] turret a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    Spin2WinAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
+    HeroAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
-    Spin2WinAimCommand(const Spin2WinAimCommand &other) = delete;
+    HeroAimCommand(const HeroAimCommand &other) = delete;
 
-    Spin2WinAimCommand &operator=(const Spin2WinAimCommand &other) = delete;
+    HeroAimCommand &operator=(const HeroAimCommand &other) = delete;
 
     void initialize() override;
 
@@ -42,9 +42,9 @@ protected:
     OperationMode *const operationMode = nullptr;
     ManualAttributes *manualAttributes;
 
-};  // Spin2WinAimCommand
+};  // HeroAimCommand
 
 }  // namespace control::turret
 
-#endif  // SPIN2WIN_AIM_COMMAND_HPP_
+#endif  // HERO_AIM_COMMAND_HPP_
 

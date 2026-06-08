@@ -1,5 +1,5 @@
-#ifndef SPIN2WIN_AIM_COMMAND_HPP_
-#define SPIN2WIN_AIM_COMMAND_HPP_
+#ifndef SENTRY_AIM_COMMAND_HPP_
+#define SENTRY_AIM_COMMAND_HPP_
 
 #include "tap/control/command.hpp"
 
@@ -7,9 +7,11 @@
 #include "subsystems/turret/modes/operation_mode.hpp"
 #include "control/drivers/drivers.hpp"
 
-namespace control::turret
+namespace control
 {
-class Spin2WinAimCommand : public tap::control::Command
+namespace turret
+{
+class SentryAimCommand : public tap::control::Command
 {
 public:
     /**
@@ -19,11 +21,11 @@ public:
      * @param[in] turret a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    Spin2WinAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
+    SentryAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
-    Spin2WinAimCommand(const Spin2WinAimCommand &other) = delete;
+    SentryAimCommand(const SentryAimCommand &other) = delete;
 
-    Spin2WinAimCommand &operator=(const Spin2WinAimCommand &other) = delete;
+    SentryAimCommand &operator=(const SentryAimCommand &other) = delete;
 
     void initialize() override;
 
@@ -40,11 +42,16 @@ protected:
 
     friend struct OperationMode;
     OperationMode *const operationMode = nullptr;
-    ManualAttributes *manualAttributes;
+    AutoAttributes *autoAttributes;
 
-};  // Spin2WinAimCommand
+    // Should be replaced with matchStarted flag by reading refserial data
+    tap::arch::MilliTimeout startMatchTimeout;
 
-}  // namespace control::turret
+};  // SentryAimCommand
 
-#endif  // SPIN2WIN_AIM_COMMAND_HPP_
+}  // namespace turret
+
+}  // namespace control
+
+#endif  // SENTRY_AIM_COMMAND_HPP_
 

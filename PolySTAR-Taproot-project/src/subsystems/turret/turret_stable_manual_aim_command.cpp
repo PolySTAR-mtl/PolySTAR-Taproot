@@ -25,7 +25,7 @@ TurretStableManualAimCommand::TurretStableManualAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void  TurretStableManualAimCommand::initialize() {
+void TurretStableManualAimCommand::initialize() {
     prevUpdate = tap::arch::clock::getTimeMilliseconds();
     this->turret->setIsSpin2WinMode(true);
     chassisRotationSpeed = 0;
@@ -35,7 +35,7 @@ void  TurretStableManualAimCommand::initialize() {
 
 }
 
-void  TurretStableManualAimCommand::execute()
+void TurretStableManualAimCommand::execute()
 {
     float xInput = drivers->controlInterface.getTurretXInput(); // Yaw
     float yInput = drivers->controlInterface.getTurretYInput(); // Pitch
@@ -54,7 +54,7 @@ void  TurretStableManualAimCommand::execute()
         compoundedTime = 0;
         if (abs(gzAverage) > 0.5f) {
             chassisRotationSpeed = gzAverage;
-        } 
+        }
         else {
             chassisRotationSpeed = 0;
         }
@@ -64,9 +64,7 @@ void  TurretStableManualAimCommand::execute()
         gzSamplingCount = 0;
     }
 
-
     float desiredYawRpm = ((GZ_STABILIZATION_CONSTANT - X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed);
-    
 
     turret->setDesiredYawRpm(desiredYawRpm);
     turret->setRelativeOutput(
@@ -74,12 +72,12 @@ void  TurretStableManualAimCommand::execute()
         fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
 }
 
-void  TurretStableManualAimCommand::end(bool) {
+void TurretStableManualAimCommand::end(bool) {
     turret->setRelativeOutput(0,0);
     this->turret->setIsSpin2WinMode(false);
 }
 
-bool  TurretStableManualAimCommand::isFinished() const { return false; }
+bool TurretStableManualAimCommand::isFinished() const { return false; }
 }  // namespace turret
 }  // namespace control
 

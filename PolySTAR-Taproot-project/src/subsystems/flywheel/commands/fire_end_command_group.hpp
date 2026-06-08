@@ -3,7 +3,7 @@
 
 #include "tap/control/comprised_command.hpp"
 #include "control/drivers/drivers.hpp"
-#include "subsystems/feeder/commands/feeder_feed_command.hpp"
+#include "subsystems/feeder/commands/feeder_feed_commands.hpp"
 #include "subsystems/flywheel/core/flywheel_subsystem.hpp"
 #include "flywheel_fire_commands.hpp"
 #include "subsystems/feeder/core/feeder_position_subsystem.hpp"
