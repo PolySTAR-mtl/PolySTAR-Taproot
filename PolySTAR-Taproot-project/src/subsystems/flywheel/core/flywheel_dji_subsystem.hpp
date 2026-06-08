@@ -10,6 +10,7 @@
 #include "tap/util_macros.hpp"
 #include "subsystems/flywheel/config/flywheel_constants.hpp"
 #include "subsystems/sentry_general_constants.hpp"
+#include "flywheel_state.hpp"
 
 namespace control::flywheel
 {
@@ -61,7 +62,6 @@ private:
 
     float currentDjiSpeed_;
 
-    bool isKickstartDone_;
     uint32_t startingTs_;
     tap::arch::MilliTimeout startMatchTimeout_;
 

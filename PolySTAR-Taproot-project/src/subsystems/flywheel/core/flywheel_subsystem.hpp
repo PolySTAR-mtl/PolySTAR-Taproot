@@ -10,6 +10,7 @@
 #include "subsystems/flywheel/config/flywheel_constants.hpp"
 #include "subsystems/flywheel/config/flywheel_config.hpp"
 #include "subsystems/flywheel/utils/fire_mode.hpp"
+#include "flywheel_state.hpp"
 
 namespace control::flywheel
 {
@@ -52,6 +53,9 @@ public:
     template <FireMode M>
     void executeFiring();
 
+protected:
+    FlywheelState getCurrentState();
+    
 private:
     // Hardware constants, not specific to any particular flywheel subsystem.
     static inline constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
@@ -60,7 +64,7 @@ private:
 
     float currentThrottle_;
 
-    bool firing_;
+    FlywheelState state_; /// TODO: Consider replacing with the flywheel state.
 };  // class FlywheelSubsystem
 
 }  // namespace control::flywheel

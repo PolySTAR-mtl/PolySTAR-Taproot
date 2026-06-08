@@ -1,5 +1,5 @@
-#ifndef FLYWHEEL_CONSTANTS_HPP_
-#define FLYWHEEL_CONSTANTS_HPP_
+#ifndef FLYWHEEL_CONSTANTS_HPP
+#define FLYWHEEL_CONSTANTS_HPP
 
 #include "tap/motor/dji_motor.hpp"
 #include "subsystems/flywheel/config/flywheel_config.hpp"
