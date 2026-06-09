@@ -4,7 +4,7 @@
 #include <cstdint>
 #include "tap/motor/dji_motor.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
-#include "../turret_constants.hpp"
+#include "subsystems/turret/config/turret_constants.hpp"
 
 
 namespace turret

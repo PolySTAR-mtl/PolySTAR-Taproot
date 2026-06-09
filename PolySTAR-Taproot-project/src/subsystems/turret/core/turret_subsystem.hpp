@@ -5,7 +5,7 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "control/drivers/drivers.hpp"
-#include "subsystems/turret/turret_constants.hpp"
+#include "subsystems/turret/config/turret_constants.hpp"
 #include "subsystems/turret/algorithms/cascaded_pid.hpp"
 
 using turret::algorithms::CascadedPid;

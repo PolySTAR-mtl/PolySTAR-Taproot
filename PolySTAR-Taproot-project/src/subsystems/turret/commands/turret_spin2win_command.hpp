@@ -5,6 +5,7 @@
 
 #include "subsystems/turret/core/turret_subsystem.hpp"
 #include "subsystems/turret/modes/operation_mode.hpp"
+#include "subsystems/turret/algorithms/imu_interpreter.hpp"
 #include "control/drivers/drivers.hpp"
 
 namespace control::turret
@@ -38,9 +39,13 @@ protected:
 
     src::Drivers *drivers;
 
+    // Need to set to tap::arch::clock::getTimeMilliseconds() on command initialization
+    uint32_t prevUpdate;
+
     friend struct OperationMode;
     OperationMode *const operationMode = nullptr;
-    ManualAttributes *manualAttributes;
+
+    algorithms::ImuInterpreter imuInterpreter;
 
 };  // Spin2WinAimCommand
 

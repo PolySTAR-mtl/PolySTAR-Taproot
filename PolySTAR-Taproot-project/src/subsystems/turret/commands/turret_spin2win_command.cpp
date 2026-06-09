@@ -11,8 +11,9 @@ namespace control::turret
 Spin2WinAimCommand::Spin2WinAimCommand(
     TurretSubsystem *const turret,
     src::Drivers *drivers)
-    : turret(turret),
-      drivers(drivers)
+    : turret(turret)
+    , drivers(drivers)
+    , imuInterpreter(drivers)
 {
     if (turret == nullptr)
     {
@@ -23,7 +24,7 @@ Spin2WinAimCommand::Spin2WinAimCommand(
 
 void Spin2WinAimCommand::initialize()
 {
-    manualAttributes->prevUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevUpdate = tap::arch::clock::getTimeMilliseconds();
     // WAIT FOR ELHAJ'S RESPONSE
     // this->turret->setIsSpin2WinMode(true);
 }

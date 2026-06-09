@@ -42,7 +42,6 @@ protected:
 
     friend struct OperationMode;
     OperationMode *const operationMode = nullptr;
-    AutoAttributes *autoAttributes;
 
     // Should be replaced with matchStarted flag by reading refserial data
     tap::arch::MilliTimeout startMatchTimeout;

@@ -23,7 +23,7 @@ HeroAimCommand::HeroAimCommand(
 
 void HeroAimCommand::initialize()
 {
-    manualAttributes->prevUpdate = tap::arch::clock::getTimeMilliseconds();
+    prevUpdate = tap::arch::clock::getTimeMilliseconds();
     // WAIT FOR ELHAJ'S RESPONSE
     // this->turret->setIsSpin2WinMode(true);
 }

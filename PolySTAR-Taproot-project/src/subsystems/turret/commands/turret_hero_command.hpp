@@ -38,9 +38,13 @@ protected:
 
     src::Drivers *drivers;
 
+    // Need to set to tap::arch::clock::getTimeMilliseconds() on command initialization
+    uint32_t prevUpdate;
+
     friend struct OperationMode;
     OperationMode *const operationMode = nullptr;
-    ManualAttributes *manualAttributes;
+
+    algorithms::ImuInterpreter imuInterpreter;
 
 };  // HeroAimCommand
 
