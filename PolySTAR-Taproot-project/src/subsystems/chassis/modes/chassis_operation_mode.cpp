@@ -81,8 +81,27 @@ namespace control::chassis
             fabs(r) >= CHASSIS_DEAD_ZONE ? r : 0.0f);
     }
 
-    void ChassisOperationMode::autoMode() 
+    void ChassisOperationMode::autoMode(ChassisSentryCommand* command) 
     {
-       
+        if (command == nullptr) {
+            return;
+        }
+
+        auto& drivers = command->drivers;
+        auto& chassis = command->chassis;
+        auto& matchTimeout = command->startMatchTimeout;
+
+        if (!matchTimeout.isExpired())
+        {
+            chassis->setTargetOutput(0, 0, 0);
+            return;
+        }
+        drivers->leds.set(tap::gpio::Leds::A, true);
+
+        const auto& movementData = drivers->cvHandler.getMovementData();
+        const float x = movementData.xSetpoint*VX_TO_X;
+        const float y = movementData.ySetpoint*VY_TO_Y;
+        const float r = movementData.rSetpoint*W_TO_R;
+        chassis->setTargetOutput(x,y,r);
     }
 } // namespace control::chassis

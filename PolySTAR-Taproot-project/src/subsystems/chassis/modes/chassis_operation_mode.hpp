@@ -3,6 +3,7 @@
 
 #include "../commands/chassis_spin2win_command.hpp"
 #include "../commands/chassis_hero_command.hpp"
+#include "../commands/chassis_sentry_command.hpp"
 
 
 namespace control::chassis
@@ -12,7 +13,7 @@ struct ChassisOperationMode
 {
     static void manualMode(ChassisSpin2winCommand* command);
     static void manualMode(ChassisHeroCommand* command);
-    static void autoMode();
+    static void autoMode(ChassisSentryCommand* command);
 }
 
 } // namespace control::chassis

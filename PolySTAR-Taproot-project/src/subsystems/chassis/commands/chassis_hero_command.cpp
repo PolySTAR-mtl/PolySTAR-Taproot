@@ -24,15 +24,13 @@ ChassisHeroCommand::ChassisHeroCommand(
         return;
     }
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(chassis));
-
-    //TODO: Intialize the operation Mode
 }
 
 void ChassisHeroCommand::initialize() {}
 
 void ChassisHeroCommand::execute()
 {
-    operationMode->manualMode(this);
+    operationMode.manualMode(this);
 }
 
 void ChassisHeroCommand::end(bool) 

@@ -51,7 +51,7 @@ private:
 
     friend struct ChassisOperationMode;
 
-    ChassisOperationMode *operationMode = nullptr;
+    ChassisOperationMode operationMode {};
 };  // ChassisSpin2winCommand
 
 }  // namespace chassis

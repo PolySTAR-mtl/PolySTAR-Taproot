@@ -41,7 +41,7 @@ private:
 
     friend struct ChassisOperationMode;
     
-    ChassisOperationMode *operationMode;
+    ChassisOperationMode operationMode {};
 
     bool m_isMoving = false;
 

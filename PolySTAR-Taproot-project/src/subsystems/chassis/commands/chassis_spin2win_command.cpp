@@ -30,7 +30,7 @@ void ChassisSpin2winCommand::initialize() {}
 
 void ChassisSpin2winCommand::execute()
 {
-    operationMode->manualMode(this);
+    operationMode.manualMode(this);
 }
 
 void ChassisSpin2winCommand::end(bool) 
