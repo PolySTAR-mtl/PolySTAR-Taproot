@@ -19,8 +19,8 @@ namespace turret
 void TurretSubsystem::initialize()
 {
     yawMotor->initialize();
-    // lqrTurret.setGravityFeedforward(gravityCounteract);
-    lqrTurret.setGravityFeedforward(0.0f); // not tuned yet 
+    lqrTurret.setGravityFeedforward(812.0f); //gravityCounteract
+    //lqrTurret.setGravityFeedforward(0.0f); // not tuned yet 
 
     pitchMotor.initialize();
 
@@ -77,8 +77,9 @@ void TurretSubsystem::runYawController(uint32_t dt) {
     int16_t currentRPM = yawMotor->getInternalEncoder().getShaftRPM();
 
     // Convert the raw motor hardware numbers into standard math units (radians)
-    float errDeg = static_cast<float>(error) * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
-    float errRad = errDeg * DEG_TO_RAD;
+    // float errDeg = static_cast<float>(error) * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
+    //float errRad = errDeg * DEG_TO_RAD;
+    float errRad = static_cast<float>(error) * M_TWOPI / DjiMotorEncoder::ENC_RESOLUTION;
     float omega = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
     // If we are super close to the target and barely moving, turn the motor off so it doesn't jitter
@@ -102,15 +103,18 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
     int16_t currentRPM = pitchMotor.getInternalEncoder().getShaftRPM();
 
     // Convert the raw motor hardware numbers into standard math units (radians).
-    float errDeg = static_cast<float>(error) * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
-    float errRad = errDeg * DEG_TO_RAD;
+    // float errDeg = static_cast<float>(error) * 360.0f / DjiMotorEncoder::ENC_RESOLUTION;
+    // float errRad = errDeg * DEG_TO_RAD;
+    float errRad = static_cast<float>(error) * M_TWOPI / DjiMotorEncoder::ENC_RESOLUTION;
     float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
     // Absolute pitch angle from neutral position (ideally about horizontal), in radians.
     // Used only for the gravity feed-forward; the LQR itself sees the error.
-    float pitchOffsetTicks = static_cast<float>(currentPitchTicks)
-                           - static_cast<float>(PITCH_NEUTRAL_POS);
-    float pitchAngleRad = pitchOffsetTicks * 360.0f / DjiMotorEncoder::ENC_RESOLUTION * DEG_TO_RAD;
+    int32_t pitchOffsetTicks = currentPitchTicks - static_cast<int32_t>(PITCH_NEUTRAL_POS);
+    if (abs(pitchOffsetTicks) >= DjiMotorEncoder::ENC_RESOLUTION / 2) {
+        pitchOffsetTicks = pitchOffsetTicks - DjiMotorEncoder::ENC_RESOLUTION * getSign(pitchOffsetTicks);
+    }
+    float pitchAngleRad = static_cast<float>(pitchOffsetTicks) * 360.0f / DjiMotorEncoder::ENC_RESOLUTION * DEG_TO_RAD;
 
     // If we are super close to the target and barely moving, suppress the LQR
     // output but keep the gravity feed-forward so the gun still holds position
@@ -137,7 +141,7 @@ void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch)
 #else
     yawDesiredPos = limitVal<uint16_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
 #endif
-    pitchDesiredPos = limitVal<uint16_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
+        pitchDesiredPos = limitVal<uint16_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
 }
 
 /*
@@ -161,11 +165,16 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
     uint16_t currentYaw = yawMotor->getInternalEncoder().getEncoder().getWrappedValue();
     uint16_t currentPitch = pitchMotor.getInternalEncoder().getEncoder().getWrappedValue();
 
-    uint16_t newYaw = currentYaw   + static_cast<uint16_t>(yawDelta   * YAW_SCALE_FACTOR);
-    uint16_t newPitch = currentPitch + static_cast<uint16_t>(pitchDelta  * PITCH_SCALE_FACTOR);
+    int32_t tempYaw = static_cast<int32_t>(currentYaw) + static_cast<int32_t>(yawDelta * YAW_SCALE_FACTOR);
+    int32_t tempPitch = static_cast<int32_t>(currentPitch) + static_cast<int32_t>(pitchDelta * PITCH_SCALE_FACTOR);
+
+    int32_t res = DjiMotorEncoder::ENC_RESOLUTION; 
+    
+    uint16_t newYaw = static_cast<uint16_t>(((tempYaw % res) + res) % res);
+    uint16_t newPitch = static_cast<uint16_t>(((tempPitch % res) + res) % res);
 
     setAbsoluteOutput(
-        yawDelta == 0 ? yawDesiredPos : newYaw,
+        yawDelta   == 0 ? yawDesiredPos : newYaw,
         pitchDelta == 0 ? pitchDesiredPos : newPitch);
 }
 
