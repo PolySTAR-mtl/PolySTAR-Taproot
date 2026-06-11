@@ -89,7 +89,7 @@ namespace control::chassis
         const float chassisRad = atan2(inputs.x, inputs.y);
 
         // Turret yaw orientation 
-        int64_t yawDelta = command->turretYawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS;
+        const int64_t yawDelta = command->turretYawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS;
         float yawDeltaRad = tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi / 180;
 
         const float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
