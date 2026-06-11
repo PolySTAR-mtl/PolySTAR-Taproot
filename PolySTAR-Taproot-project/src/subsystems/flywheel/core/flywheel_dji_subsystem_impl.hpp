@@ -8,25 +8,22 @@ namespace control::flywheel
 
 template <FireMode M>
 inline void FlywheelDjiSubsystem::initializeFiring() {
+    startingTs_ = tap::arch::clock::getTimeMilliseconds();
     if constexpr (M == FireMode::Auto) {
-        isKickstartDone_ = false;
-        startingTs_ = tap::arch::clock::getTimeMilliseconds();
         startMatchTimeout_.restart(START_MATCH_WAIT_TIME);
     }
     else if constexpr (M == FireMode::Normal) {
         sendStartingBoost();
-        isKickstartDone_ = false;
-        startingTs_ = tap::arch::clock::getTimeMilliseconds();
     }
 }
 
 template <FireMode M>
 inline void FlywheelDjiSubsystem::executeFiring() {
+    FlywheelState state = getState();
     if constexpr (M == FireMode::Auto) {
         if (!startMatchTimeout_.isExpired())
         {
             stopFiring();
-            isKickstartDone_ = false;
             return;
         }
 
@@ -35,7 +32,6 @@ inline void FlywheelDjiSubsystem::executeFiring() {
         if (!drivers_->cvHandler.shouldShoot())
         {
             stopFiring();
-            isKickstartDone_ = false;
             return;
         }
 
@@ -45,18 +41,17 @@ inline void FlywheelDjiSubsystem::executeFiring() {
         {
             sendStartingBoost();
         }
-        else if (!isKickstartDone_)
+        else if (state == FlywheelState::Starting)
         {
             startFiring();
             isKickstartDone_ = true;
         }
     }
     else if constexpr (M == FireMode::Normal) {
-        if (!isKickstartDone_ &&
+        if (state == FlywheelState::Starting &&
             tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
         {
             startFiring();
-            isKickstartDone_ = true;
         }
     }
 }

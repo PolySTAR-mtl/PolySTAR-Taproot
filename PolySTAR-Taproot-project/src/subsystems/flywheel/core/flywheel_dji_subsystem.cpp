@@ -22,7 +22,6 @@ FlywheelDjiSubsystem::FlywheelDjiSubsystem(src::Drivers *drivers)
         leftMotor_{drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"},
         rightMotor_{drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"},
         currentDjiSpeed_{ACTIVE_FLYWHEEL_CONFIG.motorLowSpeed}, // TODO: change speed here
-        isKickstartDone_{},
         startingTs_{},
         startMatchTimeout_{}
 {
@@ -36,20 +35,23 @@ void FlywheelDjiSubsystem::initialize() {
 
 void FlywheelDjiSubsystem::refresh() {}
 
-void FlywheelDjiSubsystem::startFiring() {
+void FlywheelDjiSubsystem::startFiring()
+{
     FlywheelSubsystem::startFiring();
     leftMotor_.setDesiredOutput(currentDjiSpeed_);
     rightMotor_.setDesiredOutput(currentDjiSpeed_);
     /// TODO: Add a "Start firing\n" log message.
 }
 
-void FlywheelDjiSubsystem::stopFiring() {
+void FlywheelDjiSubsystem::stopFiring()
+{
     FlywheelSubsystem::stopFiring();
     rightMotor_.setDesiredOutput(0);
     leftMotor_.setDesiredOutput(0);
 }
 
-void FlywheelDjiSubsystem::sendStartingBoost() {
+void FlywheelDjiSubsystem::sendStartingBoost()
+{
     rightMotor_.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
     leftMotor_.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
 }

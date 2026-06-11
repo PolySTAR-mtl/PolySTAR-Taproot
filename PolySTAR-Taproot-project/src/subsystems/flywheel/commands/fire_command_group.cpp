@@ -31,11 +31,10 @@ void FireCommandGroup::initialize() {
 
 void FireCommandGroup::execute()
 {
-    if ( !feederIsFeeding_ && feederDelayTimer_.execute())
-        {
-            comprisedCommandScheduler.addCommand(&feedCommand_);
-            feederIsFeeding_ = true;
-        }
+    if (!feederIsFeeding_ && feederDelayTimer_.execute()) {
+        comprisedCommandScheduler.addCommand(&feedCommand_);
+        feederIsFeeding_ = true;
+    }
     this->comprisedCommandScheduler.run();
 }
 
