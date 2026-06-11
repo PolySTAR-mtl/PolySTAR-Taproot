@@ -1,4 +1,5 @@
 #include "subsystems/turret/core/turret_subsystem.hpp"
+#include "subsystems/turret/config/turret_config.hpp"
 
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
@@ -17,12 +18,12 @@ namespace control::turret
 TurretSubsystem::TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor)
         : tap::control::Subsystem(drivers),
           yawMotor(yawMotor),
-          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
-          cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
-          cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
-          yawDesiredPos(YAW_NEUTRAL_POS),
-          pitchDesiredPos(PITCH_NEUTRAL_POS),
-          yawRpmPid(YAW_INNER_PID_CONFIG) {}
+          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, ACTIVE_TURRET_CONFIG.pitchIsInverted, "pitch motor"),
+          cascadedPitchController(ACTIVE_TURRET_CONFIG.pitchOuterPidConfig, ACTIVE_TURRET_CONFIG.pitchInnerPidConfig),
+          cascadedYawController(ACTIVE_TURRET_CONFIG.yawOuterPidConfig, ACTIVE_TURRET_CONFIG.yawInnerPidConfig),
+          yawDesiredPos(ACTIVE_TURRET_CONFIG.yawNeutralPos),
+          pitchDesiredPos(ACTIVE_TURRET_CONFIG.pitchNeutralPos),
+          yawRpmPid(ACTIVE_TURRET_CONFIG.yawInnerPidConfig) {}
 
 void TurretSubsystem::initialize() {
     yawMotor->initialize();
@@ -112,17 +113,27 @@ void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) {
 #ifdef TARGET_SPIN_TO_WIN
     yawDesiredPos = yaw;
 #else
-    yawDesiredPos = limitVal<uint16_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
+    yawDesiredPos = limitVal<uint16_t>(
+        yaw,
+        ACTIVE_TURRET_CONFIG.yawNeutralPos - ACTIVE_TURRET_CONFIG.yawRange,
+        ACTIVE_TURRET_CONFIG.yawNeutralPos + ACTIVE_TURRET_CONFIG.yawRange
+    );
 #endif
-    pitchDesiredPos = limitVal<uint16_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
+    pitchDesiredPos = limitVal<uint16_t>(
+        pitch,
+        ACTIVE_TURRET_CONFIG.pitchNeutralPos - ACTIVE_TURRET_CONFIG.pitchRange,
+        ACTIVE_TURRET_CONFIG.pitchNeutralPos + ACTIVE_TURRET_CONFIG.pitchRange
+    );
 }
 
 /*
     Set desired position setpoints for turret. Values are in degrees.
 */
 void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch) {
-    setAbsoluteOutput(YAW_NEUTRAL_POS + yawMotor->degreesToEncoder<int64_t>(yaw),
-                      PITCH_NEUTRAL_POS + pitchMotor.degreesToEncoder<int64_t>(pitch));
+    setAbsoluteOutput(
+        ACTIVE_TURRET_CONFIG.yawNeutralPos + yawMotor->degreesToEncoder<int64_t>(yaw),
+        ACTIVE_TURRET_CONFIG.pitchNeutralPos + pitchMotor.degreesToEncoder<int64_t>(pitch)
+    );
 }
 
 /*
@@ -132,8 +143,8 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta) {
     uint16_t currentYaw = yawMotor->getEncoderWrapped();
     uint16_t currentPitch = pitchMotor.getEncoderWrapped();
 
-    uint16_t newYaw = currentYaw + yawDelta * YAW_SCALE_FACTOR;
-    uint16_t newPitch = currentPitch + pitchDelta * PITCH_SCALE_FACTOR;
+    uint16_t newYaw = currentYaw + yawDelta * ACTIVE_TURRET_CONFIG.yawScaleFactor;
+    uint16_t newPitch = currentPitch + pitchDelta * ACTIVE_TURRET_CONFIG.pitchScaleFactor;
 
     // Don't update the setpoint if input is zero
     // This prevents the turret from drifting when no input is given
@@ -148,8 +159,8 @@ void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta) {
 void TurretSubsystem::sendCVUpdate() {
 
     // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
-    float currentBodyYawDeg = yawMotor->encoderToDegrees<int64_t>(yawMotor->getEncoderUnwrapped()-YAW_NEUTRAL_POS);
-    float currentBodyPitchDeg = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderWrapped()-PITCH_NEUTRAL_POS);
+    float currentBodyYawDeg = yawMotor->encoderToDegrees<int64_t>(yawMotor->getEncoderUnwrapped() - ACTIVE_TURRET_CONFIG.yawNeutralPos);
+    float currentBodyPitchDeg = pitchMotor.encoderToDegrees<int64_t>(pitchMotor.getEncoderWrapped() - ACTIVE_TURRET_CONFIG.pitchNeutralPos);
 
     src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage;
     // CV protocol expects angles in milliradians
@@ -168,15 +179,15 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
 
     if (sendYaw) {
         nBytes = sprintf (buffer, "Yaw: %i, Setpoint: %i\n",
-                                (int)(yawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS),
-                                (int)(yawDesiredPos - YAW_NEUTRAL_POS));
+                                (int)(yawMotor->getEncoderWrapped() - ACTIVE_TURRET_CONFIG.yawNeutralPos),
+                                (int)(yawDesiredPos - ACTIVE_TURRET_CONFIG.yawNeutralPos));
         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
     }
 
     if (sendPitch) {
         nBytes = sprintf (buffer, "Pitch: %i, Setpoint: %i\n",
-                                (int)(pitchMotor.getEncoderWrapped() - PITCH_NEUTRAL_POS),
-                                (int)(pitchDesiredPos - PITCH_NEUTRAL_POS));
+                                (int)(pitchMotor.getEncoderWrapped() - ACTIVE_TURRET_CONFIG.pitchNeutralPos),
+                                (int)(pitchDesiredPos - ACTIVE_TURRET_CONFIG.pitchNeutralPos));
         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
     }
 }

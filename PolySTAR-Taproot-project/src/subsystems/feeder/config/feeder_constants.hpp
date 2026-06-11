@@ -3,6 +3,7 @@
 
 #include "algorithms/feed_forward.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
+#include "tap/motor/dji_motor.hpp"
 
 /**
  * Feeder position PID: A PID controller for feeder position. The PID parameters for the
@@ -38,7 +39,7 @@ static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
 /**
  * Unit conversion constants
  */
-static constexpr float DEGREE_TO_TICK = 8192.0f * 36.0f / 360.0f; // 8192 Ticks per turn, 36:1 gear ratio
+static constexpr float DEGREE_TO_TICK = DjiMotor::ENC_RESOLUTION * 36.0f / 360.0f; // 8192 Ticks per turn, 36:1 gear ratio
 
 /**
  * Feeder PID constants

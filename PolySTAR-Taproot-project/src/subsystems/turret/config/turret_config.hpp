@@ -20,39 +20,39 @@ struct TurretConfig {
     /**
      * Neutral position values from YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
      */
-    uint16_t YAW_NEUTRAL_POS;
-    uint16_t PITCH_NEUTRAL_POS;
+    uint16_t yawNeutralPos;
+    uint16_t pitchNeutralPos;
 
     /**
      * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
      */
-    float YAW_RANGE_DEGREES;
-    float PITCH_RANGE_DEGREES;
+    float yawRangeDegrees;
+    float pitchRangeDegrees;
 
     /**
      * Range values in encoder ticks, where 0..8191 is a full revolution
      */
-    uint16_t YAW_RANGE;
-    uint16_t PITCH_RANGE;
+    uint16_t yawRange;
+    uint16_t pitchRange;
 
     /**
      * Scale factor for converting user inputs into position setpoint deltas.
      * In other words, input sensitivity.
      */
-    float YAW_SCALE_FACTOR;
-    float PITCH_SCALE_FACTOR;
+    float yawScaleFactor;
+    float pitchScaleFactor;
 
     /*
      * Mouse sensitivity
      */
-    float TURRET_MOUSE_X_SCALE_FACTOR;
-    float TURRET_MOUSE_Y_SCALE_FACTOR;
+    float turretMouseXScaleFactor;
+    float turretMouseYScaleFactor;
 
     /**
      * Inverted directions
      */
-    float YAW_IS_INVERTED;
-    float PITCH_IS_INVERTED;
+    float yawIsInverted;
+    float pitchIsInverted;
 
     /**
      * Helper to keep config constexpr

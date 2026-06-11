@@ -75,23 +75,23 @@ constexpr TurretConfig SENTRY_TURRET_CONFIG = {
     .yawOuterPidConfig = YAW_OUTER_PID_CONFIG,
     .yawInnerPidConfig = YAW_INNER_PID_CONFIG,
 
-    .YAW_NEUTRAL_POS = 6900,
-    .PITCH_NEUTRAL_POS = 3900,
+    .yawNeutralPos = 6900,
+    .pitchNeutralPos = 3900,
 
-    .YAW_RANGE_DEGREES = 90,
-    .PITCH_RANGE_DEGREES = 20,
+    .yawRangeDegrees = 90,
+    .pitchRangeDegrees = 20,
 
-    .YAW_RANGE = TurretConfig::degreesToTicks(YAW_RANGE_DEGREES),
-    .PITCH_RANGE = TurretConfig::degreesToTicks(PITCH_RANGE_DEGREES),
+    .yawRange = TurretConfig::degreesToTicks(YAW_RANGE_DEGREES),
+    .pitchRange = TurretConfig::degreesToTicks(PITCH_RANGE_DEGREES),
 
-    .YAW_SCALE_FACTOR = 500.0f,
-    .PITCH_SCALE_FACTOR = 300.0f,
+    .yawScaleFactor = 500.0f,
+    .pitchScaleFactor = 300.0f,
 
-    .TURRET_MOUSE_X_SCALE_FACTOR = 0.05f,
-    .TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f,
+    .turretMouseXScaleFactor = 0.05f,
+    .turretMouseYScaleFactor = -0.05f,
 
-    .YAW_IS_INVERTED = true,
-    .PITCH_IS_INVERTED = true
+    .yawIsInverted = true,
+    .pitchIsInverted = true
 };
 
 } // namespace control::turret

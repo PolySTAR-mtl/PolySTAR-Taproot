@@ -2,6 +2,7 @@
 #define TURRET_CONSTANTS_HPP
 
 #include "tap/communication/serial/uart.hpp"
+#include "tap/motor/dji_motor.hpp"
 
 namespace control::turret {
 
@@ -40,7 +41,7 @@ static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
 static constexpr float RPM_TO_DEGPERMS = 0.006;
 static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
 static constexpr float MRAD_TO_DEGREES = 0.0572958;
-static constexpr float DEGREE_TO_TICK = 8192.0f / 360.0f; // 8192 Ticks per turn, 1:1 gear ratio
+static constexpr float DEGREE_TO_TICK = DjiMotor::ENC_RESOLUTION / 360.0f; // 8192 Ticks per turn, 1:1 gear ratio
 
 /**
  * Spin2win stabilization constants
