@@ -9,7 +9,7 @@
 
 namespace control::turret
 {
-class HeroAimCommand : public tap::control::Command
+class TurretHeroAimCommand : public tap::control::Command
 {
 public:
     /**
@@ -19,11 +19,11 @@ public:
      * @param[in] turret a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    HeroAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
+    TurretHeroAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
-    HeroAimCommand(const HeroAimCommand &other) = delete;
+    TurretHeroAimCommand(const TurretHeroAimCommand &other) = delete;
 
-    HeroAimCommand &operator=(const HeroAimCommand &other) = delete;
+    TurretHeroAimCommand &operator=(const TurretHeroAimCommand &other) = delete;
 
     void initialize() override;
 

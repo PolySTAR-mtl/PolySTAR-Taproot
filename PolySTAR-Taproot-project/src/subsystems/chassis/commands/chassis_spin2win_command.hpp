@@ -3,15 +3,13 @@
 
 #include "tap/control/command.hpp"
 
-#include "../chassis_spin2win_subsystem.hpp"
+#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
-#include "../modes/chassis_operation_mode.hpp"
+#include "subsystems/chassis/modes/chassis_operation_mode.hpp"
 
-namespace control
+namespace control::chassis
 {
-namespace chassis
-{
-class ChassisSpin2winCommand : public tap::control::Command
+class ChassisSpin2winDriveCommand : public tap::control::Command
 {
 public:
     /**
@@ -21,11 +19,11 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisSpin2winCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
+    ChassisSpin2winDriveCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
 
-    ChassisSpin2winCommand(const ChassisSpin2winCommand &other) = delete;
+    ChassisSpin2winDriveCommand(const ChassisSpin2winDriveCommand &other) = delete;
 
-    ChassisSpin2winCommand &operator=(const ChassisSpin2winCommand &other) = delete;
+    ChassisSpin2winDriveCommand &operator=(const ChassisSpin2winDriveCommand &other) = delete;
 
     void initialize() override;
 
@@ -54,9 +52,7 @@ private:
     ChassisOperationMode operationMode {};
 };  // ChassisSpin2winCommand
 
-}  // namespace chassis
-
-}  // namespace control
+}  // namespace control::chassis
 
 #endif  // CHASSIS_DRIVE_COMMAND_HPP_
 

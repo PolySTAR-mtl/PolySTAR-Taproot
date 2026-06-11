@@ -22,7 +22,7 @@ namespace control::turret
         command->turret->setAbsoluteOutputDegrees(yawSetpoint, pitchSetpoint);
     }
 
-    void OperationMode::manualMode(Spin2WinAimCommand* command) {
+    void OperationMode::manualMode(TurretSpin2WinAimCommand* command) {
         if (command == nullptr) {
             return;
         }
@@ -42,7 +42,7 @@ namespace control::turret
             fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
     }
 
-    void OperationMode::manualMode(HeroAimCommand* command) {
+    void OperationMode::manualMode(TurretHeroAimCommand* command) {
         if (command == nullptr) {
             return;
         }

@@ -30,6 +30,8 @@ consteval FeederConfig getFeederConfig<target::RobotTarget::Standard>() {
     return STANDARD_FEEDER_CONFIG;
 }
 
+constexpr FeederConfig ACTIVE_FEEDER_CONFIG = getFeederConfig<target::ROBOT_TARGET>();
+
 }; // namespace control::feeder
 
 #endif

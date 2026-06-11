@@ -30,7 +30,7 @@ struct TurretConfig {
     float pitchRangeDegrees;
 
     /**
-     * Range values in encoder ticks, where 0..8191 is a full revolution
+     * Range values in encoder ticks, where 0.8191 is a full revolution
      */
     uint16_t yawRange;
     uint16_t pitchRange;
@@ -67,6 +67,6 @@ consteval TurretConfig getTurretConfig();
 
 } // namespace control::turret
 
-#include "turret_config_impl.hpp"
+#include "subsystems/turret/config/turret_config_impl.hpp"
 
 #endif // TURRET_CONFIG_HPP

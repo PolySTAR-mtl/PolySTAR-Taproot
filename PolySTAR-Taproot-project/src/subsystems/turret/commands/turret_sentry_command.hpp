@@ -7,10 +7,9 @@
 #include "subsystems/turret/modes/operation_mode.hpp"
 #include "control/drivers/drivers.hpp"
 
-namespace control
+namespace control::turret
 {
-namespace turret
-{
+
 class SentryAimCommand : public tap::control::Command
 {
 public:
@@ -48,9 +47,7 @@ protected:
 
 };  // SentryAimCommand
 
-}  // namespace turret
-
-}  // namespace control
+}  // namespace control::turret
 
 #endif  // SENTRY_AIM_COMMAND_HPP_
 

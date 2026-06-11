@@ -3,15 +3,14 @@
 
 #include "tap/control/command.hpp"
 
-#include "../chassis_subsystem.hpp"
+#include "subsystems/chassis/chassis_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
-#include "../modes/chassis_operation_mode.hpp"
+#include "subsystems/chassis/modes/chassis_operation_mode.hpp"
 #include "tap/architecture/timeout.hpp"
-
 
 namespace control::chassis 
 {
-class ChassisSentryCommand : public tap::control::Command
+class ChassisSentryDriveCommand : public tap::control::Command
 {
 public:
     /**
@@ -21,11 +20,11 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisSentryCommand(ChassisSubsystem *const chassis, src::Drivers *drivers);
+    ChassisSentryDriveCommand(ChassisSubsystem *const chassis, src::Drivers *drivers);
 
-    ChassisSentryCommand(const ChassisSentryCommand &other) = delete;
+    ChassisSentryDriveCommand(const ChassisSentryDriveCommand &other) = delete;
 
-    ChassisSentryCommand &operator=(const ChassisSentryCommand &other) = delete;
+    ChassisSentryDriveCommand &operator=(const ChassisSentryDriveCommand &other) = delete;
 
     void initialize() override;
 
@@ -49,6 +48,7 @@ private:
     tap::arch::MilliTimeout startMatchTimeout;
 
 }; // ChassisSentryCommand
+
 } // namespace control::chassis
 
 #endif // CHASSIS_SENTRY_COMMAND_HPP

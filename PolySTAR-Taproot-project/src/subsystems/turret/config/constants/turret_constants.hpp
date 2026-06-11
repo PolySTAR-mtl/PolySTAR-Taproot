@@ -41,7 +41,7 @@ static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
 static constexpr float RPM_TO_DEGPERMS = 0.006;
 static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
 static constexpr float MRAD_TO_DEGREES = 0.0572958;
-static constexpr float DEGREE_TO_TICK = DjiMotor::ENC_RESOLUTION / 360.0f; // 8192 Ticks per turn, 1:1 gear ratio
+static constexpr float DEGREE_TO_TICK = tap::motor::DjiMotor::ENC_RESOLUTION / 360.0f; // 8192 Ticks per turn, 1:1 gear ratio
 
 /**
  * Spin2win stabilization constants
@@ -49,8 +49,8 @@ static constexpr float DEGREE_TO_TICK = DjiMotor::ENC_RESOLUTION / 360.0f; // 81
  */
 static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
-const constexpr float GZ_STABILIZATION_CONSTANT = 0.47;
-const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1;
+static constexpr float GZ_STABILIZATION_CONSTANT = 0.47;
+static constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1;
 
 } // namespace control::turret
 

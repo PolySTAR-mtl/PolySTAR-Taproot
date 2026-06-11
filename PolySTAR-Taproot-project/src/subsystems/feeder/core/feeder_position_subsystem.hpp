@@ -9,11 +9,11 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "subsystems/feeder/config/feeder_constants.hpp"
+#include "subsystems/feeder/config/feeder_config.hpp"
 
-namespace control
+namespace control::feeder
 {
-namespace feeder
-{
+
 /**
  * A bare bones Subsystem for interacting with a feeder.
  */
@@ -27,10 +27,10 @@ public:
      */
     FeederPositionSubsystem(tap::Drivers *drivers)
         : tap::control::Subsystem(drivers),
-          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, IS_FEEDER_INVERTED, "feeder motor"),
+          feederMotor(drivers, FEEDER_MOTOR_ID, ACTIVE_FEEDER_CONFIG.canBusMotors, ACTIVE_FEEDER_CONFIG.isFeederInverted, "feeder motor"),
           feederPID(FEEDER_PID_CONFIG),
           feederFF(FEEDER_FF_CONFIG),
-          jamChecker(this, JAM_CHECKER_TOLERANCE_TICK, JAM_CHECKER_TOLERANCE_MS)
+          jamChecker(this, ACTIVE_FEEDER_CONFIG.jamCheckerToleranceTick, ACTIVE_FEEDER_CONFIG.jamCheckerToleranceMs)
     {
     }
 
@@ -69,10 +69,7 @@ public:
     inline float getVelocity() override;
 
 private:
-    ///< Hardware constants, not specific to any particular feeder.
-    static constexpr tap::motor::MotorId FEEDER_MOTOR_ID = tap::motor::MOTOR8;
-
-    ///< Motors.  Use these to interact with any dji style motors.
+    // Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor feederMotor;
     
     // PID controller for position feedback from motor
@@ -94,8 +91,6 @@ private:
 
 };  // class FeederSubsystem
 
-}  // namespace feeder
-
-}  // namespace control
+}  // namespace feeder::control
 
 #endif  // FEEDER_SUBSYSTEM_HPP_

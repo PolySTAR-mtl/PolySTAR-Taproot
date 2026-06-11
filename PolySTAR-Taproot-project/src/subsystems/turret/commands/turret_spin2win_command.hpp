@@ -10,7 +10,7 @@
 
 namespace control::turret
 {
-class Spin2WinAimCommand : public tap::control::Command
+class TurretSpin2WinAimCommand : public tap::control::Command
 {
 public:
     /**
@@ -20,11 +20,11 @@ public:
      * @param[in] turret a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    Spin2WinAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
+    TurretSpin2WinAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
-    Spin2WinAimCommand(const Spin2WinAimCommand &other) = delete;
+    TurretSpin2WinAimCommand(const TurretSpin2WinAimCommand &other) = delete;
 
-    Spin2WinAimCommand &operator=(const Spin2WinAimCommand &other) = delete;
+    TurretSpin2WinAimCommand &operator=(const TurretSpin2WinAimCommand &other) = delete;
 
     void initialize() override;
 

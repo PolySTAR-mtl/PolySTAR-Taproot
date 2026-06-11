@@ -10,7 +10,7 @@ namespace control::turret {
 /**
  * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
  */
-static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SPIN_TO_WIN_PITCH_OUTER_PID_CONFIG(
     0.3f, // kP
     0.0f, // kI
     0.8f, // kD
@@ -24,7 +24,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SPIN_TO_WIN_PITCH_INNER_PID_CONFIG(
     70.0f, // kP
     0.1f,  // kI
     0.0f,  // kD
@@ -38,7 +38,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SPIN_TO_WIN_YAW_OUTER_PID_CONFIG(
     0.08f, // kP
     0.0f, // kI
     0.45f, // kD
@@ -52,7 +52,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SPIN_TO_WIN_YAW_INNER_PID_CONFIG(
     50.0f, // kP
     0.0f,  // kI
     0.0f,  // kD
@@ -67,22 +67,29 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 );
 
 /**
+ * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
+ * Note: Needs to be out of the config, otherwise it can't be constexpr
+ */
+static constexpr float SPIN_TO_WIN_YAW_RANGE_DEGREES = 90;
+static constexpr float SPIN_TO_WIN_PITCH_RANGE_DEGREES = 20;
+
+/**
  * Spin To Win turret config
  */
 constexpr TurretConfig SPIN_TO_WIN_TURRET_CONFIG = {
-    .pitchOuterPidConfig = PITCH_OUTER_PID_CONFIG,
-    .pitchInnerPidConfig = PITCH_INNER_PID_CONFIG,
-    .yawOuterPidConfig = YAW_OUTER_PID_CONFIG,
-    .yawInnerPidConfig = YAW_INNER_PID_CONFIG,
+    .pitchOuterPidConfig = SPIN_TO_WIN_PITCH_OUTER_PID_CONFIG,
+    .pitchInnerPidConfig = SPIN_TO_WIN_PITCH_INNER_PID_CONFIG,
+    .yawOuterPidConfig = SPIN_TO_WIN_YAW_OUTER_PID_CONFIG,
+    .yawInnerPidConfig = SPIN_TO_WIN_YAW_INNER_PID_CONFIG,
 
     .yawNeutralPos = 4755,
     .pitchNeutralPos = 6515,
 
-    .yawRangeDegrees = 90,
-    .pitchRangeDegrees = 20,
+    .yawRangeDegrees = SPIN_TO_WIN_YAW_RANGE_DEGREES,
+    .pitchRangeDegrees = SPIN_TO_WIN_PITCH_RANGE_DEGREES,
 
-    .yawRange = TurretConfig::degreesToTicks(YAW_RANGE_DEGREES),
-    .pitchRange = TurretConfig::degreesToTicks(PITCH_RANGE_DEGREES),
+    .yawRange = TurretConfig::degreesToTicks(SPIN_TO_WIN_YAW_RANGE_DEGREES),
+    .pitchRange = TurretConfig::degreesToTicks(SPIN_TO_WIN_PITCH_RANGE_DEGREES),
 
     .yawScaleFactor = 900.0f,
     .pitchScaleFactor = 400.0f,

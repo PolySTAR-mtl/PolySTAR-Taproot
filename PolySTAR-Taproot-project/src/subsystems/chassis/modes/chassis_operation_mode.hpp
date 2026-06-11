@@ -1,10 +1,9 @@
 #ifndef CHASSIS_OPERATION_MODE_HPP
 #define CHASSIS_OPERATION_MODE_HPP
 
-#include "../commands/chassis_spin2win_command.hpp"
-#include "../commands/chassis_hero_command.hpp"
-#include "../commands/chassis_sentry_command.hpp"
-
+#include "subsystems/chassis/commands/chassis_spin2win_command.hpp"
+#include "subsystems/chassis/commands/chassis_hero_command.hpp"
+#include "subsystems/chassis/commands/chassis_sentry_command.hpp"
 
 namespace control::chassis
 {
@@ -33,11 +32,11 @@ struct SubsystemCoords
 
 struct ChassisOperationMode
 {
-    static void manualMode(ChassisSpin2winCommand* command);
-    static void manualMode(ChassisHeroCommand* command);
-    static void autoMode(ChassisSentryCommand* command);
+    static void manualMode(ChassisSpin2winDriveCommand* command);
+    static void manualMode(ChassisHeroDriveCommand* command);
+    static void autoMode(ChassisSentryDriveCommand* command);
 
-    static ChassisInputs getChassisInputs(ChassisSentryCommand* command);
+    static ChassisInputs getChassisInputs(ChassisSentryDriveCommand* command);
 
     template<typename Command>
     static ChassisInputs getChassisInputs(Command *const command);

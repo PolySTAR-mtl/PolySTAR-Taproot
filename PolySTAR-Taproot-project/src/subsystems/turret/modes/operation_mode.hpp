@@ -12,8 +12,8 @@ struct OperationMode
 {
     // SHOULD CHANGE TO SENTRY COMMAND
     static void autoMode(SentryAimCommand* command);
-    static void manualMode(HeroAimCommand* command);
-    static void manualMode(Spin2WinAimCommand* command);
+    static void manualMode(TurretHeroAimCommand* command);
+    static void manualMode(TurretSpin2WinAimCommand* command);
 
     template<typename T>
     static float getXInput(T* command);

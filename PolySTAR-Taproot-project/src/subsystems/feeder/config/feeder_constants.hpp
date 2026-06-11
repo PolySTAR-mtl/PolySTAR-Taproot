@@ -39,7 +39,7 @@ static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
 /**
  * Unit conversion constants
  */
-static constexpr float DEGREE_TO_TICK = DjiMotor::ENC_RESOLUTION * 36.0f / 360.0f; // 8192 Ticks per turn, 36:1 gear ratio
+static constexpr float DEGREE_TO_TICK = tap::motor::DjiMotor::ENC_RESOLUTION * 36.0f / 360.0f; // 8192 Ticks per turn, 36:1 gear ratio
 
 /**
  * Feeder PID constants
@@ -49,5 +49,10 @@ static constexpr float FEEDER_PID_KI = 5.0f;
 static constexpr float FEEDER_PID_KD = 0.0f;
 static constexpr float FEEDER_PID_MAX_ERROR_SUM = 5000.0f;
 static constexpr float FEEDER_PID_MAX_OUTPUT = 8000.0f;
+
+/*
+ * Hardware constants, not specific to any particular feeder.
+ */
+static constexpr tap::motor::MotorId FEEDER_MOTOR_ID = tap::motor::MOTOR8;
 
 #endif

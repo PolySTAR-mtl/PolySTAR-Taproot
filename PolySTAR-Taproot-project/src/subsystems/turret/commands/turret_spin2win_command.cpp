@@ -8,7 +8,7 @@ using src::communication::cv::CVSerialData;
 namespace control::turret
 {
 
-Spin2WinAimCommand::Spin2WinAimCommand(
+TurretSpin2WinAimCommand::TurretSpin2WinAimCommand(
     TurretSubsystem *const turret,
     src::Drivers *drivers)
     : turret(turret)
@@ -22,24 +22,24 @@ Spin2WinAimCommand::Spin2WinAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void Spin2WinAimCommand::initialize()
+void TurretSpin2WinAimCommand::initialize()
 {
     prevUpdate = tap::arch::clock::getTimeMilliseconds();
     // WAIT FOR ELHAJ'S RESPONSE
     // this->turret->setIsSpin2WinMode(true);
 }
 
-void Spin2WinAimCommand::execute()
+void TurretSpin2WinAimCommand::execute()
 {
     operationMode->manualMode(this);
 }
 
-void Spin2WinAimCommand::end(bool)
+void TurretSpin2WinAimCommand::end(bool)
 {
     // this->turret->setIsSpin2WinMode(false);
 }
 
-bool Spin2WinAimCommand::isFinished() const { return false; }
+bool TurretSpin2WinAimCommand::isFinished() const { return false; }
 
 }  // namespace control::turret
 

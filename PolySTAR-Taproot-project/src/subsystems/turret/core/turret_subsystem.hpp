@@ -6,6 +6,7 @@
 #include "tap/util_macros.hpp"
 #include "control/drivers/drivers.hpp"
 #include "subsystems/turret/config/constants/turret_constants.hpp"
+#include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/algorithms/cascaded_pid.hpp"
 
 using turret::algorithms::CascadedPid;
@@ -47,8 +48,8 @@ public:
     // Getters
     const tap::motor::DjiMotor &getYawMotor() const { return *yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
-    int64_t getYawNeutralPos() { return YAW_NEUTRAL_POS; }
-    int64_t getPitchNeutralPos() { return PITCH_NEUTRAL_POS; }
+    int64_t getYawNeutralPos() { return ACTIVE_TURRET_CONFIG.yawNeutralPos; }
+    int64_t getPitchNeutralPos() { return ACTIVE_TURRET_CONFIG.pitchNeutralPos; }
     int64_t getYawUnwrapped() { return yawMotor->getEncoderUnwrapped(); }
     int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
     int getYawWrapped() { return yawMotor->getEncoderWrapped(); }

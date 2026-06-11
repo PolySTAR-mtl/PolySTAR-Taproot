@@ -10,7 +10,7 @@ namespace control::turret {
 /**
  * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
  */
-static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SENTRY_PITCH_OUTER_PID_CONFIG(
     0.5f, // kP
     0.0f, // kI
     0.6f, // kD
@@ -24,7 +24,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SENTRY_PITCH_INNER_PID_CONFIG(
     200.0f, // kP
     0.1f,  // kI
     0.1f,  // kD
@@ -38,7 +38,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SENTRY_YAW_OUTER_PID_CONFIG(
     0.1f, // kP
     0.0f, // kI
     0.6, // kD
@@ -52,7 +52,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig SENTRY_YAW_INNER_PID_CONFIG(
     250.0f, // kP
     0.17f,  // kI
     0.0f,  // kD
@@ -67,22 +67,29 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 );
 
 /**
+ * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
+ * Note: Needs to be out of the config, otherwise it can't be constexpr
+ */
+static constexpr float SENTRY_YAW_RANGE_DEGREES = 90;
+static constexpr float SENTRY_PITCH_RANGE_DEGREES = 20;
+
+/**
  * Sentry turret config
  */
 constexpr TurretConfig SENTRY_TURRET_CONFIG = {
-    .pitchOuterPidConfig = PITCH_OUTER_PID_CONFIG,
-    .pitchInnerPidConfig = PITCH_INNER_PID_CONFIG,
-    .yawOuterPidConfig = YAW_OUTER_PID_CONFIG,
-    .yawInnerPidConfig = YAW_INNER_PID_CONFIG,
+    .pitchOuterPidConfig = SENTRY_PITCH_OUTER_PID_CONFIG,
+    .pitchInnerPidConfig = SENTRY_PITCH_INNER_PID_CONFIG,
+    .yawOuterPidConfig = SENTRY_YAW_OUTER_PID_CONFIG,
+    .yawInnerPidConfig = SENTRY_YAW_INNER_PID_CONFIG,
 
     .yawNeutralPos = 6900,
     .pitchNeutralPos = 3900,
 
-    .yawRangeDegrees = 90,
-    .pitchRangeDegrees = 20,
+    .yawRangeDegrees = SENTRY_YAW_RANGE_DEGREES,
+    .pitchRangeDegrees = SENTRY_PITCH_RANGE_DEGREES,
 
-    .yawRange = TurretConfig::degreesToTicks(YAW_RANGE_DEGREES),
-    .pitchRange = TurretConfig::degreesToTicks(PITCH_RANGE_DEGREES),
+    .yawRange = TurretConfig::degreesToTicks(SENTRY_YAW_RANGE_DEGREES),
+    .pitchRange = TurretConfig::degreesToTicks(SENTRY_PITCH_RANGE_DEGREES),
 
     .yawScaleFactor = 500.0f,
     .pitchScaleFactor = 300.0f,

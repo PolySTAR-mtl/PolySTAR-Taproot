@@ -118,4 +118,6 @@ consteval FeederConfig getFeederConfig();
 
 } // namespace control::feeder
 
+#include "feeder_config_impl.hpp"
+
 #endif

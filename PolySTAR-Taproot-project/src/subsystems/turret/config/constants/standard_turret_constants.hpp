@@ -10,7 +10,7 @@ namespace control::turret {
 /**
  * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
  */
-static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig STANDARD_PITCH_OUTER_PID_CONFIG(
     0.3f, // kP
     0.0f, // kI
     0.8f, // kD
@@ -24,7 +24,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig STANDARD_PITCH_INNER_PID_CONFIG(
     260.0f, // kP
     0.8f,  // kI
     0.0f,  // kD
@@ -38,7 +38,7 @@ static constexpr tap::algorithms::SmoothPidConfig PITCH_INNER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig STANDARD_YAW_OUTER_PID_CONFIG(
     0.08f, // kP
     0.0f, // kI
     0.45f, // kD
@@ -52,7 +52,7 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_OUTER_PID_CONFIG(
     0.0f  // Error derivative floor
 );
 
-static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
+static constexpr tap::algorithms::SmoothPidConfig STANDARD_YAW_INNER_PID_CONFIG(
     300.0f, // kP
     0.0f,  // kI
     0.0f,  // kD
@@ -67,59 +67,29 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 );
 
 /**
- * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
- */
-static constexpr uint16_t YAW_NEUTRAL_POS = 4072;
-static constexpr uint16_t PITCH_NEUTRAL_POS = 6515;
-
-/**
  * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
+ * Note: Needs to be out of the config, otherwise it can't be constexpr
  */
-static constexpr float YAW_RANGE_DEGREES = 90;
-static constexpr float PITCH_RANGE_DEGREES = 20;
-
-/**
- * Range values in encoder ticks, where 0..8191 is a full revolution
- */
-static constexpr uint16_t YAW_RANGE = TurretConfig::degreesToTicks(YAW_RANGE_DEGREES);
-static constexpr uint16_t PITCH_RANGE = TurretConfig::degreesToTicks(PITCH_RANGE_DEGREES);
-
-/**
- * Scale factor for converting user inputs into position setpoint deltas.
- * In other words, input sensitivity.
- */
-static constexpr float YAW_SCALE_FACTOR = 900.0f;
-static constexpr float PITCH_SCALE_FACTOR = 400.0f;
-
-/*
- * Mouse sensitivity
- */
-static constexpr float TURRET_MOUSE_X_SCALE_FACTOR = 0.05f;
-static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
-
-/**
- * Inverted directions
- */
-static constexpr float YAW_IS_INVERTED = true;
-static constexpr float PITCH_IS_INVERTED = true;
+static constexpr float STANDARD_YAW_RANGE_DEGREES = 90;
+static constexpr float STANDARD_PITCH_RANGE_DEGREES = 20;
 
 /**
  * Standard turret config
  */
 constexpr TurretConfig STANDARD_TURRET_CONFIG = {
-    .pitchOuterPidConfig = PITCH_OUTER_PID_CONFIG,
-    .pitchInnerPidConfig = PITCH_INNER_PID_CONFIG,
-    .yawOuterPidConfig = YAW_OUTER_PID_CONFIG,
-    .yawInnerPidConfig = YAW_INNER_PID_CONFIG,
+    .pitchOuterPidConfig = STANDARD_PITCH_OUTER_PID_CONFIG,
+    .pitchInnerPidConfig = STANDARD_PITCH_INNER_PID_CONFIG,
+    .yawOuterPidConfig = STANDARD_YAW_OUTER_PID_CONFIG,
+    .yawInnerPidConfig = STANDARD_YAW_INNER_PID_CONFIG,
 
     .yawNeutralPos = 4072,
     .pitchNeutralPos = 6515,
 
-    .yawRangeDegrees = 90,
-    .pitchRangeDegrees = 20,
+    .yawRangeDegrees = STANDARD_YAW_RANGE_DEGREES,
+    .pitchRangeDegrees = STANDARD_PITCH_RANGE_DEGREES,
 
-    .yawRange = TurretConfig::degreesToTicks(YAW_RANGE_DEGREES),
-    .pitchRange = TurretConfig::degreesToTicks(PITCH_RANGE_DEGREES),
+    .yawRange = TurretConfig::degreesToTicks(STANDARD_YAW_RANGE_DEGREES),
+    .pitchRange = TurretConfig::degreesToTicks(STANDARD_PITCH_RANGE_DEGREES),
 
     .yawScaleFactor = 900.0f,
     .pitchScaleFactor = 400.0f,
