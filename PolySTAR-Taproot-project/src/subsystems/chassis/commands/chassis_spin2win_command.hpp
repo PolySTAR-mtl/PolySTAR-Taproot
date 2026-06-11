@@ -3,8 +3,9 @@
 
 #include "tap/control/command.hpp"
 
-#include "chassis_spin2win_subsystem.hpp"
+#include "../chassis_spin2win_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
+#include "../modes/chassis_operation_mode.hpp"
 
 namespace control
 {
@@ -48,7 +49,9 @@ private:
 
     bool m_isMoving = false;
 
+    friend struct ChassisOperationMode;
 
+    ChassisOperationMode operationMode {};
 };  // ChassisSpin2winCommand
 
 }  // namespace chassis

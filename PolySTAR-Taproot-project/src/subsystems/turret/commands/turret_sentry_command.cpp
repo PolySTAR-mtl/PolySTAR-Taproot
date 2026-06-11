@@ -35,12 +35,7 @@ void SentryAimCommand::execute()
         turret->setAbsoluteOutputDegrees(0, 0);
         return;
     }
-    // Acquire setpoints received from CV over serial through CVHandler
-    CVSerialData::Rx::TurretData turretData = drivers->cvHandler.getTurretData();
-    float pitchSetpoint = turretData.pitchSetpoint*autoAttributes->MRAD_TO_DEGREES;
-    float yawSetpoint = turretData.yawSetpoint*autoAttributes->MRAD_TO_DEGREES;
-
-    turret->setAbsoluteOutputDegrees(yawSetpoint, pitchSetpoint);
+    operationMode->autoMode(this);
 }
 
 void SentryAimCommand::end(bool)
