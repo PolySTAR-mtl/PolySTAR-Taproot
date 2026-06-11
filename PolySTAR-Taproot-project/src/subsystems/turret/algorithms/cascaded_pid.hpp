@@ -4,7 +4,7 @@
 #include <cstdint>
 #include "tap/motor/dji_motor.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
-#include "subsystems/turret/config/turret_constants.hpp"
+#include "subsystems/turret/config/constants/turret_constants.hpp"
 
 
 namespace turret
@@ -16,7 +16,7 @@ namespace algorithms
    Outer PID takes position error as input and controls RPM setpoint
    Inner PID takes RPM error as input and controls motor voltage
    Normally velocity controller is a PI controller and position controller is a PD controller
-   Note on maximum values : 
+   Note on maximum values :
     positionConfig.maxOutput is the maximum RPM of the turret
     velocityConfig.maxOutput is the maximum voltage sent to the motor */
 class CascadedPid
@@ -47,7 +47,7 @@ public:
     void setParameter(Controller controller, Parameter param, float value);
 
 protected:
-   
+
     // Inner and outer control loops
     tap::algorithms::SmoothPid positionController;
     tap::algorithms::SmoothPid velocityController;

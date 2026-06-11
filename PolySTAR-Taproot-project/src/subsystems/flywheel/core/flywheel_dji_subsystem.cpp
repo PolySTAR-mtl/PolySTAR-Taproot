@@ -28,15 +28,13 @@ FlywheelDjiSubsystem::FlywheelDjiSubsystem(src::Drivers *drivers)
 {
 }
 
-void FlywheelDjiSubsystem::initialize()
-{
+void FlywheelDjiSubsystem::initialize() {
     FlywheelSubsystem::initialize();
     leftMotor_.initialize();
     rightMotor_.initialize();
 }
 
-void FlywheelDjiSubsystem::refresh() {
-}
+void FlywheelDjiSubsystem::refresh() {}
 
 void FlywheelDjiSubsystem::startFiring() {
     FlywheelSubsystem::startFiring();

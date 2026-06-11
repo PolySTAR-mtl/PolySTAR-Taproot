@@ -1,27 +1,19 @@
-#pragma once
+#ifndef TURRET_CONSTANTS_HPP
+#define TURRET_CONSTANTS_HPP
 
 #include "tap/communication/serial/uart.hpp"
+
+namespace control::turret {
+
 using tap::communication::serial::Uart;
 
-#ifdef TARGET_ICRA
-#include "constants/icra_turret_constants.hpp"
-#endif
+/**
+ * Hardware constants
+ */
+static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
+static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
+static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
-#ifdef TARGET_STANDARD
-#include "constants/standard_turret_constants.hpp"
-#endif
-
-#ifdef TARGET_SPIN_TO_WIN
-#include "constants/spin_to_win_turret_constants.hpp"
-#endif
-
-#ifdef TARGET_SENTRY
-#include "constants/sentry_turret_constants.hpp"
-#endif
-
-#ifdef TARGET_HERO
-#include "constants/hero_turret_constants.hpp"
-#endif
 /**
  * Right joystick dead zone size. If the absolute value returned by the stick is below
  * this value, it is considered zero.
@@ -48,6 +40,7 @@ static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
 static constexpr float RPM_TO_DEGPERMS = 0.006;
 static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
 static constexpr float MRAD_TO_DEGREES = 0.0572958;
+static constexpr float DEGREE_TO_TICK = 8192.0f / 360.0f; // 8192 Ticks per turn, 1:1 gear ratio
 
 /**
  * Spin2win stabilization constants
@@ -57,3 +50,7 @@ static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
 const constexpr float GZ_STABILIZATION_CONSTANT = 0.47;
 const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1;
+
+} // namespace control::turret
+
+#endif // TURRET_CONSTANTS_HPP

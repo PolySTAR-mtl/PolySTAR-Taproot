@@ -3,6 +3,7 @@
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
 #include "control/drivers/drivers.hpp"
+#include "tap/motor/dji_motor.hpp"
 #include "communication/cv_handler.hpp"
 
 using tap::communication::serial::Uart;
@@ -10,12 +11,20 @@ using tap::algorithms::limitVal;
 using tap::algorithms::getSign;
 using tap::motor::DjiMotor;
 
-namespace control
+namespace control::turret
 {
-namespace turret
-{
-void TurretSubsystem::initialize()
-{
+
+TurretSubsystem::TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor)
+        : tap::control::Subsystem(drivers),
+          yawMotor(yawMotor),
+          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
+          cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
+          cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
+          yawDesiredPos(YAW_NEUTRAL_POS),
+          pitchDesiredPos(PITCH_NEUTRAL_POS),
+          yawRpmPid(YAW_INNER_PID_CONFIG) {}
+
+void TurretSubsystem::initialize() {
     yawMotor->initialize();
     pitchMotor.initialize();
 
@@ -25,7 +34,6 @@ void TurretSubsystem::initialize()
 }
 
 void TurretSubsystem::refresh() {
-
     uint32_t currentTime = tap::arch::clock::getTimeMilliseconds();
 
     // Run controllers as fast as possible
@@ -100,8 +108,7 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
 /*
     Set desired position setpoints for turret. Values are in encoder ticks.
 */
-void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch)
-{
+void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) {
 #ifdef TARGET_SPIN_TO_WIN
     yawDesiredPos = yaw;
 #else
@@ -113,8 +120,7 @@ void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch)
 /*
     Set desired position setpoints for turret. Values are in degrees.
 */
-void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch)
-{
+void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch) {
     setAbsoluteOutput(YAW_NEUTRAL_POS + yawMotor->degreesToEncoder<int64_t>(yaw),
                       PITCH_NEUTRAL_POS + pitchMotor.degreesToEncoder<int64_t>(pitch));
 }
@@ -122,8 +128,7 @@ void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch)
 /*
     Set position setpoints relative to turret's current position. Values are in encoder ticks.
 */
-void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta)
-{
+void TurretSubsystem::setRelativeOutput(float yawDelta, float pitchDelta) {
     uint16_t currentYaw = yawMotor->getEncoderWrapped();
     uint16_t currentPitch = pitchMotor.getEncoderWrapped();
 

@@ -35,6 +35,14 @@ static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
     1000.0f // maxVelocity
 );
 
+/**
+ * Unit conversion constants
+ */
+static constexpr float DEGREE_TO_TICK = 8192.0f * 36.0f / 360.0f; // 8192 Ticks per turn, 36:1 gear ratio
+
+/**
+ * Feeder PID constants
+ */
 static constexpr float FEEDER_PID_KP = 20.0f;
 static constexpr float FEEDER_PID_KI = 5.0f;
 static constexpr float FEEDER_PID_KD = 0.0f;

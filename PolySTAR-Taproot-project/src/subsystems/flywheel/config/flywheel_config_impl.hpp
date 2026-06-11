@@ -37,4 +37,4 @@ consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Standard>() {
 
 }; // namespace control::flywheel
 
-#endif
+#endif // FLYWHEEL_CONFIG_IMPL_HPP

@@ -21,4 +21,4 @@ static constexpr uint32_t KICKSTART_DELAY_MS = 300;
 
 } // namespace control::flywheel
 
-#endif
+#endif // FLYWHEEL_CONSTANTS_HPP_

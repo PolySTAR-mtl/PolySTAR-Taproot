@@ -7,7 +7,6 @@ enum class RobotTarget
 {
     Engineer,
     Hero,
-    Icra,
     Sentry,
     SpinToWin,
     Standard,
@@ -18,8 +17,6 @@ constexpr RobotTarget ROBOT_TARGET =
     RobotTarget::Engineer;
 #elif defined(TARGET_HERO)
     RobotTarget::Hero;
-#elif defined(TARGET_ICRA)
-    RobotTarget::Icra;
 #elif defined(TARGET_SENTRY)
     RobotTarget::SpinToWin;
 #elif defined(TARGET_SPIN_TO_WIN)

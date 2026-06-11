@@ -1,9 +1,15 @@
+#ifndef SPIN_TO_WIN_TURRET_CONSTANTS_HPP
+#define SPIN_TO_WIN_TURRET_CONSTANTS_HPP
+
 #include "tap/algorithms/smooth_pid.hpp"
+#include "subsystems/turret/config/turret_config.hpp"
+#include "subsystems/turret/config/constants/turret_constants.hpp"
+
+namespace control::turret {
 
 /**
  * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
  */
-
 static constexpr tap::algorithms::SmoothPidConfig PITCH_OUTER_PID_CONFIG(
     0.3f, // kP
     0.0f, // kI
@@ -61,39 +67,33 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 );
 
 /**
- * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
+ * Spin To Win turret config
  */
-static constexpr uint16_t YAW_NEUTRAL_POS = 4072 + 683;
-static constexpr uint16_t PITCH_NEUTRAL_POS = 6515;
+constexpr TurretConfig SPIN_TO_WIN_TURRET_CONFIG = {
+    .pitchOuterPidConfig = PITCH_OUTER_PID_CONFIG,
+    .pitchInnerPidConfig = PITCH_INNER_PID_CONFIG,
+    .yawOuterPidConfig = YAW_OUTER_PID_CONFIG,
+    .yawInnerPidConfig = YAW_INNER_PID_CONFIG,
 
-/**
- * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
- */
-static constexpr float YAW_RANGE_DEGREES = 90;
-static constexpr float PITCH_RANGE_DEGREES = 20;
+    .YAW_NEUTRAL_POS = 4755,
+    .PITCH_NEUTRAL_POS = 6515,
 
-/**
- * Range values in encoder ticks, where 0..8191 is a full revolution
- */
-static constexpr uint16_t YAW_RANGE = (uint16_t)(YAW_RANGE_DEGREES * 8192.0f / 360.0f);
-static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f / 360.0f);
+    .YAW_RANGE_DEGREES = 90,
+    .PITCH_RANGE_DEGREES = 20,
 
-/**
- * Scale factor for converting user inputs into position setpoint deltas. 
- * In other words, input sensitivity.
- */
-static constexpr float YAW_SCALE_FACTOR = 900.0f;
-static constexpr float PITCH_SCALE_FACTOR = 400.0f;
+    .YAW_RANGE = TurretConfig::degreesToTicks(YAW_RANGE_DEGREES),
+    .PITCH_RANGE = TurretConfig::degreesToTicks(PITCH_RANGE_DEGREES),
 
-/*
- * Mouse sensitivity
- */
-static constexpr float TURRET_MOUSE_X_SCALE_FACTOR = 0.05f;
-static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
+    .YAW_SCALE_FACTOR = 900.0f,
+    .PITCH_SCALE_FACTOR = 400.0f,
 
-/**
- * Inverted directions
- */
+    .TURRET_MOUSE_X_SCALE_FACTOR = 0.05f,
+    .TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f,
 
-static constexpr float YAW_IS_INVERTED = true;
-static constexpr float PITCH_IS_INVERTED = true;
+    .YAW_IS_INVERTED = true,
+    .PITCH_IS_INVERTED = true
+};
+
+} // namespace control::turret
+
+#endif // SPIN_TO_WIN_TURRET_CONSTANTS_HPP
