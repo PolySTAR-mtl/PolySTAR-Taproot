@@ -9,7 +9,6 @@
  * Feeder position PID: A PID controller for feeder position. The PID parameters for the
  * controller are listed below.
  */
-
 static constexpr tap::algorithms::SmoothPidConfig FEEDER_PID_CONFIG(
     0.075f, // kP
     0.0f, // kI
@@ -28,7 +27,6 @@ static constexpr tap::algorithms::SmoothPidConfig FEEDER_PID_CONFIG(
  * Turret Position FeedForward: Feed Forward controllers for feeder position. The FF parameters for the
  * controller are listed below.
  */
-
 static constexpr src::algorithms::FeedForwardConfig FEEDER_FF_CONFIG(
     400.0f, // kS
     0.0f, // kV
@@ -54,5 +52,6 @@ static constexpr float FEEDER_PID_MAX_OUTPUT = 8000.0f;
  * Hardware constants, not specific to any particular feeder.
  */
 static constexpr tap::motor::MotorId FEEDER_MOTOR_ID = tap::motor::MOTOR8;
+static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
 #endif

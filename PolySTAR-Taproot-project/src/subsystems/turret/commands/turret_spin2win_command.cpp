@@ -25,13 +25,13 @@ TurretSpin2WinAimCommand::TurretSpin2WinAimCommand(
 void TurretSpin2WinAimCommand::initialize()
 {
     prevUpdate = tap::arch::clock::getTimeMilliseconds();
-    // WAIT FOR ELHAJ'S RESPONSE
+    // Need to look into it
     // this->turret->setIsSpin2WinMode(true);
 }
 
 void TurretSpin2WinAimCommand::execute()
 {
-    operationMode->manualMode(this);
+    operationMode.manualMode(this);
 }
 
 void TurretSpin2WinAimCommand::end(bool)

@@ -35,7 +35,7 @@ void SentryAimCommand::execute()
         turret->setAbsoluteOutputDegrees(0, 0);
         return;
     }
-    operationMode->autoMode(this);
+    operationMode.autoMode(this);
 }
 
 void SentryAimCommand::end(bool)

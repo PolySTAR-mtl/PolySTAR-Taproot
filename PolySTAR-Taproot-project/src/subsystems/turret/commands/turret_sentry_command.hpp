@@ -32,6 +32,8 @@ public:
 
     void end(bool) override;
 
+    const char *getName() const override { return "SentryAimCommand"; }
+
     bool isFinished() const override;
 
 protected:
@@ -40,7 +42,7 @@ protected:
     src::Drivers *drivers;
 
     friend struct OperationMode;
-    OperationMode *const operationMode = nullptr;
+    OperationMode operationMode {};
 
     // Should be replaced with matchStarted flag by reading refserial data
     tap::arch::MilliTimeout startMatchTimeout;

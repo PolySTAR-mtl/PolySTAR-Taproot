@@ -25,14 +25,7 @@ public:
      * Constructs a new FeederSubsystem with default parameters specified in
      * the private section of this class.
      */
-    FeederPositionSubsystem(tap::Drivers *drivers)
-        : tap::control::Subsystem(drivers),
-          feederMotor(drivers, FEEDER_MOTOR_ID, ACTIVE_FEEDER_CONFIG.canBusMotors, ACTIVE_FEEDER_CONFIG.isFeederInverted, "feeder motor"),
-          feederPID(FEEDER_PID_CONFIG),
-          feederFF(FEEDER_FF_CONFIG),
-          jamChecker(this, ACTIVE_FEEDER_CONFIG.jamCheckerToleranceTick, ACTIVE_FEEDER_CONFIG.jamCheckerToleranceMs)
-    {
-    }
+    FeederPositionSubsystem(tap::Drivers *drivers);
 
     FeederPositionSubsystem(const FeederPositionSubsystem &other) = delete;
 

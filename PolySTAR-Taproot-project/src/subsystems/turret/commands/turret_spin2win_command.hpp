@@ -32,6 +32,8 @@ public:
 
     void end(bool) override;
 
+    const char *getName() const override { return "TurretSpin2WinAimCommand"; }
+
     bool isFinished() const override;
 
 protected:
@@ -43,7 +45,7 @@ protected:
     uint32_t prevUpdate;
 
     friend struct OperationMode;
-    OperationMode *const operationMode = nullptr;
+    OperationMode operationMode {};
 
     algorithms::ImuInterpreter imuInterpreter;
 

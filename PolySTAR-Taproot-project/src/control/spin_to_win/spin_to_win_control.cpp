@@ -57,7 +57,7 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 /* define commands ----------------------------------------------------------*/
 /* chassis */
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
-chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
+chassis::ChassisSpin2winDriveCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2WinCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 /* turret */

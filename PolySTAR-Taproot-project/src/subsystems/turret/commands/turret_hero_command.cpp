@@ -24,13 +24,13 @@ TurretHeroAimCommand::TurretHeroAimCommand(
 void TurretHeroAimCommand::initialize()
 {
     prevUpdate = tap::arch::clock::getTimeMilliseconds();
-    // WAIT FOR ELHAJ'S RESPONSE
+    // Need to look into this
     // this->turret->setIsSpin2WinMode(true);
 }
 
 void TurretHeroAimCommand::execute()
 {
-    operationMode->manualMode(this);
+    operationMode.manualMode(this);
 }
 
 void TurretHeroAimCommand::end(bool)

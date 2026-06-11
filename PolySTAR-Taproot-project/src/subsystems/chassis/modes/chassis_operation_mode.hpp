@@ -1,10 +1,6 @@
 #ifndef CHASSIS_OPERATION_MODE_HPP
 #define CHASSIS_OPERATION_MODE_HPP
 
-#include "subsystems/chassis/commands/chassis_spin2win_command.hpp"
-#include "subsystems/chassis/commands/chassis_hero_command.hpp"
-#include "subsystems/chassis/commands/chassis_sentry_command.hpp"
-
 namespace control::chassis
 {
 
@@ -29,6 +25,11 @@ struct SubsystemCoords
     float y = 0.0f;
     float r = 0.0f;
 };
+
+// Forward decleration to avoid circular dependency with the commands
+class ChassisSpin2winDriveCommand;
+class ChassisHeroDriveCommand;
+class ChassisSentryDriveCommand;
 
 struct ChassisOperationMode
 {
