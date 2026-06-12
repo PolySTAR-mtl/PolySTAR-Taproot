@@ -39,5 +39,5 @@ void ChassisHeroDriveCommand::end(bool)
 bool ChassisHeroDriveCommand::isFinished() const { return false; }
 
 bool ChassisHeroDriveCommand::isMoving() const { return m_isMoving; }
-}  // namespace chassis
-}  // namespace control
+
+}  // namespace control::chassis

@@ -1,5 +1,5 @@
 #include "subsystems/turret/algorithms/imu_interpreter.hpp"
-#include "subsystems/turret/config/turret_constants.hpp"
+#include "subsystems/turret/config/constants/turret_constants.hpp"
 
 namespace algorithms
 {
@@ -37,7 +37,7 @@ namespace algorithms
             gzSamplingCount = 0;
         }
 
-        turretYawRPM = ((GZ_STABILIZATION_CONSTANT - X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed);
+        turretYawRPM = ((control::turret::GZ_STABILIZATION_CONSTANT - control::turret::X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed);
     }
 
     float ImuInterpreter::getTurretYawRPM() const {

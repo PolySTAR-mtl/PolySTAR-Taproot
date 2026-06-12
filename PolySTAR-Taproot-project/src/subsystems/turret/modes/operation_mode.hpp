@@ -1,12 +1,12 @@
 #ifndef OPERATION_MODE_HPP_
 #define OPERATION_MODE_HPP_
 
-#include "subsystems/turret/commands/turret_sentry_command.hpp"
-#include "subsystems/turret/commands/turret_hero_command.hpp"
-#include "subsystems/turret/commands/turret_spin2win_command.hpp"
-
 namespace control::turret
 {
+
+class SentryAimCommand;
+class TurretHeroAimCommand;
+class TurretSpin2WinAimCommand;
 
 struct OperationMode
 {
@@ -23,5 +23,10 @@ struct OperationMode
 };
 
 }  // namespace control::turret
+
+#include "subsystems/turret/commands/turret_sentry_command.hpp"
+#include "subsystems/turret/commands/turret_hero_command.hpp"
+#include "subsystems/turret/commands/turret_spin2win_command.hpp"
+#include "subsystems/turret/modes/operation_mode_impl.hpp"
 
 #endif // OPERATION_MODE_HPP_

@@ -2,6 +2,7 @@
 #define OPERATION_MODE_IMPL_HPP_
 
 #include "subsystems/turret/modes/operation_mode.hpp"
+#include "subsystems/turret/config/turret_config.hpp"
 
 namespace control::turret
 {
@@ -13,7 +14,7 @@ float OperationMode::getXInput(T* command) {
     }
 
     float xInput = command->drivers->controlInterface.getTurretXInput();
-    float xMouseInput = command->drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
+    float xMouseInput = command->drivers->controlInterface.getTurretXMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseXScaleFactor;
 
     return xInput + xMouseInput;
 }
@@ -25,7 +26,7 @@ float OperationMode::getYInput(T* command) {
     }
 
     float yInput = command->drivers->controlInterface.getTurretYInput();
-    float yMouseInput = command->drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
+    float yMouseInput = command->drivers->controlInterface.getTurretYMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseYScaleFactor;
 
     return yInput + yMouseInput;
 }

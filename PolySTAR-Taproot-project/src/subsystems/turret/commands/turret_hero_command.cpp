@@ -12,7 +12,8 @@ TurretHeroAimCommand::TurretHeroAimCommand(
     TurretSubsystem *const turret,
     src::Drivers *drivers)
     : turret(turret),
-      drivers(drivers)
+      drivers(drivers),
+      imuInterpreter(drivers)
 {
     if (turret == nullptr)
     {

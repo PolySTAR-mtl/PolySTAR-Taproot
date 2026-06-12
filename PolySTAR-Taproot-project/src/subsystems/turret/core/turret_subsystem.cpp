@@ -259,7 +259,5 @@ void TurretSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::
     }
 }
 
-}  // namespace turret
-
-}  // namespace control
+}  // namespace control::turret
 

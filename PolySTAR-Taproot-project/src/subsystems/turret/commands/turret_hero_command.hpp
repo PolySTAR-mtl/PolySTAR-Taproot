@@ -6,6 +6,7 @@
 #include "subsystems/turret/core/turret_subsystem.hpp"
 #include "subsystems/turret/modes/operation_mode.hpp"
 #include "control/drivers/drivers.hpp"
+#include "subsystems/turret/algorithms/imu_interpreter.hpp"
 
 namespace control::turret
 {
