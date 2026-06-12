@@ -6,10 +6,11 @@
 #include "subsystems/turret/core/turret_subsystem.hpp"
 #include "subsystems/turret/modes/operation_mode.hpp"
 #include "control/drivers/drivers.hpp"
+#include "subsystems/turret/algorithms/imu_interpreter.hpp"
 
 namespace control::turret
 {
-class HeroAimCommand : public tap::control::Command
+class TurretHeroAimCommand : public tap::control::Command
 {
 public:
     /**
@@ -19,17 +20,19 @@ public:
      * @param[in] turret a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    HeroAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
+    TurretHeroAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
-    HeroAimCommand(const HeroAimCommand &other) = delete;
+    TurretHeroAimCommand(const TurretHeroAimCommand &other) = delete;
 
-    HeroAimCommand &operator=(const HeroAimCommand &other) = delete;
+    TurretHeroAimCommand &operator=(const TurretHeroAimCommand &other) = delete;
 
     void initialize() override;
 
     virtual void execute() override;
 
     void end(bool) override;
+
+    const char *getName() const override { return "TurretHeroAimCommand"; }
 
     bool isFinished() const override;
 
@@ -38,9 +41,13 @@ protected:
 
     src::Drivers *drivers;
 
+    // Need to set to tap::arch::clock::getTimeMilliseconds() on command initialization
+    uint32_t prevUpdate;
+
     friend struct OperationMode;
-    OperationMode *const operationMode = nullptr;
-    ManualAttributes *manualAttributes;
+    OperationMode operationMode {};
+
+    algorithms::ImuInterpreter imuInterpreter;
 
 };  // HeroAimCommand
 

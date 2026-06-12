@@ -11,7 +11,7 @@ GenericFeedCommand<Subsytem, FeedPolicy>::GenericFeedCommand(Subsytem* const fee
     : tap::control::Command{},
         feeder_{feeder},
         drivers_{drivers},
-        feedPolicy_{feeder}
+        commandPolicy_{feeder}
 {
     if (feeder == nullptr)
     {

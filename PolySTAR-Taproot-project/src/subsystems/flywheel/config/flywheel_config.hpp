@@ -54,4 +54,4 @@ consteval FlywheelConfig getFlywheelConfig();
 
 #include "flywheel_config_impl.hpp"
 
-#endif
+#endif // FLYWHEEL_CONFIG_HPP

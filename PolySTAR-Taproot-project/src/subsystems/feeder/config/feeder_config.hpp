@@ -4,11 +4,10 @@
 #include <stdint.h>
 
 #include "robot_target.hpp"
+#include "subsystems/feeder/config/feeder_constants.hpp"
 #include "tap/communication/can/can_bus.hpp"
 
 namespace control::feeder {
-
-static constexpr float DEGREE_TO_TICK = 8192 * 36 / 360; // 8192 Ticks per turn, 36:1 gear ratio
 
 struct FeederConfig {
     // Used for the velocity subsystem
@@ -118,5 +117,7 @@ template <target::RobotTarget R>
 consteval FeederConfig getFeederConfig();
 
 } // namespace control::feeder
+
+#include "feeder_config_impl.hpp"
 
 #endif

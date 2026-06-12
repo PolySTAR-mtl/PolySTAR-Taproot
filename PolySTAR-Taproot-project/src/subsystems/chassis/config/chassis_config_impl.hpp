@@ -26,11 +26,6 @@ consteval ChassisConfig getChassisConfig<target::RobotTarget::Sentry>(){
 }
 
 template<>
-consteval ChassisConfig getChassisConfig<target::RobotTarget::Icra>(){
-    return ICRA_CHASSIS_CONFIG;
-}
-
-template<>
 consteval ChassisConfig getChassisConfig<target::RobotTarget::Engineer>(){
     return ENGINEER_CHASSIS_CONFIG;
 }

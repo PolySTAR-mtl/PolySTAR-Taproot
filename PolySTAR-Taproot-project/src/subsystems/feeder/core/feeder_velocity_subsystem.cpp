@@ -1,5 +1,8 @@
 #include "feeder_velocity_subsystem.hpp"
 
+#include "subsystems/feeder/config/feeder_constants.hpp"
+#include "subsystems/feeder/config/feeder_config.hpp"
+
 #include "tap/communication/serial/remote.hpp"
 #include "tap/algorithms/math_user_utils.hpp"
 #include "control/drivers/drivers.hpp"
@@ -7,10 +10,17 @@
 using namespace tap;
 using tap::communication::serial::Uart;
 
-namespace control
+namespace control::feeder
 {
-namespace feeder
-{
+
+FeederVelocitySubsystem::FeederVelocitySubsystem(tap::Drivers *drivers)
+        : tap::control::Subsystem(drivers),
+          feederMotor(drivers, FEEDER_MOTOR_ID, CAN_BUS_MOTORS, ACTIVE_FEEDER_CONFIG.isFeederInverted, "feeder motor"),
+          feederPid(FEEDER_PID_KP,FEEDER_PID_KI,FEEDER_PID_KD,FEEDER_PID_MAX_ERROR_SUM,FEEDER_PID_MAX_OUTPUT)
+
+    {
+    }
+
 void FeederVelocitySubsystem::initialize()
 {
     feederMotor.initialize();
@@ -40,7 +50,5 @@ void FeederVelocitySubsystem::setDesiredOutput(float rpm)
     feederDesiredRpm = rpm;
 }
 
-}  // namespace feeder
-
-}  // namespace control
+}  // namespace control::feeder
 

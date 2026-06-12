@@ -5,11 +5,12 @@
 
 #include "subsystems/turret/core/turret_subsystem.hpp"
 #include "subsystems/turret/modes/operation_mode.hpp"
+#include "subsystems/turret/algorithms/imu_interpreter.hpp"
 #include "control/drivers/drivers.hpp"
 
 namespace control::turret
 {
-class Spin2WinAimCommand : public tap::control::Command
+class TurretSpin2WinAimCommand : public tap::control::Command
 {
 public:
     /**
@@ -19,17 +20,19 @@ public:
      * @param[in] turret a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    Spin2WinAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
+    TurretSpin2WinAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
-    Spin2WinAimCommand(const Spin2WinAimCommand &other) = delete;
+    TurretSpin2WinAimCommand(const TurretSpin2WinAimCommand &other) = delete;
 
-    Spin2WinAimCommand &operator=(const Spin2WinAimCommand &other) = delete;
+    TurretSpin2WinAimCommand &operator=(const TurretSpin2WinAimCommand &other) = delete;
 
     void initialize() override;
 
     virtual void execute() override;
 
     void end(bool) override;
+
+    const char *getName() const override { return "TurretSpin2WinAimCommand"; }
 
     bool isFinished() const override;
 
@@ -38,9 +41,13 @@ protected:
 
     src::Drivers *drivers;
 
+    // Need to set to tap::arch::clock::getTimeMilliseconds() on command initialization
+    uint32_t prevUpdate;
+
     friend struct OperationMode;
-    OperationMode *const operationMode = nullptr;
-    ManualAttributes *manualAttributes;
+    OperationMode operationMode {};
+
+    algorithms::ImuInterpreter imuInterpreter;
 
 };  // Spin2WinAimCommand
 

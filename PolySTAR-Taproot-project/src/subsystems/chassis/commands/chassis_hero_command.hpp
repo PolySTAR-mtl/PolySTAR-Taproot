@@ -3,22 +3,22 @@
 
 #include "tap/control/command.hpp"
 
-#include "../chassis_spin2win_subsystem.hpp"
+#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
-#include "../modes/chassis_operation_mode.hpp"
-
+#include "subsystems/chassis/modes/chassis_operation_mode.hpp"
 
 namespace control::chassis
 {
-class ChassisHeroCommand : public tap::control::Command 
+
+class ChassisHeroDriveCommand : public tap::control::Command 
 {
 public:
 
-    ChassisHeroCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
+    ChassisHeroDriveCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
 
-    ChassisHeroCommand(const ChassisHeroCommand &other) = delete;
+    ChassisHeroDriveCommand(const ChassisHeroDriveCommand &other) = delete;
 
-    ChassisHeroCommand &operator=(const ChassisHeroCommand &other) = delete;
+    ChassisHeroDriveCommand &operator=(const ChassisHeroDriveCommand &other) = delete;
 
     void initialize() override;
 
@@ -46,6 +46,7 @@ private:
     bool m_isMoving = false;
 
 }; // ChassisHeroCommand
+
 } // namespace control::chassis
 
 #endif // CHASSIS_HERO_COMMAND_HPP_

@@ -1,4 +1,8 @@
 #pragma once
+
+#include <cstdint>
+#include "tap/communication/can/can_bus.hpp"
+
 /**
  * Chassis wheel velocity PID: A PD controller for chassis wheel RPM. The PID parameters for the
  * controller are listed below.

@@ -1,7 +1,7 @@
 #include "chassis_spin2win_keyboard_command.hpp"
 #include "chassis_constants.hpp"
 
-#include "subsystems/turret/turret_constants.hpp"
+#include "subsystems/turret/config/turret_config.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
@@ -53,7 +53,7 @@ void  ChassisSpin2winKeyboardCommand::execute()
     float chassisRad = atan2(yInput, xInput);
 
     // Turret yaw orientation 
-    int64_t yawDelta = turretYawMotor->getEncoderWrapped() - YAW_NEUTRAL_POS;
+    int64_t yawDelta = turretYawMotor->getEncoderWrapped() - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
     float yawDeltaRad = tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi / 180;
 
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));

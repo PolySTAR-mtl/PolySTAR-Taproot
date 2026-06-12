@@ -56,4 +56,6 @@ consteval ChassisConfig getChassisConfig();
 
 } // namespace control::chassis
 
+#include "subsystems/chassis/config/chassis_config_impl.hpp"
+
 #endif // CHASSIS_CONFIG_HPP

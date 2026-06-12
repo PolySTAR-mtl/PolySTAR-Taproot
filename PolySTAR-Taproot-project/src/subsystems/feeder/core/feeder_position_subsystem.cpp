@@ -7,10 +7,16 @@
 using namespace tap;
 using tap::communication::serial::Uart;
 
-namespace control
+namespace control::feeder
 {
-namespace feeder
-{
+
+FeederPositionSubsystem::FeederPositionSubsystem(tap::Drivers *drivers)
+    : tap::control::Subsystem(drivers),
+        feederMotor(drivers, FEEDER_MOTOR_ID, ACTIVE_FEEDER_CONFIG.canBusMotors, ACTIVE_FEEDER_CONFIG.isFeederInverted, "feeder motor"),
+        feederPID(FEEDER_PID_CONFIG),
+        feederFF(FEEDER_FF_CONFIG),
+        jamChecker(this, ACTIVE_FEEDER_CONFIG.jamCheckerToleranceTick, ACTIVE_FEEDER_CONFIG.jamCheckerToleranceMs) {}
+
 void FeederPositionSubsystem::initialize()
 {
     feederMotor.initialize();
@@ -75,6 +81,5 @@ inline bool FeederPositionSubsystem::isOnline()  {
 inline float FeederPositionSubsystem::getVelocity()  {
     return feederMotor.getShaftRPM();
 };
-}  // namespace feeder
 
-}  // namespace control
+}  // namespace control::feeder

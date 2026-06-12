@@ -5,7 +5,8 @@
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "control/drivers/drivers.hpp"
-#include "subsystems/turret/turret_constants.hpp"
+#include "subsystems/turret/config/constants/turret_constants.hpp"
+#include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/algorithms/cascaded_pid.hpp"
 
 using turret::algorithms::CascadedPid;
@@ -27,17 +28,7 @@ public:
      * Constructs a new TurretSubsystem with default parameters specified in
      * the private section of this class.
      */
-    TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor)
-        : tap::control::Subsystem(drivers),
-          yawMotor(yawMotor),
-          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, PITCH_IS_INVERTED, "pitch motor"),
-          cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
-          cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
-          yawDesiredPos(YAW_NEUTRAL_POS),
-          pitchDesiredPos(PITCH_NEUTRAL_POS),
-          yawRpmPid(YAW_INNER_PID_CONFIG)
-    {
-    }
+    TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor);
 
     TurretSubsystem(const TurretSubsystem &other) = delete;
 
@@ -57,8 +48,8 @@ public:
     // Getters
     const tap::motor::DjiMotor &getYawMotor() const { return *yawMotor; }
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
-    int64_t getYawNeutralPos() { return YAW_NEUTRAL_POS; }
-    int64_t getPitchNeutralPos() { return PITCH_NEUTRAL_POS; }
+    int64_t getYawNeutralPos() { return ACTIVE_TURRET_CONFIG.yawNeutralPos; }
+    int64_t getPitchNeutralPos() { return ACTIVE_TURRET_CONFIG.pitchNeutralPos; }
     int64_t getYawUnwrapped() { return yawMotor->getEncoderUnwrapped(); }
     int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
     int getYawWrapped() { return yawMotor->getEncoderWrapped(); }
@@ -83,11 +74,6 @@ private:
     void pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
     void sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold);
 
-    // Hardware constants
-    static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
-    static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
-    static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
-    
     // Hardware interfaces
     src::Drivers *drivers;
     tap::motor::DjiMotor *yawMotor;

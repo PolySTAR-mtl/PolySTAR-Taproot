@@ -7,10 +7,9 @@
 #include "subsystems/turret/modes/operation_mode.hpp"
 #include "control/drivers/drivers.hpp"
 
-namespace control
+namespace control::turret
 {
-namespace turret
-{
+
 class SentryAimCommand : public tap::control::Command
 {
 public:
@@ -33,6 +32,8 @@ public:
 
     void end(bool) override;
 
+    const char *getName() const override { return "SentryAimCommand"; }
+
     bool isFinished() const override;
 
 protected:
@@ -41,17 +42,14 @@ protected:
     src::Drivers *drivers;
 
     friend struct OperationMode;
-    OperationMode *const operationMode = nullptr;
-    AutoAttributes *autoAttributes;
+    OperationMode operationMode {};
 
     // Should be replaced with matchStarted flag by reading refserial data
     tap::arch::MilliTimeout startMatchTimeout;
 
 };  // SentryAimCommand
 
-}  // namespace turret
-
-}  // namespace control
+}  // namespace control::turret
 
 #endif  // SENTRY_AIM_COMMAND_HPP_
 
