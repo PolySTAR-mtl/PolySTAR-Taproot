@@ -56,7 +56,7 @@ void TurretSubsystem::refresh() {
     }
 
     if(TURRET_DEBUG_STABLE_IMU && (currentTime - prevDebugUpdate > TURRET_DEBUG_MESSAGE_DELAY_MS)) {
-        sendTuningDebugInfo(true, false, 0, 0); // Clear previous debug info 
+        sendDebugInfo(false, false); // Clear previous debug info 
 
         char buffer[500];
         int nBytes;
@@ -141,13 +141,7 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
 */
 void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) 
 {
-#ifdef TARGET_SPIN_TO_WIN
     yawDesiredPos = yaw;
-#elif defined TARGET_HERO
-    yawDesiredPos = yaw;
-#else
-    yawDesiredPos = limitVal<uint16_t>(yaw, YAW_NEUTRAL_POS - YAW_RANGE, YAW_NEUTRAL_POS + YAW_RANGE);
-#endif
     pitchDesiredPos = limitVal<uint16_t>(pitch, PITCH_NEUTRAL_POS - PITCH_RANGE, PITCH_NEUTRAL_POS + PITCH_RANGE);
 }
 
