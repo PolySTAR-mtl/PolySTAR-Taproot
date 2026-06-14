@@ -7,8 +7,8 @@ namespace turret::algorithms
 }
 
 #ifdef TARGET_HERO
-static constexpr turret::algorithms::Gains2 Kyaw  = {31.62f, 3.46f};
-static constexpr turret::algorithms::Gains2 Kpitch = {31.62f, 2.75f};
+static constexpr turret::algorithms::Gains2 Kyaw  = {45.00f, 3.00f};
+static constexpr turret::algorithms::Gains2 Kpitch = {65.00f, 3.00f};
 #endif
 
 #ifdef TARGET_SENTRY

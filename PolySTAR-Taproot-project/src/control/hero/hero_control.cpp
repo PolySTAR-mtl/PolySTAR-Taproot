@@ -63,8 +63,6 @@ chassis::ChassisSpin2winKeyboardCommand chassisKeyboardDrive(&theChassis, driver
 
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
 turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
-turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers()); // Used for tuning
-turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers()); // Used for tuning
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
