@@ -26,7 +26,7 @@
 #include "subsystems/feeder/feeder_position_subsystem.hpp"
 
 // Flywheel includes
-#include "subsystems/flywheel/flywheel_fire_command.hpp"
+#include "subsystems/flywheel/flywheel_fire_commands.hpp"
 #include "subsystems/flywheel/flywheel_subsystem.hpp"
 
 // Motor includes
@@ -110,7 +110,7 @@ void setDefaultStandardCommands(src::Drivers *)
 {
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    theFlywheel.setDefaultCommand(&flywheelStart);
+    //theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/

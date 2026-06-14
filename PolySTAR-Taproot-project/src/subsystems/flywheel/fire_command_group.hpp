@@ -4,7 +4,7 @@
 #include "tap/control/comprised_command.hpp"
 #include "control/drivers/drivers.hpp"
 #include "flywheel_subsystem.hpp"
-#include "flywheel_fire_command.hpp"
+#include "flywheel_fire_commands.hpp"
 #include "fire_end_command_group.hpp"
 #include "subsystems/feeder/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/feeder_position_subsystem.hpp"

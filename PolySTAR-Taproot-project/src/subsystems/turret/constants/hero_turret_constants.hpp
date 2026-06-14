@@ -63,8 +63,8 @@ static constexpr tap::algorithms::SmoothPidConfig YAW_INNER_PID_CONFIG(
 /**
  * Neutral position values for YAW and PITCH. Corresponds to turret aiming straight ahead, parallel to ground.
  */
-static constexpr uint16_t YAW_NEUTRAL_POS = 4072;
-static constexpr uint16_t PITCH_NEUTRAL_POS = 5150;
+static constexpr uint16_t YAW_NEUTRAL_POS = 4085;
+static constexpr uint16_t PITCH_NEUTRAL_POS = 5500;
 
 /**
  * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
@@ -84,6 +84,8 @@ static constexpr uint16_t PITCH_RANGE = (uint16_t)(PITCH_RANGE_DEGREES * 8192.0f
  */
 static constexpr float YAW_SCALE_FACTOR = 900.0f;
 static constexpr float PITCH_SCALE_FACTOR = 400.0f;
+static constexpr float gravityCounteract = 812.0f;
+
 
 /*
  * Mouse sensitivity
