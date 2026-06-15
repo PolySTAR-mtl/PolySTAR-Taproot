@@ -41,6 +41,7 @@ struct TurretConfig {
      */
     float yawScaleFactor;
     float pitchScaleFactor;
+    float gravityCounteract;
 
     /*
      * Mouse sensitivity

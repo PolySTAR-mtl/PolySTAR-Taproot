@@ -34,7 +34,7 @@ TurretSubsystem::TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *ya
 
 void TurretSubsystem::initialize() {
     yawMotor->initialize();
-    lqrTurret.setGravityFeedforward(gravityCounteract);
+    lqrTurret.setGravityFeedforward(ACTIVE_TURRET_CONFIG.gravityCounteract);
     pitchMotor.initialize();
 
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();

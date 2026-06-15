@@ -93,6 +93,8 @@ constexpr TurretConfig SPIN_TO_WIN_TURRET_CONFIG = {
 
     .yawScaleFactor = 900.0f,
     .pitchScaleFactor = 400.0f,
+    .gravityCounteract = 812.0f,
+
 
     .turretMouseXScaleFactor = 0.05f,
     .turretMouseYScaleFactor = -0.05f,

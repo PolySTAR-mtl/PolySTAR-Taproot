@@ -93,6 +93,8 @@ constexpr TurretConfig SENTRY_TURRET_CONFIG = {
 
     .yawScaleFactor = 500.0f,
     .pitchScaleFactor = 300.0f,
+    .gravityCounteract = 812.0f,
+
 
     .turretMouseXScaleFactor = 0.05f,
     .turretMouseYScaleFactor = -0.05f,
