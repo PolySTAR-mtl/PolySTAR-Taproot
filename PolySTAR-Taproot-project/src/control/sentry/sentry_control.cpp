@@ -8,12 +8,11 @@
 #include "control/safe_disconnect.hpp"
 
 // Chassis includes
-#include "subsystems/chassis/chassis_auto_drive_command.hpp"
-#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
+// #include "subsystems/chassis/chassis_auto_drive_command.hpp"
+// #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 #include "subsystems/chassis/chassis_drive_command.hpp"
-#include "subsystems/chassis/chassis_keyboard_drive_command.hpp"
 #include "subsystems/chassis/chassis_subsystem.hpp"
-#include "subsystems/chassis/chassis_test_auto_drive_command.hpp"
+// #include "subsystems/chassis/chassis_test_auto_drive_command.hpp"
 
 // Turret includes
 #include "subsystems/turret/turret_auto_aim_command.hpp"
@@ -58,21 +57,21 @@ using tap::control::ToggleCommandMapping;
 namespace control
 {
 /* define subsystems --------------------------------------------------------*/
+tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
+
 chassis::ChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
-flywheel::FlywheelDjiSubsystem theFlywheel(drivers());
+flywheel::FlywheelSubsystem theFlywheel(drivers());
 feeder::FeederVelocitySubsystem theFeeder(drivers());
 feeder::FeederPositionSubsystem theTestFeeder(drivers());
 
-
 /* define commands ----------------------------------------------------------*/
-
 /* chassis ------------------------------------------------------------------*/
 chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
-chassis::ChassisAutoDriveCommand chassisAutoDrive(&theChassis, drivers());
-chassis::ChassisTestAutoDriveCommand chassisTestAutoDrive(&theChassis, drivers());
-chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
-chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+// chassis::ChassisAutoDriveCommand chassisAutoDrive(&theChassis, drivers());
+//chassis::ChassisTestAutoDriveCommand chassisTestAutoDrive(&theChassis, drivers());
+//chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
+// chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 /* turret -------------------------------------------------------------------*/
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
@@ -87,11 +86,10 @@ feeder::FeederMoveUnjamCommand feederMoveUnjam(&theTestFeeder, drivers());
 feeder::FeederAutoFeedCommand feederAutoFeed(&theFeeder, drivers());
 feeder::FeederAutoFeedTestCommand feederAutoFeedTest(&theFeeder, drivers());
 
-
 /* flywheel -----------------------------------------------------------------*/
 // flywheel::FlywheelAutoFireDjiCommand flywheelStartTest(&theFlywheel, drivers());
-flywheel::FlywheelAutoFireDjiCommand flywheelStart(&theFlywheel, drivers());
-flywheel::FlywheelFireDjiCommand flywheelStartManual(&theFlywheel, drivers());
+flywheel::FlywheelAutoFireCommand flywheelStart(&theFlywheel, drivers());
+flywheel::FlywheelFireCommand flywheelStartManual(&theFlywheel, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
 RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
@@ -105,9 +103,9 @@ HoldCommandMapping startFlywheelManual(drivers(), {&flywheelStartManual}, Remote
 /*-Turret-*/
 ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 /*-Chassis-*/
-ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
+// ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 /*-Auto commands*/
-HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim, &feederAutoFeedTest}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /*-Only used for calibration-*/
@@ -119,7 +117,7 @@ void registerStandardSubsystems(src::Drivers *drivers)
 {
     drivers->commandScheduler.registerSubsystem(&theChassis);
     drivers->commandScheduler.registerSubsystem(&theTurret);
-    drivers->commandScheduler.registerSubsystem(&theTestFeeder);
+    // drivers->commandScheduler.registerSubsystem(&theTestFeeder);
     drivers->commandScheduler.registerSubsystem(&theFeeder);
     drivers->commandScheduler.registerSubsystem(&theFlywheel);
 }
@@ -130,13 +128,14 @@ void initializeSubsystems()
     theChassis.initialize();
     theTurret.initialize();
     theFeeder.initialize();
-    theTestFeeder.initialize();
+    // theTestFeeder.initialize();
     theFlywheel.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *)
 {
+    // theChassis.setDefaultCommand(&chassisAutoDrive);
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
     theFlywheel.setDefaultCommand(&flywheelStart);
@@ -145,7 +144,7 @@ void setDefaultStandardCommands(src::Drivers *)
 /* add any starting commands to the scheduler here --------------------------*/
 void startStandardCommands(src::Drivers *drivers)
 {
-    drivers->commandScheduler.addCommand(&chassisImuCalibrate);
+    // drivers->commandScheduler.addCommand(&chassisImuCalibrate);
 }
 
 /* register io mappings here ------------------------------------------------*/
@@ -162,9 +161,9 @@ void registerStandardIoMappings(src::Drivers *drivers)
     // drivers->commandMapper.addMap(&rightAimTurret);
     drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
-    drivers->commandMapper.addMap(&toggleChassisDrive);
+    // drivers->commandMapper.addMap(&toggleChassisDrive);
     // drivers->commandMapper.addMap(&toggleAutoTestCommands);
-    drivers->commandMapper.addMap(&toggleAutoCommands);
+    // drivers->commandMapper.addMap(&toggleAutoCommands);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)

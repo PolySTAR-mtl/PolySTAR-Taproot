@@ -23,6 +23,9 @@ static constexpr float CHASSIS_TR_PROPORTIONAL_KALMAN = 0.0f;
  * of the chassis when using the keyboard.
 */
 
+static constexpr float CHASSIS_MASS_KG          = 17.2597f;
+static constexpr float CHASSIS_YAW_INERTIA_KGM2 = 1.139542f;
+
 #ifdef TARGET_HERO
 static constexpr float CHASSIS_DEFAULT_SPEED = 0.25f;
 
@@ -81,11 +84,11 @@ static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
  * Chassis motors can bus.
  */
 #ifdef TARGET_HERO
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
 #endif
 
 #ifdef TARGET_SENTRY
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
+static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 #endif
 
 #ifdef TARGET_STANDARD

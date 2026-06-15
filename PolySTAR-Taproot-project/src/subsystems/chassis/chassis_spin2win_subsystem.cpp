@@ -207,4 +207,3 @@ void ChassisSpin2WinSubsystem::sendCVUpdate() {
 }  // namespace chassis
 
 }  // namespace control
-

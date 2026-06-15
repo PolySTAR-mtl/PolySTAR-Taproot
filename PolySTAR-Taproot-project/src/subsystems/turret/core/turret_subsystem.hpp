@@ -6,10 +6,14 @@
 #include "tap/util_macros.hpp"
 #include "control/drivers/drivers.hpp"
 #include "subsystems/turret/config/constants/turret_constants.hpp"
+#include "subsystems/turret/config/constants/turret_constants.hpp"
+#include "subsystems/turret/algorithms/cascaded_pid.hpp" // old PID
+#include "subsystems/turret/algorithms/turret_lqr.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
-#include "subsystems/turret/algorithms/cascaded_pid.hpp"
 
-using turret::algorithms::CascadedPid;
+
+// using turret::algorithms::CascadedPid;
+using turret::algorithms::TurretLqrController;
 
 namespace control
 {
@@ -31,7 +35,6 @@ public:
     TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor);
 
     TurretSubsystem(const TurretSubsystem &other) = delete;
-
     TurretSubsystem &operator=(const TurretSubsystem &other) = delete;
 
     ~TurretSubsystem() = default;
@@ -69,23 +72,34 @@ private:
     void sendCVUpdate();
     void sendDebugInfo(bool sendYaw, bool sendPitch);
 
-    // Methods used when tuning the inner loop of the cascaded PID controller
-    void yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
-    void pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
-    void sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold);
+    // // Methods used when tuning the inner loop of the cascaded PID controller
+    // void yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
+    // void pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
+    // void sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold);
 
+    // Hardware constants
+    static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
+    static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
+    static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+    
     // Hardware interfaces
     src::Drivers *drivers;
     tap::motor::DjiMotor *yawMotor;
     tap::motor::DjiMotor pitchMotor;
 
-    // Motor Controllers for position control
-    CascadedPid cascadedPitchController;
-    CascadedPid cascadedYawController;
+    // // Motor Controllers for position control
+    // CascadedPid cascadedPitchController;
+    // CascadedPid cascadedYawController;
+
+    // Linear Quadratic Regulator for optimal turret stability.
+    TurretLqrController lqrTurret;
 
     // Position setpoints for turret, in encoder ticks
     float yawDesiredPos;
     float pitchDesiredPos;
+
+    bool yawInDeadzone_ = false;
+    bool pitchInDeadzone_ = false;
 
     // Time variables for fixed rate tasks
     uint32_t prevDebugUpdate;

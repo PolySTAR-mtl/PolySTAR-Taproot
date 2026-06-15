@@ -7,6 +7,7 @@
 #include "tap/motor/dji_motor.hpp"
 #include "communication/cv_handler.hpp"
 
+
 using tap::communication::serial::Uart;
 using tap::algorithms::limitVal;
 using tap::algorithms::getSign;
@@ -19,14 +20,21 @@ TurretSubsystem::TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *ya
         : tap::control::Subsystem(drivers),
           yawMotor(yawMotor),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, ACTIVE_TURRET_CONFIG.pitchIsInverted, "pitch motor"),
-          cascadedPitchController(ACTIVE_TURRET_CONFIG.pitchOuterPidConfig, ACTIVE_TURRET_CONFIG.pitchInnerPidConfig),
-          cascadedYawController(ACTIVE_TURRET_CONFIG.yawOuterPidConfig, ACTIVE_TURRET_CONFIG.yawInnerPidConfig),
+        //   cascadedPitchController(PITCH_OUTER_PID_CONFIG, PITCH_INNER_PID_CONFIG),
+        //   cascadedYawController(YAW_OUTER_PID_CONFIG, YAW_INNER_PID_CONFIG),
+         lqrTurret(TURRET_PAN_INERTIA,
+          TURRET_TILT_INERTIA,
+          /*motorOutputMax*/ 8500.0f,
+          /*axisToMotorScale*/ 250.0f),
           yawDesiredPos(ACTIVE_TURRET_CONFIG.yawNeutralPos),
           pitchDesiredPos(ACTIVE_TURRET_CONFIG.pitchNeutralPos),
-          yawRpmPid(ACTIVE_TURRET_CONFIG.yawInnerPidConfig) {}
+          yawRpmPid(ACTIVE_TURRET_CONFIG.yawInnerPidConfig)
+    {
+    }
 
 void TurretSubsystem::initialize() {
     yawMotor->initialize();
+    lqrTurret.setGravityFeedforward(gravityCounteract);
     pitchMotor.initialize();
 
     prevControllerUpdate = tap::arch::clock::getTimeMilliseconds();
@@ -64,7 +72,7 @@ void TurretSubsystem::refresh() {
     }
 
     if(TURRET_DEBUG_STABLE_IMU && (currentTime - prevDebugUpdate > TURRET_DEBUG_MESSAGE_DELAY_MS)) {
-        sendTuningDebugInfo(true, false, 0, 0); // Clear previous debug info
+        sendDebugInfo(false, false); // Clear previous debug info 
 
         char buffer[500];
         int nBytes;
@@ -80,50 +88,77 @@ void TurretSubsystem::refresh() {
     Run yaw controller and update motor output.
 */
 void TurretSubsystem::runYawController(uint32_t dt) {
-    float error = yawDesiredPos - yawMotor->getEncoderWrapped();
+    // Calculate the distance between our current angle and the target angle
+    int32_t error = static_cast<int32_t>(yawMotor->getEncoderWrapped()) 
+                    - static_cast<int32_t>(yawDesiredPos);
+    
+    
+    // Make sure the turret takes the shortest path instead of spinning the long way around (wrapped)
     if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
-        // If error is greater than 180deg then the shortest path to setpoint crosses zero
-        // So we add +/- 360deg to error to get the correct direction
-        // Avoids turret whipping around when position crosses zero
-        error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
+        error = error - DjiMotor::ENC_RESOLUTION * getSign(error);
     }
+    
+    // Check how fast the turret is currently spinning.
     int16_t currentRPM = yawMotor->getShaftRPM();
-
-    cascadedYawController.update(error, currentRPM, dt);
-
-    yawMotor->setDesiredOutput(cascadedYawController.getOutput());
+    
+    // Convert the raw motor hardware numbers into standard math units (radians)
+    float errDeg = yawMotor->encoderToDegrees<int64_t>((int64_t)error);
+    float errRad = errDeg * DEG_TO_RAD;
+    float omega = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
+    
+    // If we are super close to the target and barely moving, turn the motor off so it doesn't jitter
+    if (std::fabs(errRad) < 0.5f * DEG_TO_RAD && std::fabs(omega) < 0.2f) {
+        yawMotor->setDesiredOutput(0);
+        return;
+    }
+    
+    // Calculate exactly how much power is needed, then send that power to the motor.
+    // Pass the error as the angle with ref=0; the controller just computes (angle - ref).
+    float cmd = lqrTurret.updateYaw(errRad, omega, 0.0f);
+    yawMotor->setDesiredOutput(static_cast<int32_t>(cmd));
 }
 
-/*
-    Run pitch controller and update motor output.
-*/
 void TurretSubsystem::runPitchController(uint32_t dt) {
-    float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+    // Calculate how far off we are from where we want to point.
+    int32_t error = static_cast<int32_t>(pitchDesiredPos)
+                  - static_cast<int32_t>(pitchMotor.getEncoderWrapped());
+
+    // Check how fast the turret is currently tilting.
     int16_t currentRPM = pitchMotor.getShaftRPM();
 
-    cascadedPitchController.update(error, currentRPM, dt);
+    // Convert the raw motor hardware numbers into standard math units (radians).
+    float errDeg = pitchMotor.encoderToDegrees<int64_t>(static_cast<int64_t>(error));
+    float errRad = errDeg * DEG_TO_RAD;
+    float omega  = static_cast<float>(currentRPM) * RPM_TO_RAD_S;
 
-    pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
+    // Absolute pitch angle from neutral position (ideally about horizontal), in radians.
+    // Used only for the gravity feed-forward; the LQR itself sees the error.
+    float pitchAngleRad = pitchMotor.encoderToDegrees<int64_t>(
+        static_cast<int64_t>(pitchMotor.getEncoderWrapped()) -
+        static_cast<int64_t>(ACTIVE_TURRET_CONFIG.pitchNeutralPos)) * DEG_TO_RAD;
+
+    // If we are super close to the target and barely moving, suppress the LQR
+    // output but keep the gravity feed-forward so the gun still holds position
+    // instead of drooping out of the deadband.
+    if (std::fabs(errRad) < 0.5f * DEG_TO_RAD && std::fabs(omega) < 0.2f) {
+        float u_hold = lqrTurret.gravityFeedforward(pitchAngleRad);
+        pitchMotor.setDesiredOutput(static_cast<int32_t>(u_hold));
+        return;
+    }
+
+    // Calculate the needed power and apply it to the motor (reversed with a '-' to match the physical wiring).
+    auto cmd = lqrTurret.updatePitch(errRad, omega, 0.0f);
+    float u_grav = lqrTurret.gravityFeedforward(pitchAngleRad);
+    pitchMotor.setDesiredOutput(static_cast<int32_t>(-cmd + u_grav));
 }
 
 /*
     Set desired position setpoints for turret. Values are in encoder ticks.
 */
-void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) {
-#ifdef TARGET_SPIN_TO_WIN
+void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) 
+{
     yawDesiredPos = yaw;
-#else
-    yawDesiredPos = limitVal<uint16_t>(
-        yaw,
-        ACTIVE_TURRET_CONFIG.yawNeutralPos - ACTIVE_TURRET_CONFIG.yawRange,
-        ACTIVE_TURRET_CONFIG.yawNeutralPos + ACTIVE_TURRET_CONFIG.yawRange
-    );
-#endif
-    pitchDesiredPos = limitVal<uint16_t>(
-        pitch,
-        ACTIVE_TURRET_CONFIG.pitchNeutralPos - ACTIVE_TURRET_CONFIG.pitchRange,
-        ACTIVE_TURRET_CONFIG.pitchNeutralPos + ACTIVE_TURRET_CONFIG.pitchRange
-    );
+    pitchDesiredPos = limitVal<uint16_t>(pitch, ACTIVE_TURRET_CONFIG.pitchNeutralPos - ACTIVE_TURRET_CONFIG.pitchRange, ACTIVE_TURRET_CONFIG.pitchNeutralPos + ACTIVE_TURRET_CONFIG.pitchRange);
 }
 
 /*
@@ -195,59 +230,59 @@ void TurretSubsystem::sendDebugInfo(bool sendYaw, bool sendPitch) {
 /*
     Velocity Control debug information, used during tuning of the inner loops.
 */
-void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold) {
-    char buffer[500];
+// void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold) {
+//     char buffer[500];
+    
+//     int nBytes;
 
-    int nBytes;
+//     if (sendYaw) {
+//         float error = yawDesiredPos - yawMotor->getEncoderWrapped();
+//         if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
+//             error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
+//         }
+//         float yawDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
+//         nBytes = sprintf (buffer, "Yaw RPM: %i, Setpoint: %i\n",
+//                                 (int)(yawMotor->getShaftRPM()),
+//                                 (int)(yawDesiredVel));
+//         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+//     }
 
-    if (sendYaw) {
-        float error = yawDesiredPos - yawMotor->getEncoderWrapped();
-        if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
-            error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
-        }
-        float yawDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
-        nBytes = sprintf (buffer, "Yaw RPM: %i, Setpoint: %i\n",
-                                (int)(yawMotor->getShaftRPM()),
-                                (int)(yawDesiredVel));
-        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
-    }
-
-    if (sendPitch) {
-        float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
-        float pitchDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
-        nBytes = sprintf (buffer, "Pitch RPM: %i, Setpoint: %i\n",
-                                (int)(pitchMotor.getShaftRPM()),
-                                (int)(pitchDesiredVel));
-        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
-    }
-}
+//     if (sendPitch) {
+//         float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+//         float pitchDesiredVel = error > threshold ? velSetpoint : error < -threshold ? -velSetpoint : 0;
+//         nBytes = sprintf (buffer, "Pitch RPM: %i, Setpoint: %i\n",
+//                                 (int)(pitchMotor.getShaftRPM()),
+//                                 (int)(pitchDesiredVel));
+//         drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+//     }
+// }
 
 /*
     Run yaw inner loop. Used when tuning.
 */
-void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
-    int64_t error = yawDesiredPos - yawMotor->getEncoderWrapped();
-    if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
-        error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
-    }
-    int16_t currentRPM = yawMotor->getShaftRPM();
+// void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
+//     int64_t error = yawDesiredPos - yawMotor->getEncoderWrapped();
+//     if (abs(error) >= DjiMotor::ENC_RESOLUTION/2) {
+//         error =  error - DjiMotor::ENC_RESOLUTION * getSign(error);
+//     }
+//     int16_t currentRPM = yawMotor->getShaftRPM();
 
-    cascadedYawController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
+//     cascadedYawController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
-    yawMotor->setDesiredOutput(cascadedYawController.getOutput());
-}
+//     yawMotor->setDesiredOutput(cascadedYawController.getOutput());
+// }
 
 /*
     Run pitch inner loop. Used when tuning.
 */
-void TurretSubsystem::pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
-    float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
-    int16_t currentRPM = pitchMotor.getShaftRPM();
+// void TurretSubsystem::pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
+//     float error = pitchDesiredPos - pitchMotor.getEncoderWrapped();
+//     int16_t currentRPM = pitchMotor.getShaftRPM();
 
-    cascadedPitchController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
+//     cascadedPitchController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
-    pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
-}
+//     pitchMotor.setDesiredOutput(cascadedPitchController.getOutput());
+// }
 
 void TurretSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
     int64_t error = desiredRpm - motor->getShaftRPM();
