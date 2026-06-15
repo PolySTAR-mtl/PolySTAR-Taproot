@@ -97,5 +97,5 @@ static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN
 #endif
 
 #ifdef TARGET_SPIN_TO_WIN
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
 #endif
