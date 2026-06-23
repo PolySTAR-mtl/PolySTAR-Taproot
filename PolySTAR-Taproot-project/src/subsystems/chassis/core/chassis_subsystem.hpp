@@ -22,7 +22,7 @@ namespace control::chassis
 /**
  * A bare bones Subsystem for interacting with a 4 wheeled chassis.
  */
-template<ChassisType Type>
+template <ChassisType Type>
 class ChassisSubsystem : public tap::control::Subsystem
 {
 public:
@@ -91,16 +91,23 @@ public:
     const tap::motor::DjiMotor &getBackLeftMotor() const { return backLeftMotor; }
     const tap::motor::DjiMotor &getBackRightMotor() const { return backRightMotor; }
 
-        inline void rpmToBody(float fl, float fr, float bl, float br,
-                      float& xNorm, float& yNorm, float& rNorm) const
+    inline void rpmToBody(
+        float fl, float fr, float bl, float br,
+        float& xNorm, float& yNorm, float& rNorm) const
     {
         constexpr float S = rpmScaleFactor;
         // Avoid divide-by-zero if someone changes S later
         if (S == 0.0f) { xNorm = yNorm = rNorm = 0.0f; return; }
 
-        yNorm = (fl + br) / (2.0f * S);
-        rNorm = (fl - br) / (2.0f * S);
-        xNorm = -(fr + bl) / (2.0f * S);
+        if constexpr (Type == ChassisType::OmniWheels) {
+            xNorm = -(fr + bl) / (2.0f * S);
+            yNorm = (fl + br) / (2.0f * S);
+            rNorm = (fr - bl) / (2.0f * S);
+        } else if constexpr (Type == ChassisType::Mecanum) {
+            xNorm = (fl + fr + bl + br) / (4.0f * S);
+            yNorm = (-fl + fr + bl - br) / (4.0f * S);
+            rNorm = (-fl + fr - bl + br) / (4.0f * S);
+        }
     }
 
 private:

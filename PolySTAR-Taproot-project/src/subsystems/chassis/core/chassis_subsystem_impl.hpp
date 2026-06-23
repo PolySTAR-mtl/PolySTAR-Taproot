@@ -1,5 +1,3 @@
-
-
 #include "chassis_subsystem.hpp"
 
 #include "tap/communication/serial/remote.hpp"
@@ -59,10 +57,9 @@ void ChassisSubsystem<Type>::refresh() {
     prevVy = vy;
     prevW  = w;
     
-
     // our current speed, current acceleration, and target speed (Ref)
     // It spits out the optimal electrical commands (cmd) for all 4 motors.
-    auto cmd = lqrController->update(
+    auto cmd = lqrController->template update<Type>(
         vx, dvx, vxRef,
         vy, dvy, vyRef,
         w,  dw,  wRef
@@ -132,7 +129,7 @@ void ChassisSubsystem<Type>::updateRpmSetpoints() {
     if(yInputRamp.isTargetReached() == false) { yInputRamp.update(RAMP_SLOPE * dt); }
     if(rInputRamp.isTargetReached() == false) { rInputRamp.update(RAMP_SLOPE * dt); }
     
-    // setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
+    setDesiredOutput(xInputRamp.getValue(), yInputRamp.getValue(), rInputRamp.getValue());
     vxRef = xInputRamp.getValue();
     vyRef = yInputRamp.getValue();
     wRef  = rInputRamp.getValue();

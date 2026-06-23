@@ -8,27 +8,19 @@
 #include "control/safe_disconnect.hpp"
 
 // Chassis includes
-// #include "subsystems/chassis/chassis_auto_drive_command.hpp"
-// #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
-#include "subsystems/chassis/chassis_drive_command.hpp"
-#include "subsystems/chassis/chassis_subsystem.hpp"
-// #include "subsystems/chassis/chassis_test_auto_drive_command.hpp"
+#include "subsystems/chassis/commands/chassis_sentry_command.hpp"
+#include "subsystems/chassis/commands/chassis_spin2win_command.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
+#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 
 // Turret includes
-#include "subsystems/turret/turret_auto_aim_command.hpp"
-#include "subsystems/turret/turret_test_bottomleft_command.hpp"
-#include "subsystems/turret/turret_manual_aim_command.hpp"
-#include "subsystems/turret/turret_mouse_aim_command.hpp"
-#include "subsystems/turret/turret_test_topright_command.hpp"
-#include "subsystems/turret/turret_subsystem.hpp"
-#include "subsystems/turret/turret_test_auto_aim_command.hpp"
+#include "subsystems/turret/commands/turret_sentry_command.hpp"
+#include "subsystems/turret/commands/turret_spin2win_command.hpp"
+#include "subsystems/turret/core/turret_subsystem.hpp"
 
 // Feeder includes
-#include "subsystems/feeder/core/feeder_velocity_subsystem.hpp"
-#include "subsystems/feeder/commands/feeder_auto_feed_command.hpp"
-#include "subsystems/feeder/commands/feeder_auto_feed_test_command.hpp"
-
-#include "subsystems/feeder/core/feeder_position_subsystem.hpp" // Test with controller
+#include "subsystems/feeder/core/feeder_position_subsystem.hpp"
+#include "subsystems/feeder/commands/feeder_feed_commands.hpp"
 #include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/commands/feeder_move_command.hpp"
 
@@ -59,32 +51,24 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
-chassis::ChassisSubsystem theChassis(drivers());
+chassis::MecanumChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 flywheel::FlywheelSubsystem theFlywheel(drivers());
-feeder::FeederVelocitySubsystem theFeeder(drivers());
-feeder::FeederPositionSubsystem theTestFeeder(drivers());
+feeder::FeederPositionSubsystem theFeeder(drivers());
 
 /* define commands ----------------------------------------------------------*/
 /* chassis ------------------------------------------------------------------*/
-chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
-// chassis::ChassisAutoDriveCommand chassisAutoDrive(&theChassis, drivers());
-//chassis::ChassisTestAutoDriveCommand chassisTestAutoDrive(&theChassis, drivers());
-//chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
+// chassis::ChassisSpin2winDriveCommand chassisDrive(&theChassis, drivers(), &yawMotor);
+chassis::ChassisSentryDriveCommand chassisDrive(&theChassis, drivers());
 // chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 /* turret -------------------------------------------------------------------*/
-turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers());
-turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers());
-turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
-turret::TurretAutoAimCommand turretAutoAim(&theTurret, drivers());
-turret::TurretTestAutoAimCommand turretTestAutoAim(&theTurret, drivers());
+turret::TurretSpin2WinAimCommand turretManualAim(&theTurret, drivers());
+// turret::TurretSentryAimCommand turretAutoAim(&theTurret, drivers());
 
 /* feeder -------------------------------------------------------------------*/
-feeder::FeederMoveUnjamCommand feederMoveUnjam(&theTestFeeder, drivers());
-feeder::FeederAutoFeedCommand feederAutoFeed(&theFeeder, drivers());
-feeder::FeederAutoFeedTestCommand feederAutoFeedTest(&theFeeder, drivers());
+feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
+// feeder::FeederAutoFeedCommand feederAutoFeed(&theFeeder, drivers());
 
 /* flywheel -----------------------------------------------------------------*/
 // flywheel::FlywheelAutoFireDjiCommand flywheelStartTest(&theFlywheel, drivers());
@@ -101,7 +85,7 @@ HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapStat
 // HoldCommandMapping startFlywheel(drivers(), {&flywheelStartTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 HoldCommandMapping startFlywheelManual(drivers(), {&flywheelStartManual}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
 /*-Turret-*/
-ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
+// ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 /*-Chassis-*/
 // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 /*-Auto commands*/
@@ -117,7 +101,6 @@ void registerStandardSubsystems(src::Drivers *drivers)
 {
     drivers->commandScheduler.registerSubsystem(&theChassis);
     drivers->commandScheduler.registerSubsystem(&theTurret);
-    // drivers->commandScheduler.registerSubsystem(&theTestFeeder);
     drivers->commandScheduler.registerSubsystem(&theFeeder);
     drivers->commandScheduler.registerSubsystem(&theFlywheel);
 }
@@ -128,7 +111,6 @@ void initializeSubsystems()
     theChassis.initialize();
     theTurret.initialize();
     theFeeder.initialize();
-    // theTestFeeder.initialize();
     theFlywheel.initialize();
 }
 
@@ -159,7 +141,7 @@ void registerStandardIoMappings(src::Drivers *drivers)
     /*-Turret-*/
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);
-    drivers->commandMapper.addMap(&turretMouseAimToggle);
+    // drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
     // drivers->commandMapper.addMap(&toggleChassisDrive);
     // drivers->commandMapper.addMap(&toggleAutoTestCommands);

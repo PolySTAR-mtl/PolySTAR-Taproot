@@ -41,6 +41,8 @@ struct ChassisOperationMode
     static void manualMode(ChassisSpin2winDriveCommand* command);
     static void manualMode(ChassisHeroDriveCommand* command);
     static void autoMode(ChassisSentryDriveCommand* command);
+    // for testing
+    static void manualMode(ChassisSentryDriveCommand* command);
 
     static ChassisInputs getChassisInputs(ChassisSentryDriveCommand* command);
 

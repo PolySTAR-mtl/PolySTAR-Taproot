@@ -34,7 +34,6 @@ void ChassisSpin2winDriveCommand::execute()
 
 void ChassisSpin2winDriveCommand::end(bool) 
 { 
-    chassis->setDesiredOutput(0, 0, 0);
     //turretYawMotor->setDesiredOutput(turretYawMotor->getEncoderWrapped());
 }
 

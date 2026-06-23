@@ -38,6 +38,17 @@ void ChassisOperationMode::autoMode(ChassisSentryDriveCommand* command)
     setOutput(command, coords);    
 }
 
+void ChassisOperationMode::manualMode(ChassisSentryDriveCommand* command) 
+{
+    if (command == nullptr) {
+        return;
+    }
+
+    ChassisInputs inputs = getChassisInputs(command);
+    SubsystemCoords coords = calculateSubsystemCoords(command, inputs);
+    setOutput(command, coords);    
+}
+
 ChassisInputs ChassisOperationMode::getChassisInputs(ChassisSentryDriveCommand* command)
 {
     if (!command->startMatchTimeout.isExpired()) 

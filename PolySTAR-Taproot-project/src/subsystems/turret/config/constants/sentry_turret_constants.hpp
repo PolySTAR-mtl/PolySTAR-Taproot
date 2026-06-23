@@ -71,7 +71,7 @@ static constexpr tap::algorithms::SmoothPidConfig SENTRY_YAW_INNER_PID_CONFIG(
  * Note: Needs to be out of the config, otherwise it can't be constexpr
  */
 static constexpr float SENTRY_YAW_RANGE_DEGREES = 90;
-static constexpr float SENTRY_PITCH_RANGE_DEGREES = 20;
+static constexpr float SENTRY_PITCH_RANGE_DEGREES = 25;
 
 /**
  * Sentry turret config
@@ -83,7 +83,7 @@ constexpr TurretConfig SENTRY_TURRET_CONFIG = {
     .yawInnerPidConfig = SENTRY_YAW_INNER_PID_CONFIG,
 
     .yawNeutralPos = 6900,
-    .pitchNeutralPos = 3900,
+    .pitchNeutralPos = 1000,
 
     .yawRangeDegrees = SENTRY_YAW_RANGE_DEGREES,
     .pitchRangeDegrees = SENTRY_PITCH_RANGE_DEGREES,

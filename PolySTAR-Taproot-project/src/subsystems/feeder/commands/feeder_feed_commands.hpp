@@ -13,7 +13,7 @@ namespace control::feeder
     using FeederFeedCommand = 
         GenericFeedCommand<FeederVelocitySubsystem, NormalFeedPolicy<FeederVelocitySubsystem>>;
 
-    using AutoFeedCommand = 
+    using FeederAutoFeedCommand = 
         GenericFeedCommand<FeederVelocitySubsystem, AutoFeedPolicy<FeederVelocitySubsystem>>;
 }
 
