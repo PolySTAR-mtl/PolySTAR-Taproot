@@ -11,7 +11,7 @@ namespace control::chassis
 {
 
 ChassisSpin2winDriveCommand::ChassisSpin2winDriveCommand(
-    ChassisSpin2WinSubsystem *const chassis,
+    OmniWheelsChassisSubsystem *const chassis,
     src::Drivers *drivers,
     tap::motor::DjiMotor* turretYawMotor)
     : chassis(chassis),

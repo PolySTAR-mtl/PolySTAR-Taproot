@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "chassis_subsystem.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 
 namespace control
@@ -20,7 +20,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisKeyboardDriveCommand(ChassisSubsystem *const chassis, src::Drivers *drivers);
+    ChassisKeyboardDriveCommand(MecanumChassisSubsystem *const chassis, src::Drivers *drivers);
 
     ChassisKeyboardDriveCommand(const ChassisKeyboardDriveCommand &other) = delete;
 
@@ -37,7 +37,7 @@ public:
     bool isFinished() const override;
 
 private:
-    ChassisSubsystem *const chassis;
+    MecanumChassisSubsystem *const chassis;
 
     src::Drivers *drivers;
 

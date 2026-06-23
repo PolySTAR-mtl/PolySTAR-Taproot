@@ -9,7 +9,7 @@ namespace control::chassis
 {
 
 ChassisHeroDriveCommand::ChassisHeroDriveCommand(
-    ChassisSpin2WinSubsystem *const chassis,
+    OmniWheelsChassisSubsystem *const chassis,
     src::Drivers *drivers,
     tap::motor::DjiMotor* turretYawMotor)
     : chassis(chassis),

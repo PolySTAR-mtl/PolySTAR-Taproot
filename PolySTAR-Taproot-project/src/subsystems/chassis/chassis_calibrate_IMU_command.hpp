@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "chassis_subsystem.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "tap/communication/sensors/imu/imu_interface.hpp"
 
@@ -21,7 +21,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisCalibrateImuCommand(ChassisSubsystem *const chassis, src::Drivers *drivers);
+    ChassisCalibrateImuCommand(OmniWheelsChassisSubsystem *const chassis, src::Drivers *drivers);
 
     ChassisCalibrateImuCommand(const ChassisCalibrateImuCommand &other) = delete;
 
@@ -38,7 +38,7 @@ public:
     bool isFinished() const override;
 
 private:
-    ChassisSubsystem *const chassis;
+    OmniWheelsChassisSubsystem *const chassis;
 
     src::Drivers *drivers;
 

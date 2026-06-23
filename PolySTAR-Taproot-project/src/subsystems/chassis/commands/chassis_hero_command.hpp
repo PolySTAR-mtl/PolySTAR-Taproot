@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "subsystems/chassis/modes/chassis_operation_mode.hpp"
 
@@ -14,7 +14,7 @@ class ChassisHeroDriveCommand : public tap::control::Command
 {
 public:
 
-    ChassisHeroDriveCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
+    ChassisHeroDriveCommand(OmniWheelsChassisSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
 
     ChassisHeroDriveCommand(const ChassisHeroDriveCommand &other) = delete;
 
@@ -33,7 +33,7 @@ public:
     bool isMoving() const;
 
 private:
-    ChassisSpin2WinSubsystem *const chassis;
+    OmniWheelsChassisSubsystem *const chassis;
 
     src::Drivers *drivers;
 

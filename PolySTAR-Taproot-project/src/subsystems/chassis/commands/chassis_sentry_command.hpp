@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "subsystems/chassis/chassis_subsystem.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "subsystems/chassis/modes/chassis_operation_mode.hpp"
 #include "tap/architecture/timeout.hpp"
@@ -20,7 +20,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisSentryDriveCommand(ChassisSubsystem *const chassis, src::Drivers *drivers);
+    ChassisSentryDriveCommand(MecanumChassisSubsystem *const chassis, src::Drivers *drivers);
 
     ChassisSentryDriveCommand(const ChassisSentryDriveCommand &other) = delete;
 
@@ -37,7 +37,7 @@ public:
     bool isFinished() const override;
 
 private:
-    ChassisSubsystem *const chassis;
+    MecanumChassisSubsystem *const chassis;
 
     src::Drivers *drivers;
 

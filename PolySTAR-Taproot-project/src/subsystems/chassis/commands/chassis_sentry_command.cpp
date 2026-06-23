@@ -1,11 +1,12 @@
 #include "chassis_sentry_command.hpp"
+
 #include "subsystems/sentry_general_constants.hpp"
 
 namespace control::chassis 
 {
 
 ChassisSentryDriveCommand::ChassisSentryDriveCommand(
-    ChassisSubsystem *const chassis,
+    MecanumChassisSubsystem *const chassis,
     src::Drivers *drivers)
     : chassis(chassis),
     drivers(drivers),

@@ -47,7 +47,7 @@ protected:
     friend struct OperationMode;
     OperationMode operationMode {};
 
-    algorithms::ImuInterpreter imuInterpreter;
+    ::algorithms::ImuInterpreter imuInterpreter;
 
 };  // Spin2WinAimCommand
 

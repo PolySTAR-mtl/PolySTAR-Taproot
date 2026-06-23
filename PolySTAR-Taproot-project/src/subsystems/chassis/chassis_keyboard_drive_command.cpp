@@ -11,7 +11,7 @@ namespace control
 namespace chassis
 {
 ChassisKeyboardDriveCommand::ChassisKeyboardDriveCommand(
-    ChassisSubsystem *const chassis,
+    MecanumChassisSubsystem *const chassis,
     src::Drivers *drivers)
     : chassis(chassis),
       drivers(drivers)

@@ -14,7 +14,7 @@ float OperationMode::getXInput(T* command) {
     }
 
     float xInput = command->drivers->controlInterface.getTurretXInput();
-    float xMouseInput = command->drivers->controlInterface.getTurretXMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseXScaleFactor;
+    float xMouseInput = command->drivers->controlInterface.getTurretXMouseInput() * ACTIVE_TURRET_CONFIG.turretMouseXScaleFactor;
 
     return xInput + xMouseInput;
 }
@@ -26,7 +26,7 @@ float OperationMode::getYInput(T* command) {
     }
 
     float yInput = command->drivers->controlInterface.getTurretYInput();
-    float yMouseInput = command->drivers->controlInterface.getTurretYMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseYScaleFactor;
+    float yMouseInput = command->drivers->controlInterface.getTurretYMouseInput() * ::control::turret::ACTIVE_TURRET_CONFIG.turretMouseYScaleFactor;
 
     return yInput + yMouseInput;
 }

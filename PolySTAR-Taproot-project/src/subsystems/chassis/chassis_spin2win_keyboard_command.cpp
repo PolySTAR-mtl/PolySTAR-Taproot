@@ -14,7 +14,7 @@ namespace control
 namespace chassis
 {
 ChassisSpin2winKeyboardCommand::ChassisSpin2winKeyboardCommand(
-    ChassisSpin2WinSubsystem *const chassis,
+    OmniWheelsChassisSubsystem *const chassis,
     src::Drivers *drivers,
     const tap::motor::DjiMotor* turretYawMotor)
     : chassis(chassis),

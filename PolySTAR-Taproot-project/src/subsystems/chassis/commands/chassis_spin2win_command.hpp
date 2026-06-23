@@ -3,8 +3,8 @@
 
 #include "tap/control/command.hpp"
 
-#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "subsystems/chassis/modes/chassis_operation_mode.hpp"
 
 namespace control::chassis
@@ -19,7 +19,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisSpin2winDriveCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
+    ChassisSpin2winDriveCommand(OmniWheelsChassisSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *turretYawMotor);
 
     ChassisSpin2winDriveCommand(const ChassisSpin2winDriveCommand &other) = delete;
 
@@ -38,7 +38,7 @@ public:
     bool isMoving() const;
 
 private:
-    ChassisSpin2WinSubsystem *const chassis;
+    OmniWheelsChassisSubsystem *const chassis;
 
     src::Drivers *drivers;
 
