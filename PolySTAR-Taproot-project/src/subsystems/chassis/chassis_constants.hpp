@@ -80,25 +80,3 @@ static constexpr float W_TO_R = 0.07955; // 1rps = 0.5 on chassis r
  */
 static constexpr bool CHASSIS_DEBUG_MESSAGE = true;
 static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
-/**
- * Chassis motors can bus.
- */
-#ifdef TARGET_HERO
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
-#endif
-
-#ifdef TARGET_SENTRY
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
-#endif
-
-#ifdef TARGET_STANDARD
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
-#endif
-
-#ifdef TARGET_ICRA
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
-#endif
-
-#ifdef TARGET_SPIN_TO_WIN
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
-#endif

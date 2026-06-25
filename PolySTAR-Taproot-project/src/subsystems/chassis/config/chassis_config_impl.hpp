@@ -30,6 +30,8 @@ consteval ChassisConfig getChassisConfig<target::RobotTarget::Engineer>(){
     return ENGINEER_CHASSIS_CONFIG;
 }
 
-} // namespace chassis
+constexpr ChassisConfig ACTIVE_CHASSIS_CONFIG = getChassisConfig<target::ROBOT_TARGET>();
+
+} // namespace control::chassis
 
 #endif // CHASSIS_CONFIG_IMPL_HPP

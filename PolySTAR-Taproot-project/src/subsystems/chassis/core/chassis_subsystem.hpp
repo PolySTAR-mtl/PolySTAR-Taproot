@@ -8,11 +8,12 @@
 #include "tap/algorithms/ramp.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "subsystems/chassis/chassis_constants.hpp"
 #include "control/drivers/drivers.hpp"
 #include "control/robot_config.hpp"
+#include "subsystems/chassis/chassis_constants.hpp"
 #include "subsystems/chassis/algorithms/chassis_lqr.hpp"
-#include "chassis_type.hpp"
+#include "subsystems/chassis/core/chassis_type.hpp"
+#include "subsystems/chassis/config/chassis_config.hpp"
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -46,10 +47,10 @@ public:
     ChassisSubsystem(src::Drivers *drivers)
         : tap::control::Subsystem(drivers),
           drivers(drivers),
-          frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "front left motor"),
-          frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "front right motor"),
-          backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "back left motor"),
-          backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "back right motor"),
+          frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.can_bus_motors, false, "front left motor"),
+          frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.can_bus_motors, true, "front right motor"),
+          backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.can_bus_motors, false, "back left motor"),
+          backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.can_bus_motors, true, "back right motor"),
           frontLeftPid(pidConfig),
           frontRightPid(pidConfig),
           backLeftPid(pidConfig),
