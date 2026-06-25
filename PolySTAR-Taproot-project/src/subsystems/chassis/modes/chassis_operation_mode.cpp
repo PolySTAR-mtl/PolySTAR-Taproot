@@ -40,13 +40,14 @@ void ChassisOperationMode::autoMode(ChassisSentryDriveCommand* command)
 
 void ChassisOperationMode::manualMode(ChassisSentryDriveCommand* command) 
 {
-    if (command == nullptr) {
-        return;
-    }
+    float xInput = command->drivers->controlInterface.getChassisXInput();
+    float yInput = command->drivers->controlInterface.getChassisYInput();
+    float rInput = command->drivers->controlInterface.getChassisRInput();
 
-    ChassisInputs inputs = getChassisInputs(command);
-    SubsystemCoords coords = calculateSubsystemCoords(command, inputs);
-    setOutput(command, coords);    
+    command->chassis->setTargetOutput(
+        fabs(xInput) >= CHASSIS_DEAD_ZONE ? xInput : 0.0f,
+        fabs(yInput) >= CHASSIS_DEAD_ZONE ? yInput : 0.0f,
+        fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f);
 }
 
 ChassisInputs ChassisOperationMode::getChassisInputs(ChassisSentryDriveCommand* command)
