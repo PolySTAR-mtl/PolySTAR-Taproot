@@ -28,98 +28,72 @@ template<ChassisType Type>
 void ChassisSubsystem<Type>::refresh() {
     updateRpmSetpoints();
     // Ancien code PID (a conserver au cas ou)
-    // uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
-    // updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
-    // updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm, dt);
-    // updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm, dt);
-    // updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm, dt);
-    // prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
+    uint32_t dt = tap::arch::clock::getTimeMilliseconds() - prevPidUpdate;
+    updateRpmPid(&frontLeftPid, &frontLeftMotor, frontLeftDesiredRpm, dt);
+    updateRpmPid(&frontRightPid, &frontRightMotor, frontRightDesiredRpm, dt);
+    updateRpmPid(&backLeftPid, &backLeftMotor, backLeftDesiredRpm, dt);
+    updateRpmPid(&backRightPid, &backRightMotor, backRightDesiredRpm, dt);
+    prevPidUpdate = tap::arch::clock::getTimeMilliseconds();
 
-    uint32_t now = tap::arch::clock::getTimeMilliseconds();
-    float dt = (now - prevControlUpdate) / 1000.0f;
-    prevControlUpdate = now;
+    // uint32_t now = tap::arch::clock::getTimeMilliseconds();
+    // float dt = (now - prevControlUpdate) / 1000.0f;
+    // prevControlUpdate = now;
 
-    float fl = static_cast<float>(frontLeftMotor.getShaftRPM());
-    float fr = static_cast<float>(frontRightMotor.getShaftRPM());
-    float bl = static_cast<float>(backLeftMotor.getShaftRPM());
-    float br = static_cast<float>(backRightMotor.getShaftRPM());
+    // float fl = static_cast<float>(frontLeftMotor.getShaftRPM());
+    // float fr = static_cast<float>(frontRightMotor.getShaftRPM());
+    // float bl = static_cast<float>(backLeftMotor.getShaftRPM());
+    // float br = static_cast<float>(backRightMotor.getShaftRPM());
 
-    float vx=0.f, vy=0.f, w=0.f;
-    rpmToBody(fl, fr, bl, br, vx, vy, w);
+    // float vx=0.f, vy=0.f, w=0.f;
+    // rpmToBody(fl, fr, bl, br, vx, vy, w);
 
-    // Calculate the robot's current acceleration (change in speed divided by time).
-    float dvx = (vx - prevVx) / dt;
-    float dvy = (vy - prevVy) / dt;
-    float dw  = (w  - prevW ) / dt;
+    // // Calculate the robot's current acceleration (change in speed divided by time).
+    // float dvx = (vx - prevVx) / dt;
+    // float dvy = (vy - prevVy) / dt;
+    // float dw  = (w  - prevW ) / dt;
 
-    // Save the current speeds to use as the "previous" speeds during the next loop.
-    prevVx = vx;
-    prevVy = vy;
-    prevW  = w;
+    // // Save the current speeds to use as the "previous" speeds during the next loop.
+    // prevVx = vx;
+    // prevVy = vy;
+    // prevW  = w;
     
-    // our current speed, current acceleration, and target speed (Ref)
-    // It spits out the optimal electrical commands (cmd) for all 4 motors.
-    auto cmd = lqrController->template update<Type>(
-        vx, dvx, vxRef,
-        vy, dvy, vyRef,
-        w,  dw,  wRef
-    );
+    // // our current speed, current acceleration, and target speed (Ref)
+    // // It spits out the optimal electrical commands (cmd) for all 4 motors.
+    // auto cmd = lqrController->template update<Type>(
+    //     vx, dvx, vxRef,
+    //     vy, dvy, vyRef,
+    //     w,  dw,  wRef
+    // );
 
-    frontLeftMotor.setDesiredOutput(cmd[0]);
-    frontRightMotor.setDesiredOutput(cmd[1]);
-    backLeftMotor.setDesiredOutput(cmd[2]);
-    backRightMotor.setDesiredOutput(cmd[3]);
+    // frontLeftMotor.setDesiredOutput(cmd[0]);
+    // frontRightMotor.setDesiredOutput(cmd[1]);
+    // backLeftMotor.setDesiredOutput(cmd[2]);
+    // backRightMotor.setDesiredOutput(cmd[3]);
 
     // Attempt to send a UART positionMessage to Jetson if the delay has elapsed
-    if (tap::arch::clock::getTimeMilliseconds() - prevCVUpdate > CHASSIS_CV_UPDATE_PERIOD ) {
-        prevCVUpdate = tap::arch::clock::getTimeMilliseconds();
-        sendCVUpdate();
-    }
+    // 
 
-    if (CHASSIS_DEBUG_MESSAGE == false) return;
 
-    if (tap::arch::clock::getTimeMilliseconds() - prevDebugTime > CHASSIS_DEBUG_MESSAGE_DELAY_MS) {
-        prevDebugTime = tap::arch::clock::getTimeMilliseconds();
-        auto gz = drivers->mpu6500.getGz();
-        char buffer[500];
 
-        // Front right debug message
-        int nBytes = sprintf (buffer, "FR-RPM: %i, SETPOINT: %i\n",
-                              frontRightMotor.getShaftRPM(),
-                              (int)cmd[0]);
-        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-        // Front left debug message
-        nBytes = sprintf (buffer, "FL-RPM: %i, SETPOINT: %i\n",
-                              frontLeftMotor.getShaftRPM(),
-                              (int)cmd[1]);
-        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-        // Back right debug message
-        nBytes = sprintf (buffer, "BR-RPM: %i, SETPOINT: %i\n",
-                              backRightMotor.getShaftRPM(),
-                              (int)cmd[2]);
-        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-        // Back left debug message
-        nBytes = sprintf (buffer, "BL-RPM: %i, SETPOINT: %i\n",
-                              backLeftMotor.getShaftRPM(),
-                              (int)cmd[3]);
-        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-        
-        nBytes = sprintf (buffer, "GZ: %i\n",
-                            (int)gz);
-        drivers->uart.write(Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
-        
-    }
+
+
+
+
+
+
+    
 }
 
-// void ChassisSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
-//     int64_t error = desiredRpm - motor->getShaftRPM();
-//     pid->runControllerDerivateError(error, dt);
-//     if (desiredRpm == 0) {
-//         motor->setDesiredOutput(0);
-//     } else {
-//         motor->setDesiredOutput(pid->getOutput());
-//     }
-// }
+template<ChassisType Type>
+void ChassisSubsystem<Type>::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
+    int64_t error = desiredRpm - motor->getShaftRPM();
+    pid->runControllerDerivateError(error, dt);
+    if (desiredRpm == 0) {
+        motor->setDesiredOutput(0);
+    } else {
+        motor->setDesiredOutput(pid->getOutput());
+    }
+}
 
 template<ChassisType Type>
 void ChassisSubsystem<Type>::updateRpmSetpoints() {

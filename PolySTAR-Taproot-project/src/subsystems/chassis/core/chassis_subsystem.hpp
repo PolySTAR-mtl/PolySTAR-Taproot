@@ -3,8 +3,8 @@
 
 #include <memory>
 #include "tap/control/subsystem.hpp"
-// #include "tap/algorithms/smooth_pid.hpp"
-// #include "modm/math/filter/pid.hpp"
+#include "tap/algorithms/smooth_pid.hpp"
+#include "modm/math/filter/pid.hpp"
 #include "tap/algorithms/ramp.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
@@ -50,14 +50,14 @@ public:
           frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "front right motor"),
           backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "back left motor"),
           backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "back right motor"),
-        //   frontLeftPid(pidConfig),
-        //   frontRightPid(pidConfig),
-        //   backLeftPid(pidConfig),
-        //   backRightPid(pidConfig),
-        //   frontLeftDesiredRpm(0),
-        //   frontRightDesiredRpm(0),
-        //   backLeftDesiredRpm(0),
-        //   backRightDesiredRpm(0),
+          frontLeftPid(pidConfig),
+          frontRightPid(pidConfig),
+          backLeftPid(pidConfig),
+          backRightPid(pidConfig),
+          frontLeftDesiredRpm(0),
+          frontRightDesiredRpm(0),
+          backLeftDesiredRpm(0),
+          backRightDesiredRpm(0),
           prevCVUpdate(0)
     {
         lqrController = std::make_unique<chassis::algorithms::ChassisLqrController>(
@@ -80,7 +80,7 @@ public:
 
     void setDesiredOutput(float x, float y, float r);
 
-    // void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
+    void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
     void updateRpmSetpoints();
     void setTargetOutput(float x, float y, float r);
 
@@ -134,16 +134,16 @@ private:
     std::unique_ptr<chassis::algorithms::ChassisLqrController> lqrController;
 
     // // Smooth PID configuration
-    // tap::algorithms::SmoothPidConfig pidConfig = { CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD,
-    //                                                         CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT,
-    //                                                         CHASSIS_TQ_DERIVATIVE_KALMAN, CHASSIS_TR_DERIVATIVE_KALMAN,
-    //                                                         CHASSIS_TQ_PROPORTIONAL_KALMAN, CHASSIS_TR_PROPORTIONAL_KALMAN };
+    tap::algorithms::SmoothPidConfig pidConfig = { CHASSIS_PID_KP, CHASSIS_PID_KI, CHASSIS_PID_KD,
+                                                            CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT,
+                                                            CHASSIS_TQ_DERIVATIVE_KALMAN, CHASSIS_TR_DERIVATIVE_KALMAN,
+                                                            CHASSIS_TQ_PROPORTIONAL_KALMAN, CHASSIS_TR_PROPORTIONAL_KALMAN };
     
     // // Smooth PID controllers for position feedback from motors
-    // tap::algorithms::SmoothPid frontLeftPid;
-    // tap::algorithms::SmoothPid frontRightPid;
-    // tap::algorithms::SmoothPid backLeftPid;
-    // tap::algorithms::SmoothPid backRightPid;
+    tap::algorithms::SmoothPid frontLeftPid;
+    tap::algorithms::SmoothPid frontRightPid;
+    tap::algorithms::SmoothPid backLeftPid;
+    tap::algorithms::SmoothPid backRightPid;
 
     float vxRef = 0.0f;   // desired forward speed in [-1, 1]
     float vyRef = 0.0f;   // desired rightward speed in [-1, 1]
@@ -176,7 +176,7 @@ private:
     static constexpr float rpmScaleFactor = 3500.0f;
 
     uint32_t prevDebugTime;
-    // uint32_t prevPidUpdate;
+    uint32_t prevPidUpdate;
 
     // Variables for managing UART messages sent to CV
     uint32_t prevCVUpdate;
