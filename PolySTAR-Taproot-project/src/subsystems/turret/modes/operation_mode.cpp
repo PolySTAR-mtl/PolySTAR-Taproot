@@ -4,6 +4,7 @@
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
 #include "communication/cv_serial_data.hpp"
+#include "operation_mode.hpp"
 
 using src::communication::cv::CVSerialData;
 
@@ -20,6 +21,21 @@ namespace control::turret
         float yawSetpoint = turretData.yawSetpoint*MRAD_TO_DEGREES;
 
         command->turret->setAbsoluteOutputDegrees(yawSetpoint, pitchSetpoint);
+    }
+
+     void OperationMode::manualMode(TurretSentryAimCommand* command) {
+        if (command == nullptr) {
+            return;
+        }
+
+        // Get inputs from the controller and mouse
+        const float xInput = getXInput(command);
+        const float yInput = getYInput(command);
+
+        // Set desired outputs
+        command->turret->setRelativeOutput(
+            fabs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
+            fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
     }
 
     void OperationMode::manualMode(TurretSpin2WinAimCommand* command) {

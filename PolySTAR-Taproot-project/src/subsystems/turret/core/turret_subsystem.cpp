@@ -147,7 +147,7 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
     }
 
     // Calculate the needed power and apply it to the motor (reversed with a '-' to match the physical wiring).
-    auto cmd = lqrTurret.updatePitch(errRad, omega, 0.0f);
+    auto cmd = lqrTurret.updatePitch(errRad, -omega, 0.0f);
     float u_grav = lqrTurret.gravityFeedforward(pitchAngleRad);
     pitchMotor.setDesiredOutput(static_cast<int32_t>(-cmd + u_grav));
 }

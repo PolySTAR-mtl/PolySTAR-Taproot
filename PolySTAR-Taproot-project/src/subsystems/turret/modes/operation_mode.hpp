@@ -12,6 +12,7 @@ struct OperationMode
 {
     // SHOULD CHANGE TO SENTRY COMMAND
     static void autoMode(TurretSentryAimCommand* command);
+    static void manualMode(TurretSentryAimCommand* command);
     static void manualMode(TurretHeroAimCommand* command);
     static void manualMode(TurretSpin2WinAimCommand* command);
 

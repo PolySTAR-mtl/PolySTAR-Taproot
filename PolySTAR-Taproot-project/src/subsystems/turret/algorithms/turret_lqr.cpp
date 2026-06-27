@@ -44,7 +44,8 @@ float TurretLqrController::gravityFeedforward(float pitchAngle)
     multiplier = -2.25f;
     #endif
     // Cancels the gravitational torque on the pitch axis at the current angle.
-    return Kg_ * multiplier * std::cos(pitchAngle);
+    //return Kg_ * multiplier * std::cos(pitchAngle);
+    return Kg_ * std::cos(pitchAngle);
 }
 
 float TurretLqrController::updatePitch(float pitchAngle, float pitchRate, float pitchRef)

@@ -83,7 +83,7 @@ constexpr TurretConfig SENTRY_TURRET_CONFIG = {
     .yawInnerPidConfig = SENTRY_YAW_INNER_PID_CONFIG,
 
     .yawNeutralPos = 6900,
-    .pitchNeutralPos = 6000,
+    .pitchNeutralPos = 8000,
 
     .yawRangeDegrees = SENTRY_YAW_RANGE_DEGREES,
     .pitchRangeDegrees = SENTRY_PITCH_RANGE_DEGREES,
