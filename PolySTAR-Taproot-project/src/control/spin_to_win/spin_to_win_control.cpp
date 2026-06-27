@@ -74,12 +74,13 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /* Controller mappings */
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP),true);
-HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+// HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP), true);
+// ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Mouse mappings */
 ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
-HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT),true);
+HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
 // ToggleCommandMapping toggleClientAiming(drivers(), {&turretMouseNoSpin}, RemoteMapState({Remote::Key::F}));
 // ToggleCommandMapping toggleChassisSpinKey(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::R}));
 // ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
@@ -109,7 +110,6 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    // theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -119,10 +119,11 @@ void startStandardCommands(src::Drivers *drivers) {
 
 /* register io mappings here ------------------------------------------------*/
 void registerStandardIoMappings(src::Drivers *drivers) {
-    drivers->commandMapper.addMap(&feedFeeder);
-    drivers->commandMapper.addMap(&toggleChassisSpin);
+    // drivers->commandMapper.addMap(&feedFeeder);
+    // drivers->commandMapper.addMap(&toggleChassisSpin);
     drivers->commandMapper.addMap(&mouseStartFlywheel);
     drivers->commandMapper.addMap(&mouseFeedFeeder);
+    // drivers->commandMapper.addMap(&startFlywheel);
     // drivers->commandMapper.addMap(&toggleClientAiming);
     // drivers->commandMapper.addMap(&toggleChassisSpinKey);
     // drivers->commandMapper.addMap(&leftAimTurret);
