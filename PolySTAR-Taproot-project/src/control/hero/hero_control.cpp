@@ -7,18 +7,15 @@
 #include "control/safe_disconnect.hpp"
 
 // Chassis includes
-#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
-#include "subsystems/chassis/chassis_relative_drive_command.hpp"
-#include "subsystems/chassis/chassis_spin2win_command.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "subsystems/chassis/chassis_spin2win_keyboard_command.hpp"
-#include "subsystems/chassis/chassis_spin2win_calibrate_IMU.hpp"
+#include "subsystems/chassis/chassis_relative_drive_command.hpp"
+#include "subsystems/chassis/commands/chassis_hero_command.hpp"
+#include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 
 // Turret includes
-#include "subsystems/turret/turret_subsystem.hpp"
-#include "subsystems/turret/turret_manual_aim_command.hpp"
-#include "subsystems/turret/turret_mouse_aim_command.hpp"
-#include "subsystems/turret/turret_test_bottomleft_command.hpp"
-#include "subsystems/turret/turret_test_topright_command.hpp"
+#include "subsystems/turret/core/turret_subsystem.hpp"
+#include "subsystems/turret/commands/turret_hero_command.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/core/feeder_position_subsystem.hpp"
@@ -52,7 +49,7 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
-chassis::ChassisSpin2WinSubsystem theChassis(drivers());
+chassis::OmniWheelsChassisSubsystem theChassis(drivers());
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelDjiSubsystem theFlywheel(drivers());
@@ -60,11 +57,10 @@ flywheel::FlywheelDjiSubsystem theFlywheel(drivers());
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2winKeyboardCommand chassisKeyboardDrive(&theChassis, drivers(), &yawMotor);
-chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
-chassis::ChassisSpin2WinCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
+chassis::ChassisHeroDriveCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
+chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
-turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
+turret::TurretHeroAimCommand turretManualAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
@@ -84,7 +80,7 @@ HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManua
 /* Keyboard mappings */
 HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
 ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
-ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::G}));
+//ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::G}));
 
 // ToggleCommandMapping togglechassisRelativeDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 // ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
@@ -127,7 +123,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     //drivers->commandMapper.addMap(&startFlywheel);
     drivers->commandMapper.addMap(&mouseFeedFeeder);
     drivers->commandMapper.addMap(&mouseStartFlywheel);
-    drivers->commandMapper.addMap(&toggleClientAiming);
+    //drivers->commandMapper.addMap(&toggleClientAiming);
     drivers->commandMapper.addMap(&toggleChassisSpin);
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);

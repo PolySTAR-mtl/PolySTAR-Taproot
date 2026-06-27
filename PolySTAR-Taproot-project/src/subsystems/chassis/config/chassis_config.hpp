@@ -23,7 +23,7 @@ struct ChassisConfig
 
 constexpr ChassisConfig HERO_CHASSIS_CONFIG {
     .default_speed =  0.25f,
-    .can_bus_motors = tap::can::CanBus::CAN_BUS1,
+    .can_bus_motors = tap::can::CanBus::CAN_BUS2,
 };
 
 constexpr ChassisConfig SENTRY_CHASSIS_CONFIG {
@@ -33,7 +33,7 @@ constexpr ChassisConfig SENTRY_CHASSIS_CONFIG {
 
 constexpr ChassisConfig SPIN_TO_WIN_CHASSIS_CONFIG {
     .default_speed = 0.4f,
-    .can_bus_motors = tap::can::CanBus::CAN_BUS1,
+    .can_bus_motors = tap::can::CanBus::CAN_BUS2,
 };
 
 constexpr ChassisConfig STANDARD_CHASSIS_CONFIG {
