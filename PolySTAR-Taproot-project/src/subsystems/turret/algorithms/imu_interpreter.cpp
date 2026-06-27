@@ -14,6 +14,7 @@ namespace algorithms
 
     void ImuInterpreter::update(const float xInput) {
         float gZ = drivers->mpu6500.getGz();
+        
         gzSamplingSum += gZ;
         gzSamplingCount++;
         gzAverage = gzSamplingSum / gzSamplingCount;

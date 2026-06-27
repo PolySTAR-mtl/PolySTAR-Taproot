@@ -26,7 +26,7 @@ void TurretSpin2WinAimCommand::initialize()
 {
     prevUpdate = tap::arch::clock::getTimeMilliseconds();
     // Need to look into it
-    // this->turret->setIsSpin2WinMode(true);
+    this->turret->setIsSpin2WinMode(true);
 }
 
 void TurretSpin2WinAimCommand::execute()
