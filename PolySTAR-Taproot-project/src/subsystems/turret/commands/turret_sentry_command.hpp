@@ -10,7 +10,7 @@
 namespace control::turret
 {
 
-class SentryAimCommand : public tap::control::Command
+class TurretSentryAimCommand : public tap::control::Command
 {
 public:
     /**
@@ -20,11 +20,11 @@ public:
      * @param[in] turret a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    SentryAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
+    TurretSentryAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
-    SentryAimCommand(const SentryAimCommand &other) = delete;
+    TurretSentryAimCommand(const TurretSentryAimCommand &other) = delete;
 
-    SentryAimCommand &operator=(const SentryAimCommand &other) = delete;
+    TurretSentryAimCommand &operator=(const TurretSentryAimCommand &other) = delete;
 
     void initialize() override;
 

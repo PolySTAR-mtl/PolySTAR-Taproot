@@ -82,7 +82,7 @@ constexpr TurretConfig SPIN_TO_WIN_TURRET_CONFIG = {
     .yawOuterPidConfig = SPIN_TO_WIN_YAW_OUTER_PID_CONFIG,
     .yawInnerPidConfig = SPIN_TO_WIN_YAW_INNER_PID_CONFIG,
 
-    .yawNeutralPos = 4755,
+    .yawNeutralPos = 0,
     .pitchNeutralPos = 6515,
 
     .yawRangeDegrees = SPIN_TO_WIN_YAW_RANGE_DEGREES,

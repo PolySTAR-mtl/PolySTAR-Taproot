@@ -16,7 +16,7 @@ enum class OperationType
     None,
 };
 
-struct ChassisInputs 
+struct ChassisInputs
 {
     float x = 0.0f;
     float y = 0.0f;
@@ -24,7 +24,7 @@ struct ChassisInputs
     OperationType operationType = OperationType::None;
 };
 
-struct SubsystemCoords 
+struct SubsystemCoords
 {
     float x = 0.0f;
     float y = 0.0f;

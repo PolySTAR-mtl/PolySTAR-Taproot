@@ -2,10 +2,11 @@
 #define FEEDER_SUBSYSTEM_LEGACY_HPP_
 
 #include "tap/control/subsystem.hpp"
-#include "modm/math/filter/pid.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
 #include "subsystems/feeder/utils/feed_mode.hpp"
+#include "modm/math/filter/pid.hpp"
+#include "control/drivers/drivers.hpp"
 
 namespace control::feeder
 {
@@ -21,7 +22,7 @@ public:
      * Constructs a new FeederSubsystem with default parameters specified in
      * the private section of this class.
      */
-    FeederVelocitySubsystem(tap::Drivers *drivers);
+    FeederVelocitySubsystem(tap::Drivers *drivers, src::Drivers *srcDrivers);
 
     FeederVelocitySubsystem(const FeederVelocitySubsystem &other) = delete;
 
@@ -55,8 +56,14 @@ private:
     // Activating the command sets a desired RPM (defined in feeder_constants.hpp) for the motor.
     float feederDesiredRpm;
 
+    tap::arch::MilliTimeout startMatchTimeout;
+
+    src::Drivers *srcDrivers;
+
 };  // class FeederSubsystem
 
 }  // namespace control::feeder
+
+#include "feeder_velocity_subsystem_impl.hpp"
 
 #endif  // FEEDER_SUBSYSTEM_LEGACY_HPP_

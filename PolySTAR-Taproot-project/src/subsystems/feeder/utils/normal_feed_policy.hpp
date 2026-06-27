@@ -21,4 +21,6 @@ private:
 };
 } // control::feeder
 
+#include "normal_feed_policy_impl.hpp"
+
 #endif // NORMAL_FEED_POLICY_HPP

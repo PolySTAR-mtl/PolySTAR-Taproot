@@ -25,14 +25,12 @@ void AutoFeedPolicy<Subsystem>::initialize()
 template<typename Subsystem>
 void AutoFeedPolicy<Subsystem>::execute() 
 {
-    feeder_template executeFeed<FeedMode::Auto>();
+    feeder_->template executeFeed<FeedMode::Auto>();
 }
 
 template<typename Subsystem>
-void AutoFeedPolicy<Subsystem>::end(bool interrupt) 
-{
-    feeder_->template stopFiring();
-}
+void AutoFeedPolicy<Subsystem>::end(bool interrupt) {}
+
 } // control::feeder
 
 #endif //AUTO_FEED_POLICY_IMPL_HPP

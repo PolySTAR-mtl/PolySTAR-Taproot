@@ -9,7 +9,7 @@ using src::communication::cv::CVSerialData;
 
 namespace control::turret
 {
-    void OperationMode::autoMode(SentryAimCommand *command) {
+    void OperationMode::autoMode(TurretSentryAimCommand *command) {
         if (command == nullptr) {
             return;
         }

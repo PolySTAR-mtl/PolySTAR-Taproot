@@ -35,7 +35,7 @@ void ChassisOperationMode::autoMode(ChassisSentryDriveCommand* command)
 
     ChassisInputs inputs = getChassisInputs(command);
     SubsystemCoords coords = calculateSubsystemCoords(command, inputs);
-    setOutput(command, coords);    
+    setOutput(command, coords);
 }
 
 void ChassisOperationMode::manualMode(ChassisSentryDriveCommand* command) 

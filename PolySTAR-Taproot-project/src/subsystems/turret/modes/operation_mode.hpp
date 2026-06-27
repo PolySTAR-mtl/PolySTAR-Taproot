@@ -4,14 +4,14 @@
 namespace control::turret
 {
 
-class SentryAimCommand;
+class TurretSentryAimCommand;
 class TurretHeroAimCommand;
 class TurretSpin2WinAimCommand;
 
 struct OperationMode
 {
     // SHOULD CHANGE TO SENTRY COMMAND
-    static void autoMode(SentryAimCommand* command);
+    static void autoMode(TurretSentryAimCommand* command);
     static void manualMode(TurretHeroAimCommand* command);
     static void manualMode(TurretSpin2WinAimCommand* command);
 

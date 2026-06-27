@@ -10,7 +10,7 @@ namespace control
 {
 namespace turret
 {
-SentryAimCommand::SentryAimCommand(
+TurretSentryAimCommand::TurretSentryAimCommand(
     TurretSubsystem *const turret,
     src::Drivers *drivers)
     : turret(turret),
@@ -23,12 +23,12 @@ SentryAimCommand::SentryAimCommand(
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem *>(turret));
 }
 
-void SentryAimCommand::initialize()
+void TurretSentryAimCommand::initialize()
 {
     startMatchTimeout.restart(START_MATCH_WAIT_TIME);
 }
 
-void SentryAimCommand::execute()
+void TurretSentryAimCommand::execute()
 {
     if (!startMatchTimeout.isExpired())
     {
@@ -38,13 +38,13 @@ void SentryAimCommand::execute()
     operationMode.autoMode(this);
 }
 
-void SentryAimCommand::end(bool)
+void TurretSentryAimCommand::end(bool)
 {
     // Do nothing when switching back to manual aim,
     // ie leave current setpoints where they are.
 }
 
-bool SentryAimCommand::isFinished() const { return false; }
+bool TurretSentryAimCommand::isFinished() const { return false; }
 }  // namespace turret
 }  // namespace control
 

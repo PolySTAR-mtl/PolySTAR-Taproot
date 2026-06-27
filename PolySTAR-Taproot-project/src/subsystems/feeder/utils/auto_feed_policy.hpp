@@ -24,4 +24,6 @@ private:
 };
 } // control::feeder
 
+#include "auto_feed_policy_impl.hpp"
+
 #endif //AUTO_FEED_POLICY_HPP
