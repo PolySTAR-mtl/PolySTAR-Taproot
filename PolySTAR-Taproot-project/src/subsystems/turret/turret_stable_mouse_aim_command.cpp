@@ -30,7 +30,7 @@ void  TurretStableMouseAimCommand::initialize() {
 
 void  TurretStableMouseAimCommand::execute() {
     float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
-    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR ;
+    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
 
     uint32_t currentUpdate = tap::arch::clock::getTimeMilliseconds();
     uint32_t timeDelta = currentUpdate - prevUpdate;

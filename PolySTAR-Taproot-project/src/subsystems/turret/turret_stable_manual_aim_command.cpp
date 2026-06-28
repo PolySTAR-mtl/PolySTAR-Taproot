@@ -40,6 +40,12 @@ void  TurretStableManualAimCommand::execute()
     float xInput = drivers->controlInterface.getTurretXInput(); // Yaw
     float yInput = drivers->controlInterface.getTurretYInput(); // Pitch
 
+    float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
+    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
+
+    xInput += xMouseInput;
+    yInput += yMouseInput;
+
     float gZ = this->drivers->mpu6500.getGz();
     gzSamplingSum += gZ;
     gzSamplingCount++;
