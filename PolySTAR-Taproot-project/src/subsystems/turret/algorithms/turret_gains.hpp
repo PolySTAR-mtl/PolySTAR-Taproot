@@ -18,7 +18,7 @@ static constexpr turret::algorithms::Gains2 Kpitch = {31.62f, 1.92f};
 
 #ifdef TARGET_STANDARD
 static constexpr turret::algorithms::Gains2 Kyaw  = {31.62f, 3.46f};
-static constexpr turret::algorithms::Gains2 Kpitch = {31.62f, 1.92f};
+static constexpr turret::algorithms::Gains2 Kpitch = {45.00f, 2.50f};
 #endif
 
 #ifdef TARGET_ICRA
@@ -28,5 +28,5 @@ static constexpr turret::algorithms::Gains2 Kpitch = {31.62f, 3.59f};
 
 #ifdef TARGET_SPIN_TO_WIN
 static constexpr turret::algorithms::Gains2 Kyaw  = {31.62f, 3.46f};
-static constexpr turret::algorithms::Gains2 Kpitch = {31.62f, 1.92f};
+static constexpr turret::algorithms::Gains2 Kpitch = {60.00f, 2.50f};
 #endif
