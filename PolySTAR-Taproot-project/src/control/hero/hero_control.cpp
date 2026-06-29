@@ -79,7 +79,7 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* Controller mappings */
 HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP), true);
 ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretStableAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+// HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretStableAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Keyboard mappings */
 HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
@@ -129,7 +129,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
 
     drivers->commandMapper.addMap(&mouseStartFlywheel);
     drivers->commandMapper.addMap(&toggleClientAiming);
-    drivers->commandMapper.addMap(&toggleChassisSpin);
+    // drivers->commandMapper.addMap(&toggleChassisSpin);
     // drivers->commandMapper.addMap(&leftAimTurret);
     // drivers->commandMapper.addMap(&rightAimTurret);
 }
