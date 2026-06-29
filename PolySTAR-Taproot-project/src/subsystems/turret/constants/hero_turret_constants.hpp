@@ -70,7 +70,7 @@ static constexpr uint16_t PITCH_NEUTRAL_POS = 5500;
  * Range values for YAW and PITCH. Motion is limited to range [-Range, +Range] from neutral position.
  */
 static constexpr float YAW_RANGE_DEGREES = 90;
-static constexpr float PITCH_RANGE_DEGREES = 40;
+static constexpr float PITCH_RANGE_DEGREES = 75; // 40
 
 /**
  * Range values in encoder ticks, where 0..8191 is a full revolution
