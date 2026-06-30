@@ -26,10 +26,10 @@ void ChassisSentryDriveCommand::initialize()
 
 void ChassisSentryDriveCommand::execute()
 {
-    operationMode.autoMode(this);
+    // operationMode.autoMode(this);
     
     // for testing
-    // operationMode.manualMode(this);
+    operationMode.manualMode(this);
 }
 
 void ChassisSentryDriveCommand::end(bool) 

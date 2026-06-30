@@ -30,12 +30,15 @@ void TurretSentryAimCommand::initialize()
 
 void TurretSentryAimCommand::execute()
 {
+    /*
     if (!startMatchTimeout.isExpired())
     {
         turret->setAbsoluteOutputDegrees(0, 0);
         return;
     }
     operationMode.autoMode(this);
+    */
+    operationMode.manualMode(this);
 }
 
 void TurretSentryAimCommand::end(bool)
