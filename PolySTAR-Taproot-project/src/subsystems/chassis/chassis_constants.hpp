@@ -23,7 +23,7 @@ static constexpr float CHASSIS_MASS_KG          = 17.2597f;
 static constexpr float CHASSIS_YAW_INERTIA_KGM2 = 1.139542f;
 
 #ifdef TARGET_HERO
-static constexpr float CHASSIS_DEFAULT_SPEED = 0.25f;
+static constexpr float CHASSIS_DEFAULT_SPEED = 0.15f; // 0.25
 
 #elif defined(TARGET_SPIN_TO_WIN)
 static constexpr float CHASSIS_DEFAULT_SPEED = 0.4f;
