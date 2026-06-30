@@ -60,13 +60,11 @@ flywheel::FlywheelDjiSubsystem theFlywheel(drivers());
 
 /* define commands ----------------------------------------------------------*/
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
-chassis::ChassisSpin2winKeyboardCommand chassisKeyboardDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2winCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
 chassis::ChassisSpin2WinCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretStableManualAimCommand turretStableAim(&theTurret, &chassisSpinDrive, drivers());
-turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
+turret::TurretStableManualAimCommand turretStableAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
@@ -79,19 +77,12 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 /* Controller mappings */
 HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP), true);
 ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-// HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretStableAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretStableAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Keyboard mappings */
-HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
 ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
-ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::G}));
-
-// ToggleCommandMapping togglechassisRelativeDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
-// ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
-
-/*-Only used for calibration-*/
-// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
+ToggleCommandMapping toggleChassisSpinKey(drivers(), {&chassisSpinDrive, &turretStableAim}, RemoteMapState({Remote::Key::R}));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {
@@ -113,7 +104,6 @@ void initializeSubsystems() {
 void setDefaultStandardCommands(src::Drivers *) {
     theChassis.setDefaultCommand(&chassisRelativeDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    // theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -125,13 +115,10 @@ void startStandardCommands(src::Drivers *drivers) {
 void registerStandardIoMappings(src::Drivers *drivers) {
     drivers->commandMapper.addMap(&feedFeeder);
     drivers->commandMapper.addMap(&startFlywheel);
+    drivers->commandMapper.addMap(&toggleChassisSpin);
     drivers->commandMapper.addMap(&mouseFeedFeeder);
-
     drivers->commandMapper.addMap(&mouseStartFlywheel);
-    drivers->commandMapper.addMap(&toggleClientAiming);
-    // drivers->commandMapper.addMap(&toggleChassisSpin);
-    // drivers->commandMapper.addMap(&leftAimTurret);
-    // drivers->commandMapper.addMap(&rightAimTurret);
+    drivers->commandMapper.addMap(&toggleChassisSpinKey);
 }
 
 void initSubsystemCommands(src::Drivers *drivers)
