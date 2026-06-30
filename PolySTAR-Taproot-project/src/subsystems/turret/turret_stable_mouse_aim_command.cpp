@@ -14,7 +14,6 @@ TurretStableMouseAimCommand::TurretStableMouseAimCommand(
     chassis::ChassisSpin2winKeyboardCommand *const chassisCommand,
     src::Drivers *drivers)
     : turret(turret),
-      chassisCommand(chassisCommand),
       drivers(drivers)
 {
     if (turret == nullptr)
@@ -35,8 +34,6 @@ void  TurretStableMouseAimCommand::execute() {
     uint32_t currentUpdate = tap::arch::clock::getTimeMilliseconds();
     uint32_t timeDelta = currentUpdate - prevUpdate;
     prevUpdate = currentUpdate;
-
-    xMouseInput += (chassisCommand->isMoving() ? LOW_ROTATION : HIGH_ROTATION) * timeDelta;
 
     turret->setRelativeOutput(xMouseInput, yMouseInput);
 }

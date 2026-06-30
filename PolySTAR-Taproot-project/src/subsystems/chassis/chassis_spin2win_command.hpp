@@ -46,6 +46,8 @@ private:
     // variable used to find rotation angle 
     const tap::motor::DjiMotor* turretYawMotor;
 
+    std::map<std::string, bool> keyboard_input;
+
     bool m_isMoving = false;
 
 

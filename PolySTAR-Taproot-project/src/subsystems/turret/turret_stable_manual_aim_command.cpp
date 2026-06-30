@@ -12,10 +12,8 @@ namespace turret
 {
 TurretStableManualAimCommand::TurretStableManualAimCommand(
     TurretSubsystem *const turret,
-    chassis::ChassisSpin2winCommand *const chassisCommand,
     src::Drivers *drivers)
     : turret(turret),
-      chassisCommand(chassisCommand),
       drivers(drivers)
 {
     if (turret == nullptr)
@@ -70,9 +68,7 @@ void  TurretStableManualAimCommand::execute()
         gzSamplingCount = 0;
     }
 
-
     float desiredYawRpm = ((GZ_STABILIZATION_CONSTANT - X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed);
-    
 
     turret->setDesiredYawRpm(desiredYawRpm);
     turret->setRelativeOutput(

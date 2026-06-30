@@ -44,7 +44,12 @@ private:
     src::Drivers *drivers;
 
     uint32_t prevUpdate;
-    chassis::ChassisSpin2winKeyboardCommand *const chassisCommand;
+
+    uint32_t compoundedTime = 0;
+    float chassisRotationSpeed = 0;
+    int gzSamplingCount = 0;
+    float gzSamplingSum = 0;
+    float gzAverage = 0;
 };  // TurretStableMouseAimCommand
 
 }  // namespace turret

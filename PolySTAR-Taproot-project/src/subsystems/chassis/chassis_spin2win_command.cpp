@@ -33,6 +33,25 @@ void  ChassisSpin2winCommand::execute()
 {
     float xInput = drivers->controlInterface.getChassisXInput();
     float yInput = drivers->controlInterface.getChassisYInput();
+    float rInput = drivers->controlInterface.getChassisRInput();
+
+    keyboard_input = drivers->controlInterface.getChassisKeyboardInput();
+    
+    float xKeyInput = 0;
+    float yKeyInput = 0;
+
+    float multiplier = CHASSIS_DEFAULT_SPEED;
+
+    if (keyboard_input["w"]) { xKeyInput += 1; }
+    if (keyboard_input["s"]) { xKeyInput -= 1; }
+    if (keyboard_input["d"]) { yKeyInput += 1; }
+    if (keyboard_input["a"]) { yKeyInput -= 1; }
+    if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
+    if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
+    if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
+
+    xInput += xKeyInput * multiplier;
+    yInput += yKeyInput * multiplier;
 
     m_isMoving = sqrt(xInput*xInput+yInput*yInput) > CHASSIS_DEAD_ZONE;
 

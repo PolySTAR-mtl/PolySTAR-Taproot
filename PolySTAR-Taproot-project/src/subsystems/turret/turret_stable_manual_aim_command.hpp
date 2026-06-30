@@ -22,7 +22,7 @@ public:
      * @param[in] turret a pointer to the turret to be passed in that this
      *      Command will interact with.
      */
-    TurretStableManualAimCommand(TurretSubsystem *const turret, chassis::ChassisSpin2winCommand *const chassisCommand, src::Drivers *drivers);
+    TurretStableManualAimCommand(TurretSubsystem *const turret, src::Drivers *drivers);
 
     TurretStableManualAimCommand(const TurretStableManualAimCommand &other) = delete;
 
@@ -40,8 +40,6 @@ public:
 
 private:
     TurretSubsystem *const turret;
-
-    chassis::ChassisSpin2winCommand *const chassisCommand;
 
     src::Drivers *drivers;
 
