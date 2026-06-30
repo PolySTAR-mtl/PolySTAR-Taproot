@@ -75,20 +75,18 @@ chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 
 /* turret -------------------------------------------------------------------*/
 turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers());
-turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers());
-turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
-turret::TurretAutoAimCommand turretAutoAim(&theTurret, drivers());
-turret::TurretTestAutoAimCommand turretTestAutoAim(&theTurret, drivers());
+// turret::TurretAutoAimCommand turretAutoAim(&theTurret, drivers());
+// Same as AutoAim but no delay on match start
+// turret::TurretTestAutoAimCommand turretTestAutoAim(&theTurret, drivers());
 
 /* feeder -------------------------------------------------------------------*/
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theTestFeeder, drivers());
-feeder::FeederAutoFeedCommand feederAutoFeed(&theFeeder, drivers());
-feeder::FeederAutoFeedTestCommand feederAutoFeedTest(&theFeeder, drivers());
+// feeder::FeederAutoFeedCommand feederAutoFeed(&theFeeder, drivers());
+// feeder::FeederAutoFeedTestCommand feederAutoFeedTest(&theFeeder, drivers());
 
 /* flywheel -----------------------------------------------------------------*/
 // flywheel::FlywheelAutoFireDjiCommand flywheelStartTest(&theFlywheel, drivers());
-flywheel::FlywheelAutoFireCommand flywheelStart(&theFlywheel, drivers());
+// flywheel::FlywheelAutoFireCommand flywheelStart(&theFlywheel, drivers());
 flywheel::FlywheelFireCommand flywheelStartManual(&theFlywheel, drivers());
 
 /* safe disconnect function -------------------------------------------------*/
@@ -99,25 +97,19 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
 /*-Flywheel-*/
 // HoldCommandMapping startFlywheel(drivers(), {&flywheelStartTest}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping startFlywheelManual(drivers(), {&flywheelStartManual}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping startFlywheelManual(drivers(), {&flywheelStartManual}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 /*-Turret-*/
-ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
 /*-Chassis-*/
-// ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
+
 /*-Auto commands*/
 // HoldCommandMapping toggleAutoCommands(drivers(), {&chassisAutoDrive, &turretAutoAim, &feederAutoFeed, &flywheelStart}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping toggleAutoTestCommands(drivers(), {&chassisTestAutoDrive, &turretTestAutoAim, &feederAutoFeedTest}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
-
-/*-Only used for calibration-*/
-// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP)); 
-// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers)
 {
     drivers->commandScheduler.registerSubsystem(&theChassis);
     drivers->commandScheduler.registerSubsystem(&theTurret);
-    // drivers->commandScheduler.registerSubsystem(&theTestFeeder);
     drivers->commandScheduler.registerSubsystem(&theFeeder);
     drivers->commandScheduler.registerSubsystem(&theFlywheel);
 }
@@ -128,17 +120,14 @@ void initializeSubsystems()
     theChassis.initialize();
     theTurret.initialize();
     theFeeder.initialize();
-    // theTestFeeder.initialize();
     theFlywheel.initialize();
 }
 
 /* set any default commands to subsystems here ------------------------------*/
 void setDefaultStandardCommands(src::Drivers *)
 {
-    // theChassis.setDefaultCommand(&chassisAutoDrive);
     theChassis.setDefaultCommand(&chassisDrive);
     theTurret.setDefaultCommand(&turretManualAim);
-    theFlywheel.setDefaultCommand(&flywheelStart);
 }
 
 /* add any starting commands to the scheduler here --------------------------*/
@@ -157,11 +146,7 @@ void registerStandardIoMappings(src::Drivers *drivers)
     // drivers->commandMapper.addMap(&startFlywheel);
     drivers->commandMapper.addMap(&startFlywheelManual);
     /*-Turret-*/
-    // drivers->commandMapper.addMap(&leftAimTurret);
-    // drivers->commandMapper.addMap(&rightAimTurret);
-    drivers->commandMapper.addMap(&turretMouseAimToggle);
     /*-Chassis-*/
-    // drivers->commandMapper.addMap(&toggleChassisDrive);
     // drivers->commandMapper.addMap(&toggleAutoTestCommands);
     // drivers->commandMapper.addMap(&toggleAutoCommands);
 }

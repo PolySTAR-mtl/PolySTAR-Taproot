@@ -73,4 +73,7 @@ const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.175;
 #elif defined(TARGET_HERO)
 const constexpr float GZ_STABILIZATION_CONSTANT = 0.310;
 const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.175;
+#else
+const constexpr float GZ_STABILIZATION_CONSTANT = 0.350;
+const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.175;
 #endif
