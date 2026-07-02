@@ -89,7 +89,7 @@ HoldCommandMapping startFlywheel(drivers(), {&flywheelStart, &feederMoveUnjam}, 
 // HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManualAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Keyboard & Mouse mappings */
-ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
+HoldCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
 HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT),true);
 ToggleCommandMapping toggleChassisSpinKey(drivers(), {&chassisSpinDrive, &turretManualAim}, RemoteMapState({Remote::Key::R}));
 
