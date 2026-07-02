@@ -51,13 +51,8 @@ static constexpr bool IS_Y_INVERTED = true;
 /*
  *   chassis rotation speed for spin to win feature
  */
-#if defined(TARGET_SPIN_TO_WIN)
-static constexpr float ROTATION_SPEED_HIGH = 0.75 * 1.0;
-static constexpr float ROTATION_SPEED_LOW = 0.4 * 1.0;
-#else
 static constexpr float ROTATION_SPEED_HIGH = 0.75 * 1.0;
 static constexpr float ROTATION_SPEED_LOW = 0.5 * 1.0;
-#endif
 
 
 /**
