@@ -42,7 +42,7 @@ static constexpr float FEEDER_REVERSE_RPM = -1500;
 
 static constexpr float DEGREE_TO_TICK = 8192*36/360; // 8192 Ticks per turn, 36:1 gear ratio 
 static constexpr float UNJAM_MAX_WAIT_TIME_MS = 500;
-static constexpr float MOVE_DISPLACEMENT_TICK = 120*DEGREE_TO_TICK;
+static constexpr float MOVE_DISPLACEMENT_TICK = 50*DEGREE_TO_TICK;
 static constexpr float UNJAM_CYCLES = 1;
 static constexpr float UNJAM_DISPLACEMENT_TICK = 45*DEGREE_TO_TICK;
 static constexpr float PAUSE_AFTER_MOVE_TIME_MS = 100;
