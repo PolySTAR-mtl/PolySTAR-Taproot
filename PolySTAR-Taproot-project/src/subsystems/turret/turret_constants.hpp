@@ -71,7 +71,7 @@ static constexpr float TURRET_MASS_KG           = 4.44628f;
 const constexpr float GZ_STABILIZATION_CONSTANT = 0.350;
 const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.175;
 #elif defined(TARGET_HERO)
-const constexpr float GZ_STABILIZATION_CONSTANT = 0.240;
+const constexpr float GZ_STABILIZATION_CONSTANT = 0.343;
 const constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.180;
 #else
 const constexpr float GZ_STABILIZATION_CONSTANT = 0.350;
