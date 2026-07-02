@@ -29,8 +29,8 @@ void  TurretManualAimCommand::execute()
     float xInput = drivers->controlInterface.getTurretXInput();
     float yInput = drivers->controlInterface.getTurretYInput();
 
-    float xMouseInput = drivers->controlInterface.getTurretXMouseInput() * TURRET_MOUSE_X_SCALE_FACTOR;
-    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() * TURRET_MOUSE_Y_SCALE_FACTOR;
+    float xMouseInput = drivers->controlInterface.getTurretXMouseInput() > 0.05 ? 660.0f : 0; // STICK_MAX_VALUE = 660.0f;
+    float yMouseInput = drivers->controlInterface.getTurretYMouseInput() > 0.05 ? 660.0f : 0;
 
     xInput += xMouseInput;
     yInput += yMouseInput;

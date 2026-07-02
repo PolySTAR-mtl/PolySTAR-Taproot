@@ -86,7 +86,6 @@ static constexpr float YAW_SCALE_FACTOR = 900.0f;
 static constexpr float PITCH_SCALE_FACTOR = 400.0f;
 static constexpr float gravityCounteract = 812.0f;
 
-
 /*
  * Mouse sensitivity
  */
@@ -96,6 +95,5 @@ static constexpr float TURRET_MOUSE_Y_SCALE_FACTOR = -0.05f;
 /**
  * Inverted directions
  */
-
 static constexpr float YAW_IS_INVERTED = true;
 static constexpr float PITCH_IS_INVERTED = true;

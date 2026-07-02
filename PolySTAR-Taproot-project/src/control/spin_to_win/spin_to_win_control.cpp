@@ -84,8 +84,8 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /* Controller mappings */
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
-ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart, &feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
+HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN),true);
+HoldCommandMapping startFlywheel(drivers(), {&flywheelStart, &feederMoveUnjam}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 // HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManualAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Keyboard & Mouse mappings */
@@ -139,7 +139,7 @@ void initSubsystemCommands(src::Drivers *drivers)
     startStandardCommands(drivers);
     registerStandardIoMappings(drivers);
     char buffer[50];
-    int nBytes = sprintf(buffer,"Initializing Standard\n");
+    int nBytes = sprintf(buffer,"Initializing Spin to Win\n");
     drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
 }
 

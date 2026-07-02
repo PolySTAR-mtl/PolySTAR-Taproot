@@ -130,10 +130,10 @@ void initSubsystemCommands(src::Drivers *drivers)
     startStandardCommands(drivers);
     registerStandardIoMappings(drivers);
     char buffer[50];
-    int nBytes = sprintf(buffer,"Initializing Standard\n");
+    int nBytes = sprintf(buffer,"Initializing Hero\n");
     drivers->uart.write(tap::communication::serial::Uart::UartPort::Uart8,(uint8_t*) buffer, nBytes+1);
 }
 
 }  // namespace control
 
-#endif  // TARGET_STANDARD
+#endif  // TARGET_HERO
