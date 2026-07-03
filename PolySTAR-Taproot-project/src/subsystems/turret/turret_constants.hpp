@@ -52,4 +52,4 @@ static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
  * Represents how much the joystick should have move per ms to stabilize the turret
  */
 static constexpr float LOW_ROTATION = 0.67;
-static constexpr float HIGH_ROTATION = 0.95;
+static constexpr float HIGH_ROTATION = 1.6; //0.95
