@@ -13,11 +13,8 @@
 #include "subsystems/chassis/chassis_calibrate_IMU_command.hpp"
 
 // Turret includes
-#include "subsystems/turret/turret_subsystem.hpp"
-#include "subsystems/turret/turret_manual_aim_command.hpp"
-#include "subsystems/turret/turret_mouse_aim_command.hpp"
-#include "subsystems/turret/turret_test_bottomleft_command.hpp"
-#include "subsystems/turret/turret_test_topright_command.hpp"
+#include "subsystems/turret/core/turret_subsystem.hpp"
+#include "subsystems/turret/commands/turret_aim_commands.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/core/feeder_position_subsystem.hpp"
@@ -59,10 +56,7 @@ chassis::ChassisDriveCommand chassisDrive(&theChassis, drivers());
 chassis::ChassisKeyboardDriveCommand chassisKeyboardDrive(&theChassis, drivers());
 chassis::ChassisCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
-turret::TurretManualAimCommand turretManualAim(&theTurret, drivers());
-turret::TurretMouseAimCommand turretMouseAim(&theTurret, drivers());
-turret::TurretTestBottomLeftCommand turretLeftAim(&theTurret, drivers()); // Used for tuning
-turret::TurretTestTopRightCommand turretRightAim(&theTurret, drivers()); // Used for tuning
+turret::ManualAimCommand turretManualAim(&theTurret, drivers());
 
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
 
@@ -79,14 +73,9 @@ ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(R
 /* Keyboard mappings */
 HoldRepeatCommandMapping mouseFeedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(RemoteMapState::MouseButton::LEFT), true);
 ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));
-ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::G}));
+ToggleCommandMapping toggleClientAiming(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 
 // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
-// ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
-
-/*-Only used for calibration-*/
-// HoldCommandMapping rightAimTurret(drivers(), {&turretRightAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP));
-// HoldCommandMapping leftAimTurret(drivers(), {&turretLeftAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
 
 /* register subsystems here -------------------------------------------------*/
 void registerStandardSubsystems(src::Drivers *drivers) {

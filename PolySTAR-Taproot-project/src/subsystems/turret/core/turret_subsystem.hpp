@@ -8,12 +8,15 @@
 #include "subsystems/turret/config/constants/turret_constants.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/algorithms/cascaded_pid.hpp"
+#include "subsystems/turret/utils/aim_mode.hpp"
+#include "subsystems/sentry_general_constants.hpp"
+#include "subsystems/turret/algorithms/imu_interpreter.hpp"
+
+
 
 using turret::algorithms::CascadedPid;
 
-namespace control
-{
-namespace turret
+namespace control::turret
 {
 
 /**
@@ -59,7 +62,14 @@ public:
     void setIsSpin2WinMode(bool isSpin2WinMode) { m_isSpin2WinMode = isSpin2WinMode; }
     void setDesiredYawRpm(float desiredRpm) { desiredYawRpm = desiredRpm; }
 
+    template <AimMode A>
+    void initializeAiming();
 
+    template <AimMode A>
+    void executeAiming();
+
+    template <AimMode A>
+    void stopAiming();
 private:
     // Controller Functions
     void runYawController(uint32_t dt);
@@ -98,10 +108,13 @@ private:
     bool m_isSpin2WinMode = false;
     float desiredYawRpm = 0;
 
+    tap::arch::MilliTimeout startMatchTimeout;
+    algorithms::ImuInterpreter imuInterpreter;
+
 };  // class TurretSubsystem
 
-}  // namespace turret
+}  // namespace control::turret
 
-}  // namespace control
+#include "turret_subsystem_impl.hpp"
 
 #endif  // TURRET_SUBSYSTEM_HPP_

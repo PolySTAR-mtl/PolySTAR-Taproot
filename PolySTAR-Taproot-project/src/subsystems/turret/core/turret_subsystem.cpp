@@ -23,7 +23,9 @@ TurretSubsystem::TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *ya
           cascadedYawController(ACTIVE_TURRET_CONFIG.yawOuterPidConfig, ACTIVE_TURRET_CONFIG.yawInnerPidConfig),
           yawDesiredPos(ACTIVE_TURRET_CONFIG.yawNeutralPos),
           pitchDesiredPos(ACTIVE_TURRET_CONFIG.pitchNeutralPos),
-          yawRpmPid(ACTIVE_TURRET_CONFIG.yawInnerPidConfig) {}
+          yawRpmPid(ACTIVE_TURRET_CONFIG.yawInnerPidConfig),
+          imuInterpreter(drivers)
+{}
 
 void TurretSubsystem::initialize() {
     yawMotor->initialize();

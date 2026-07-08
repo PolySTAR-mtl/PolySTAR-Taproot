@@ -14,7 +14,7 @@
 
 // Turret includes
 #include "subsystems/turret/core/turret_subsystem.hpp"
-#include "subsystems/turret/commands/turret_spin2win_command.hpp"
+#include "subsystems/turret/commands/turret_aim_commands.hpp"
 
 // Feeder includes
 #include "subsystems/feeder/core/feeder_position_subsystem.hpp"
@@ -61,7 +61,7 @@ chassis::ChassisSpin2winDriveCommand chassisSpinDrive(&theChassis, drivers(), &y
 chassis::ChassisSpin2WinCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 /* turret */
-turret::TurretSpin2WinAimCommand turretManualAim(&theTurret, drivers());
+turret::ManualAimCommand turretManualAim(&theTurret, drivers());
 
 /* feeder */
 feeder::FeederMoveUnjamCommand feederMoveUnjam(&theFeeder, drivers());
