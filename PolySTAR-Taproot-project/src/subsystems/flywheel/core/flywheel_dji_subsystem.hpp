@@ -51,9 +51,6 @@ public:
     void executeFiring() {}
 
 private:
-    // Hardware constants, not specific to any particular flywheel subsystem.
-    static constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
-
     src::Drivers* drivers_;
 
     ///< Motors.  Use these to interact with any dji style motors.

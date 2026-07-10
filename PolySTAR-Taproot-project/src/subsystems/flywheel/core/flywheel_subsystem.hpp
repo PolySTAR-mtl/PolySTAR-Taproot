@@ -55,11 +55,8 @@ public:
 
 protected:
     FlywheelState getCurrentState();
-    
-private:
-    // Hardware constants, not specific to any particular flywheel subsystem.
-    static inline constexpr tap::gpio::Pwm::Pin FLYWHEEL_PWM_PIN = tap::gpio::Pwm::Pin::Z;
 
+private:
     src::motor::SnailMotor snailMotor_;
 
     float currentThrottle_;
