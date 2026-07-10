@@ -3,7 +3,7 @@
 
 #include "tap/control/command.hpp"
 
-#include "chassis_spin2win_subsystem.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 
 namespace control
@@ -20,7 +20,7 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisRelativeDriveCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *yawMotor);
+    ChassisRelativeDriveCommand(OmniWheelsChassisSubsystem *const chassis, src::Drivers *drivers, tap::motor::DjiMotor *yawMotor);
 
     ChassisRelativeDriveCommand(const ChassisRelativeDriveCommand &other) = delete;
 
@@ -41,7 +41,7 @@ private:
 
     uint32_t prevDebugTime;
 
-    ChassisSpin2WinSubsystem *const chassis;
+    OmniWheelsChassisSubsystem *const chassis;
 
     std::map<std::string, bool> keyboard_input;
 

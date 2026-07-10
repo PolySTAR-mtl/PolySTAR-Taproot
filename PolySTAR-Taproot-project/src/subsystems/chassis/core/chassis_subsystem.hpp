@@ -1,5 +1,5 @@
-#ifndef CHASSIS_SPIN2WIN_SUBSYSTEM_HPP_
-#define CHASSIS_SPIN2WIN_SUBSYSTEM_HPP_
+#ifndef CHASSIS_SUBSYSTEM_HPP_
+#define CHASSIS_SUBSYSTEM_HPP_
 
 #include "tap/control/subsystem.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
@@ -7,8 +7,10 @@
 #include "tap/algorithms/ramp.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "chassis_constants.hpp"
+#include "subsystems/chassis/chassis_constants.hpp"
 #include "control/drivers/drivers.hpp"
+#include "subsystems/chassis/utils/drive_mode.hpp"
+#include "wheel_type.hpp"
 
 //#include "control/control_operator_interface_edu.hpp"
 
@@ -19,7 +21,8 @@ namespace chassis
 /**
  * A bare bones Subsystem for interacting with a 4 wheeled chassis.
  */
-class ChassisSpin2WinSubsystem : public tap::control::Subsystem
+template <WheelType T>
+class ChassisSubsystem : public tap::control::Subsystem
 {
 public:
     /**
@@ -34,10 +37,10 @@ public:
     static constexpr float MAX_CURRENT_OUTPUT = 8000.0f;
 
     /**
-     * Constructs a new ChassisSpin2WinSubsystem with default parameters specified in
+     * Constructs a new ChassisSubsystem with default parameters specified in
      * the private section of this class.
      */
-    ChassisSpin2WinSubsystem(src::Drivers *drivers)
+    ChassisSubsystem(src::Drivers *drivers,tap::motor::DjiMotor* yawMotor)
         : tap::control::Subsystem(drivers),
           drivers(drivers),
           frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "front left motor"),
@@ -52,22 +55,22 @@ public:
           frontRightDesiredRpm(0),
           backLeftDesiredRpm(0),
           backRightDesiredRpm(0),
-          prevCVUpdate(0)
+          prevCVUpdate(0),
+          turretYawMotor(yawMotor)
     {
     }
 
-    ChassisSpin2WinSubsystem(const ChassisSpin2WinSubsystem &other) = delete;
+    ChassisSubsystem(const ChassisSubsystem &other) = delete;
 
-    ChassisSpin2WinSubsystem &operator=(const ChassisSpin2WinSubsystem &other) = delete;
+    ChassisSubsystem &operator=(const ChassisSubsystem &other) = delete;
 
-    ~ChassisSpin2WinSubsystem() = default;
+    ~ChassisSubsystem() = default;
 
     void initialize() override;
 
     void refresh() override;
 
-    void setDesiredOutput(float x, float y, float r);
-
+    
     void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
     void updateRpmSetpoints();
     void setTargetOutput(float x, float y, float r);
@@ -79,6 +82,20 @@ public:
     const tap::motor::DjiMotor &getBackLeftMotor() const { return backLeftMotor; }
     const tap::motor::DjiMotor &getBackRightMotor() const { return backRightMotor; }
 
+    float getRotationAngle(){ return rotationAngle;}
+    void setRotationAngle(float newRotationAngle){ rotationAngle = newRotationAngle;}
+
+    void setDesiredOutput(float x, float y, float r);
+
+    template <DriveMode D>
+    void initializeDriving();
+
+    template <DriveMode D>
+    void executeDriving();
+
+    template <DriveMode D>
+    void endDriving();
+
 private:
     src::Drivers *drivers;
 
@@ -87,7 +104,6 @@ private:
     static constexpr tap::motor::MotorId FRONT_RIGHT_MOTOR_ID = tap::motor::MOTOR2;
     static constexpr tap::motor::MotorId BACK_RIGHT_MOTOR_ID = tap::motor::MOTOR3;
     static constexpr tap::motor::MotorId BACK_LEFT_MOTOR_ID = tap::motor::MOTOR4;
-    static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor frontLeftMotor;
@@ -140,10 +156,27 @@ private:
     const int16_t M_TO_MM = 1000;
     const float DEG_TO_MILLIRAD = 17.453293;
 
-};  // class ChassisSpin2WinSubsystem
+    //variable used for spin2win debugging
+    float rotationAngle = 0.0f;
+
+    // For the relative drive:
+    tap::motor::DjiMotor* turretYawMotor;
+
+    // For the auto mode:
+    tap::arch::MilliTimeout startMatchTimeout;
+
+};  // class ChassisSubsystem
 
 }  // namespace chassis
 
 }  // namespace control
+
+#include "chassis_subsystem_impl.hpp"
+
+namespace control::chassis
+{
+    using OmniWheelsChassisSubsystem = ChassisSubsystem<WheelType::OmniWheels>;
+    using MecanumChassisSubsystem = ChassisSubsystem<WheelType::Mecanum>;
+}
 
 #endif  // CHASSIS_SUBSYSTEM_HPP_

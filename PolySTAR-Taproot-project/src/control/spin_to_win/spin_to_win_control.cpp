@@ -7,10 +7,10 @@
 #include "control/safe_disconnect.hpp"
 
 // Chassis includes
-#include "subsystems/chassis/chassis_spin2win_subsystem.hpp"
-#include "subsystems/chassis/commands/chassis_spin2win_command.hpp"
-#include "subsystems/chassis/chassis_relative_drive_command.hpp"
-#include "subsystems/chassis/chassis_spin2win_calibrate_IMU.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
+#include "subsystems/chassis/commands/chassis_drive_commands.hpp"
+#include "subsystems/chassis/commands/chassis_relative_drive_command.hpp"
+#include "subsystems/chassis/commands/chassis_spin2win_calibrate_IMU.hpp"
 
 // Turret includes
 #include "subsystems/turret/core/turret_subsystem.hpp"
@@ -49,7 +49,7 @@ namespace control
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
-chassis::ChassisSpin2WinSubsystem theChassis(drivers());
+chassis::OmniWheelsChassisSubsystem theChassis(drivers(), &yawMotor);
 turret::TurretSubsystem theTurret(drivers(), &yawMotor);
 feeder::FeederPositionSubsystem theFeeder(drivers());
 flywheel::FlywheelSubsystem theFlywheel(drivers());
@@ -57,7 +57,7 @@ flywheel::FlywheelSubsystem theFlywheel(drivers());
 /* define commands ----------------------------------------------------------*/
 /* chassis */
 chassis::ChassisRelativeDriveCommand chassisRelativeDrive(&theChassis, drivers(), &yawMotor);
-chassis::ChassisSpin2winDriveCommand chassisSpinDrive(&theChassis, drivers(), &yawMotor);
+chassis::ManualDriveCommand chassisSpinDrive(&theChassis, drivers());
 chassis::ChassisSpin2WinCalibrateImuCommand chassisImuCalibrate(&theChassis, drivers());
 
 /* turret */

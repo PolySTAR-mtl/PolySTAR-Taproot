@@ -1,5 +1,5 @@
 #include "chassis_keyboard_drive_command.hpp"
-#include "chassis_constants.hpp"
+#include "subsystems/chassis/chassis_constants.hpp"
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
@@ -11,7 +11,7 @@ namespace control
 namespace chassis
 {
 ChassisKeyboardDriveCommand::ChassisKeyboardDriveCommand(
-    ChassisSubsystem *const chassis,
+    MecanumChassisSubsystem *const chassis,
     src::Drivers *drivers)
     : chassis(chassis),
       drivers(drivers)

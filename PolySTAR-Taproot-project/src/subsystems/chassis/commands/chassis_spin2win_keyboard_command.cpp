@@ -1,5 +1,5 @@
 #include "chassis_spin2win_keyboard_command.hpp"
-#include "chassis_constants.hpp"
+#include "subsystems/chassis/chassis_constants.hpp"
 
 #include "subsystems/turret/config/turret_config.hpp"
 
@@ -14,7 +14,7 @@ namespace control
 namespace chassis
 {
 ChassisSpin2winKeyboardCommand::ChassisSpin2winKeyboardCommand(
-    ChassisSpin2WinSubsystem *const chassis,
+    OmniWheelsChassisSubsystem *const chassis,
     src::Drivers *drivers,
     const tap::motor::DjiMotor* turretYawMotor)
     : chassis(chassis),

@@ -1,5 +1,5 @@
 #include "chassis_relative_drive_command.hpp"
-#include "chassis_constants.hpp"
+#include "subsystems/chassis/chassis_constants.hpp"
 
 #include "subsystems/turret/config/turret_config.hpp"
 
@@ -16,7 +16,7 @@ namespace control
 namespace chassis
 {
 ChassisRelativeDriveCommand::ChassisRelativeDriveCommand(
-    ChassisSpin2WinSubsystem *const chassis,
+    OmniWheelsChassisSubsystem *const chassis,
     src::Drivers *drivers,
     tap::motor::DjiMotor *yawMotor)
     : chassis(chassis),

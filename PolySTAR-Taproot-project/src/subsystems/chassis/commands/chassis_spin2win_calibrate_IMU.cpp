@@ -10,7 +10,7 @@ namespace control
 namespace chassis
 {
 ChassisSpin2WinCalibrateImuCommand::ChassisSpin2WinCalibrateImuCommand(
-    ChassisSpin2WinSubsystem *const chassis,
+    OmniWheelsChassisSubsystem *const chassis,
     src::Drivers *drivers)
     : chassis(chassis),
       drivers(drivers),

@@ -2,8 +2,7 @@
 #define CHASSIS_CALIBRATE_IMU_COMMAND_HPP_
 
 #include "tap/control/command.hpp"
-
-#include "chassis_spin2win_subsystem.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "control/drivers/drivers.hpp"
 #include "tap/communication/sensors/imu/imu_interface.hpp"
 
@@ -11,7 +10,7 @@ namespace control
 {
 namespace chassis
 {
-class ChassisSpin2WinCalibrateImuCommand : public tap::control::Command
+class ChassisCalibrateImuCommand : public tap::control::Command
 {
 public:
     /**
@@ -21,11 +20,11 @@ public:
      * @param[in] chassis a pointer to the chassis to be passed in that this
      *      Command will interact with.
      */
-    ChassisSpin2WinCalibrateImuCommand(ChassisSpin2WinSubsystem *const chassis, src::Drivers *drivers);
+    ChassisCalibrateImuCommand(MecanumChassisSubsystem *const chassis, src::Drivers *drivers);
 
-    ChassisSpin2WinCalibrateImuCommand(const ChassisSpin2WinCalibrateImuCommand &other) = delete;
+    ChassisCalibrateImuCommand(const ChassisCalibrateImuCommand &other) = delete;
 
-    ChassisSpin2WinCalibrateImuCommand &operator=(const ChassisSpin2WinCalibrateImuCommand &other) = delete;
+    ChassisCalibrateImuCommand &operator=(const ChassisCalibrateImuCommand &other) = delete;
 
     void initialize() override;
 
@@ -38,7 +37,7 @@ public:
     bool isFinished() const override;
 
 private:
-    ChassisSpin2WinSubsystem *const chassis;
+    MecanumChassisSubsystem *const chassis;
 
     src::Drivers *drivers;
 
