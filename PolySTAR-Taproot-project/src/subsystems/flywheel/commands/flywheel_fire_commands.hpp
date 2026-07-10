@@ -9,13 +9,16 @@
 
 namespace control::flywheel
 {
-using FlywheelAutoFireDjiCommand =
+using AutoFireDjiCommand =
     GenericFireCommand<FlywheelDjiSubsystem, AutoFirePolicy<FlywheelDjiSubsystem>>;
 
-using FlywheelFireDjiCommand =
+using AutoFireCommand =
+    GenericFireCommand<FlywheelSubsystem, AutoFirePolicy<FlywheelSubsystem>>;
+
+using FireDjiCommand =
     GenericFireCommand<FlywheelDjiSubsystem, NormalFirePolicy<FlywheelDjiSubsystem>>;
 
-using FlywheelFireCommand =
+using FireCommand =
     GenericFireCommand<FlywheelSubsystem, NormalFirePolicy<FlywheelSubsystem>>;
 }
 

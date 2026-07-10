@@ -6,7 +6,7 @@
 namespace control::feeder
 {
 template <typename Subsystem>
-class AutoFeedPolicy 
+class AutoFeedPolicy
 {
 public:
     AutoFeedPolicy(Subsystem* const feeder);
@@ -22,6 +22,9 @@ public:
 private:
     Subsystem* feeder_;
 };
+
 } // control::feeder
+
+#include "auto_feed_policy_impl.hpp"
 
 #endif //AUTO_FEED_POLICY_HPP

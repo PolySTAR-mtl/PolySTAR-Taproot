@@ -2,16 +2,15 @@
 #define MANUAL_DRIVE_POLICY_IMPL_HPP
 
 #include "manual_drive_policy.hpp"
-#include "drive_mode.hpp"
+#include "subsystems/chassis/utils/modes/drive_mode.hpp"
 
 namespace control::chassis
 {
 
 template <typename Subsystem>
-ManualDrivePolicy<Subsystem>::ManualDrivePolicy(Subsystem* const chassis) : 
+ManualDrivePolicy<Subsystem>::ManualDrivePolicy(Subsystem* const chassis) :
     chassis_{chassis}
 {
-
 }
 
 template <typename Subsystem>
@@ -30,13 +29,11 @@ void ManualDrivePolicy<Subsystem>::execute()
 }
 
 template <typename Subsystem>
-void ManualDrivePolicy<Subsystem>::end(const bool interrupt)
+void ManualDrivePolicy<Subsystem>::end(const bool)
 {
     chassis_->template endDriving<DriveMode::Manual>();
 }
 
-
 } // namespace control::chassis
- 
 
 #endif // MANUAL_DRIVE_POLICY_IMPL_HPP

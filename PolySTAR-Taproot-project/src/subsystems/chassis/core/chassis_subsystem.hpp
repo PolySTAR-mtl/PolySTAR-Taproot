@@ -1,22 +1,23 @@
 #ifndef CHASSIS_SUBSYSTEM_HPP_
 #define CHASSIS_SUBSYSTEM_HPP_
 
+#include "subsystems/chassis/utils/modes/drive_mode.hpp"
+#include "subsystems/chassis/utils/modes/wheel_type.hpp"
+#include "subsystems/chassis/utils/modes/spin_mode.hpp"
+#include "subsystems/chassis/config/chassis_constants.hpp"
+
 #include "tap/control/subsystem.hpp"
 #include "tap/algorithms/smooth_pid.hpp"
 #include "modm/math/filter/pid.hpp"
 #include "tap/algorithms/ramp.hpp"
 #include "tap/motor/dji_motor.hpp"
 #include "tap/util_macros.hpp"
-#include "subsystems/chassis/chassis_constants.hpp"
 #include "control/drivers/drivers.hpp"
-#include "subsystems/chassis/utils/drive_mode.hpp"
-#include "wheel_type.hpp"
 
-//#include "control/control_operator_interface_edu.hpp"
 
-namespace control
-{
-namespace chassis
+// #include "control/control_operator_interface_edu.hpp"
+
+namespace control::chassis
 {
 /**
  * A bare bones Subsystem for interacting with a 4 wheeled chassis.
@@ -70,7 +71,6 @@ public:
 
     void refresh() override;
 
-    
     void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm,  uint32_t dt);
     void updateRpmSetpoints();
     void setTargetOutput(float x, float y, float r);
@@ -86,7 +86,9 @@ public:
     void setRotationAngle(float newRotationAngle){ rotationAngle = newRotationAngle;}
 
     void setDesiredOutput(float x, float y, float r);
+    void updateDesiredOutput();
 
+    // Drive policy methods.
     template <DriveMode D>
     void initializeDriving();
 
@@ -96,14 +98,23 @@ public:
     template <DriveMode D>
     void endDriving();
 
+    // Spin policy methods.
+    template <SpinMode S>
+    void initializeSpinning();
+
+    template <SpinMode S>
+    void executeSpinning();
+
+    template <SpinMode S>
+    void endSpinning();
+
 private:
     src::Drivers *drivers;
 
-    ///< Hardware constants, not specific to any particular chassis.
-    static constexpr tap::motor::MotorId FRONT_LEFT_MOTOR_ID = tap::motor::MOTOR1;
-    static constexpr tap::motor::MotorId FRONT_RIGHT_MOTOR_ID = tap::motor::MOTOR2;
-    static constexpr tap::motor::MotorId BACK_RIGHT_MOTOR_ID = tap::motor::MOTOR3;
-    static constexpr tap::motor::MotorId BACK_LEFT_MOTOR_ID = tap::motor::MOTOR4;
+    // input values from the control interface
+    float xInput_;
+    float yInput_;
+    float rInput_;
 
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor frontLeftMotor;
@@ -116,7 +127,7 @@ private:
                                                             CHASSIS_PID_MAX_ERROR_SUM, CHASSIS_PID_MAX_OUTPUT,
                                                             CHASSIS_TQ_DERIVATIVE_KALMAN, CHASSIS_TR_DERIVATIVE_KALMAN,
                                                             CHASSIS_TQ_PROPORTIONAL_KALMAN, CHASSIS_TR_PROPORTIONAL_KALMAN };
-    
+
     // Smooth PID controllers for position feedback from motors
     tap::algorithms::SmoothPid frontLeftPid;
     tap::algorithms::SmoothPid frontRightPid;
@@ -165,18 +176,16 @@ private:
     // For the auto mode:
     tap::arch::MilliTimeout startMatchTimeout;
 
+    // For the spin mode:
+    bool isMoving_ = false;
+
 };  // class ChassisSubsystem
 
-}  // namespace chassis
+using OmniWheelsChassisSubsystem = ChassisSubsystem<WheelType::OmniWheels>;
+using MecanumChassisSubsystem = ChassisSubsystem<WheelType::Mecanum>;
 
-}  // namespace control
+}  // namespace control::chassis
 
 #include "chassis_subsystem_impl.hpp"
-
-namespace control::chassis
-{
-    using OmniWheelsChassisSubsystem = ChassisSubsystem<WheelType::OmniWheels>;
-    using MecanumChassisSubsystem = ChassisSubsystem<WheelType::Mecanum>;
-}
 
 #endif  // CHASSIS_SUBSYSTEM_HPP_

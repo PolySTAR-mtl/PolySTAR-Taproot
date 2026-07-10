@@ -11,8 +11,8 @@ consteval FlywheelConfig getFlywheelConfig() {
 }
 
 template <>
-consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Engineer>() {
-    return ENGINEER_FLYWHEEL_CONFIG;
+consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Standard>() {
+    return STANDARD_FLYWHEEL_CONFIG;
 }
 
 template <>
@@ -25,15 +25,7 @@ consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Sentry>() {
     return SENTRY_FLYWHEEL_CONFIG;
 }
 
-template <>
-consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::SpinToWin>() {
-    return SPIN_TO_WIN_FLYWHEEL_CONFIG;
-}
 
-template <>
-consteval FlywheelConfig getFlywheelConfig<target::RobotTarget::Standard>() {
-    return STANDARD_FLYWHEEL_CONFIG;
-}
 
 }; // namespace control::flywheel
 

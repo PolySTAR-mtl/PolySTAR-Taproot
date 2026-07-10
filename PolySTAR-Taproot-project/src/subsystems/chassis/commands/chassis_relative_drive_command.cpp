@@ -1,5 +1,6 @@
 #include "chassis_relative_drive_command.hpp"
-#include "subsystems/chassis/chassis_constants.hpp"
+#include "subsystems/chassis/config/chassis_constants.hpp"
+#include "subsystems/chassis/config/chassis_config.hpp"
 
 #include "subsystems/turret/config/turret_config.hpp"
 
@@ -39,12 +40,12 @@ void  ChassisRelativeDriveCommand::execute()
     float rInput = drivers->controlInterface.getChassisRInput();
 
     keyboard_input = drivers->controlInterface.getChassisKeyboardInput();
-    
+
     float xKeyInput = 0;
     float yKeyInput = 0;
     float rKeyInput = 0;
 
-    float multiplier = CHASSIS_DEFAULT_SPEED;
+    float multiplier = ACTIVE_CHASSIS_CONFIG.chassisDefaultSpeed;
 
     if (keyboard_input["w"]) { xKeyInput += 1; }
     if (keyboard_input["s"]) { xKeyInput -= 1; }
@@ -54,7 +55,7 @@ void  ChassisRelativeDriveCommand::execute()
     if (keyboard_input["e"]) { rKeyInput -= 1; }
     if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
     if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
-    if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = CHASSIS_DEFAULT_SPEED; }
+    if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = ACTIVE_CHASSIS_CONFIG.chassisDefaultSpeed; }
 
     xInput += xKeyInput * multiplier;
     yInput += yKeyInput * multiplier;
@@ -63,9 +64,9 @@ void  ChassisRelativeDriveCommand::execute()
     // Chassis joystick orientation in radians
     float chassisRad = atan2(yInput, xInput);
 
-    // Turret yaw orientation 
+    // Turret yaw orientation
     int64_t yawDelta = yawMotor->getEncoderWrapped() - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
-    float yawDeltaRad = tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi / 180;
+    float yawDeltaRad = tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi_v<float> / 180.0f;
 
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
     float x = d * cos(chassisRad + yawDeltaRad);

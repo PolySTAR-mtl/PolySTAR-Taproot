@@ -3,26 +3,23 @@
 
 namespace target {
 
-enum class RobotTarget 
+enum class RobotTarget
 {
     Engineer,
     Hero,
     Sentry,
-    SpinToWin,
     Standard,
 };
 
-constexpr RobotTarget ROBOT_TARGET = 
+constexpr RobotTarget ROBOT_TARGET =
 #if defined(TARGET_ENGINEER)
     RobotTarget::Engineer;
+#elif defined(TARGET_STANDARD)
+    RobotTarget::Standard;
 #elif defined(TARGET_HERO)
     RobotTarget::Hero;
 #elif defined(TARGET_SENTRY)
-    RobotTarget::SpinToWin;
-#elif defined(TARGET_SPIN_TO_WIN)
-    RobotTarget::SpinToWin;
-#elif defined(TARGET_STANDARD)
-    RobotTarget::Standard;
+    RobotTarget::Sentry;
 #else
     RobotTarget::Standard;
     #warning "No target defined, defaulting to standard. Define a target in the build system to remove this warning."

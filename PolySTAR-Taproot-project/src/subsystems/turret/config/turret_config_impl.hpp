@@ -5,14 +5,18 @@
 
 #include "subsystems/turret/config/constants/hero_turret_constants.hpp"
 #include "subsystems/turret/config/constants/sentry_turret_constants.hpp"
-#include "subsystems/turret/config/constants/spin_to_win_turret_constants.hpp"
 #include "subsystems/turret/config/constants/standard_turret_constants.hpp"
 
 namespace control::turret {
 
 template <target::RobotTarget R>
 consteval TurretConfig getTurretConfig() {
-    return SPIN_TO_WIN_TURRET_CONFIG;
+    return STANDARD_TURRET_CONFIG;
+}
+
+template <>
+consteval TurretConfig getTurretConfig<target::RobotTarget::Standard>() {
+    return STANDARD_TURRET_CONFIG;
 }
 
 template <>
@@ -23,16 +27,6 @@ consteval TurretConfig getTurretConfig<target::RobotTarget::Hero>() {
 template <>
 consteval TurretConfig getTurretConfig<target::RobotTarget::Sentry>() {
     return SENTRY_TURRET_CONFIG;
-}
-
-template <>
-consteval TurretConfig getTurretConfig<target::RobotTarget::SpinToWin>() {
-    return SPIN_TO_WIN_TURRET_CONFIG;
-}
-
-template <>
-consteval TurretConfig getTurretConfig<target::RobotTarget::Standard>() {
-    return STANDARD_TURRET_CONFIG;
 }
 
 constexpr TurretConfig ACTIVE_TURRET_CONFIG = getTurretConfig<target::ROBOT_TARGET>();

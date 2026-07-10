@@ -10,6 +10,6 @@ enum class WheelType
     Mecanum,
 };
 
-}
+} // namespace control::chassis
 
 #endif // WHEEL_TYPE_HPP

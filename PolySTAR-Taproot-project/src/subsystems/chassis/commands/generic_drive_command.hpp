@@ -11,7 +11,7 @@
 namespace control::chassis
 {
 
-template <typename Subsystem, command_policy DrivePolicy>
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
 class GenericDriveCommand : public tap::control::Command
 {
 public:
@@ -38,6 +38,7 @@ private:
     Subsystem* const chassis_;
     src::Drivers* drivers_;
     DrivePolicy drivePolicy_;
+    SpinPolicy spinPolicy_;
 };
 
 }

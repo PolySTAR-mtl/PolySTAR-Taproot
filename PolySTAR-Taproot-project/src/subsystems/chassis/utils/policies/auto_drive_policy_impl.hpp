@@ -2,16 +2,15 @@
 #define AUTO_DRIVE_POLICY_IMPL_HPP
 
 #include "auto_drive_policy.hpp"
-#include "drive_mode.hpp"
+#include "subsystems/chassis/utils/modes/drive_mode.hpp"
 
 namespace control::chassis
 {
 
 template <typename Subsystem>
-AutoDrivePolicy<Subsystem>::AutoDrivePolicy(Subsystem* const chassis) : 
+AutoDrivePolicy<Subsystem>::AutoDrivePolicy(Subsystem* const chassis) :
     chassis_{chassis}
 {
-
 }
 
 template <typename Subsystem>
@@ -30,13 +29,11 @@ void AutoDrivePolicy<Subsystem>::execute()
 }
 
 template <typename Subsystem>
-void AutoDrivePolicy<Subsystem>::end(const bool interrupt)
+void AutoDrivePolicy<Subsystem>::end(const bool)
 {
     chassis_->template endDriving<DriveMode::Auto>();
 }
 
-
 } // namespace control::chassis
- 
 
 #endif // AUTO_DRIVE_POLICY_IMPL_HPP

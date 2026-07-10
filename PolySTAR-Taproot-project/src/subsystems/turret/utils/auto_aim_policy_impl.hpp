@@ -28,7 +28,7 @@ void AutoAimPolicy<Subsystem>::execute()
 }
 
 template <typename Subsystem>
-void AutoAimPolicy<Subsystem>::end(const bool interrupt)
+void AutoAimPolicy<Subsystem>::end(const bool)
 {
     turret_->template stopAiming<AimMode::Auto>();
 }

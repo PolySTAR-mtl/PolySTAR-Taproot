@@ -40,7 +40,7 @@ public:
 
 private:
     // attributes needed to operate the group command
-    flywheel::FlywheelFireCommand fireCommand_;
+    flywheel::FireCommand fireCommand_;
 
     feeder::FeederMoveUnjamCommand feedCommand_;
 

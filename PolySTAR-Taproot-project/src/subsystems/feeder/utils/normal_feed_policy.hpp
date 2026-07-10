@@ -1,10 +1,10 @@
 #ifndef NORMAL_FEED_POLICY_HPP
 #define NORMAL_FEED_POLICY_HPP
 
-namespace control::feeder 
+namespace control::feeder
 {
 template <typename Subsystem>
-class NormalFeedPolicy 
+class NormalFeedPolicy
 {
 public:
     NormalFeedPolicy(Subsystem* const feeder);
@@ -19,6 +19,9 @@ public:
 private:
     Subsystem* const feeder_;
 };
+
 } // control::feeder
+
+#include "normal_feed_policy_impl.hpp"
 
 #endif // NORMAL_FEED_POLICY_HPP

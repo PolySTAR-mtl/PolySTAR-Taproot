@@ -29,7 +29,7 @@ void ManualAimPolicy<Subsystem>::execute()
 }
 
 template <typename Subsystem>
-void ManualAimPolicy<Subsystem>::end(const bool interrupt)
+void ManualAimPolicy<Subsystem>::end(const bool)
 {
     turret_->template stopAiming<AimMode::Manual>();
 }

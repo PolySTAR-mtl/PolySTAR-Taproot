@@ -6,12 +6,13 @@
 namespace control::chassis
 {
 
-template <typename Subsystem, command_policy DrivePolicy>
-GenericDriveCommand<Subsystem, DrivePolicy>::GenericDriveCommand(Subsystem* const chassis, src::Drivers* drivers)
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+GenericDriveCommand<Subsystem, DrivePolicy, SpinPolicy>::GenericDriveCommand(Subsystem* const chassis, src::Drivers* drivers)
     : tap::control::Command{},
         chassis_{chassis},
         drivers_{drivers},
-        drivePolicy_{chassis}
+        drivePolicy_{chassis},
+        spinPolicy_{chassis}
 {
     if (chassis == nullptr)
     {
@@ -20,35 +21,37 @@ GenericDriveCommand<Subsystem, DrivePolicy>::GenericDriveCommand(Subsystem* cons
     this->addSubsystemRequirement(dynamic_cast<tap::control::Subsystem*>(chassis));
 }
 
-template <typename Subsystem, command_policy DrivePolicy>
-GenericDriveCommand<Subsystem, DrivePolicy>::~GenericDriveCommand() = default;
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+GenericDriveCommand<Subsystem, DrivePolicy, SpinPolicy>::~GenericDriveCommand() = default;
 
-template <typename Subsystem, command_policy DrivePolicy>
-void GenericDriveCommand<Subsystem, DrivePolicy>::initialize()
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+void GenericDriveCommand<Subsystem, DrivePolicy, SpinPolicy>::initialize()
 {
     drivePolicy_.initialize();
 }
 
-template <typename Subsystem, command_policy DrivePolicy>
-void GenericDriveCommand<Subsystem, DrivePolicy>::execute()
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+void GenericDriveCommand<Subsystem, DrivePolicy, SpinPolicy>::execute()
 {
     drivePolicy_.execute();
+    spinPolicy_.execute();
+    chassis_->updateDesiredOutput();
 }
 
-template <typename Subsystem, command_policy DrivePolicy>
-const char* GenericDriveCommand<Subsystem, DrivePolicy>::getName() const
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+const char* GenericDriveCommand<Subsystem, DrivePolicy, SpinPolicy>::getName() const
 {
     return NAME;
 }
 
-template <typename Subsystem, command_policy DrivePolicy>
-bool GenericDriveCommand<Subsystem, DrivePolicy>::isFinished() const
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+bool GenericDriveCommand<Subsystem, DrivePolicy, SpinPolicy>::isFinished() const
 {
     return false;
 }
 
-template <typename Subsystem, command_policy DrivePolicy>
-void GenericDriveCommand<Subsystem, DrivePolicy>::end(const bool interrupt)
+template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+void GenericDriveCommand<Subsystem, DrivePolicy, SpinPolicy>::end(const bool interrupt)
 {
     drivePolicy_.end(interrupt);
 }

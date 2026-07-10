@@ -10,6 +10,6 @@ enum class FeederMode
     AutoMode,
 };
 
-}
+} // namespace control::feeder
 
 #endif // FEEDER_MODE_HPP

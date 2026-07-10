@@ -28,7 +28,9 @@ void AutoFirePolicy<Subsystem>::execute()
 }
 
 template <typename Subsystem>
-void AutoFirePolicy<Subsystem>::end(bool) { flywheel_->stopFiring(); }
+void AutoFirePolicy<Subsystem>::end(bool) {
+    flywheel_->stopFiring();
+}
 
 } // namespace control::flywheel
 

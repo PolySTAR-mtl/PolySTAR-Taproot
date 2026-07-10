@@ -1,6 +1,8 @@
 #ifndef TURRET_SUBSYSTEM_IMPL_HPP
 #define TURRET_SUBSYSTEM_IMPL_HPP
 
+#include <cmath>
+
 #include "turret_subsystem.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
 #include "communication/cv_serial_data.hpp"
@@ -26,7 +28,7 @@ void TurretSubsystem::executeAiming()
         // Get inputs from the controller and mouse
         float xInput = drivers->controlInterface.getTurretXInput();
         xInput += drivers->controlInterface.getTurretXMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseXScaleFactor;
-        
+
         float yInput = drivers->controlInterface.getTurretYInput();
         yInput += drivers->controlInterface.getTurretYMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseYScaleFactor;
 
@@ -37,8 +39,8 @@ void TurretSubsystem::executeAiming()
         // Set desired outputs
         setDesiredYawRpm(desiredYawRpm);
         setRelativeOutput(
-            fabs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
-            fabs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
+            std::abs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
+            std::abs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
 
     } else if (A == AimMode::Auto) {
         if (!startMatchTimeout.isExpired()){

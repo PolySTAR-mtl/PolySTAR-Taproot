@@ -11,6 +11,11 @@ consteval FeederConfig getFeederConfig() {
 }
 
 template <>
+consteval FeederConfig getFeederConfig<target::RobotTarget::Standard>() {
+    return STANDARD_FEEDER_CONFIG;
+}
+
+template <>
 consteval FeederConfig getFeederConfig<target::RobotTarget::Hero>() {
     return HERO_FEEDER_CONFIG;
 }
@@ -18,16 +23,6 @@ consteval FeederConfig getFeederConfig<target::RobotTarget::Hero>() {
 template <>
 consteval FeederConfig getFeederConfig<target::RobotTarget::Sentry>() {
     return SENTRY_FEEDER_CONFIG;
-}
-
-template <>
-consteval FeederConfig getFeederConfig<target::RobotTarget::SpinToWin>() {
-    return SPIN_TO_WIN_FEEDER_CONFIG;
-}
-
-template <>
-consteval FeederConfig getFeederConfig<target::RobotTarget::Standard>() {
-    return STANDARD_FEEDER_CONFIG;
 }
 
 constexpr FeederConfig ACTIVE_FEEDER_CONFIG = getFeederConfig<target::ROBOT_TARGET>();

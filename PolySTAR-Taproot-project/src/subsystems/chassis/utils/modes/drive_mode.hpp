@@ -8,7 +8,7 @@ enum class DriveMode
 {
     Auto = 0,
     Manual,
-};    
+};
 
 } // namespace control::chassis
 
