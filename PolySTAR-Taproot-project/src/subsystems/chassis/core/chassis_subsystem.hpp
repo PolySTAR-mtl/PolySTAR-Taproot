@@ -89,32 +89,17 @@ public:
     void updateDesiredOutput();
 
     // Drive policy methods.
-    template <DriveMode D>
+    template <DriveMode D, SpinMode S>
     void initializeDriving();
 
-    template <DriveMode D>
+    template <DriveMode D, SpinMode S>
     void executeDriving();
 
-    template <DriveMode D>
+    template <DriveMode D, SpinMode S>
     void endDriving();
-
-    // Spin policy methods.
-    template <SpinMode S>
-    void initializeSpinning();
-
-    template <SpinMode S>
-    void executeSpinning();
-
-    template <SpinMode S>
-    void endSpinning();
 
 private:
     src::Drivers *drivers;
-
-    // input values from the control interface
-    float xInput_;
-    float yInput_;
-    float rInput_;
 
     ///< Motors.  Use these to interact with any dji style motors.
     tap::motor::DjiMotor frontLeftMotor;

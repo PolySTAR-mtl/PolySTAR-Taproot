@@ -221,36 +221,6 @@ void ChassisSubsystem<Type>::setDesiredOutput(float x, float y, float r)
     }
 }
 
-template <WheelType Type>
-void ChassisSubsystem<Type>::updateDesiredOutput()
-{
-    float x = tap::algorithms::limitVal<float>(xInput_,-1,1);
-    float y = tap::algorithms::limitVal<float>(yInput_,-1,1);
-    float r = tap::algorithms::limitVal<float>(rInput_,-1,1);
-
-    // x, y, and r contained between -1 and 1
-    // Normalize movement vector
-    const float norm = sqrt(x*x+y*y);
-    if (norm > 1) {
-        x = x / norm;
-        y = y / norm;
-    }
-
-    y = IS_Y_INVERTED ? -y : y;
-
-    if constexpr (Type == WheelType::Mecanum) {
-        frontLeftDesiredRpm = (x - y - r) * rpmScaleFactor;
-        frontRightDesiredRpm = (x + y + r) * rpmScaleFactor;
-        backLeftDesiredRpm = (x + y - r) * rpmScaleFactor;
-        backRightDesiredRpm = (x - y + r) * rpmScaleFactor;
-    } else if constexpr (Type == WheelType::OmniWheels) {
-        frontLeftDesiredRpm = (y + r) * rpmScaleFactor;
-        frontRightDesiredRpm = (-x - r) * rpmScaleFactor;
-        backLeftDesiredRpm = (-x + r) * rpmScaleFactor;
-        backRightDesiredRpm = (y - r) * rpmScaleFactor;
-    }
-}
-
 } // namespace control::chassis
 
 #include "subsystems/chassis/core/chassis_subsystem_mode_impl.hpp"

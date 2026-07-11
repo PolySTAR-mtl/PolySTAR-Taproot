@@ -10,47 +10,7 @@
 namespace control::chassis
 {
 
-/**
- * -------------------------------
- * Spin policy
- * -------------------------------
- */
-template <WheelType T> template <SpinMode S>
-void ChassisSubsystem<T>::initializeSpinning()
-{
-    if constexpr (S == SpinMode::Spin) {
-        // do nothing
-    } else if constexpr (S == SpinMode::NoSpin) {
-        // do nothing
-    }
-}
-
-template <WheelType T> template <SpinMode S>
-void ChassisSubsystem<T>::executeSpinning()
-{
-    if constexpr(S == SpinMode::Spin) {
-        rInput_ = isMoving_ ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
-    } else if constexpr (S == SpinMode::NoSpin) {
-        // do nothing
-    }
-}
-
-template <WheelType T> template <SpinMode S>
-void ChassisSubsystem<T>::endSpinning()
-{
-    if constexpr (S == SpinMode::Spin) {
-        // do nothing
-    } else if constexpr (S == SpinMode::NoSpin) {
-        // do nothing
-    }
-}
-
-/**
- * -------------------------------
- * Drive policy
- * -------------------------------
- */
-template <WheelType T> template <DriveMode D>
+template <WheelType T> template <DriveMode D, SpinMode S>
 void ChassisSubsystem<T>::initializeDriving()
 {
     if constexpr (D == DriveMode::Manual) {
@@ -60,12 +20,13 @@ void ChassisSubsystem<T>::initializeDriving()
     }
 }
 
-template <WheelType T> template <DriveMode D>
+template <WheelType T> template <DriveMode D, SpinMode S>
 void ChassisSubsystem<T>::executeDriving()
 {
     if constexpr(D == DriveMode::Manual) {
         const float xInput = drivers->controlInterface.getChassisXInput();
         const float yInput = drivers->controlInterface.getChassisYInput();
+        float rInput = drivers->controlInterface.getChassisRInput();
 
         // Setup for spin mode
         isMoving_ = sqrt(xInput * xInput + yInput * yInput) > CHASSIS_DEAD_ZONE;
@@ -86,14 +47,17 @@ void ChassisSubsystem<T>::executeDriving()
         const float x = d * cos(chassisRad + yawDeltaRad);
         const float y = d * sin(chassisRad + yawDeltaRad);
 
-        xInput_ = fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f;
-        yInput_ = fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f;
+        if constexpr (S == SpinMode::Spin) {
+            rInput = isMoving_ ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
+        } else if constexpr (S == SpinMode::NoSpin) {
+            // Do nothing, rInput is already set to the joystick input
+        }
 
-        // setDesiredOutput(
-        //     fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
-        //     fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f,
-        //     fabs(r) >= CHASSIS_DEAD_ZONE ? r : 0.0f
-        // );
+        setDesiredOutput(
+            fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
+            fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f,
+            fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f
+        );
     } else if constexpr (D == DriveMode::Auto) {
         if (!startMatchTimeout.isExpired()){
             setTargetOutput(0, 0, 0);
@@ -102,19 +66,15 @@ void ChassisSubsystem<T>::executeDriving()
         drivers->leds.set(tap::gpio::Leds::A, true);
         const auto& movementData = drivers->cvHandler.getMovementData();
 
-        xInput_ = movementData.xSetpoint;
-        yInput_ = movementData.ySetpoint;
-        rInput_ = movementData.rSetpoint;
-
-        // setDesiredOutput(
-        //     movementData.xSetpoint,
-        //     movementData.ySetpoint,
-        //     movementData.rSetpoint
-        // );
+        setDesiredOutput(
+            movementData.xSetpoint,
+            movementData.ySetpoint,
+            movementData.rSetpoint
+        );
     }
 }
 
-template <WheelType T> template <DriveMode D>
+template <WheelType T> template <DriveMode D, SpinMode S>
 void ChassisSubsystem<T>::endDriving()
 {
     if constexpr (D == DriveMode::Manual) {

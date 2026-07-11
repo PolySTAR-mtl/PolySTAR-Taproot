@@ -7,31 +7,31 @@
 namespace control::chassis
 {
 
-template <typename Subsystem>
-AutoDrivePolicy<Subsystem>::AutoDrivePolicy(Subsystem* const chassis) :
+template <typename Subsystem, SpinMode SpinMode>
+AutoDrivePolicy<Subsystem, SpinMode>::AutoDrivePolicy(Subsystem* const chassis) :
     chassis_{chassis}
 {
 }
 
-template <typename Subsystem>
-AutoDrivePolicy<Subsystem>::~AutoDrivePolicy() = default;
+template <typename Subsystem, SpinMode SpinMode>
+AutoDrivePolicy<Subsystem, SpinMode>::~AutoDrivePolicy() = default;
 
-template <typename Subsystem>
-void AutoDrivePolicy<Subsystem>::initialize()
+template <typename Subsystem, SpinMode SpinMode>
+void AutoDrivePolicy<Subsystem, SpinMode>::initialize()
 {
-    chassis_->template initializeDriving<DriveMode::Auto>();
+    chassis_->template initializeDriving<DriveMode::Auto, SpinMode>();
 }
 
-template <typename Subsystem>
-void AutoDrivePolicy<Subsystem>::execute()
+template <typename Subsystem, SpinMode SpinMode>
+void AutoDrivePolicy<Subsystem, SpinMode>::execute()
 {
-    chassis_->template executeDriving<DriveMode::Auto>();
+    chassis_->template executeDriving<DriveMode::Auto, SpinMode>();
 }
 
-template <typename Subsystem>
-void AutoDrivePolicy<Subsystem>::end(const bool)
+template <typename Subsystem, SpinMode SpinMode>
+void AutoDrivePolicy<Subsystem, SpinMode>::end(const bool)
 {
-    chassis_->template endDriving<DriveMode::Auto>();
+    chassis_->template endDriving<DriveMode::Auto, SpinMode>();
 }
 
 } // namespace control::chassis

@@ -7,11 +7,12 @@
 
 #include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "subsystems/concepts/command_policy.hpp"
+#include "subsystems/chassis/utils/modes/spin_mode.hpp"
 
 namespace control::chassis
 {
 
-template <typename Subsystem, command_policy DrivePolicy, command_policy SpinPolicy>
+template <typename Subsystem, command_policy DrivePolicy>
 class GenericDriveCommand : public tap::control::Command
 {
 public:
@@ -38,7 +39,6 @@ private:
     Subsystem* const chassis_;
     src::Drivers* drivers_;
     DrivePolicy drivePolicy_;
-    SpinPolicy spinPolicy_;
 };
 
 }
