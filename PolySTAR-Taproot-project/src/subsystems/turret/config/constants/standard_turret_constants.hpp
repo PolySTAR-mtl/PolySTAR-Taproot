@@ -82,7 +82,7 @@ constexpr TurretConfig STANDARD_TURRET_CONFIG = {
     .yawOuterPidConfig = STANDARD_TURRET_YAW_OUTER_PID_CONFIG,
     .yawInnerPidConfig = STANDARD_TURRET_YAW_INNER_PID_CONFIG,
 
-    .yawNeutralPos = 4755,
+    .yawNeutralPos = 203,
     .pitchNeutralPos = 6515,
 
     .yawRangeDegrees = STANDARD_TURRET_YAW_RANGE_DEGREES,

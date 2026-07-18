@@ -3,6 +3,7 @@
 
 #include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "subsystems/chassis/config/chassis_constants.hpp"
+#include "subsystems/chassis/config/chassis_config.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/chassis/utils/modes/wheel_type.hpp"
 
@@ -15,6 +16,27 @@
 
 namespace control::chassis
 {
+
+template <WheelType T>
+ChassisSubsystem<T>::ChassisSubsystem(src::Drivers *drivers,tap::motor::DjiMotor* yawMotor)
+    : tap::control::Subsystem(drivers),
+        drivers(drivers),
+        frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.canBusMotors, false, "front left motor"),
+        frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.canBusMotors, true, "front right motor"),
+        backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.canBusMotors, false, "back left motor"),
+        backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, ACTIVE_CHASSIS_CONFIG.canBusMotors, true, "back right motor"),
+        frontLeftPid(pidConfig),
+        frontRightPid(pidConfig),
+        backLeftPid(pidConfig),
+        backRightPid(pidConfig),
+        frontLeftDesiredRpm(0),
+        frontRightDesiredRpm(0),
+        backLeftDesiredRpm(0),
+        backRightDesiredRpm(0),
+        prevCVUpdate(0),
+        turretYawMotor(yawMotor)
+{
+}
 
 template <WheelType T>
 void ChassisSubsystem<T>::initialize()

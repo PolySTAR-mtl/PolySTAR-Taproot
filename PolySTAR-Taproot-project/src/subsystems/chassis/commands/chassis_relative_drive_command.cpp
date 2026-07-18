@@ -45,7 +45,7 @@ void  ChassisRelativeDriveCommand::execute()
     float yKeyInput = 0;
     float rKeyInput = 0;
 
-    float multiplier = ACTIVE_CHASSIS_CONFIG.chassisDefaultSpeed;
+    float multiplier = ACTIVE_CHASSIS_CONFIG.defaultSpeed;
 
     if (keyboard_input["w"]) { xKeyInput += 1; }
     if (keyboard_input["s"]) { xKeyInput -= 1; }
@@ -55,7 +55,7 @@ void  ChassisRelativeDriveCommand::execute()
     if (keyboard_input["e"]) { rKeyInput -= 1; }
     if (keyboard_input["shift"]) { multiplier = CHASSIS_SHIFT_MULTIPLIER; }
     if (keyboard_input["ctrl"]) { multiplier = CHASSIS_CTRL_MULTIPLIER; }
-    if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = ACTIVE_CHASSIS_CONFIG.chassisDefaultSpeed; }
+    if (keyboard_input["shift"] && keyboard_input["ctrl"]) { multiplier = ACTIVE_CHASSIS_CONFIG.defaultSpeed; }
 
     xInput += xKeyInput * multiplier;
     yInput += yKeyInput * multiplier;

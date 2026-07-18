@@ -9,17 +9,27 @@ namespace control::chassis
 {
 
 struct ChassisConfig {
-    float chassisDefaultSpeed; // The default speed of the chassis
+    /**
+     * The default speed of the chassis.
+     */
+    float defaultSpeed;
+
+    /**
+    * Chassis motors can bus.
+    */
+    tap::can::CanBus canBusMotors;
 };
 
 constexpr ChassisConfig BASE_CHASSIS_CONFIG {
-    .chassisDefaultSpeed = 0.5f
+    .defaultSpeed = 0.5f,
+    .canBusMotors = tap::can::CanBus::CAN_BUS1
 };
 
 constexpr ChassisConfig STANDARD_CHASSIS_CONFIG = BASE_CHASSIS_CONFIG;
 
 constexpr ChassisConfig HERO_CHASSIS_CONFIG {
-    .chassisDefaultSpeed = 0.25f
+    .defaultSpeed = 0.25f,
+    .canBusMotors = tap::can::CanBus::CAN_BUS2
 };
 
 constexpr ChassisConfig SENTRY_CHASSIS_CONFIG = BASE_CHASSIS_CONFIG;

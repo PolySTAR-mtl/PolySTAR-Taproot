@@ -36,7 +36,6 @@ static constexpr float CHASSIS_TR_PROPORTIONAL_KALMAN = 0.0f;
 static constexpr float CHASSIS_SHIFT_MULTIPLIER = 1.0f;
 static constexpr float CHASSIS_CTRL_MULTIPLIER = 0.25f;
 
-
 /**
  * Left joystick dead zone size. If the absolute value return by the stick is below
  * this value, it is considered zero.
@@ -77,11 +76,6 @@ static constexpr float W_TO_R = 0.07955; // 1rps = 0.5 on chassis r
 static constexpr bool CHASSIS_DEBUG_MESSAGE = true;
 static constexpr uint32_t CHASSIS_DEBUG_MESSAGE_DELAY_MS = 100;
 
-/**
- * Chassis motors can bus.
- */
-static constexpr tap::can::CanBus CHASSIS_CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS2;
-
 } // namespace control::chassis
 
-#endif
+#endif // CHASSIS_CONSTANTS_HPP

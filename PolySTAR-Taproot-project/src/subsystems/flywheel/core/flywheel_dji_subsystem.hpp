@@ -44,6 +44,9 @@ public:
 
     void sendStartingBoost();
 
+    /**
+     * Fire policy methods. Definition can be found in the implementation file.
+     */
     template <FireMode M>
     void initializeFiring() {}
 

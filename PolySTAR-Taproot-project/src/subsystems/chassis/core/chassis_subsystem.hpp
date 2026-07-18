@@ -26,40 +26,7 @@ template <WheelType T>
 class ChassisSubsystem : public tap::control::Subsystem
 {
 public:
-    /**
-     * This max output is measured in the c620 robomaster translated current.
-     * Per the datasheet, the controllable current range is -16384 ~ 0 ~ 16384.
-     * The corresponding speed controller output torque current range is
-     * -20 ~ 0 ~ 20 A.
-     *
-     * For this demo, we have capped the output at 8000. This should be more
-     * than enough for what you are doing.
-     */
-    static constexpr float MAX_CURRENT_OUTPUT = 8000.0f;
-
-    /**
-     * Constructs a new ChassisSubsystem with default parameters specified in
-     * the private section of this class.
-     */
-    ChassisSubsystem(src::Drivers *drivers,tap::motor::DjiMotor* yawMotor)
-        : tap::control::Subsystem(drivers),
-          drivers(drivers),
-          frontLeftMotor(drivers, FRONT_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "front left motor"),
-          frontRightMotor(drivers, FRONT_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "front right motor"),
-          backLeftMotor(drivers, BACK_LEFT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, false, "back left motor"),
-          backRightMotor(drivers, BACK_RIGHT_MOTOR_ID, CHASSIS_CAN_BUS_MOTORS, true, "back right motor"),
-          frontLeftPid(pidConfig),
-          frontRightPid(pidConfig),
-          backLeftPid(pidConfig),
-          backRightPid(pidConfig),
-          frontLeftDesiredRpm(0),
-          frontRightDesiredRpm(0),
-          backLeftDesiredRpm(0),
-          backRightDesiredRpm(0),
-          prevCVUpdate(0),
-          turretYawMotor(yawMotor)
-    {
-    }
+    ChassisSubsystem(src::Drivers *drivers,tap::motor::DjiMotor* yawMotor);
 
     ChassisSubsystem(const ChassisSubsystem &other) = delete;
 
@@ -88,7 +55,9 @@ public:
     void setDesiredOutput(float x, float y, float r);
     void updateDesiredOutput();
 
-    // Drive policy methods.
+    /**
+     *  Drive policy methods. Definition can be found in the implementation file.
+     */
     template <DriveMode D, SpinMode S>
     void initializeDriving();
 

@@ -47,6 +47,9 @@ public:
 
     virtual void stopFiring();
 
+    /**
+     * Fire policy methods. Definition can be found in the implementation file.
+     */
     template <FireMode M>
     void initializeFiring();
 

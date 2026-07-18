@@ -40,6 +40,9 @@ public:
 
     const tap::motor::DjiMotor &getFeederMotor() const { return feederMotor; }
 
+    /**
+     * Feed policy methods. Definition can be found in the implementation file.
+     */
     template <FeedMode M>
     void initializeFeed();
 

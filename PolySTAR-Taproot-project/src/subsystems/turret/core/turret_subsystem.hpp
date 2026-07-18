@@ -26,11 +26,6 @@ namespace control::turret
 class TurretSubsystem : public tap::control::Subsystem
 {
 public:
-
-    /**
-     * Constructs a new TurretSubsystem with default parameters specified in
-     * the private section of this class.
-     */
     TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor);
 
     TurretSubsystem(const TurretSubsystem &other) = delete;
@@ -62,6 +57,9 @@ public:
     void setIsSpin2WinMode(bool isSpin2WinMode) { m_isSpin2WinMode = isSpin2WinMode; }
     void setDesiredYawRpm(float desiredRpm) { desiredYawRpm = desiredRpm; }
 
+    /**
+     * Aim policy methods. Definition can be found in the implementation file.
+     */
     template <AimMode A>
     void initializeAiming();
 

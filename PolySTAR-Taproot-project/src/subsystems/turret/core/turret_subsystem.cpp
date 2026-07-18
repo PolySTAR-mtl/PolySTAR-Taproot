@@ -17,6 +17,7 @@ namespace control::turret
 
 TurretSubsystem::TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor)
         : tap::control::Subsystem(drivers),
+          drivers(drivers),
           yawMotor(yawMotor),
           pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, ACTIVE_TURRET_CONFIG.pitchIsInverted, "pitch motor"),
           cascadedPitchController(ACTIVE_TURRET_CONFIG.pitchOuterPidConfig, ACTIVE_TURRET_CONFIG.pitchInnerPidConfig),
@@ -41,6 +42,12 @@ void TurretSubsystem::refresh() {
 
     // Run controllers as fast as possible
     runPitchController(currentTime - prevControllerUpdate);
+    /**
+     * Yaw controller decides the position, but can't set a RPM because it uses the cascaded PID.
+     * updateRPMPiD uses smooth pid, which lets it set a RPM.
+     * For now, haven't found a proper solution to this if we want to use the IMU at all times.
+     * (We would need to set a position and add an RPM on top of it)
+     */
     m_isSpin2WinMode ? updateRpmPid(&yawRpmPid, yawMotor, desiredYawRpm, currentTime - prevControllerUpdate) : runYawController(currentTime - prevControllerUpdate);
     prevControllerUpdate = currentTime;
 

@@ -53,7 +53,7 @@ void ChassisSubsystem<T>::executeDriving()
             // Do nothing, rInput is already set to the joystick input
         }
 
-        setDesiredOutput(
+        setTargetOutput(
             fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
             fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f,
             fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f
@@ -66,7 +66,7 @@ void ChassisSubsystem<T>::executeDriving()
         drivers->leds.set(tap::gpio::Leds::A, true);
         const auto& movementData = drivers->cvHandler.getMovementData();
 
-        setDesiredOutput(
+        setTargetOutput(
             movementData.xSetpoint,
             movementData.ySetpoint,
             movementData.rSetpoint
@@ -78,9 +78,9 @@ template <WheelType T> template <DriveMode D, SpinMode S>
 void ChassisSubsystem<T>::endDriving()
 {
     if constexpr (D == DriveMode::Manual) {
-        setDesiredOutput(0.0f, 0.0f, 0.0f);
+        setTargetOutput(0.0f, 0.0f, 0.0f);
     } else if constexpr (D == DriveMode::Auto) {
-        setDesiredOutput(0.0f, 0.0f, 0.0f);
+        setTargetOutput(0.0f, 0.0f, 0.0f);
     }
 }
 

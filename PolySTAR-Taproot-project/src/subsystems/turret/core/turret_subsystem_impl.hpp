@@ -17,7 +17,7 @@ void TurretSubsystem::initializeAiming()
         startMatchTimeout.restart(START_MATCH_WAIT_TIME);
 
     } else if (A == AimMode::Manual) {
-        setIsSpin2WinMode(true);
+        setIsSpin2WinMode(false);
     }
 }
 
@@ -66,8 +66,6 @@ void TurretSubsystem::stopAiming()
     }
 }
 
-
 } // namespace control::turret
-
 
 #endif // TURRET_SUBSYSTEM_IMPL_HPP

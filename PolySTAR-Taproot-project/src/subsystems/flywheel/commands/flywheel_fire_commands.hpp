@@ -22,4 +22,4 @@ using FireCommand =
     GenericFireCommand<FlywheelSubsystem, NormalFirePolicy<FlywheelSubsystem>>;
 }
 
-#endif
+#endif // FLYWHEEL_FIRE_COMMANDS_HPP

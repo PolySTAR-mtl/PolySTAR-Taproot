@@ -51,8 +51,8 @@ struct TurretConfig {
     /**
      * Inverted directions
      */
-    float yawIsInverted;
-    float pitchIsInverted;
+    bool yawIsInverted;
+    bool pitchIsInverted;
 
     /**
      * Helper to keep config constexpr
