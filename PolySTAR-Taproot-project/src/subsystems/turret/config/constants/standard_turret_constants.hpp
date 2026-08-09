@@ -39,9 +39,9 @@ static constexpr tap::algorithms::SmoothPidConfig STANDARD_TURRET_PITCH_INNER_PI
 );
 
 static constexpr tap::algorithms::SmoothPidConfig STANDARD_TURRET_YAW_OUTER_PID_CONFIG(
-    0.08f, // kP
+    0.14f, // kP
     0.0f, // kI
-    0.45f, // kD
+    0.53f, // kD
     20.0f, // Max error sum
     250.0f, // Max output
     1.0f, // TQ Derivative Kalman
@@ -82,7 +82,7 @@ constexpr TurretConfig STANDARD_TURRET_CONFIG = {
     .yawOuterPidConfig = STANDARD_TURRET_YAW_OUTER_PID_CONFIG,
     .yawInnerPidConfig = STANDARD_TURRET_YAW_INNER_PID_CONFIG,
 
-    .yawNeutralPos = 203,
+    .yawNeutralPos = 1568,
     .pitchNeutralPos = 6515,
 
     .yawRangeDegrees = STANDARD_TURRET_YAW_RANGE_DEGREES,

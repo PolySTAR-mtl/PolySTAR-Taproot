@@ -119,15 +119,15 @@ void TurretSubsystem::runPitchController(uint32_t dt) {
     Set desired position setpoints for turret. Values are in encoder ticks.
 */
 void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) {
-#ifdef TARGET_SPIN_TO_WIN
     yawDesiredPos = yaw;
-#else
-    yawDesiredPos = limitVal<uint16_t>(
+/**
+ * This is for the case where the robot doesn't have a slip ring
+ * yawDesiredPos = limitVal<uint16_t>(
         yaw,
         ACTIVE_TURRET_CONFIG.yawNeutralPos - ACTIVE_TURRET_CONFIG.yawRange,
         ACTIVE_TURRET_CONFIG.yawNeutralPos + ACTIVE_TURRET_CONFIG.yawRange
     );
-#endif
+ */
     pitchDesiredPos = limitVal<uint16_t>(
         pitch,
         ACTIVE_TURRET_CONFIG.pitchNeutralPos - ACTIVE_TURRET_CONFIG.pitchRange,
