@@ -1,10 +1,12 @@
 #ifndef MANUAL_AIM_POLICY_HPP
 #define MANUAL_AIM_POLICY_HPP
 
+#include "subsystems/turret/utils/modes/spin_mode.hpp"
+
 namespace control::turret
 {
 
-template <typename Subsystem>
+template <typename Subsystem, SpinMode spinMode>
 class ManualAimPolicy
 {
 public:

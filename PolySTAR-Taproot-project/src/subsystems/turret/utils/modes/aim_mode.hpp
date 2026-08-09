@@ -4,7 +4,7 @@
 namespace control::turret
 {
 
-enum class AimMode 
+enum class AimMode
 {
     Manual,
     Auto,

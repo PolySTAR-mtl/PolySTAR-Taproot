@@ -11,9 +11,9 @@ GenericAimCommand<Subsystem, AimPolicy>::GenericAimCommand(Subsystem* const turr
     tap::control::Command{},
     turret_{turret},
     drivers_{drivers},
-    aimPolicy_{turret} 
+    aimPolicy_{turret}
 {
-    if (turret == nullptr) 
+    if (turret == nullptr)
     {
         return;
     }
@@ -44,7 +44,7 @@ const char* GenericAimCommand<Subsystem, AimPolicy>::getName() const
 }
 
 template <typename Subsystem, command_policy AimPolicy>
-bool GenericAimCommand<Subsystem, AimPolicy>::isFinished() const 
+bool GenericAimCommand<Subsystem, AimPolicy>::isFinished() const
 {
     return false;
 }

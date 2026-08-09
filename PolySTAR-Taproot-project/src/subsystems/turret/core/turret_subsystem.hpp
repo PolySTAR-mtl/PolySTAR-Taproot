@@ -8,7 +8,8 @@
 #include "subsystems/turret/config/constants/turret_constants.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/algorithms/cascaded_pid.hpp"
-#include "subsystems/turret/utils/aim_mode.hpp"
+#include "subsystems/turret/utils/modes/aim_mode.hpp"
+#include "subsystems/turret/utils/modes/spin_mode.hpp"
 #include "subsystems/sentry_general_constants.hpp"
 #include "subsystems/turret/algorithms/imu_interpreter.hpp"
 
@@ -60,13 +61,13 @@ public:
     /**
      * Aim policy methods. Definition can be found in the implementation file.
      */
-    template <AimMode A>
+    template <AimMode A, SpinMode S>
     void initializeAiming();
 
-    template <AimMode A>
+    template <AimMode A, SpinMode S>
     void executeAiming();
 
-    template <AimMode A>
+    template <AimMode A, SpinMode S>
     void stopAiming();
 private:
     // Controller Functions

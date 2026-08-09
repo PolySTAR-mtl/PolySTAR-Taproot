@@ -10,21 +10,26 @@
 namespace control::turret
 {
 
-template <AimMode A>
+
+template <AimMode A, SpinMode S>
 void TurretSubsystem::initializeAiming()
 {
-    if constexpr (A == AimMode::Auto){
+    if constexpr (A == AimMode::Auto) {
         startMatchTimeout.restart(START_MATCH_WAIT_TIME);
 
-    } else if (A == AimMode::Manual) {
-        setIsSpin2WinMode(false);
+    } else if constexpr (A == AimMode::Manual) {
+        if constexpr (S == SpinMode::Spin) {
+            setIsSpin2WinMode(true);
+        } else if constexpr (S == SpinMode::NoSpin) {
+            setIsSpin2WinMode(false);
+        }
     }
 }
 
-template <AimMode A>
+template <AimMode A, SpinMode S>
 void TurretSubsystem::executeAiming()
 {
-    if constexpr (A == AimMode::Manual){
+    if constexpr (A == AimMode::Manual) {
         // Get inputs from the controller and mouse
         float xInput = drivers->controlInterface.getTurretXInput();
         xInput += drivers->controlInterface.getTurretXMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseXScaleFactor;
@@ -42,8 +47,8 @@ void TurretSubsystem::executeAiming()
             std::abs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
             std::abs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
 
-    } else if (A == AimMode::Auto) {
-        if (!startMatchTimeout.isExpired()){
+    } else if constexpr (A == AimMode::Auto) {
+        if (!startMatchTimeout.isExpired()) {
             setAbsoluteOutputDegrees(0, 0);
             return;
         }
@@ -56,13 +61,17 @@ void TurretSubsystem::executeAiming()
     }
 }
 
-template <AimMode A>
+template <AimMode A, SpinMode S>
 void TurretSubsystem::stopAiming()
 {
-    if constexpr (A == AimMode::Auto){
+    if constexpr (A == AimMode::Auto) {
         // Do nothing
-    } else if (A == AimMode::Manual) {
-        setIsSpin2WinMode(false);
+    } else if constexpr (A == AimMode::Manual) {
+        if constexpr (S == SpinMode::Spin) {
+            setIsSpin2WinMode(false);
+        } else if constexpr (S == SpinMode::NoSpin) {
+            setIsSpin2WinMode(true);
+        }
     }
 }
 
