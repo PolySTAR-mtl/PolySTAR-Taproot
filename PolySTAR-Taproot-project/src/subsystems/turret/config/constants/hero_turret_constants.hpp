@@ -82,7 +82,7 @@ constexpr TurretConfig HERO_TURRET_CONFIG = {
     .yawOuterPidConfig = HERO_YAW_OUTER_PID_CONFIG,
     .yawInnerPidConfig = HERO_YAW_INNER_PID_CONFIG,
 
-    .yawNeutralPos = 4072,
+    .yawNeutralPos = 1850, // 4072 -> 2024 Diminuer : sens horaire
     .pitchNeutralPos = 5150,
 
     .yawRangeDegrees = HERO_YAW_RANGE_DEGREES,

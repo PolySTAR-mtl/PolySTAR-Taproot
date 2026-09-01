@@ -74,9 +74,9 @@ RemoteSafeDisconnectFunction remoteSafeDisconnectFunction(drivers());
 
 /* define command mappings --------------------------------------------------*/
 /* Controller mappings */
-HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP),true);
-ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
-HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManualSpinAim}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::DOWN));
+HoldRepeatCommandMapping feedFeeder(drivers(), {&feederMoveUnjam}, RemoteMapState(Remote::Switch::LEFT_SWITCH, Remote::SwitchState::UP),true);
+ToggleCommandMapping startFlywheel(drivers(), {&flywheelStart}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::UP));
+HoldCommandMapping toggleChassisSpin(drivers(), {&chassisSpinDrive, &turretManualSpinAim}, RemoteMapState(Remote::Switch::RIGHT_SWITCH, Remote::SwitchState::DOWN));
 
 /* Mouse mappings */
 // ToggleCommandMapping mouseStartFlywheel(drivers(), {&flywheelStart}, RemoteMapState(RemoteMapState::MouseButton::RIGHT));

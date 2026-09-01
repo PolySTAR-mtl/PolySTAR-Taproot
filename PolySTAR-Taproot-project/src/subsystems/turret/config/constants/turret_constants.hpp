@@ -49,7 +49,13 @@ static constexpr float DEGREE_TO_TICK = tap::motor::DjiMotor::ENC_RESOLUTION / 3
  */
 static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
+
+#ifdef TARGET_HERO
+static constexpr float GZ_STABILIZATION_CONSTANT = 0.22;
+#else
 static constexpr float GZ_STABILIZATION_CONSTANT = 0.47;
+#endif
+
 static constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1;
 
 } // namespace control::turret

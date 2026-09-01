@@ -48,11 +48,12 @@ inline void FlywheelDjiSubsystem::executeFiring() {
         }
     }
     else if constexpr (M == FireMode::Normal) {
-        if (state == FlywheelState::Starting &&
-            tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
-        {
-            startFiring();
-        }
+        startFiring();
+        // if (state == FlywheelState::Starting &&
+        //     tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
+        // {
+        //     startFiring();
+        // }
     }
 }
 
