@@ -1,5 +1,5 @@
-#ifndef FLYWHEEL_SUBSYSTEM_IMPL_HPP
-#define FLYWHEEL_SUBSYSTEM_IMPL_HPP
+#ifndef FLYWHEEL_DJI_SUBSYSTEM_IMPL_HPP
+#define FLYWHEEL_DJI_SUBSYSTEM_IMPL_HPP
 
 #include "flywheel_dji_subsystem.hpp"
 
@@ -19,8 +19,10 @@ inline void FlywheelDjiSubsystem::initializeFiring() {
 
 template <FireMode M>
 inline void FlywheelDjiSubsystem::executeFiring() {
-    FlywheelState state = getState();
+    
+    //FlywheelState state = getState();
     if constexpr (M == FireMode::Auto) {
+        /*
         if (!startMatchTimeout_.isExpired())
         {
             stopFiring();
@@ -46,17 +48,16 @@ inline void FlywheelDjiSubsystem::executeFiring() {
             startFiring();
             isKickstartDone_ = true;
         }
+        */
     }
     else if constexpr (M == FireMode::Normal) {
-        startFiring();
-        // if (state == FlywheelState::Starting &&
-        //     tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
-        // {
-        //     startFiring();
-        // }
+        if (tap::arch::clock::getTimeMilliseconds() - startingTs_ > KICKSTART_DELAY_MS)
+        {
+            startFiring();
+        }
     }
 }
 
 } // namespace control::flywheel
 
-#endif // FLYWHEEL_SUBSYSTEM_IMPL_HPP
+#endif // FLYWHEEL_DJI_SUBSYSTEM_IMPL_HPP

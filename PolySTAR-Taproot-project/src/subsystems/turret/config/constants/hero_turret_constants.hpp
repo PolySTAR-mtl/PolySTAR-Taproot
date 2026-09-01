@@ -11,7 +11,7 @@ namespace control::turret {
  * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
  */
 static constexpr tap::algorithms::SmoothPidConfig HERO_PITCH_OUTER_PID_CONFIG(
-    0.3f, // kP
+    0.28f, // kP
     0.0f, // kI
     0.8f, // kD
     20.0f, // Max error sum

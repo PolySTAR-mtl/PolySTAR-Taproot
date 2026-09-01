@@ -70,7 +70,7 @@ constexpr FeederConfig HERO_FEEDER_CONFIG {
 
     .isFeederInverted = true,
 
-    .canBusMotors = tap::can::CanBus::CAN_BUS2,
+    .canBusMotors = tap::can::CanBus::CAN_BUS1,
 };
 
 constexpr FeederConfig SENTRY_FEEDER_CONFIG {

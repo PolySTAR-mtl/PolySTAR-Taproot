@@ -48,10 +48,10 @@ public:
      * Fire policy methods. Definition can be found in the implementation file.
      */
     template <FireMode M>
-    void initializeFiring() {}
+    void initializeFiring();
 
     template <FireMode M>
-    void executeFiring() {}
+    void executeFiring();
 
 private:
     src::Drivers* drivers_;
@@ -67,8 +67,8 @@ private:
 
 };  // class FlywheelSubsystem
 
-#include "flywheel_dji_subsystem_impl.hpp"
-
 }  // namespace control::flywheel
+
+#include "flywheel_dji_subsystem_impl.hpp"
 
 #endif  // FLYWHEEL_SUBSYSTEM_HPP
