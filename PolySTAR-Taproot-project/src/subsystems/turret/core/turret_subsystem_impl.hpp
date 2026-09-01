@@ -21,7 +21,7 @@ void TurretSubsystem::initializeAiming()
         if constexpr (S == SpinMode::Spin) {
             setIsSpin2WinMode(true);
         } else if constexpr (S == SpinMode::NoSpin) {
-            setIsSpin2WinMode(false);
+            // Do nothing
         }
     }
 }
@@ -36,13 +36,18 @@ void TurretSubsystem::executeAiming()
 
         float yInput = drivers->controlInterface.getTurretYInput();
         yInput += drivers->controlInterface.getTurretYMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseYScaleFactor;
+        
+        if constexpr (S == SpinMode::Spin) {
+            // IMU stabilization
+            imuInterpreter.update(xInput);
+            const float desiredYawRpm = imuInterpreter.getTurretYawRPM();
 
-        // IMU stabilization
-        imuInterpreter.update(xInput);
-        const float desiredYawRpm = imuInterpreter.getTurretYawRPM();
+            setDesiredYawRpm(desiredYawRpm);
+        } else if constexpr (S == SpinMode::NoSpin) {
+            // Do nothing
+        }
 
         // Set desired outputs
-        setDesiredYawRpm(desiredYawRpm);
         setRelativeOutput(
             std::abs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
             std::abs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
@@ -70,7 +75,7 @@ void TurretSubsystem::stopAiming()
         if constexpr (S == SpinMode::Spin) {
             setIsSpin2WinMode(false);
         } else if constexpr (S == SpinMode::NoSpin) {
-            setIsSpin2WinMode(true);
+            // Do nothing
         }
     }
 }

@@ -26,31 +26,30 @@ void ChassisSubsystem<T>::executeDriving()
     if constexpr(D == DriveMode::Manual) {
         const float xInput = drivers->controlInterface.getChassisXInput();
         const float yInput = drivers->controlInterface.getChassisYInput();
-        float rInput = drivers->controlInterface.getChassisRInput();
-
-        // Setup for spin mode
-        isMoving_ = sqrt(xInput * xInput + yInput * yInput) > CHASSIS_DEAD_ZONE;
 
         // const float rotationAngle = command->turretYawMotor->getEncoderUnwrapped();
         // command->chassis->setRotationAngle(rotationAngle);
 
         // Chassis joystick orientation in radians
-        const float chassisRad = atan2(xInput, yInput);
+        const float chassisRad = atan2(yInput, xInput);
 
         // Turret yaw orientation
         const int64_t yawDelta = turretYawMotor->getEncoderWrapped() - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
-        const float yawDeltaRad = static_cast<float>(
-            tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi_v<float> / 180.0f
-        );
+        const float yawDeltaRad =
+            static_cast<float>(tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta)) * std::numbers::pi_v<float> / 180.0f;
 
         const float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
         const float x = d * cos(chassisRad + yawDeltaRad);
         const float y = d * sin(chassisRad + yawDeltaRad);
+        float rInput = 0.0f;
 
         if constexpr (S == SpinMode::Spin) {
+            // Setup for spin mode
+            isMoving_ = d > CHASSIS_DEAD_ZONE;
+
             rInput = isMoving_ ? ROTATION_SPEED_LOW : ROTATION_SPEED_HIGH;
         } else if constexpr (S == SpinMode::NoSpin) {
-            // Do nothing, rInput is already set to the joystick input
+            rInput = drivers->controlInterface.getChassisRInput();
         }
 
         setTargetOutput(
