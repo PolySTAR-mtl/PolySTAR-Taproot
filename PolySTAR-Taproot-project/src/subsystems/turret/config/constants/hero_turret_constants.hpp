@@ -11,13 +11,13 @@ namespace control::turret {
  * Turret Position Controllers: Cascaded PID parameters for turret position (pitch and yaw).
  */
 static constexpr tap::algorithms::SmoothPidConfig HERO_PITCH_OUTER_PID_CONFIG(
-    0.28f, // kP
+    0.25f, // kP
     0.0f, // kI
-    0.8f, // kD
+    0.2f, // kD
     20.0f, // Max error sum
     60.0f, // Max output
     1.0f, // TQ Derivative Kalman
-    0.0f, // TR Derivative Kalman
+    0.6f, // TR Derivative Kalman
     1.0f, // TQ Proportional Kalman
     0.0f, // TR Proportional Kalman
     2.0f, // Error Deadzone
@@ -25,10 +25,10 @@ static constexpr tap::algorithms::SmoothPidConfig HERO_PITCH_OUTER_PID_CONFIG(
 );
 
 static constexpr tap::algorithms::SmoothPidConfig HERO_PITCH_INNER_PID_CONFIG(
-    260.0f, // kP
-    0.8f,  // kI
+    140.0f, // kP
+    0.18f,  // kI
     0.0f,  // kD
-    5000.0f,  // Max error sum
+    3000.0f,  // Max error sum
     16000.0f, // Max output
     1.0f, // TQ Derivative Kalman
     0.0f, // TR Derivative Kalman
