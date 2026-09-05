@@ -2,7 +2,12 @@
     "configurations": [
         {
             "name": "Test",
-            "defines": ["${default}", "ENV_UNIT_TESTS", "PLATFORM_HOSTED", "RUN_WITH_PROFILING"],
+            "defines": [
+                "${default}",
+                "ENV_UNIT_TESTS",
+                "PLATFORM_HOSTED",
+                "RUN_WITH_PROFILING"
+            ],
             "includePath": [
                 "${default}",
                 "PolySTAR-Taproot-project/taproot/sim-modm/hosted-linux/modm/src",
@@ -11,18 +16,26 @@
             ],
             "compilerPath": "g++",
             "intelliSenseMode": "gcc-x64",
-            "browse": { "limitSymbolsToIncludedHeaders": true }
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            }
         },
         {
             "name": "Sim",
-            "defines": ["${default}", "PLATFORM_HOSTED", "RUN_WITH_PROFILING"],
+            "defines": [
+                "${default}",
+                "PLATFORM_HOSTED",
+                "RUN_WITH_PROFILING"
+            ],
             "includePath": [
                 "${default}",
                 "PolySTAR-Taproot-project/taproot/sim-modm/hosted-linux/modm/src"
             ],
             "compilerPath": "g++",
             "intelliSenseMode": "gcc-x64",
-            "browse": { "limitSymbolsToIncludedHeaders": true }
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            }
         },
         {
             "name": "Hardware",
@@ -31,11 +44,14 @@
                 "PolySTAR-Taproot-project/taproot/modm/src",
                 "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/core",
                 "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/device",
-                "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/dsp"        
+                "PolySTAR-Taproot-project/taproot/modm/ext/cmsis/dsp",
+                "${workspaceFolder}/PolySTAR-Taproot-project/src/subsystems/chassis"
             ],
             "compilerPath": "arm-none-eabi-g++",
             "intelliSenseMode": "gcc-arm",
-            "browse": { "limitSymbolsToIncludedHeaders": true }
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4
