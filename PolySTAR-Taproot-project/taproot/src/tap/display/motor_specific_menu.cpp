@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -61,8 +61,8 @@ void MotorSpecificMenu::draw()
 
     currDesiredOutput = associatedMotor->getOutputDesired();
     currIsInverted = associatedMotor->isMotorInverted();
-    currEncoderWrapped = associatedMotor->getEncoderWrapped();
-    currRPM = associatedMotor->getShaftRPM();
+    currEncoderWrapped = associatedMotor->getInternalEncoder().getEncoder().getWrappedValue();
+    currRPM = associatedMotor->getInternalEncoder().getShaftRPM();
 
     display << "  Motor ID: " << associatedMotor->getMotorIdentifier() << modm::endl
             << "  Des. Output: " << currDesiredOutput << modm::endl
@@ -83,9 +83,12 @@ bool MotorSpecificMenu::hasChanged()
 {
     bool sameOutputDesired = (associatedMotor->getOutputDesired() == currDesiredOutput);
     bool sameInverted = (associatedMotor->isMotorInverted() == currIsInverted);
-    bool sameEncoderWrapped = (associatedMotor->getEncoderWrapped() == currEncoderWrapped);
+    bool sameEncoderWrapped =
+        (associatedMotor->getInternalEncoder().getEncoder().getWrappedValue() ==
+         currEncoderWrapped);
 
-    return !(sameOutputDesired && sameInverted && sameEncoderWrapped);
+    return !(sameOutputDesired && sameInverted && sameEncoderWrapped) &&
+           updatePeriodicTimer.execute();
 }
 }  // namespace display
 }  // namespace tap

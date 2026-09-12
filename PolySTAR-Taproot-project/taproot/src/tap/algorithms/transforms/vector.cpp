@@ -21,35 +21,14 @@
  * along with Taproot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "linear_interpolation_predictor_contiguous.hpp"
+#include "vector.hpp"
 
-namespace tap::algorithms
-{
-LinearInterpolationPredictorContiguous::LinearInterpolationPredictorContiguous(
-    float lowerBound,
-    float upperBound)
-    : lastUpdateCallTime(0),
-      previousValue(0.0f, lowerBound, upperBound),
-      slope(0.0f)
-{
-}
+#include "position.hpp"
 
-void LinearInterpolationPredictorContiguous::update(float newValue, uint32_t currTime)
+namespace tap::algorithms::transforms
 {
-    if (currTime <= lastUpdateCallTime)
-    {
-        slope = 0;
-        return;
-    }
-    slope = (previousValue.difference(newValue)) / (currTime - lastUpdateCallTime);
-    previousValue.setValue(newValue);
-    lastUpdateCallTime = currTime;
-}
-
-void LinearInterpolationPredictorContiguous::reset(float initialValue, uint32_t initialTime)
+inline Vector Vector::operator+(const Position& other) const
 {
-    previousValue.setValue(initialValue);
-    lastUpdateCallTime = initialTime;
-    slope = 0.0f;
+    return Vector(this->coordinates_ + other.coordinates());
 }
-}  // namespace tap::algorithms
+}  // namespace tap::algorithms::transforms

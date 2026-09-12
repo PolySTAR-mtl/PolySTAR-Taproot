@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -38,6 +38,8 @@
 #include <atomic>
 #include <iostream>
 #include <stdexcept>
+
+#include "tap/util_macros.hpp"
 
 #include "json_messages.hpp"
 using std::cerr;

@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -24,6 +24,7 @@
 
 #include <cmath>
 
+#include "tap/architecture/clock.hpp"
 #include "tap/control/chassis/chassis_subsystem_interface.hpp"
 
 #include "modm/math/geometry/angle.hpp"
@@ -38,7 +39,6 @@ void Odometry2DTracker::update()
 {
     modm::Vector3f chassisAbsoluteDisplacement;
     modm::Vector3f chassisVelocity;
-    float chassisYaw = 0.0f;
 
     bool validDisplacementAvailable = chassisDisplacementObserver->getVelocityChassisDisplacement(
         &chassisVelocity,
@@ -76,7 +76,14 @@ void Odometry2DTracker::update()
         }
 
         prevChassisAbsoluteDisplacement = chassisAbsoluteDisplacement;
+
+        lastComputedOdometryTime = tap::arch::clock::getTimeMicroseconds();
     }
+}
+
+void Odometry2DTracker::overrideOdometryPosition(const float positionX, const float positionY)
+{
+    location.setPosition(positionX, positionY);
 }
 
 }  // namespace tap::algorithms::odometry

@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -44,7 +44,10 @@ namespace display
 class MotorMenu : public modm::AbstractMenu<DummyAllocator<modm::IAbstractView> >
 {
 public:
-    MotorMenu(modm::ViewStack<DummyAllocator<modm::IAbstractView> > *stack, Drivers *drivers);
+    MotorMenu(
+        modm::ViewStack<DummyAllocator<modm::IAbstractView> > *stack,
+        Drivers *drivers,
+        int entriesToDisplay = DISPLAY_MAX_ENTRIES);
 
     virtual ~MotorMenu() = default;
 

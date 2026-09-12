@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -135,6 +135,7 @@ private:
      */
     const int globalIdentifier;
 
+protected:
     command_scheduler_bitmap_t commandRequirementsBitwise = 0;
 };  // class Command
 

@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -25,7 +25,7 @@
 
 namespace tap::mock
 {
-MotorInterfaceMock::MotorInterfaceMock() : tap::motor::MotorInterface() {}
+MotorInterfaceMock::MotorInterfaceMock() : tap::motor::MotorInterface(), encoder() {}
 
 MotorInterfaceMock::~MotorInterfaceMock() {}
 }  // namespace tap::mock

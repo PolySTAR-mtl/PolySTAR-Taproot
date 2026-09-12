@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 /*
- * Copyright (c) 2022-2023 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of Taproot.
  *
@@ -128,7 +128,7 @@ public:
         uint16_t CRC16;
     } modm_packed;
 
-    static const uint16_t SERIAL_RX_BUFF_SIZE = 256;
+    static const uint16_t SERIAL_RX_BUFF_SIZE = 1024;
     static const uint16_t SERIAL_HEAD_BYTE = 0xA5;
 
     using ReceivedSerialMessage = SerialMessage<SERIAL_RX_BUFF_SIZE>;
