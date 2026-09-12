@@ -15,6 +15,27 @@
 
       python = pkgs.python3;
       pythonPackages = python.pkgs;
+
+      lbuild = pythonPackages.buildPythonPackage rec {
+        pname = "lbuild";
+        version = "1.20.0";
+
+        src = pythonPackages.fetchPypi {
+          inherit pname version;
+          sha256 = "sha256-nHBniVpEzuQ9EXeFHxHqrI4kPfsF94AhmRdbb//TD88=";
+        };
+
+        propagatedBuildInputs = with pythonPackages; [
+          colorful
+          anytree
+          jinja2
+          lxml
+          gitpython
+        ];
+
+        doCheck = false;
+      };
+
     in {
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
@@ -41,7 +62,7 @@
           pythonPackages.pyelftools
           # pythonPackages.standard-telnetlib
           pythonPackages.jinja2
-          pipenv
+          lbuild
           stlink
           openocd
           boost
