@@ -30,7 +30,7 @@ SRC_PATH             = "src"
 TEST_PATH            = "test"
 
 
-TAPROOT_SCRIPTS_TOOLPATH = abspath("../taproot-scripts/scons-tools")
+TAPROOT_SCRIPTS_TOOLPATH = abspath("#/../taproot/taproot-scripts/scons-tools")
 
 # Don't compile this stuff
 ignored_dirs         = [".lbuild_cache", BUILD_PATH, TAPROOT_PATH]
