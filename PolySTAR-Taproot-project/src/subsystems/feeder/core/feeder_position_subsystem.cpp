@@ -79,7 +79,7 @@ inline bool FeederPositionSubsystem::isOnline()  {
 };
 
 inline float FeederPositionSubsystem::getVelocity()  {
-    return feederMotor.getShaftRPM();
+    return feederMotor.getInternalEncoder().getShaftRPM();
 };
 
 }  // namespace control::feeder
