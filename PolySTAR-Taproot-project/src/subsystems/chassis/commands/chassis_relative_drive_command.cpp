@@ -1,4 +1,7 @@
 #include "chassis_relative_drive_command.hpp"
+
+#include <numbers>
+
 #include "subsystems/chassis/config/chassis_constants.hpp"
 #include "subsystems/chassis/config/chassis_config.hpp"
 
@@ -6,9 +9,8 @@
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/errors/create_errors.hpp"
-
+#include "tap/motor/dji_motor_encoder.hpp"
 #include "control/control_interface.hpp"
-#include <numbers>
 
 using tap::communication::serial::RefSerialData;
 
@@ -65,8 +67,13 @@ void  ChassisRelativeDriveCommand::execute()
     float chassisRad = atan2(yInput, xInput);
 
     // Turret yaw orientation
-    int64_t yawDelta = yawMotor->getEncoderWrapped() - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
-    float yawDeltaRad = tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta) * std::numbers::pi_v<float> / 180.0f;
+    const float yawDeltaTicks =
+    yawMotor->getInternalEncoder().getEncoder().getWrappedValue()
+    - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
+
+    const float yawDeltaRad =
+        yawDeltaTicks * 2.0f * std::numbers::pi_v<float>
+        / tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
     float x = d * cos(chassisRad + yawDeltaRad);

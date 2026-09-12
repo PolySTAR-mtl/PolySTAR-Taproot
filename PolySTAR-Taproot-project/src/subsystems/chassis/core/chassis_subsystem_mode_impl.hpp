@@ -34,9 +34,11 @@ void ChassisSubsystem<T>::executeDriving()
         const float chassisRad = atan2(yInput, xInput);
 
         // Turret yaw orientation
-        const int64_t yawDelta = turretYawMotor->getEncoderWrapped() - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
+        const float yawDeltaTicks = turretYawMotor->getInternalEncoder().getEncoder().getWrappedValue() - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
+
         const float yawDeltaRad =
-            static_cast<float>(tap::motor::DjiMotor::encoderToDegrees<int64_t>(yawDelta)) * std::numbers::pi_v<float> / 180.0f;
+            yawDeltaTicks * 2.0f * std::numbers::pi_v<float>
+            / tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
         const float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
         const float x = d * cos(chassisRad + yawDeltaRad);

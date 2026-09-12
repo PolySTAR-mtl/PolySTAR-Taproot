@@ -20,7 +20,7 @@ FeederPositionSubsystem::FeederPositionSubsystem(tap::Drivers *drivers)
 void FeederPositionSubsystem::initialize()
 {
     feederMotor.initialize();
-    feederDesiredPos = feederMotor.getEncoderUnwrapped();
+    feederDesiredPos = feederMotor.getInternalEncoder().getEncoder().getUnwrappedValue();
 }
 
 void FeederPositionSubsystem::refresh() {
@@ -31,7 +31,7 @@ void FeederPositionSubsystem::refresh() {
 }
 
 void FeederPositionSubsystem::updateController(float desiredPos, uint32_t dt) {
-    float error = desiredPos - feederMotor.getEncoderUnwrapped();
+    float error = desiredPos - feederMotor.getInternalEncoder().getEncoder().getUnwrappedValue();
 
     if (fabs(error) < DEGREE_TO_TICK) error = 0;
 
@@ -49,7 +49,7 @@ void FeederPositionSubsystem::setSetpoint(float newAngle)  {
 };
 
 float FeederPositionSubsystem::getCurrentValue() const  {
-    return feederMotor.getEncoderUnwrapped();
+    return feederMotor.getInternalEncoder().getEncoder().getUnwrappedValue();
 };
 
 float FeederPositionSubsystem::getJamSetpointTolerance() const  {

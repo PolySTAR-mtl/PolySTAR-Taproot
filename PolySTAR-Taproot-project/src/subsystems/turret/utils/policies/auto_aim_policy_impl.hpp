@@ -18,19 +18,19 @@ AutoAimPolicy<Subsystem>::~AutoAimPolicy() = default;
 template <typename Subsystem>
 void AutoAimPolicy<Subsystem>::initialize()
 {
-    turret_->template initializeAiming<AimMode::Auto>();
+    turret_->template initializeAiming<AimMode::Auto, SpinMode::NoSpin>();
 }
 
 template <typename Subsystem>
 void AutoAimPolicy<Subsystem>::execute()
 {
-    turret_->template executeAiming<AimMode::Auto>();
+    turret_->template executeAiming<AimMode::Auto, SpinMode::NoSpin>();
 }
 
 template <typename Subsystem>
 void AutoAimPolicy<Subsystem>::end(const bool)
 {
-    turret_->template stopAiming<AimMode::Auto>();
+    turret_->template stopAiming<AimMode::Auto, SpinMode::NoSpin>();
 }
 
 }

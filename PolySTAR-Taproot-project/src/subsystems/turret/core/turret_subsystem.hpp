@@ -49,10 +49,10 @@ public:
     const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
     int64_t getYawNeutralPos() { return ACTIVE_TURRET_CONFIG.yawNeutralPos; }
     int64_t getPitchNeutralPos() { return ACTIVE_TURRET_CONFIG.pitchNeutralPos; }
-    int64_t getYawUnwrapped() { return yawMotor->getEncoderUnwrapped(); }
-    int64_t getPitchUnwrapped() { return pitchMotor.getEncoderUnwrapped(); }
-    int getYawWrapped() { return yawMotor->getEncoderWrapped(); }
-    int getPitchWrapped() { return pitchMotor.getEncoderWrapped(); }
+    int64_t getYawUnwrapped() { return yawMotor->getInternalEncoder().getEncoder().getUnwrappedValue(); }
+    int64_t getPitchUnwrapped() { return pitchMotor.getInternalEncoder().getEncoder().getUnwrappedValue(); }
+    int getYawWrapped() { return yawMotor->getInternalEncoder().getEncoder().getWrappedValue(); }
+    int getPitchWrapped() { return pitchMotor.getInternalEncoder().getEncoder().getWrappedValue(); }
 
     //setters
     void setIsSpin2WinMode(bool isSpin2WinMode) { m_isSpin2WinMode = isSpin2WinMode; }

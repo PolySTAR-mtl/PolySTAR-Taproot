@@ -159,14 +159,14 @@ void ChassisSubsystem<T>::sendCVUpdate()
 
     // Get motor encoder positions
     // Revolutions is calculated because DJIMotor interface does not have the getter for this value
-    uint16_t frontLeftEncoder = frontLeftMotor.getEncoderWrapped();
-    int16_t frontLeftRevolutions = (frontLeftMotor.getEncoderUnwrapped() - frontLeftEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
-    uint16_t frontRightEncoder = frontRightMotor.getEncoderWrapped();
-    int16_t frontRightRevolutions = (frontRightMotor.getEncoderUnwrapped() - frontRightEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
-    uint16_t backLeftEncoder = backLeftMotor.getEncoderWrapped();
-    int16_t backLeftRevolutions = (backLeftMotor.getEncoderUnwrapped() - backLeftEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
-    uint16_t backRightEncoder = backRightMotor.getEncoderWrapped();
-    int16_t backRightRevolutions = (backRightMotor.getEncoderUnwrapped() - backRightEncoder)/tap::motor::DjiMotor::ENC_RESOLUTION;
+    uint16_t frontLeftEncoder = frontLeftMotor.getInternalEncoder().getEncoder().getWrappedValue();
+    int16_t frontLeftRevolutions = (frontLeftMotor.getInternalEncoder().getEncoder().getUnwrappedValue() - frontLeftEncoder)/tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
+    uint16_t frontRightEncoder = frontRightMotor.getInternalEncoder().getEncoder().getWrappedValue();
+    int16_t frontRightRevolutions = (frontRightMotor.getInternalEncoder().getEncoder().getUnwrappedValue() - frontRightEncoder)/tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
+    uint16_t backLeftEncoder = backLeftMotor.getInternalEncoder().getEncoder().getWrappedValue();
+    int16_t backLeftRevolutions = (backLeftMotor.getInternalEncoder().getEncoder().getUnwrappedValue() - backLeftEncoder)/tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
+    uint16_t backRightEncoder = backRightMotor.getInternalEncoder().getEncoder().getWrappedValue();
+    int16_t backRightRevolutions = (backRightMotor.getInternalEncoder().getEncoder().getUnwrappedValue() - backRightEncoder)/tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
     // Get motor RPMs
     int16_t frontLeftRPM = frontLeftMotor.getShaftRPM();
