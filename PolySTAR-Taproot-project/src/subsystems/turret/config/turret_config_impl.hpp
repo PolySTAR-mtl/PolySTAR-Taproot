@@ -1,8 +1,6 @@
 #ifndef TURRET_CONFIG_IMPL_HPP
 #define TURRET_CONFIG_IMPL_HPP
 
-#include "subsystems/turret/config/turret_config.hpp"
-
 #include "subsystems/turret/config/constants/hero_turret_constants.hpp"
 #include "subsystems/turret/config/constants/sentry_turret_constants.hpp"
 #include "subsystems/turret/config/constants/standard_turret_constants.hpp"

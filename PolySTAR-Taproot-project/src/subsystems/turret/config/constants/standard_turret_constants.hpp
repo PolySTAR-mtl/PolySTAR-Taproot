@@ -2,6 +2,7 @@
 #define STANDARD_TURRET_CONSTANTS_HPP
 
 #include "tap/algorithms/smooth_pid.hpp"
+#include "subsystems/turret/config/turret_conversions.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/config/constants/turret_constants.hpp"
 
@@ -88,8 +89,8 @@ constexpr TurretConfig STANDARD_TURRET_CONFIG = {
     .yawRangeDegrees = STANDARD_TURRET_YAW_RANGE_DEGREES,
     .pitchRangeDegrees = STANDARD_TURRET_PITCH_RANGE_DEGREES,
 
-    .yawRange = TurretConfig::degreesToTicks(STANDARD_TURRET_YAW_RANGE_DEGREES),
-    .pitchRange = TurretConfig::degreesToTicks(STANDARD_TURRET_PITCH_RANGE_DEGREES),
+    .yawRange = degreesToTicks(STANDARD_TURRET_YAW_RANGE_DEGREES),
+    .pitchRange = degreesToTicks(STANDARD_TURRET_PITCH_RANGE_DEGREES),
 
     .yawScaleFactor = 900.0f,
     .pitchScaleFactor = 400.0f,

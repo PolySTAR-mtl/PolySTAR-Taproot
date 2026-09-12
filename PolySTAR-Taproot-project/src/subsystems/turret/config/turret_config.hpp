@@ -54,12 +54,6 @@ struct TurretConfig {
     bool yawIsInverted;
     bool pitchIsInverted;
 
-    /**
-     * Helper to keep config constexpr
-     */
-    static constexpr uint16_t degreesToTicks(float degrees) {
-        return (uint16_t)(degrees * DEGREE_TO_TICK);
-    }
 };
 
 template <target::RobotTarget R>

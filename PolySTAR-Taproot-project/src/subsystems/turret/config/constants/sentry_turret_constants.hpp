@@ -2,6 +2,7 @@
 #define SENTRY_TURRET_CONSTANTS_HPP
 
 #include "tap/algorithms/smooth_pid.hpp"
+#include "subsystems/turret/config/turret_conversions.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/config/constants/turret_constants.hpp"
 
@@ -88,8 +89,8 @@ constexpr TurretConfig SENTRY_TURRET_CONFIG = {
     .yawRangeDegrees = SENTRY_YAW_RANGE_DEGREES,
     .pitchRangeDegrees = SENTRY_PITCH_RANGE_DEGREES,
 
-    .yawRange = TurretConfig::degreesToTicks(SENTRY_YAW_RANGE_DEGREES),
-    .pitchRange = TurretConfig::degreesToTicks(SENTRY_PITCH_RANGE_DEGREES),
+    .yawRange = degreesToTicks(SENTRY_YAW_RANGE_DEGREES),
+    .pitchRange = degreesToTicks(SENTRY_PITCH_RANGE_DEGREES),
 
     .yawScaleFactor = 500.0f,
     .pitchScaleFactor = 300.0f,
