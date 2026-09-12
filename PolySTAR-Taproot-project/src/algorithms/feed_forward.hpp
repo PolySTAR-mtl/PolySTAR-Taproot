@@ -27,17 +27,14 @@ public:
      */
     float calculate(float velocity);
 
-    inline void setKs(float ks) { config.ks = ks; }
-    inline void setKv(float kv) { config.kv = kv; }
-    inline void setKg(float kg) { config.kg = kg; }
-    inline void setMaxVel(float maxVel) { config.maxVelocity = maxVel; }
+    void setKs(float ks);
+    void setKv(float kv);
+    void setKg(float kg);
+    void setMaxVel(float maxVel);
 
-protected:
+private:
     // gains and constants, to be set by the user
-    FeedForwardConfig config;
-
-    static constexpr float DEG_TO_RAD = 0.0174533;
-
+    FeedForwardConfig config_;
 };
 
 }  // namespace algorithms
