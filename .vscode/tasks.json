@@ -17,38 +17,12 @@
             }
         },
         {
-            "label": ".Build ICRA",
-            "type": "shell",
-            "presentation": {
-                "panel": "new"
-            },
-            "command": "pipenv run scons build robot=TARGET_ICRA",
-            "group": "build",
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
-            }
-        },
-        {
             "label": ".Build Standard",
             "type": "shell",
             "presentation": {
                 "panel": "new"
             },
             "command": "pipenv run scons build robot=TARGET_STANDARD",
-            "group": "build",
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
-            }
-        },
-        {
-            "label": ".Build Spin To Win",
-            "type": "shell",
-            "presentation": {
-                "panel": "new"
-            },
-            "command": "pipenv run scons build robot=TARGET_SPIN_TO_WIN",
             "group": "build",
             "problemMatcher": [],
             "options": {
@@ -82,38 +56,12 @@
             }
         },
         {
-            "label": ".Program ICRA",
-            "type": "shell",
-            "presentation": {
-                "panel": "new"
-            },
-            "command": "pipenv run scons run robot=TARGET_ICRA",
-            "group": "build",
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
-            }
-        },
-        {
             "label": ".Program Standard",
             "type": "shell",
             "presentation": {
                 "panel": "new"
             },
             "command": "pipenv run scons run robot=TARGET_STANDARD",
-            "group": "build",
-            "problemMatcher": [],
-            "options": {
-                "cwd": "${workspaceRoot}/PolySTAR-Taproot-project"
-            }
-        },
-        {
-            "label": ".Program Spin To Win",
-            "type": "shell",
-            "presentation": {
-                "panel": "new"
-            },
-            "command": "pipenv run scons run robot=TARGET_SPIN_TO_WIN",
             "group": "build",
             "problemMatcher": [],
             "options": {

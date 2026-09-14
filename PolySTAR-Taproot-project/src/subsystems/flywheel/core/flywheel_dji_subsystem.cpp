@@ -1,0 +1,61 @@
+#include "flywheel_dji_subsystem.hpp"
+
+#include "tap/communication/serial/remote.hpp"
+#include "tap/algorithms/math_user_utils.hpp"
+#include "control/drivers/drivers.hpp"
+
+#include <numeric>
+
+/// TODO: Fix a bug caused by firing which was a float used as a bool.
+
+using namespace tap;
+using tap::communication::serial::Uart;
+
+namespace control
+{
+namespace flywheel
+{
+
+FlywheelDjiSubsystem::FlywheelDjiSubsystem(src::Drivers *drivers)
+    : FlywheelSubsystem{drivers},
+        drivers_{drivers},
+        leftMotor_{drivers, LEFT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, false, "left motor"},
+        rightMotor_{drivers, RIGHT_MOTOR_ID, CAN_BUS_MOTORS_FLYWHEEL, true, "right motor"},
+        currentDjiSpeed_{ACTIVE_FLYWHEEL_CONFIG.motorLowSpeed}, // TODO: change speed here
+        startingTs_{},
+        startMatchTimeout_{}
+{
+}
+
+void FlywheelDjiSubsystem::initialize() {
+    FlywheelSubsystem::initialize();
+    leftMotor_.initialize();
+    rightMotor_.initialize();
+}
+
+void FlywheelDjiSubsystem::refresh() {}
+
+void FlywheelDjiSubsystem::startFiring()
+{
+    FlywheelSubsystem::startFiring();
+    leftMotor_.setDesiredOutput(currentDjiSpeed_);
+    rightMotor_.setDesiredOutput(currentDjiSpeed_);
+    /// TODO: Add a "Start firing\n" log message.
+}
+
+void FlywheelDjiSubsystem::stopFiring()
+{
+    FlywheelSubsystem::stopFiring();
+    rightMotor_.setDesiredOutput(0);
+    leftMotor_.setDesiredOutput(0);
+}
+
+void FlywheelDjiSubsystem::sendStartingBoost()
+{
+    rightMotor_.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
+    leftMotor_.setDesiredOutput(ACTIVE_FLYWHEEL_CONFIG.motorMediumSpeed);
+}
+
+}  // namespace flywheel
+
+}  // namespace control
