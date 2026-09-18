@@ -57,28 +57,28 @@ public:
     /**
      * Returns a reference to the most up to date turret setpoint struct.
      */
-    mockable const Rx::TurretData& getTurretData() const { return turretData; };
+    mockable const Rx::TurretData& getTurretData() const;
 
     /**
      * Returns a reference to the most up to date movement setpoint struct.
      */
-    mockable const Rx::MovementData& getMovementData() const { return movementData; };
+    mockable const Rx::MovementData& getMovementData() const;
 
      /**
      * Returns a reference to the most up to date shoot order struct.
      */
-    mockable const Rx::ShootOrderData& getShootOrderData() const { return shootOrderData; };
+    mockable const Rx::ShootOrderData& getShootOrderData() const;
 
     /**
      * Returns true if the CV has sent a shoot order.
      */
-    bool shouldShoot() const { return shootOrderData.shootOrder != 0; }
+    bool shouldShoot() const;
 
 private:
     Rx::TurretData turretData;
     Rx::MovementData movementData;
     Rx::ShootOrderData shootOrderData;
-    RefSerialData::Rx::GameStage lastGameStage = RefSerialData::Rx::GameStage::END_GAME;
+    RefSerialData::Rx::GameStage lastGameStage;
     /**
      * Decodes CV serial message containing turret yaw and pitch setpoints
      */

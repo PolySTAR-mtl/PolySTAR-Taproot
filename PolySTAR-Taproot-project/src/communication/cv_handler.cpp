@@ -11,7 +11,8 @@ CVHandler::CVHandler(Drivers* drivers)
     : CVSerial(drivers, tap::communication::serial::Uart::UartPort::Uart7),
       turretData(),
       movementData(),
-      shootOrderData()
+      shootOrderData(),
+      lastGameStage(RefSerialData::Rx::GameStage::END_GAME)
 {
 }
 
@@ -46,9 +47,39 @@ void CVHandler::messageReceiveCallback(const ReceivedSerialMessage& completeMess
     drivers->uart.write(tap::communication::serial::Uart::Uart8,(uint8_t*)buffer,nBytes+1);
 }
 
-/*
-* Decode turret setpoint data
-*/
+
+/**
+ * Returns a reference to the most up to date turret setpoint struct.
+ */
+const CVHandler::Rx::TurretData& CVHandler::getTurretData() const { return turretData; };
+
+/**
+ * Returns a reference to the most up to date movement setpoint struct.
+ */
+const CVHandler::Rx::MovementData& CVHandler::getMovementData() const
+{
+    return movementData;
+};
+
+    /**
+ * Returns a reference to the most up to date shoot order struct.
+ */
+const CVHandler::Rx::ShootOrderData& CVHandler::getShootOrderData() const
+{
+    return shootOrderData;
+};
+
+/**
+ * Returns true if the CV has sent a shoot order.
+ */
+bool CVHandler::shouldShoot() const
+{
+    return shootOrderData.shootOrder != 0;
+}
+
+/**
+ * Decodes CV serial message containing turret yaw and pitch setpoints
+ */
 bool CVHandler::decodeToTurretData(const ReceivedSerialMessage& message)
 {
     if (message.header.dataLength != sizeof(Rx::TurretData))
@@ -60,9 +91,9 @@ bool CVHandler::decodeToTurretData(const ReceivedSerialMessage& message)
     return true;
 }
 
-/*
-* Decode chassis setpoint data
-*/
+/**
+ * Decodes CV serial message containing the chassis velocity setpoints.
+ */
 bool CVHandler::decodeToMovementData(const ReceivedSerialMessage& message)
 {
     if (message.header.dataLength != sizeof(Rx::MovementData))
