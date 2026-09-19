@@ -1,5 +1,7 @@
 #ifdef TARGET_HERO
 
+#include "control/robot_control.hpp"
+
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
@@ -39,12 +41,14 @@ using tap::control::RemoteMapState;
  *      and thus we must pass in the single statically allocated
  *      Drivers class to all of these objects.
  */
+namespace control
+{
 
+namespace {
 using src::DoNotUse_getDrivers;
 
 static src::driversFunc drivers = src::DoNotUse_getDrivers;
-namespace control
-{
+
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
@@ -125,7 +129,10 @@ void registerStandardIoMappings(src::Drivers *drivers) {
     // drivers->commandMapper.addMap(&toggleChassisSpinKey);
 }
 
-void initSubsystemCommands(src::Drivers *drivers)
+}
+
+template <>
+void initSubsystemCommands<target::RobotTarget::Hero>(src::Drivers *drivers)
 {
     drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
     initializeSubsystems();
@@ -140,4 +147,4 @@ void initSubsystemCommands(src::Drivers *drivers)
 
 }  // namespace control
 
-#endif  // TARGET_HERO
+#endif // TARGET_HERO

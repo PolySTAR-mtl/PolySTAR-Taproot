@@ -1,5 +1,7 @@
 #ifdef TARGET_SENTRY
 
+#include "control/robot_control.hpp"
+
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
@@ -45,6 +47,9 @@ using tap::control::ToggleCommandMapping;
 
 namespace control
 {
+
+namespace {
+
 /* define subsystems --------------------------------------------------------*/
 tap::motor::DjiMotor yawMotor(drivers(), tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor");
 
@@ -129,7 +134,10 @@ void registerStandardIoMappings(src::Drivers *drivers)
     drivers->commandMapper.addMap(&toggleAutoCommands);
 }
 
-void initSubsystemCommands(src::Drivers *drivers)
+}
+
+template <>
+void initSubsystemCommands<target::RobotTarget::Sentry>(src::Drivers *drivers)
 {
     drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
     initializeSubsystems();

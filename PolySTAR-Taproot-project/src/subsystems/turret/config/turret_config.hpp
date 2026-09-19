@@ -63,8 +63,6 @@ struct TurretConfig {
 template <target::RobotTarget R>
 consteval TurretConfig getTurretConfig();
 
-inline constexpr TurretConfig ACTIVE_TURRET_CONFIG;
-
 } // namespace control::turret
 
 #include "subsystems/turret/config/turret_config_impl.hpp"

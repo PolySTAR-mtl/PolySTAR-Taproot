@@ -21,9 +21,23 @@
 #define ROBOT_CONTROL_HPP
 
 #include "drivers/drivers.hpp"
+#include "robot_target.hpp"
 
 namespace control {
+template <target::RobotTarget R>
 void initSubsystemCommands(src::Drivers* drivers);
+
+template <>
+void initSubsystemCommands<target::RobotTarget::Hero>(
+    src::Drivers* drivers);
+
+template <>
+void initSubsystemCommands<target::RobotTarget::Sentry>(
+    src::Drivers* drivers);
+    
+template <>
+void initSubsystemCommands<target::RobotTarget::Standard>(
+    src::Drivers* drivers);
 }
 
 #endif

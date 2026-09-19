@@ -27,7 +27,7 @@ consteval TurretConfig getTurretConfig<target::RobotTarget::Sentry>() {
     return SENTRY_TURRET_CONFIG;
 }
 
-constexpr TurretConfig ACTIVE_TURRET_CONFIG = getTurretConfig<target::ROBOT_TARGET>();
+inline constexpr TurretConfig ACTIVE_TURRET_CONFIG = getTurretConfig<target::ROBOT_TARGET>();
 
 } // namespace control::turret
 
