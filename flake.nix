@@ -36,8 +36,71 @@
         doCheck = false;
       };
 
+      mkRobotCommand = { name, action, robot }:
+        pkgs.writeShellScriptBin name ''
+          set -euo pipefail
+
+          if [ -n "''${POLYSTAR_PROJECT_DIR:-}" ]; then
+            project_dir="$POLYSTAR_PROJECT_DIR"
+          elif [ -f "$PWD/SConstruct" ]; then
+            project_dir="$PWD"
+          else
+            project_dir="$PWD/PolySTAR-Taproot-project"
+          fi
+
+          if [ ! -f "$project_dir/SConstruct" ]; then
+            echo "Could not find PolySTAR-Taproot-project/SConstruct." >&2
+            echo "Run this command from the repository root or set POLYSTAR_PROJECT_DIR." >&2
+            exit 1
+          fi
+
+          cd "$project_dir"
+
+          flake_dir="''${POLYSTAR_FLAKE_DIR:-$(dirname "$project_dir")}"
+
+          exec nix develop "$flake_dir" -c scons ${action} robot=${robot} "$@"
+        '';
+
+      robotCommands = {
+        build-standard = mkRobotCommand {
+          name = "build-standard";
+          action = "build";
+          robot = "TARGET_STANDARD";
+        };
+        run-standard = mkRobotCommand {
+          name = "run-standard";
+          action = "run";
+          robot = "TARGET_STANDARD";
+        };
+        build-sentry = mkRobotCommand {
+          name = "build-sentry";
+          action = "build";
+          robot = "TARGET_SENTRY";
+        };
+        run-sentry = mkRobotCommand {
+          name = "run-sentry";
+          action = "run";
+          robot = "TARGET_SENTRY";
+        };
+        build-hero = mkRobotCommand {
+          name = "build-hero";
+          action = "build";
+          robot = "TARGET_HERO";
+        };
+        run-hero = mkRobotCommand {
+          name = "run-hero";
+          action = "run";
+          robot = "TARGET_HERO";
+        };
+      };
+
     in {
-      devShell = pkgs.mkShell {
+      apps = builtins.mapAttrs (_: command: {
+        type = "app";
+        program = "${command}/bin/${command.name}";
+      }) robotCommands;
+
+      devShells.default = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
           pkg-config
           gcc-arm-embedded-10
@@ -52,7 +115,7 @@
           bear
           glibc
           clang-tools
-        ];
+        ] ++ builtins.attrValues robotCommands;
 
         buildInputs = with pkgs; [
           python
