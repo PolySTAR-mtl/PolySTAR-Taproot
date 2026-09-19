@@ -1,6 +1,8 @@
 #ifndef IMU_INTERPRETER_HPP_
 #define IMU_INTERPRETER_HPP_
 
+#include <cstdint>
+
 #include "control/drivers/drivers.hpp"
 
 namespace algorithms
@@ -22,11 +24,12 @@ private:
 
     float turretYawRPM;
 
-    uint32_t compoundedTime = 0;
-    float chassisRotationSpeed = 0;
-    int gzSamplingCount = 0;
-    float gzSamplingSum = 0;
-    float gzAverage = 0;
+    std::uint32_t lastUpdateTime = 0;
+
+    float chassisRotationSpeed = 0.f;
+
+    std::uint32_t gzSamplingCount = 0;
+    float gzSamplingSum = 0.f;
 };
 
 } // namespace algorithms
