@@ -6,6 +6,8 @@
 #include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/config/constants/turret_constants.hpp"
 
+#include "conversions/rotation_conversion.hpp"
+
 namespace algorithms
 {
     ImuInterpreter::ImuInterpreter(src::Drivers *drivers)
@@ -17,7 +19,7 @@ namespace algorithms
         , gzSamplingSum{0.f}
     {}
 
-    void ImuInterpreter::update(const float xInput) {
+    void ImuInterpreter::update(float xInput) {
         static constexpr std::uint32_t GZ_SAMPLING_WINDOW_MS = 20;
 
         const float gZ = drivers->mpu6500.getGz();
@@ -28,7 +30,7 @@ namespace algorithms
         const std::uint32_t timeDelta = currentUpdate - lastUpdateTime;
         
         if (timeDelta >= GZ_SAMPLING_WINDOW_MS) {
-            static constexpr float GZ_THRESHOLD_RADIANS_PER_SECOND = 0.5f * std::numbers::pi_v<float> / 180.0f; // Threshold for considering the Gz value significant
+            static constexpr float GZ_THRESHOLD_RADIANS_PER_SECOND = 0.5f * std::numbers::pi_v<float> / 180.f; // Threshold for considering the Gz value significant
             
             lastUpdateTime = currentUpdate;
             
@@ -45,7 +47,11 @@ namespace algorithms
             gzSamplingCount = 0;
         }
 
-        turretYawRPM = (control::turret::ACTIVE_TURRET_CONFIG.gzStabilizationFactor - control::turret::X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed;
+        const float manualYawFactor = control::turret::X_INPUT_STABILIZATION_CONSTANT  * xInput;
+
+        const float desiredYawRadPerSecond = (control::turret::ACTIVE_TURRET_CONFIG.gzStabilizationFactor - manualYawFactor) * chassisRotationSpeed;
+
+        turretYawRPM = conversions::radiansPerSecondToRpm(desiredYawRadPerSecond);;
     }
 
     float ImuInterpreter::getTurretYawRPM() const {

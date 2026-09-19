@@ -14,7 +14,7 @@ public:
     ImuInterpreter(src::Drivers *drivers);
 
     // Update the interpreter with new IMU data
-    void update(const float xInput);
+    void update(float xInput);
 
     // Get the current interpreted turret yaw RPM for stabilization
     float getTurretYawRPM() const;
