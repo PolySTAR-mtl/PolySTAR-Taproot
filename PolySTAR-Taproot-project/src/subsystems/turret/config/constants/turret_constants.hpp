@@ -49,6 +49,7 @@ static constexpr float MRAD_TO_DEGREES = 0.0572958;
 static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
 
+/// TODO: Move to config. We should not use #ifdef to find which target is used.
 #ifdef TARGET_HERO
 static constexpr float GZ_STABILIZATION_CONSTANT = 0.22;
 #else

@@ -4,13 +4,14 @@
 namespace algorithms
 {
     ImuInterpreter::ImuInterpreter(src::Drivers *drivers)
-        : drivers(drivers)
-        , turretYawRPM(0)
-        , compoundedTime(0)
-        , chassisRotationSpeed(0)
-        , gzSamplingCount(0)
-        , gzSamplingSum(0)
-        , gzAverage(0) {}
+        : drivers{drivers}
+        , turretYawRPM{0.f}
+        , compoundedTime{0}
+        , chassisRotationSpeed{0.f}
+        , gzSamplingCount{0}
+        , gzSamplingSum{0.f}
+        , gzAverage{0.f}
+    {}
 
     void ImuInterpreter::update(const float xInput) {
         float gZ = drivers->mpu6500.getGz();
@@ -37,7 +38,7 @@ namespace algorithms
             gzSamplingCount = 0;
         }
 
-        turretYawRPM = ((control::turret::GZ_STABILIZATION_CONSTANT - control::turret::X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed);
+        turretYawRPM = (control::turret::GZ_STABILIZATION_CONSTANT - control::turret::X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed;
     }
 
     float ImuInterpreter::getTurretYawRPM() const {

@@ -189,7 +189,7 @@ void TurretSubsystem::sendCVUpdate() {
     float currentBodyPitchDeg =
         (pitchEncoder - ACTIVE_TURRET_CONFIG.pitchNeutralPos) * TICKS_TO_DEGREES;
 
-    src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage;
+    src::communication::cv::CVSerialData::Tx::TurretMessage turretMessage{};
     // CV protocol expects angles in milliradians
     turretMessage.yaw = static_cast<int16_t>(currentBodyYawDeg*DEGREE_TO_MILLIRAD);
     turretMessage.pitch = static_cast<int16_t>(currentBodyPitchDeg*DEGREE_TO_MILLIRAD * -1);
@@ -254,10 +254,10 @@ void TurretSubsystem::sendTuningDebugInfo(bool sendYaw, bool sendPitch, float ve
 */
 void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
     int64_t error = yawDesiredPos - yawMotor->getInternalEncoder().getEncoder().getWrappedValue();
-    if (abs(error) >= tap::motor::DjiMotorEncoder::ENC_RESOLUTION/2) {
+    if (abs(error) >= tap::motor::DjiMotorEncoder::ENC_RESOLUTION / 2) {
         error =  error - tap::motor::DjiMotorEncoder::ENC_RESOLUTION * getSign(error);
     }
-    int16_t currentRPM = yawMotor->getInternalEncoder().getShaftRPM();
+    const int16_t currentRPM = yawMotor->getInternalEncoder().getShaftRPM();
 
     cascadedYawController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
@@ -268,8 +268,8 @@ void TurretSubsystem::yawInnerLoopTest(uint32_t dt, float velSetpoint, float thr
     Run pitch inner loop. Used when tuning.
 */
 void TurretSubsystem::pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold) {
-    float error = pitchDesiredPos - pitchMotor.getInternalEncoder().getEncoder().getWrappedValue();
-    int16_t currentRPM = pitchMotor.getInternalEncoder().getShaftRPM();
+    const float error = pitchDesiredPos - pitchMotor.getInternalEncoder().getEncoder().getWrappedValue();
+    const int16_t currentRPM = pitchMotor.getInternalEncoder().getShaftRPM();
 
     cascadedPitchController.testInnerLoop(error, currentRPM, dt, velSetpoint, threshold);
 
@@ -277,7 +277,7 @@ void TurretSubsystem::pitchInnerLoopTest(uint32_t dt, float velSetpoint, float t
 }
 
 void TurretSubsystem::updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt) {
-    int64_t error = desiredRpm - motor->getInternalEncoder().getShaftRPM();
+    const int64_t error = desiredRpm - motor->getInternalEncoder().getShaftRPM();
     pid->runControllerDerivateError(error, dt);
     if (desiredRpm == 0) {
         motor->setDesiredOutput(0);
