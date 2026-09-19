@@ -1,4 +1,8 @@
 #include "subsystems/turret/algorithms/imu_interpreter.hpp"
+
+#include <numbers>
+
+#include "subsystems/turret/config/turret_config.hpp"
 #include "subsystems/turret/config/constants/turret_constants.hpp"
 
 namespace algorithms
@@ -26,7 +30,8 @@ namespace algorithms
         compoundedTime += timeDelta;
         if (compoundedTime >= 20) {
             compoundedTime = 0;
-            if (abs(gzAverage) > 0.5f) {
+            static constexpr float GZ_THRESHOLD_RADIANS_PER_SECOND = 0.5f * std::numbers::pi_v<float> / 180.0f; // Threshold for considering the Gz value significant
+            if (abs(gzAverage) > GZ_THRESHOLD_RADIANS_PER_SECOND) {
                 chassisRotationSpeed = gzAverage;
             }
             else {
@@ -38,7 +43,7 @@ namespace algorithms
             gzSamplingCount = 0;
         }
 
-        turretYawRPM = (control::turret::GZ_STABILIZATION_CONSTANT - control::turret::X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed;
+        turretYawRPM = (control::turret::ACTIVE_TURRET_CONFIG.gzStabilizationFactor - control::turret::X_INPUT_STABILIZATION_CONSTANT * xInput) * chassisRotationSpeed;
     }
 
     float ImuInterpreter::getTurretYawRPM() const {

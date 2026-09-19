@@ -1,6 +1,8 @@
 #ifndef HERO_TURRET_CONSTANTS_HPP
 #define HERO_TURRET_CONSTANTS_HPP
 
+#include <numbers>
+
 #include "tap/algorithms/smooth_pid.hpp"
 #include "subsystems/turret/config/turret_conversions.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
@@ -99,7 +101,9 @@ constexpr TurretConfig HERO_TURRET_CONFIG = {
     .turretMouseYScaleFactor = -0.05f,
 
     .yawIsInverted = true,
-    .pitchIsInverted = true
+    .pitchIsInverted = true,
+
+    .gzStabilizationFactor = 0.22f * std::numbers::pi_v<float> / 180.0f,
 };
 
 } // namespace control::turret

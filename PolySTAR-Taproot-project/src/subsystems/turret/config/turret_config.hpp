@@ -54,10 +54,16 @@ struct TurretConfig {
     bool yawIsInverted;
     bool pitchIsInverted;
 
+    /**
+     * IMU stabilization factor in radians per second
+     */
+    float gzStabilizationFactor;
 };
 
 template <target::RobotTarget R>
 consteval TurretConfig getTurretConfig();
+
+inline constexpr TurretConfig ACTIVE_TURRET_CONFIG;
 
 } // namespace control::turret
 
