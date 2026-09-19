@@ -49,7 +49,10 @@ static constexpr float MRAD_TO_DEGREES = 0.0572958;
 static constexpr float LOW_ROTATION = 0.67;
 static constexpr float HIGH_ROTATION = 0.95;
 
-static constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1;
+/**
+ * Constant for stabilizing the turret based on joystick input
+ */
+static constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1f;
 
 } // namespace control::turret
 

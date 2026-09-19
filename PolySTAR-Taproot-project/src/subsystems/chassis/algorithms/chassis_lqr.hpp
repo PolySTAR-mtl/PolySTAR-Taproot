@@ -19,8 +19,8 @@ public:
          axisToMotorScale: maps axis effort to per-wheel command (rpmScaleFactor) */
    ChassisLqrController(float mass,
                         float inertia,
-                        float motorOutputMax = 8000.0f,
-                        float axisToMotorScale = 3500.0f);
+                        float motorOutputMax = 8000.f,
+                        float axisToMotorScale = 3500.f);
 
    void setGains(const Gains2& Kx, const Gains2& Ky, const Gains2& Kt);
 

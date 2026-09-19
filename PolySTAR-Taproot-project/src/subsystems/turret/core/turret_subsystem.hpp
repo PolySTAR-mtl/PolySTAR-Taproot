@@ -55,9 +55,8 @@ public:
     int getPitchWrapped() { return pitchMotor.getInternalEncoder().getEncoder().getWrappedValue(); }
 
     //setters
-    void setIsSpin2WinMode(bool isSpin2WinMode) { m_isSpin2WinMode = isSpin2WinMode; }
-    void setDesiredYawRpm(float desiredRpm) { desiredYawRpm = desiredRpm; }
-
+    void setIsSpin2WinMode(bool isSpin2WinMode) { isSpin2WinMode_ = isSpin2WinMode; }
+    void setDesiredYawRpm(float desiredRpm) { desiredYawRpm_ = desiredRpm; }
     /**
      * Aim policy methods. Definition can be found in the implementation file.
      */
@@ -104,8 +103,8 @@ private:
     // added functions and variables for yaw rpm during spin2win
     tap::algorithms::SmoothPid yawRpmPid;
     void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt);
-    bool m_isSpin2WinMode = false;
-    float desiredYawRpm = 0;
+    bool isSpin2WinMode_;
+    float desiredYawRpm_;
 
     tap::arch::MilliTimeout startMatchTimeout;
     algorithms::ImuInterpreter imuInterpreter;

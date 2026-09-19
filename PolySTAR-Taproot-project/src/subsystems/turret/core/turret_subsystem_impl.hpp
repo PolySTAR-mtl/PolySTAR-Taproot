@@ -49,8 +49,8 @@ void TurretSubsystem::executeAiming()
 
         // Set desired outputs
         setRelativeOutput(
-            std::abs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.0f, // Inverted Left-Right
-            std::abs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.0f);
+            std::abs(xInput) >= TURRET_DEAD_ZONE ? xInput : 0.f, // Inverted Left-Right
+            std::abs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.f);
 
     } else if constexpr (A == AimMode::Auto) {
         if (!startMatchTimeout.isExpired()) {

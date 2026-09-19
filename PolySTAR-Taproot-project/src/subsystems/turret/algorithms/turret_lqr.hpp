@@ -15,8 +15,8 @@ public:
 
     TurretLqrController(float yawInertia,
                         float pitchInertia,
-                        float motorOutputMax = 8000.0f,
-                        float axisToMotorScale = 650.0f);
+                        float motorOutputMax = 8000.f,
+                        float axisToMotorScale = 650.f);
 
     void setGains(const Gains2& Kyaw, const Gains2& Kpitch);
     void setGravityFeedforward(float KgMotorUnits) { Kg_ = KgMotorUnits; }

@@ -8,7 +8,7 @@
 namespace control::turret {
 
 static constexpr float DEGREE_TO_TICK =
-    tap::motor::DjiMotorEncoder::ENC_RESOLUTION / 360.0f; // 8192 Ticks per turn, 1:1 gear ratio
+    tap::motor::DjiMotorEncoder::ENC_RESOLUTION / 360.f; // 8192 Ticks per turn, 1:1 gear ratio
 
 constexpr uint16_t degreesToTicks(float degrees) {
     return static_cast<uint16_t>(degrees * DEGREE_TO_TICK);

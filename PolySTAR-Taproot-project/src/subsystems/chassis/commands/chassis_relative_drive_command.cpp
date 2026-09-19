@@ -72,7 +72,7 @@ void  ChassisRelativeDriveCommand::execute()
     - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
 
     const float yawDeltaRad =
-        yawDeltaTicks * 2.0f * std::numbers::pi_v<float>
+        yawDeltaTicks * 2.f * std::numbers::pi_v<float>
         / tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
     float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
@@ -80,9 +80,9 @@ void  ChassisRelativeDriveCommand::execute()
     float y = d * sin(chassisRad + yawDeltaRad);
 
     chassis->setTargetOutput(
-        fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
-        fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f,
-        fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f
+        fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.f,
+        fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.f,
+        fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.f
         );
 }
 

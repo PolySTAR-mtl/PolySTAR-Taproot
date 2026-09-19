@@ -1,8 +1,6 @@
 #ifndef SENTRY_TURRET_CONSTANTS_HPP
 #define SENTRY_TURRET_CONSTANTS_HPP
 
-#include <numbers>
-
 #include "tap/algorithms/smooth_pid.hpp"
 #include "subsystems/turret/config/turret_conversions.hpp"
 #include "subsystems/turret/config/turret_config.hpp"
@@ -15,58 +13,58 @@ namespace control::turret {
  */
 static constexpr tap::algorithms::SmoothPidConfig SENTRY_PITCH_OUTER_PID_CONFIG(
     0.5f, // kP
-    0.0f, // kI
+    0.f, // kI
     0.6f, // kD
-    20.0f, // Max error sum
-    60.0f, // Max output
-    1.0f, // TQ Derivative Kalman
-    0.0f, // TR Derivative Kalman
-    1.0f, // TQ Proportional Kalman
-    0.0f, // TR Proportional Kalman
-    2.0f, // Error Deadzone
-    0.0f  // Error derivative floor
+    20.f, // Max error sum
+    60.f, // Max output
+    1.f, // TQ Derivative Kalman
+    0.f, // TR Derivative Kalman
+    1.f, // TQ Proportional Kalman
+    0.f, // TR Proportional Kalman
+    2.f, // Error Deadzone
+    0.f  // Error derivative floor
 );
 
 static constexpr tap::algorithms::SmoothPidConfig SENTRY_PITCH_INNER_PID_CONFIG(
-    200.0f, // kP
+    200.f, // kP
     0.1f,  // kI
     0.1f,  // kD
-    5000.0f,  // Max error sum
-    18000.0f, // Max output
-    1.0f, // TQ Derivative Kalman
-    0.0f, // TR Derivative Kalman
-    1.0f, // TQ Proportional Kalman
-    0.0f, // TR Proportional Kalman
-    0.0f, // Error Deadzone
-    0.0f  // Error derivative floor
+    5000.f,  // Max error sum
+    18000.f, // Max output
+    1.f, // TQ Derivative Kalman
+    0.f, // TR Derivative Kalman
+    1.f, // TQ Proportional Kalman
+    0.f, // TR Proportional Kalman
+    0.f, // Error Deadzone
+    0.f  // Error derivative floor
 );
 
 static constexpr tap::algorithms::SmoothPidConfig SENTRY_YAW_OUTER_PID_CONFIG(
     0.1f, // kP
-    0.0f, // kI
+    0.f, // kI
     0.6, // kD
-    20.0f, // Max error sum
-    60.0f, // Max output
-    1.0f, // TQ Derivative Kalman
-    0.0f, // TR Derivative Kalman
-    1.0f, // TQ Proportional Kalman
-    0.0f, // TR Proportional Kalman
-    2.0f, // Error Deadzone
-    0.0f  // Error derivative floor
+    20.f, // Max error sum
+    60.f, // Max output
+    1.f, // TQ Derivative Kalman
+    0.f, // TR Derivative Kalman
+    1.f, // TQ Proportional Kalman
+    0.f, // TR Proportional Kalman
+    2.f, // Error Deadzone
+    0.f  // Error derivative floor
 );
 
 static constexpr tap::algorithms::SmoothPidConfig SENTRY_YAW_INNER_PID_CONFIG(
-    250.0f, // kP
+    250.f, // kP
     0.17f,  // kI
-    0.0f,  // kD
-    5000.0f,  // Max error sum
-    16000.0f, // Max output
-    1.0f, // TQ Derivative Kalman
-    0.0f, // TR Derivative Kalman
-    1.0f, // TQ Proportional Kalman
-    0.0f, // TR Proportional Kalman
-    0.0f, // Error Deadzone
-    0.0f  // Error derivative floor
+    0.f,  // kD
+    5000.f,  // Max error sum
+    16000.f, // Max output
+    1.f, // TQ Derivative Kalman
+    0.f, // TR Derivative Kalman
+    1.f, // TQ Proportional Kalman
+    0.f, // TR Proportional Kalman
+    0.f, // Error Deadzone
+    0.f  // Error derivative floor
 );
 
 /**
@@ -94,8 +92,8 @@ constexpr TurretConfig SENTRY_TURRET_CONFIG = {
     .yawRange = degreesToTicks(SENTRY_YAW_RANGE_DEGREES),
     .pitchRange = degreesToTicks(SENTRY_PITCH_RANGE_DEGREES),
 
-    .yawScaleFactor = 500.0f,
-    .pitchScaleFactor = 300.0f,
+    .yawScaleFactor = 500.f,
+    .pitchScaleFactor = 300.f,
 
     .turretMouseXScaleFactor = 0.05f,
     .turretMouseYScaleFactor = -0.05f,
@@ -103,7 +101,7 @@ constexpr TurretConfig SENTRY_TURRET_CONFIG = {
     .yawIsInverted = true,
     .pitchIsInverted = true,
 
-    .gzStabilizationFactor = 0.47f * std::numbers::pi_v<float> / 180.0f,
+    .gzStabilizationFactor = 0.47f,
 };
 
 } // namespace control::turret

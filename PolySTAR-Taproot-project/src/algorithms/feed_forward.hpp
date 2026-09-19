@@ -9,10 +9,10 @@ namespace algorithms
 {
 struct FeedForwardConfig
 {
-    float ks = 0.0f; // Static friction compensation gain
-    float kv = 0.0f; // Velocity feedforward gain
-    float kg = 0.0f; // Gravity compensation gain
-    float maxVelocity = 0.0f;
+    float ks = 0.f; // Static friction compensation gain
+    float kv = 0.f; // Velocity feedforward gain
+    float kg = 0.f; // Gravity compensation gain
+    float maxVelocity = 0.f;
 };
 
 class FeedForward

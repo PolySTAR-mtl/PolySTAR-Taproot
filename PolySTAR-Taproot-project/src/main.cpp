@@ -109,7 +109,7 @@ static void initializeIo(src::Drivers *drivers)
     drivers->can.initialize();
     drivers->errorController.init();
     drivers->remote.initialize();
-    drivers->mpu6500.init(500.0f, 0.5f, 0.0f);
+    drivers->mpu6500.init(500.f, 0.5f, 0.f);
     drivers->refSerial.initialize();
     drivers->terminalSerial.initialize();
     drivers->schedulerTerminalHandler.init();

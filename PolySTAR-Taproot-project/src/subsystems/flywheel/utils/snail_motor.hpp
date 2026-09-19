@@ -12,8 +12,8 @@ struct SnailMotorConstants {
     static constexpr float MS_TO_SECONDS = 0.001f;
 
     // Pulse widths in milliseconds
-    static constexpr float MIN_PULSE_MS = 1.0f;
-    static constexpr float MAX_PULSE_MS = 2.0f;
+    static constexpr float MIN_PULSE_MS = 1.f;
+    static constexpr float MAX_PULSE_MS = 2.f;
 
 
     // Pulse widths converted to duty cycle
@@ -21,8 +21,8 @@ struct SnailMotorConstants {
     static constexpr float THROTTLE_RANGE =
         (MAX_PULSE_MS - MIN_PULSE_MS) * SnailMotorConstants::PWM_FREQUENCY * SnailMotorConstants::MS_TO_SECONDS;
 
-    static constexpr float MIN_THROTTLE = 0.0f;
-    static constexpr float MAX_THROTTLE = 1.0f;
+    static constexpr float MIN_THROTTLE = 0.f;
+    static constexpr float MAX_THROTTLE = 1.f;
 
 
     static constexpr tap::gpio::Pwm::Timer PWM_TIMER =

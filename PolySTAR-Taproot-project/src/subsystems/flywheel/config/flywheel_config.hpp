@@ -14,18 +14,18 @@ struct FlywheelConfig {
 
 constexpr FlywheelConfig BASE_FLYWHEEL_CONFIG {
     .flywheelDefaultThrottle = 0.6f,
-    .motorLowSpeed = 500.0f,
-    .motorMediumSpeed = 1500.0f,
-    .motorHighSpeed = 3000.0f,
+    .motorLowSpeed = 500.f,
+    .motorMediumSpeed = 1500.f,
+    .motorHighSpeed = 3000.f,
 };
 
 constexpr FlywheelConfig STANDARD_FLYWHEEL_CONFIG = BASE_FLYWHEEL_CONFIG;
 
 constexpr FlywheelConfig HERO_FLYWHEEL_CONFIG {
     .flywheelDefaultThrottle = 0.4f,
-    .motorLowSpeed = 500.0f,
-    .motorMediumSpeed = 1500.0f,
-    .motorHighSpeed = 3000.0f,
+    .motorLowSpeed = 500.f,
+    .motorMediumSpeed = 1500.f,
+    .motorHighSpeed = 3000.f,
 };
 
 constexpr FlywheelConfig SENTRY_FLYWHEEL_CONFIG = BASE_FLYWHEEL_CONFIG;

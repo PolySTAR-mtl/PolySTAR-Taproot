@@ -37,13 +37,13 @@ void ChassisSubsystem<T>::executeDriving()
         const float yawDeltaTicks = turretYawMotor->getInternalEncoder().getEncoder().getWrappedValue() - control::turret::ACTIVE_TURRET_CONFIG.yawNeutralPos;
 
         const float yawDeltaRad =
-            yawDeltaTicks * 2.0f * std::numbers::pi_v<float>
+            yawDeltaTicks * 2.f * std::numbers::pi_v<float>
             / tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
         const float d = sqrt(pow(xInput, 2) + pow(yInput, 2));
         const float x = d * cos(chassisRad + yawDeltaRad);
         const float y = d * sin(chassisRad + yawDeltaRad);
-        float rInput = 0.0f;
+        float rInput = 0.f;
 
         if constexpr (S == SpinMode::Spin) {
             // Setup for spin mode
@@ -55,9 +55,9 @@ void ChassisSubsystem<T>::executeDriving()
         }
 
         setTargetOutput(
-            fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.0f,
-            fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.0f,
-            fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.0f
+            fabs(x) >= CHASSIS_DEAD_ZONE ? x : 0.f,
+            fabs(y) >= CHASSIS_DEAD_ZONE ? y : 0.f,
+            fabs(rInput) >= CHASSIS_DEAD_ZONE ? rInput : 0.f
         );
     } else if constexpr (D == DriveMode::Auto) {
         if (!startMatchTimeout.isExpired()){
@@ -79,9 +79,9 @@ template <WheelType T> template <DriveMode D, SpinMode S>
 void ChassisSubsystem<T>::endDriving()
 {
     if constexpr (D == DriveMode::Manual) {
-        setTargetOutput(0.0f, 0.0f, 0.0f);
+        setTargetOutput(0.f, 0.f, 0.f);
     } else if constexpr (D == DriveMode::Auto) {
-        setTargetOutput(0.0f, 0.0f, 0.0f);
+        setTargetOutput(0.f, 0.f, 0.f);
     }
 }
 

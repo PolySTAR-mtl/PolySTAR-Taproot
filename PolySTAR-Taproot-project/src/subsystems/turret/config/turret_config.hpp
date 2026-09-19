@@ -55,7 +55,7 @@ struct TurretConfig {
     bool pitchIsInverted;
 
     /**
-     * IMU stabilization factor in radians per second
+     * IMU stabilization factor
      */
     float gzStabilizationFactor;
 };

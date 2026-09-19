@@ -32,15 +32,15 @@ struct FeederConfig {
 };
 
 constexpr FeederConfig BASE_FEEDER_CONFIG {
-    .feederRpm = 2500.0f,
-    .feederReverseRpm = -1500.0f,
+    .feederRpm = 2500.f,
+    .feederReverseRpm = -1500.f,
 
-    .unjamMaxWaitTimeMs = 500.0f,
+    .unjamMaxWaitTimeMs = 500.f,
     .moveDisplacementTick = 45 * DEGREE_TO_TICK,
-    .unjamCycles = 4.0f,
+    .unjamCycles = 4.f,
     .unjamDisplacementTick = 45 * DEGREE_TO_TICK,
-    .pauseAfterMoveTimeMs = 100.0f,
-    .moveTimeMs = 125.0f,
+    .pauseAfterMoveTimeMs = 100.f,
+    .moveTimeMs = 125.f,
     .setpointPosToleranceTick = 45 * DEGREE_TO_TICK,
 
     .jamCheckerToleranceTick = 5 * DEGREE_TO_TICK,
@@ -54,15 +54,15 @@ constexpr FeederConfig BASE_FEEDER_CONFIG {
 constexpr FeederConfig STANDARD_FEEDER_CONFIG = BASE_FEEDER_CONFIG;
 
 constexpr FeederConfig HERO_FEEDER_CONFIG {
-    .feederRpm = 2500.0f,
-    .feederReverseRpm = -1500.0f,
+    .feederRpm = 2500.f,
+    .feederReverseRpm = -1500.f,
 
-    .unjamMaxWaitTimeMs = 500.0f,
+    .unjamMaxWaitTimeMs = 500.f,
     .moveDisplacementTick = 45 * DEGREE_TO_TICK,
-    .unjamCycles = 1.0f,
+    .unjamCycles = 1.f,
     .unjamDisplacementTick = 45 * DEGREE_TO_TICK,
-    .pauseAfterMoveTimeMs = 100.0f,
-    .moveTimeMs = 300.0f,
+    .pauseAfterMoveTimeMs = 100.f,
+    .moveTimeMs = 300.f,
     .setpointPosToleranceTick = 45 * DEGREE_TO_TICK,
 
     .jamCheckerToleranceTick = 20 * DEGREE_TO_TICK,
@@ -74,15 +74,15 @@ constexpr FeederConfig HERO_FEEDER_CONFIG {
 };
 
 constexpr FeederConfig SENTRY_FEEDER_CONFIG {
-    .feederRpm = 2500.0f,
-    .feederReverseRpm = -1500.0f,
+    .feederRpm = 2500.f,
+    .feederReverseRpm = -1500.f,
 
-    .unjamMaxWaitTimeMs = 500.0f,
+    .unjamMaxWaitTimeMs = 500.f,
     .moveDisplacementTick = -90 * DEGREE_TO_TICK,
-    .unjamCycles = 4.0f,
+    .unjamCycles = 4.f,
     .unjamDisplacementTick = -45 * DEGREE_TO_TICK,
-    .pauseAfterMoveTimeMs = 500.0f,
-    .moveTimeMs = 200.0f,
+    .pauseAfterMoveTimeMs = 500.f,
+    .moveTimeMs = 200.f,
     .setpointPosToleranceTick = 1 * DEGREE_TO_TICK,
 
     .jamCheckerToleranceTick = 5 * DEGREE_TO_TICK,
@@ -94,15 +94,15 @@ constexpr FeederConfig SENTRY_FEEDER_CONFIG {
 };
 
 constexpr FeederConfig SPIN_TO_WIN_FEEDER_CONFIG {
-    .feederRpm = 2500.0f,
-    .feederReverseRpm = -1500.0f,
+    .feederRpm = 2500.f,
+    .feederReverseRpm = -1500.f,
 
-    .unjamMaxWaitTimeMs = 500.0f,
+    .unjamMaxWaitTimeMs = 500.f,
     .moveDisplacementTick = 45 * DEGREE_TO_TICK,
-    .unjamCycles = 4.0f,
+    .unjamCycles = 4.f,
     .unjamDisplacementTick = 45 * DEGREE_TO_TICK,
-    .pauseAfterMoveTimeMs = 100.0f,
-    .moveTimeMs = 125.0f,
+    .pauseAfterMoveTimeMs = 100.f,
+    .moveTimeMs = 125.f,
     .setpointPosToleranceTick = 45 * DEGREE_TO_TICK,
 
     .jamCheckerToleranceTick = 5 * DEGREE_TO_TICK,

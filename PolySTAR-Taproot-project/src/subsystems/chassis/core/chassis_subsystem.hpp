@@ -100,16 +100,16 @@ private:
     tap::algorithms::Ramp rInputRamp;
 
     // previous update time for ramp
-    float prevRampUpdate = 0.0f;
+    float prevRampUpdate = 0.f;
 
     // Ramp time
-    static constexpr float RAMP_TIME_MS = 500.0f;
+    static constexpr float RAMP_TIME_MS = 500.f;
 
     // Slope for ramp
-    static constexpr float RAMP_SLOPE = 1.0f / RAMP_TIME_MS;
+    static constexpr float RAMP_SLOPE = 1.f / RAMP_TIME_MS;
 
     // Scale factor for converting joystick movement into RPM setpoint
-    static constexpr float rpmScaleFactor = 3500.0f;
+    static constexpr float rpmScaleFactor = 3500.f;
 
     uint32_t prevDebugTime;
     uint32_t prevPidUpdate;
@@ -122,7 +122,7 @@ private:
     const float DEG_TO_MILLIRAD = 17.453293;
 
     //variable used for spin2win debugging
-    float rotationAngle = 0.0f;
+    float rotationAngle = 0.f;
 
     // For the relative drive:
     tap::motor::DjiMotor* turretYawMotor;

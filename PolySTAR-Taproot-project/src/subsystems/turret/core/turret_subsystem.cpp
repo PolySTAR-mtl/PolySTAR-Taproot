@@ -18,15 +18,18 @@ namespace control::turret
 
 TurretSubsystem::TurretSubsystem(src::Drivers *drivers, tap::motor::DjiMotor *yawMotor)
         : tap::control::Subsystem(drivers),
-          drivers(drivers),
-          yawMotor(yawMotor),
-          pitchMotor(drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, ACTIVE_TURRET_CONFIG.pitchIsInverted, "pitch motor"),
-          cascadedPitchController(ACTIVE_TURRET_CONFIG.pitchOuterPidConfig, ACTIVE_TURRET_CONFIG.pitchInnerPidConfig),
-          cascadedYawController(ACTIVE_TURRET_CONFIG.yawOuterPidConfig, ACTIVE_TURRET_CONFIG.yawInnerPidConfig),
-          yawDesiredPos(ACTIVE_TURRET_CONFIG.yawNeutralPos),
-          pitchDesiredPos(ACTIVE_TURRET_CONFIG.pitchNeutralPos),
-          yawRpmPid(ACTIVE_TURRET_CONFIG.yawInnerPidConfig),
-          imuInterpreter(drivers)
+          drivers{drivers},
+          yawMotor{yawMotor},
+          pitchMotor{drivers, PITCH_MOTOR_ID, CAN_BUS_MOTORS, ACTIVE_TURRET_CONFIG.pitchIsInverted, "pitch motor"},
+          cascadedPitchController{ACTIVE_TURRET_CONFIG.pitchOuterPidConfig, ACTIVE_TURRET_CONFIG.pitchInnerPidConfig},
+          cascadedYawController{ACTIVE_TURRET_CONFIG.yawOuterPidConfig, ACTIVE_TURRET_CONFIG.yawInnerPidConfig},
+          yawDesiredPos{ACTIVE_TURRET_CONFIG.yawNeutralPos},
+          pitchDesiredPos{ACTIVE_TURRET_CONFIG.pitchNeutralPos},
+          yawRpmPid{ACTIVE_TURRET_CONFIG.yawInnerPidConfig},
+          isSpin2WinMode_{false},
+          desiredYawRpm_{0},
+          startMatchTimeout{},
+          imuInterpreter{drivers}
 {}
 
 void TurretSubsystem::initialize() {
@@ -49,7 +52,7 @@ void TurretSubsystem::refresh() {
      * For now, haven't found a proper solution to this if we want to use the IMU at all times.
      * (We would need to set a position and add an RPM on top of it)
      */
-    m_isSpin2WinMode ? updateRpmPid(&yawRpmPid, yawMotor, desiredYawRpm, currentTime - prevControllerUpdate) : runYawController(currentTime - prevControllerUpdate);
+    isSpin2WinMode_ ? updateRpmPid(&yawRpmPid, yawMotor, desiredYawRpm_, currentTime - prevControllerUpdate) : runYawController(currentTime - prevControllerUpdate);
     prevControllerUpdate = currentTime;
 
     /* When tuning inner loops, use this block instead to run controllers
@@ -80,8 +83,8 @@ void TurretSubsystem::refresh() {
         int nBytes;
 
         nBytes = sprintf (buffer, "desiredYawRPM: %i\n",
-                                 (int)desiredYawRpm);
-        drivers->uart.write(TURRET_DEBUG_PORT,(uint8_t*) buffer, nBytes+1);
+                                 static_cast<int>(desiredYawRpm_));
+        drivers->uart.write(TURRET_DEBUG_PORT, reinterpret_cast<uint8_t*>(buffer), nBytes+1);
 
     }
 }
@@ -141,7 +144,7 @@ void TurretSubsystem::setAbsoluteOutput(uint16_t yaw, uint16_t pitch) {
 */
 void TurretSubsystem::setAbsoluteOutputDegrees(float yaw, float pitch) {
     constexpr float DEGREES_TO_TICKS =
-        tap::motor::DjiMotorEncoder::ENC_RESOLUTION / 360.0f;
+        tap::motor::DjiMotorEncoder::ENC_RESOLUTION / 360.f;
 
     const auto yawTicks = static_cast<int64_t>(yaw * DEGREES_TO_TICKS);
     const auto pitchTicks = static_cast<int64_t>(pitch * DEGREES_TO_TICKS);
@@ -175,7 +178,7 @@ void TurretSubsystem::sendCVUpdate() {
 
     // Get motor encoder positions in body frame (neutral position is straight ahead, parallel to ground)
     constexpr float TICKS_TO_DEGREES =
-    360.0f / tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
+    360.f / tap::motor::DjiMotorEncoder::ENC_RESOLUTION;
 
     const float yawEncoder =
         yawMotor->getInternalEncoder().getEncoder().getUnwrappedValue();
