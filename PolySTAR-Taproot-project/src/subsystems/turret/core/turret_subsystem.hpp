@@ -45,18 +45,19 @@ public:
     void setRelativeOutput(float yawDelta, float pitchDelta);
 
     // Getters
-    const tap::motor::DjiMotor &getYawMotor() const { return *yawMotor; }
-    const tap::motor::DjiMotor &getPitchMotor() const { return pitchMotor; }
-    int64_t getYawNeutralPos() { return ACTIVE_TURRET_CONFIG.yawNeutralPos; }
-    int64_t getPitchNeutralPos() { return ACTIVE_TURRET_CONFIG.pitchNeutralPos; }
-    int64_t getYawUnwrapped() { return yawMotor->getInternalEncoder().getEncoder().getUnwrappedValue(); }
-    int64_t getPitchUnwrapped() { return pitchMotor.getInternalEncoder().getEncoder().getUnwrappedValue(); }
-    int getYawWrapped() { return yawMotor->getInternalEncoder().getEncoder().getWrappedValue(); }
-    int getPitchWrapped() { return pitchMotor.getInternalEncoder().getEncoder().getWrappedValue(); }
+    const tap::motor::DjiMotor& getYawMotor() const;
+    const tap::motor::DjiMotor& getPitchMotor() const;
+    int64_t getYawNeutralPos();
+    int64_t getPitchNeutralPos();
+    int64_t getYawUnwrapped();
+    int64_t getPitchUnwrapped();
+    int getYawWrapped();
+    int getPitchWrapped();
 
     //setters
-    void setIsSpin2WinMode(bool isSpin2WinMode) { isSpin2WinMode_ = isSpin2WinMode; }
-    void setDesiredYawRpm(float desiredRpm) { desiredYawRpm_ = desiredRpm; }
+    void setIsSpin2WinMode(bool isSpin2WinMode);
+    void setDesiredYawRpm(float desiredRpm);
+
     /**
      * Aim policy methods. Definition can be found in the implementation file.
      */
@@ -68,6 +69,7 @@ public:
 
     template <AimMode A, SpinMode S>
     void stopAiming();
+
 private:
     // Controller Functions
     void runYawController(uint32_t dt);
@@ -82,32 +84,34 @@ private:
     void pitchInnerLoopTest(uint32_t dt, float velSetpoint, float threshold);
     void sendTuningDebugInfo(bool sendYaw, bool sendPitch, float velSetpoint, float threshold);
 
+    // Method for yaw rpm during spin2win
+    void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt);
+    
     // Hardware interfaces
-    src::Drivers *drivers;
-    tap::motor::DjiMotor *yawMotor;
-    tap::motor::DjiMotor pitchMotor;
+    src::Drivers* drivers_;
+    tap::motor::DjiMotor* yawMotor_;
+    tap::motor::DjiMotor pitchMotor_;
 
     // Motor Controllers for position control
-    CascadedPid cascadedPitchController;
-    CascadedPid cascadedYawController;
+    CascadedPid cascadedPitchController_;
+    CascadedPid cascadedYawController_;
 
     // Position setpoints for turret, in encoder ticks
-    float yawDesiredPos;
-    float pitchDesiredPos;
+    float yawDesiredPos_;
+    float pitchDesiredPos_;
 
     // Time variables for fixed rate tasks
-    uint32_t prevDebugUpdate;
-    uint32_t prevControllerUpdate;
-    uint32_t prevCVUpdate;
+    uint32_t prevDebugUpdate_;
+    uint32_t prevControllerUpdate_;
+    uint32_t prevCVUpdate_;
 
-    // added functions and variables for yaw rpm during spin2win
-    tap::algorithms::SmoothPid yawRpmPid;
-    void updateRpmPid(tap::algorithms::SmoothPid* pid, tap::motor::DjiMotor* const motor, float desiredRpm, uint32_t dt);
+    // Variables for yaw rpm during spin2win
+    tap::algorithms::SmoothPid yawRpmPid_;
     bool isSpin2WinMode_;
     float desiredYawRpm_;
 
-    tap::arch::MilliTimeout startMatchTimeout;
-    algorithms::ImuInterpreter imuInterpreter;
+    tap::arch::MilliTimeout startMatchTimeout_;
+    algorithms::ImuInterpreter imuInterpreter_;
 
 };  // class TurretSubsystem
 

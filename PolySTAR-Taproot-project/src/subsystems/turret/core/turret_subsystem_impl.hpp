@@ -15,7 +15,7 @@ template <AimMode A, SpinMode S>
 void TurretSubsystem::initializeAiming()
 {
     if constexpr (A == AimMode::Auto) {
-        startMatchTimeout.restart(START_MATCH_WAIT_TIME);
+        startMatchTimeout_.restart(START_MATCH_WAIT_TIME);
 
     } else if constexpr (A == AimMode::Manual) {
         if constexpr (S == SpinMode::Spin) {
@@ -31,16 +31,16 @@ void TurretSubsystem::executeAiming()
 {
     if constexpr (A == AimMode::Manual) {
         // Get inputs from the controller and mouse
-        float xInput = drivers->controlInterface.getTurretXInput();
-        xInput += drivers->controlInterface.getTurretXMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseXScaleFactor;
+        float xInput = drivers_->controlInterface.getTurretXInput();
+        xInput += drivers_->controlInterface.getTurretXMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseXScaleFactor;
 
-        float yInput = drivers->controlInterface.getTurretYInput();
-        yInput += drivers->controlInterface.getTurretYMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseYScaleFactor;
+        float yInput = drivers_->controlInterface.getTurretYInput();
+        yInput += drivers_->controlInterface.getTurretYMouseInput() * control::turret::ACTIVE_TURRET_CONFIG.turretMouseYScaleFactor;
         
         if constexpr (S == SpinMode::Spin) {
             // IMU stabilization
-            imuInterpreter.update(xInput);
-            const float desiredYawRpm = imuInterpreter.getTurretYawRPM();
+            imuInterpreter_.update(xInput);
+            const float desiredYawRpm = imuInterpreter_.getTurretYawRPM();
 
             setDesiredYawRpm(desiredYawRpm);
         } else if constexpr (S == SpinMode::NoSpin) {
@@ -53,12 +53,12 @@ void TurretSubsystem::executeAiming()
             std::abs(yInput) >= TURRET_DEAD_ZONE ? yInput : 0.f);
 
     } else if constexpr (A == AimMode::Auto) {
-        if (!startMatchTimeout.isExpired()) {
+        if (!startMatchTimeout_.isExpired()) {
             setAbsoluteOutputDegrees(0, 0);
             return;
         }
 
-        auto turretData = drivers->cvHandler.getTurretData();
+        auto turretData = drivers_->cvHandler.getTurretData();
         float pitchSetpoint = turretData.pitchSetpoint*MRAD_TO_DEGREES;
         float yawSetpoint = turretData.yawSetpoint*MRAD_TO_DEGREES;
 
