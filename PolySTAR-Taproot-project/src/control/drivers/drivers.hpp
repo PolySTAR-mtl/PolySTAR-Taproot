@@ -28,17 +28,12 @@ namespace src
 {
 class Drivers : public tap::Drivers
 {
-    friend class DriversSingleton;
+    friend src::Drivers* DoNotUse_getDrivers();
 
 #ifdef ENV_UNIT_TESTS
 public:
 #endif
-    Drivers() : 
-        tap::Drivers(),
-        controlInterface(this),
-        cvHandler(this)
-    {
-    }
+    Drivers();
 
 public:
     control::ControlInterface controlInterface;

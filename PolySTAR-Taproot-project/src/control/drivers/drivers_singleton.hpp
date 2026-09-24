@@ -26,6 +26,7 @@
 
 namespace src
 {
+
 /**
  * @return The singleton instance of the Drivers class. This is the only instance of the
  *      Drivers class that should be created anywhere in the non-unit test framework.
@@ -35,6 +36,7 @@ namespace src
  */
 src::Drivers *DoNotUse_getDrivers();
 using driversFunc = src::Drivers *(*)();
+
 }  // namespace src
 
 #endif  // DRIVERS_SINGLETON_HPP_
