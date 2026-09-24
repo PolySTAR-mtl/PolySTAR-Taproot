@@ -22,7 +22,7 @@ namespace src::control
 class ControlInterface
 {
 public:
-    ControlInterface(tap::Drivers *drivers) : drivers(drivers) {}
+    ControlInterface(tap::Drivers* drivers);
 
     /**
      * Returns the value used for chassis movement forward and backward,
@@ -71,8 +71,7 @@ public:
     mockable float getTurretYMouseInput();
 
 private:
-    tap::Drivers *drivers;
-    static constexpr float WHEEL_MAX_VALUE = 660.f;
+    tap::Drivers* drivers;
 };  // ControlInterface
 
 }  // namespace control
