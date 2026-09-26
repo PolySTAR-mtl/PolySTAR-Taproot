@@ -34,7 +34,6 @@
 #include "tap/architecture/profiler.hpp"
 
 #include "control/drivers/drivers.hpp"
-#include "control/drivers/drivers_singleton.hpp"
 
 /* error handling includes --------------------------------------------------*/
 #include "tap/errors/create_errors.hpp"
@@ -49,12 +48,12 @@ tap::arch::PeriodicMilliTimer sendMotorTimeout{2};
 
 // Place any sort of input/output initialization here. For example, place
 // serial init stuff here.
-static void initializeIo(src::Drivers *drivers);
+static void initializeIo(src::Drivers& drivers);
 
 // Anything that you would like to be called place here. It will be called
 // very frequently. Use PeriodicMilliTimers if you don't want something to be
 // called as frequently.
-static void updateIo(src::Drivers *drivers);
+static void updateIo(src::Drivers& drivers);
 
 using tap::communication::serial::Uart;
 

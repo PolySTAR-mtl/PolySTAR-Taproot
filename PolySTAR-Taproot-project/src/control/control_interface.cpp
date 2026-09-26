@@ -2,7 +2,6 @@
 
 #include "tap/algorithms/math_user_utils.hpp"
 #include "tap/drivers.hpp"
-#include "control/drivers/drivers_singleton.hpp"
 
 namespace src::control {
 
