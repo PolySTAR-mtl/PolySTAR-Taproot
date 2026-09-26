@@ -12,8 +12,6 @@ class Robot
 public:
     explicit Robot(src::Drivers *drivers);
 
-    void initialize();
-
 private:
     ControlConfig<T> config_;
 };
