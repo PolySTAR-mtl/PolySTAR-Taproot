@@ -1,7 +1,8 @@
 #ifndef AUTO_AIM_POLICY_IMPL_HPP
 #define AUTO_AIM_POLICY_IMPL_HPP
 
-#include "auto_aim_policy.hpp"
+#include "subsystems/turret/utils/modes/aim_mode.hpp"
+#include "subsystems/turret/utils/modes/spin_mode.hpp"
 
 namespace control::turret
 {
