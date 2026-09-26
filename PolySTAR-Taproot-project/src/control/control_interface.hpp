@@ -1,10 +1,11 @@
 #ifndef CONTROL_INTERFACE_HPP_
 #define CONTROL_INTERFACE_HPP_
 
+#include <map>
+#include <string>
+
 #include "tap/algorithms/linear_interpolation_predictor.hpp"
 #include "tap/util_macros.hpp"
-#include <string>
-#include <map>
 
 
 namespace tap

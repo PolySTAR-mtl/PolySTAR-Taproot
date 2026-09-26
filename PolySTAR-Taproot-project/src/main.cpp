@@ -42,10 +42,10 @@
 /* control includes ---------------------------------------------------------*/
 #include "tap/architecture/clock.hpp"
 
-#include "control/robot_control.hpp"
+#include "control/robot.hpp"
 
 /* define timers here -------------------------------------------------------*/
-tap::arch::PeriodicMilliTimer sendMotorTimeout(2);
+tap::arch::PeriodicMilliTimer sendMotorTimeout{2};
 
 // Place any sort of input/output initialization here. For example, place
 // serial init stuff here.
@@ -61,19 +61,13 @@ using tap::communication::serial::Uart;
 int main()
 {
 #ifdef PLATFORM_HOSTED
-    std::cout << "Simulation starting..." << std::endl;
+    std::cout << "Simulation starting...\n";
 #endif
-
-    /*
-     * NOTE: We are using DoNotUse_getDrivers here because in the main
-     *      robot loop we must access the singleton drivers to update
-     *      IO states and run the scheduler.
-     */
-    src::Drivers *drivers = src::DoNotUse_getDrivers();
+    src::Drivers drivers{};
 
     Board::initialize();
     initializeIo(drivers);
-    control::initSubsystemCommands<target::ROBOT_TARGET>(drivers);
+    control::Robot<target::ROBOT_TARGET> robot{&drivers};
 
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::resetMotorSims();
@@ -84,14 +78,14 @@ int main()
     while (1)
     {
         // do this as fast as you can
-        PROFILE(drivers->profiler, updateIo, (drivers));
+        PROFILE(drivers.profiler, updateIo, (drivers));
 
         if (sendMotorTimeout.execute())
         {
-            PROFILE(drivers->profiler, drivers->mpu6500.periodicIMUUpdate, ());
-            PROFILE(drivers->profiler, drivers->commandScheduler.run, ());
-            PROFILE(drivers->profiler, drivers->djiMotorTxHandler.encodeAndSendCanData, ());
-            PROFILE(drivers->profiler, drivers->terminalSerial.update, ());
+            PROFILE(drivers.profiler, drivers.mpu6500.periodicIMUUpdate, ());
+            PROFILE(drivers.profiler, drivers.commandScheduler.run, ());
+            PROFILE(drivers.profiler, drivers.djiMotorTxHandler.encodeAndSendCanData, ());
+            PROFILE(drivers.profiler, drivers.terminalSerial.update, ());
         }
         modm::delay_us(10);
     }
@@ -100,38 +94,38 @@ int main()
 
 
 
-static void initializeIo(src::Drivers *drivers)
+static void initializeIo(src::Drivers& drivers)
 {
-    drivers->analog.init();
-    drivers->pwm.init();
-    drivers->digital.init();
-    drivers->leds.init();
-    drivers->can.initialize();
-    drivers->errorController.init();
-    drivers->remote.initialize();
-    drivers->mpu6500.init(500.f, 0.5f, 0.f);
-    drivers->refSerial.initialize();
-    drivers->terminalSerial.initialize();
-    drivers->schedulerTerminalHandler.init();
-    drivers->djiMotorTerminalSerialHandler.init();
+    drivers.analog.init();
+    drivers.pwm.init();
+    drivers.digital.init();
+    drivers.leds.init();
+    drivers.can.initialize();
+    drivers.errorController.init();
+    drivers.remote.initialize();
+    drivers.mpu6500.init(500.f, 0.5f, 0.f);
+    drivers.refSerial.initialize();
+    drivers.terminalSerial.initialize();
+    drivers.schedulerTerminalHandler.init();
+    drivers.djiMotorTerminalSerialHandler.init();
 
-    drivers->uart.init<Uart::UartPort::Uart6, 230400>();
-    drivers->uart.init<Uart::UartPort::Uart8, 230400>();
+    drivers.uart.init<Uart::UartPort::Uart6, 230400>();
+    drivers.uart.init<Uart::UartPort::Uart8, 230400>();
     
-    drivers->cvHandler.initialize();
+    drivers.cvHandler.initialize();
 }
 
-static void updateIo(src::Drivers *drivers)
+static void updateIo(src::Drivers& drivers)
 {
 #ifdef PLATFORM_HOSTED
     tap::motorsim::SimHandler::updateSims();
 #endif
 
-    drivers->canRxHandler.pollCanData();
-    drivers->refSerial.updateSerial();
-    drivers->remote.read();
-    drivers->mpu6500.read();
+    drivers.canRxHandler.pollCanData();
+    drivers.refSerial.updateSerial();
+    drivers.remote.read();
+    drivers.mpu6500.read();
 
-    drivers->cvHandler.updateSerial();
-    drivers->cvHandler.processGameStage();
+    drivers.cvHandler.updateSerial();
+    drivers.cvHandler.processGameStage();
 }
