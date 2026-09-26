@@ -19,6 +19,8 @@ private:
 };
 
 extern template class Robot<target::RobotTarget::Standard>;
+extern template class Robot<target::RobotTarget::Hero>;
+extern template class Robot<target::RobotTarget::Sentry>;
 
 }
 

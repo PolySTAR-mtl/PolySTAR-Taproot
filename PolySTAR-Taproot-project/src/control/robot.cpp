@@ -16,5 +16,7 @@ void Robot<T>::initialize()
 }
 
 template class Robot<target::RobotTarget::Standard>;
+template class Robot<target::RobotTarget::Hero>;
+template class Robot<target::RobotTarget::Sentry>;
 
 }  // namespace control

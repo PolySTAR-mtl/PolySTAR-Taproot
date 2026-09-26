@@ -14,9 +14,12 @@
 #include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "subsystems/chassis/commands/chassis_drive_commands.hpp"
 #include "subsystems/chassis/commands/chassis_spin2win_calibrate_IMU.hpp"
+#include "subsystems/feeder/commands/feeder_feed_commands.hpp"
 #include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/core/feeder_position_subsystem.hpp"
+#include "subsystems/feeder/core/feeder_velocity_subsystem.hpp"
 #include "subsystems/flywheel/commands/flywheel_fire_commands.hpp"
+#include "subsystems/flywheel/core/flywheel_dji_subsystem.hpp"
 #include "subsystems/flywheel/core/flywheel_subsystem.hpp"
 #include "subsystems/turret/commands/turret_aim_commands.hpp"
 #include "subsystems/turret/core/turret_subsystem.hpp"
@@ -35,11 +38,81 @@ struct ControlConfig<target::RobotTarget::Engineer>
 
 template <>
 struct ControlConfig<target::RobotTarget::Hero>
-{};
+{
+    explicit ControlConfig(src::Drivers *drivers);
+
+    void initialize();
+
+private:
+    void registerSubsystems();
+    void initializeSubsystems();
+    void setDefaultCommands();
+    void startCommands();
+    void registerIoMappings();
+
+    src::Drivers *drivers_;
+
+    tap::motor::DjiMotor yawMotor;
+
+    chassis::OmniWheelsChassisSubsystem theChassis;
+    turret::TurretSubsystem theTurret;
+    feeder::FeederPositionSubsystem theFeeder;
+    flywheel::FlywheelDjiSubsystem theFlywheel;
+
+    chassis::ManualDriveCommand chassisRelativeDrive;
+    chassis::ManualSpinDriveCommand chassisSpinDrive;
+    chassis::ChassisSpin2WinCalibrateImuCommand chassisImuCalibrate;
+    turret::ManualAimCommand turretManualAim;
+    turret::ManualSpinAimCommand turretManualSpinAim;
+    feeder::FeederMoveUnjamCommand feederMoveUnjam;
+    flywheel::FireDjiCommand flywheelStart;
+
+    src::control::RemoteSafeDisconnectFunction remoteSafeDisconnectFunction;
+
+    tap::control::HoldRepeatCommandMapping feedFeeder;
+    tap::control::ToggleCommandMapping startFlywheel;
+    tap::control::HoldCommandMapping toggleChassisSpin;
+};
 
 template <>
 struct ControlConfig<target::RobotTarget::Sentry>
-{};
+{
+    explicit ControlConfig(src::Drivers *drivers);
+
+    void initialize();
+
+private:
+    void registerSubsystems();
+    void initializeSubsystems();
+    void setDefaultCommands();
+    void startCommands();
+    void registerIoMappings();
+
+    src::Drivers *drivers_;
+
+    tap::motor::DjiMotor yawMotor;
+
+    chassis::MecanumChassisSubsystem theChassis;
+    turret::TurretSubsystem theTurret;
+    flywheel::FlywheelDjiSubsystem theFlywheel;
+    feeder::FeederVelocitySubsystem theVelocityFeeder;
+    feeder::FeederPositionSubsystem thePositionFeeder;
+
+    chassis::SentryManualDriveCommand chassisDrive;
+    chassis::SentryAutoDriveCommand chassisAutoDrive;
+    turret::ManualAimCommand turretManualAim;
+    turret::AutoAimCommand turretAutoAim;
+    feeder::FeederMoveUnjamCommand feederMoveUnjam;
+    feeder::AutoFeedCommand feederAutoFeed;
+    flywheel::AutoFireDjiCommand flywheelAutoStart;
+    flywheel::FireDjiCommand flywheelStartManual;
+
+    src::control::RemoteSafeDisconnectFunction remoteSafeDisconnectFunction;
+
+    tap::control::HoldRepeatCommandMapping feedFeeder;
+    tap::control::ToggleCommandMapping startFlywheel;
+    tap::control::HoldCommandMapping toggleAutoCommands;
+};
 
 template <>
 struct ControlConfig<target::RobotTarget::Standard>

@@ -1,7 +1,5 @@
 #ifdef TARGET_STANDARD
 
-#include "control/robot_control.hpp"
-
 #include "tap/control/command_mapper.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
@@ -130,8 +128,7 @@ void registerStandardIoMappings(src::Drivers *drivers) {
 
 }
 
-template <>
-void initSubsystemCommands<target::RobotTarget::Standard>(src::Drivers *drivers)
+void initSubsystemCommands(src::Drivers *drivers)
 {
     drivers->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
     initializeSubsystems();
