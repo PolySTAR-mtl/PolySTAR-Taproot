@@ -11,48 +11,48 @@ using tap::communication::serial::Uart;
 /**
  * Hardware constants
  */
-static constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
-static constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
-static constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
+inline constexpr tap::motor::MotorId YAW_MOTOR_ID = tap::motor::MOTOR6;
+inline constexpr tap::motor::MotorId PITCH_MOTOR_ID = tap::motor::MOTOR5;
+inline constexpr tap::can::CanBus CAN_BUS_MOTORS = tap::can::CanBus::CAN_BUS1;
 
 /**
  * Right joystick dead zone size. If the absolute value returned by the stick is below
  * this value, it is considered zero.
  */
-static constexpr float TURRET_DEAD_ZONE = 0.05;
+inline constexpr float TURRET_DEAD_ZONE = 0.05;
 
 /*
  * UART debug message settings
  */
-static constexpr bool TURRET_DEBUG_MESSAGE = true;
-static constexpr bool TURRET_DEBUG_STABLE_IMU = true;
-static constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
-static constexpr Uart::UartPort TURRET_DEBUG_PORT = Uart::UartPort::Uart8;
+inline constexpr bool TURRET_DEBUG_MESSAGE = true;
+inline constexpr bool TURRET_DEBUG_STABLE_IMU = true;
+inline constexpr uint32_t TURRET_DEBUG_MESSAGE_DELAY_MS = 500;
+inline constexpr Uart::UartPort TURRET_DEBUG_PORT = Uart::UartPort::Uart8;
 
 /**
  * Interval for sending messages over UART to the Computer Vision computer
  * Time is in milliseconds.
  */
-static constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
+inline constexpr uint32_t TURRET_CV_UPDATE_PERIOD = 10;
 
 /**
  * Unit conversion constants
  */
-static constexpr float RPM_TO_DEGPERMS = 0.006;
-static constexpr float DEGREE_TO_MILLIRAD = 17.453293;
-static constexpr float MRAD_TO_DEGREES = 0.0572958;
+inline constexpr float RPM_TO_DEGPERMS = 0.006;
+inline constexpr float DEGREE_TO_MILLIRAD = 17.453293;
+inline constexpr float MRAD_TO_DEGREES = 0.0572958;
 
 /**
  * Spin2win stabilization constants
  * Represents how much the joystick should have move per ms to stabilize the turret
  */
-static constexpr float LOW_ROTATION = 0.67;
-static constexpr float HIGH_ROTATION = 0.95;
+inline constexpr float LOW_ROTATION = 0.67;
+inline constexpr float HIGH_ROTATION = 0.95;
 
 /**
  * Constant for stabilizing the turret based on joystick input
  */
-static constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1f;
+inline constexpr float X_INPUT_STABILIZATION_CONSTANT = 0.1f;
 
 } // namespace control::turret
 
