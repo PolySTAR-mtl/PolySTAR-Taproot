@@ -24,7 +24,9 @@ private:
 
     float turretYawRPM;
 
-    std::uint32_t lastUpdateTime = 0;
+    std::uint32_t samplingWindowStartTime = 0;
+    std::uint32_t lastImuDataTime = 0;
+    bool hasSamplingWindow = false;
 
     float chassisRotationSpeed = 0.f;
 
