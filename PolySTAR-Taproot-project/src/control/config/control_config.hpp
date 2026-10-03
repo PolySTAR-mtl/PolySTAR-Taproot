@@ -1,19 +1,18 @@
 #ifndef CONTROL_CONFIG_HPP
 #define CONTROL_CONFIG_HPP
 
-#include "control/drivers/drivers.hpp"
-#include "control/safe_disconnect.hpp"
-#include "robot_target.hpp"
-
 #include "tap/communication/serial/remote.hpp"
 #include "tap/control/hold_command_mapping.hpp"
 #include "tap/control/hold_repeat_command_mapping.hpp"
 #include "tap/control/toggle_command_mapping.hpp"
 #include "tap/motor/dji_motor.hpp"
 
-#include "subsystems/chassis/core/chassis_subsystem.hpp"
+#include "control/drivers/drivers.hpp"
+#include "control/safe_disconnect.hpp"
+#include "robot_target.hpp"
 #include "subsystems/chassis/commands/chassis_drive_commands.hpp"
 #include "subsystems/chassis/commands/chassis_spin2win_calibrate_IMU.hpp"
+#include "subsystems/chassis/core/chassis_subsystem.hpp"
 #include "subsystems/feeder/commands/feeder_feed_commands.hpp"
 #include "subsystems/feeder/commands/feeder_move_unjam_command.hpp"
 #include "subsystems/feeder/core/feeder_position_subsystem.hpp"
@@ -29,17 +28,18 @@ namespace control {
 template <target::RobotTarget T>
 struct ControlConfig
 {
-    explicit ControlConfig(src::Drivers *) = delete;
+    explicit ControlConfig(src::Drivers*) = delete;
 };
 
 template <>
 struct ControlConfig<target::RobotTarget::Engineer>
-{};
+{
+};
 
 template <>
 struct ControlConfig<target::RobotTarget::Hero>
 {
-    explicit ControlConfig(src::Drivers *drivers);
+    explicit ControlConfig(src::Drivers* drivers);
 
     void initialize();
 
@@ -50,7 +50,7 @@ private:
     void startCommands();
     void registerIoMappings();
 
-    src::Drivers *drivers_;
+    src::Drivers* drivers_;
 
     tap::motor::DjiMotor yawMotor;
 
@@ -77,7 +77,7 @@ private:
 template <>
 struct ControlConfig<target::RobotTarget::Sentry>
 {
-    explicit ControlConfig(src::Drivers *drivers);
+    explicit ControlConfig(src::Drivers* drivers);
 
     void initialize();
 
@@ -88,7 +88,7 @@ private:
     void startCommands();
     void registerIoMappings();
 
-    src::Drivers *drivers_;
+    src::Drivers* drivers_;
 
     tap::motor::DjiMotor yawMotor;
 
@@ -117,7 +117,7 @@ private:
 template <>
 struct ControlConfig<target::RobotTarget::Standard>
 {
-    explicit ControlConfig(src::Drivers *drivers);
+    explicit ControlConfig(src::Drivers* drivers);
 
     void initialize();
 
@@ -128,7 +128,7 @@ private:
     void startCommands();
     void registerIoMappings();
 
-    src::Drivers *drivers_;
+    src::Drivers* drivers_;
 
     /* define subsystems --------------------------------------------------------*/
     tap::motor::DjiMotor yawMotor;
@@ -166,13 +166,8 @@ private:
     /* Mouse mappings */
     tap::control::ToggleCommandMapping mouseStartFlywheel;
     tap::control::HoldRepeatCommandMapping mouseFeedFeeder;
-    // ToggleCommandMapping toggleClientAiming(drivers(), {&turretMouseNoSpin}, RemoteMapState({Remote::Key::F}));
-    // ToggleCommandMapping toggleChassisSpinKey(drivers(), {&chassisKeyboardDrive, &turretMouseAim}, RemoteMapState({Remote::Key::R}));
-    // ToggleCommandMapping turretMouseAimToggle(drivers(), {&turretMouseAim}, RemoteMapState({Remote::Key::B}));
-    // ToggleCommandMapping toggleChassisDrive(drivers(), {&chassisKeyboardDrive}, RemoteMapState({Remote::Key::G}));
 };
-}
 
+}  // namespace control
 
-
-#endif // CONTROL_CONFIG_HPP
+#endif  // CONTROL_CONFIG_HPP

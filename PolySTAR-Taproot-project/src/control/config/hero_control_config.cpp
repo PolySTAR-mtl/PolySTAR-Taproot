@@ -1,9 +1,20 @@
-#include "control/config/control_config.hpp"
+#include "control_config.hpp"
 
-namespace control
-{
+namespace control {
 
-ControlConfig<target::RobotTarget::Hero>::ControlConfig(src::Drivers *drivers)
+static const tap::control::RemoteMapState feederRemoteMapState{
+    tap::communication::serial::Remote::Switch::RIGHT_SWITCH,
+    tap::communication::serial::Remote::SwitchState::UP};
+
+static const tap::control::RemoteMapState startFlywheelRemoteMapState{
+    tap::communication::serial::Remote::Switch::LEFT_SWITCH,
+    tap::communication::serial::Remote::SwitchState::DOWN};
+
+static const tap::control::RemoteMapState toggleChassisSpinRemoteMapState{
+    tap::communication::serial::Remote::Switch::RIGHT_SWITCH,
+    tap::communication::serial::Remote::SwitchState::DOWN};
+
+ControlConfig<target::RobotTarget::Hero>::ControlConfig(src::Drivers* drivers)
     : drivers_{drivers}
     , yawMotor{drivers, tap::motor::MOTOR6, tap::can::CanBus::CAN_BUS1, true, "yaw motor"}
     , theChassis{drivers, &yawMotor}
@@ -18,32 +29,18 @@ ControlConfig<target::RobotTarget::Hero>::ControlConfig(src::Drivers *drivers)
     , feederMoveUnjam{&theFeeder, drivers}
     , flywheelStart{&theFlywheel, drivers}
     , remoteSafeDisconnectFunction{drivers}
-    , feedFeeder{
-          drivers,
-          {&feederMoveUnjam},
-          tap::control::RemoteMapState{
-              tap::communication::serial::Remote::Switch::RIGHT_SWITCH,
-              tap::communication::serial::Remote::SwitchState::UP},
-          true}
-    , startFlywheel{
-          drivers,
-          {&flywheelStart},
-          tap::control::RemoteMapState{
-              tap::communication::serial::Remote::Switch::LEFT_SWITCH,
-              tap::communication::serial::Remote::SwitchState::DOWN}}
+    , feedFeeder{drivers, {&feederMoveUnjam}, feederRemoteMapState, true}
+    , startFlywheel{drivers, {&flywheelStart}, startFlywheelRemoteMapState}
     , toggleChassisSpin{
           drivers,
           {&chassisSpinDrive, &turretManualSpinAim},
-          tap::control::RemoteMapState{
-              tap::communication::serial::Remote::Switch::RIGHT_SWITCH,
-              tap::communication::serial::Remote::SwitchState::DOWN}}
+          toggleChassisSpinRemoteMapState}
 {
 }
 
 void ControlConfig<target::RobotTarget::Hero>::initialize()
 {
-    drivers_->commandScheduler.setSafeDisconnectFunction(
-        &remoteSafeDisconnectFunction);
+    drivers_->commandScheduler.setSafeDisconnectFunction(&remoteSafeDisconnectFunction);
     initializeSubsystems();
     registerSubsystems();
     setDefaultCommands();
@@ -53,7 +50,7 @@ void ControlConfig<target::RobotTarget::Hero>::initialize()
     const int nBytes = sprintf(buffer, "Initializing Hero\n");
     drivers_->uart.write(
         tap::communication::serial::Uart::UartPort::Uart8,
-        reinterpret_cast<uint8_t *>(buffer),
+        reinterpret_cast<uint8_t*>(buffer),
         nBytes + 1);
 }
 
