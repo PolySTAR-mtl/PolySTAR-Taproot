@@ -30,6 +30,15 @@
     <option name="taproot:board:pwm_pins">C1,C2,C3,C4,C5,C6,C7,Buzzer,ImuHeater</option>
     -->
 
+    <!-- For DM-MC02 -->
+    <!-- <option name="taproot:dev_board">rm-dev-board-a</option>
+    <option name="taproot:communication:serial:terminal_serial:uart_port"></option>
+    <option name="taproot:communication:serial:ref_serial:uart_port"></option>
+    <option name="taproot:board:digital_in_pins"></option>
+    <option name="taproot:board:digital_out_pins"></option>
+    <option name="taproot:board:analog_in_pins"></option>
+    <option name="taproot:board:pwm_pins"></option> -->
+
   </options>
   <modules>
     <module>taproot:core</module>
@@ -44,7 +53,7 @@
     <module>taproot:communication:sensors:imu:mpu6500</module>
     <module>taproot:display</module>
 
-    <!-- Only supported on RoboMaster Development Board Type C
+    <!-- Only supported on RoboMaster Development Board Type C and DM-MC02
     <module>taproot:communication:sensors:imu:bmi088</module> -->
   </modules>
 </library>
